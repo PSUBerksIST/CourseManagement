@@ -84,6 +84,7 @@ public class TileAction extends AbstractAction {
         */
     }
      
+    // Tile the open frames
     public void actionPerformed(ActionEvent ev) {
        
         // How many frames do we have?
