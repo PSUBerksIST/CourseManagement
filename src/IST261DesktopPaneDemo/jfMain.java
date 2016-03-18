@@ -5,18 +5,32 @@
  */
 package IST261DesktopPaneDemo;
 
+import java.awt.Color;
 import java.awt.Dimension;
+import java.awt.Font;
+import java.awt.FontMetrics;
+import java.sql.Connection;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
+import java.util.ArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.ButtonGroup;
 import javax.swing.JFrame;
 import javax.swing.JInternalFrame;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JRadioButtonMenuItem;
+import javax.swing.JScrollPane;
+import javax.swing.JTable;
 import javax.swing.SwingUtilities;
 import javax.swing.UIManager;
 import javax.swing.UIManager.LookAndFeelInfo;
 import javax.swing.UnsupportedLookAndFeelException;
+import javax.swing.table.TableColumn;
+import javax.swing.table.TableModel;
+import net.proteanit.sql.DbUtils;
 
 /**
  *
@@ -34,6 +48,9 @@ public class jfMain extends JFrame {
 
     int intWindowCounter = 0;
     ButtonGroup bgLAF = new ButtonGroup();
+    
+    public Connection dbConnection;
+    public DBConnection dbc;
     /**
      * Creates new form jfMain
      */
@@ -41,8 +58,23 @@ public class jfMain extends JFrame {
     {
         initComponents();
         MakeLookAndFeelMenu();
-      
-       
+        dbc = new DBConnection(this);
+        setLocationByPlatform(true);
+        addWindowListener(new java.awt.event.WindowAdapter() {
+            public void windowClosing(java.awt.event.WindowEvent e) 
+            {
+                try {
+                    if (dbConnection != null)
+                        dbConnection.close();
+                    
+                  
+                } catch (SQLException ex) {
+                    Logger.getLogger(jfMain.class.getName()).log(Level.SEVERE, null, ex);
+                }
+                  System.exit(0);
+            }
+        });
+
     } // no argument constructor
 
     public void MakeLookAndFeelMenu()
@@ -97,6 +129,8 @@ public class jfMain extends JFrame {
         jmbMain = new javax.swing.JMenuBar();
         jmFile = new javax.swing.JMenu();
         jmiAddFrame = new javax.swing.JMenuItem();
+        jmiOpenDB = new javax.swing.JMenuItem(new OpenDatabaseAction(this));
+        jmiTestTablePanel = new javax.swing.JMenuItem();
         jmEdit = new javax.swing.JMenu();
         jmWindows = new javax.swing.JMenu();
         jmiTile = new javax.swing.JMenuItem(new TileAction(jdpMain));
@@ -146,6 +180,17 @@ public class jfMain extends JFrame {
             }
         });
         jmFile.add(jmiAddFrame);
+
+        jmiOpenDB.setText("Open Database");
+        jmFile.add(jmiOpenDB);
+
+        jmiTestTablePanel.setText("JTable Test");
+        jmiTestTablePanel.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jmiTestTablePanelActionPerformed(evt);
+            }
+        });
+        jmFile.add(jmiTestTablePanel);
 
         jmbMain.add(jmFile);
 
@@ -201,24 +246,56 @@ public class jfMain extends JFrame {
         CreateFrame();
     }//GEN-LAST:event_jmiAddFrameActionPerformed
 
+    private void jmiTestTablePanelActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jmiTestTablePanelActionPerformed
+        try 
+        {
+           System.out.println("Made it to test2");
+           Statement stTest = dbConnection.createStatement();
+           String strQuery = "Select * from AttendanceCode";
+            
+           strQuery = (String) JOptionPane.showInputDialog(this, "Enter a query", strQuery);
+           ResultSet rsAttendance = stTest.executeQuery(strQuery);
+           
+           
+           int[] arrColsToHide = {0,5,6};
+           jpTableDisplay jpDisplay = new jpTableDisplay(rsAttendance,1, arrColsToHide);    
+            
+            jpDisplay.setPreferredSize(new Dimension(900, 900));
+           CreateFrame(jpDisplay, strQuery);
+        } catch (SQLException ex) {
+            Logger.getLogger(jfMain.class.getName()).log(Level.SEVERE, null, ex);
+        }
+            
+        
+    }//GEN-LAST:event_jmiTestTablePanelActionPerformed
+
     private void CreateFrame()
     {
-          intWindowCounter++;
-        
-        JInternalFrame jifTemp = new JInternalFrame("New Frame " + intWindowCounter,true,true,true,true);
         
         JPanel jpTemp = new JPanel();
         jpTemp.setPreferredSize(new Dimension(200, 200));
-        jifTemp.add(jpTemp);
+       
+        CreateFrame(jpTemp,"");
+      
+      
+        
+    } // CreateFrame
+    
+    
+    private void CreateFrame(JPanel jpIn, String strIn)
+    {
+            intWindowCounter++;
+        
+        JInternalFrame jifTemp = new JInternalFrame("New Frame " 
+                + intWindowCounter + " - " + strIn,true,true,true,true);
+        
+        jifTemp.add(jpIn);
         jifTemp.pack();
         
         jdpMain.add(jifTemp);
         jifTemp.setVisible(true);
        
-      
-        
-    } // CreateFrame
-    
+    }
     
     /**
      * @param args the command line arguments
@@ -265,6 +342,8 @@ public class jfMain extends JFrame {
     private javax.swing.JMenu jmWindows;
     private javax.swing.JMenuBar jmbMain;
     private javax.swing.JMenuItem jmiAddFrame;
+    private javax.swing.JMenuItem jmiOpenDB;
+    private javax.swing.JMenuItem jmiTestTablePanel;
     private javax.swing.JMenuItem jmiTile;
     private javax.swing.JToolBar jtbMain;
     // End of variables declaration//GEN-END:variables
