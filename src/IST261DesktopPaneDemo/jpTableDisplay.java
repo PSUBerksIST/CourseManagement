@@ -10,6 +10,7 @@ import java.sql.ResultSet;
 import javax.swing.table.TableColumn;
 import javax.swing.table.TableModel;
 // Downloaded from http://www.4shared.com/file/69Se66yD/rs2xml.html
+// or for IST261, download from ANGEL
 import net.proteanit.sql.DbUtils;
 
 /**
@@ -49,19 +50,10 @@ public class jpTableDisplay extends javax.swing.JPanel {
         
         //TODO 
         //TODO set columns to appropriate width
-        //TODO set jScrollPane1 and jtDisplayTable width to entire jPanel
-        
-        
-       // None of these worked
-        
-      //  int intHeight = this.getHeight();
-      //  int intWidth = this.getWidth();
-      //  Dimension dTemp = new Dimension(1500,1500);
-      //  jScrollPane1.setBounds(0, 0, intWidth, intHeight);
-      //  jScrollPane1.setPreferredSize(dTemp);
-      // jtDisplayTable.setPreferredScrollableViewportSize(jScrollPane1.getSize());
       
-      //  jtDisplayTable.setPreferredSize(new Dimension(intWidth, intHeight));
+        
+        
+      
        jtDisplayTable.setAutoCreateRowSorter(true);
         jScrollPane1.doLayout();
         jtDisplayTable.doLayout();
@@ -104,15 +96,15 @@ public class jpTableDisplay extends javax.swing.JPanel {
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 375, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(15, Short.MAX_VALUE))
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 375, Short.MAX_VALUE)
+                .addGap(15, 15, 15))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 275, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(14, Short.MAX_VALUE))
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 275, Short.MAX_VALUE)
+                .addGap(14, 14, 14))
         );
     }// </editor-fold>//GEN-END:initComponents
 

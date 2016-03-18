@@ -5,15 +5,11 @@
  */
 package IST261DesktopPaneDemo;
 
-import java.awt.Color;
 import java.awt.Dimension;
-import java.awt.Font;
-import java.awt.FontMetrics;
 import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
-import java.util.ArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.ButtonGroup;
@@ -22,15 +18,10 @@ import javax.swing.JInternalFrame;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JRadioButtonMenuItem;
-import javax.swing.JScrollPane;
-import javax.swing.JTable;
 import javax.swing.SwingUtilities;
 import javax.swing.UIManager;
 import javax.swing.UIManager.LookAndFeelInfo;
 import javax.swing.UnsupportedLookAndFeelException;
-import javax.swing.table.TableColumn;
-import javax.swing.table.TableModel;
-import net.proteanit.sql.DbUtils;
 
 /**
  *
@@ -258,7 +249,7 @@ public class jfMain extends JFrame {
            
            
            int[] arrColsToHide = {0,5,6};
-           jpTableDisplay jpDisplay = new jpTableDisplay(rsAttendance,1, arrColsToHide);    
+           jpTableDisplay jpDisplay = new jpTableDisplay(rsAttendance,0, arrColsToHide);    
             
             jpDisplay.setPreferredSize(new Dimension(900, 900));
            CreateFrame(jpDisplay, strQuery);
