@@ -7,9 +7,9 @@ package IST261DesktopPaneDemo;
 
 import java.awt.Dimension;
 import java.sql.ResultSet;
-import javax.swing.JInternalFrame;
 import javax.swing.table.TableColumn;
 import javax.swing.table.TableModel;
+// Downloaded from http://www.4shared.com/file/69Se66yD/rs2xml.html
 import net.proteanit.sql.DbUtils;
 
 /**
