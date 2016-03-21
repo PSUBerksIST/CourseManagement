@@ -6,6 +6,7 @@
 package IST261DesktopPaneDemo;
 
 import java.awt.Dimension;
+import javax.swing.JDialog;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 
@@ -422,16 +423,16 @@ public class jpClass extends javax.swing.JPanel {
     }// </editor-fold>//GEN-END:initComponents
 
     private void jbAddClassActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jbAddClassActionPerformed
-//        JPanel AddClass = new jpAddClass();
-//        AddClass.setName("Add Class");
-//        CreateFrame(AddClass);        // TODO add your handling code here:
+        JPanel AddClass = new jpAddClass();
+        AddClass.setName("Add Class");
+        CreateFrame(AddClass);        // TODO add your handling code here:
     }//GEN-LAST:event_jbAddClassActionPerformed
 
     private void jbNewAssignmentActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jbNewAssignmentActionPerformed
 //        JPanel SelectAssignment = new jpSelectAssignment();
 //        SelectAssignment.setName("Select Assignment");
 //        CreateFrame(SelectAssignment);         
-        // TODO add your handling code here:
+//        // TODO add your handling code here:
     }//GEN-LAST:event_jbNewAssignmentActionPerformed
 
     private void jtfStudentIDActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jtfStudentIDActionPerformed
@@ -445,7 +446,26 @@ public class jpClass extends javax.swing.JPanel {
     private void jtfFirstNameActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jtfFirstNameActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_jtfFirstNameActionPerformed
+  private void CreateFrame(JPanel inPanel) {
+                //  intWindowCounter++;
+      JDialog jd = new JDialog();
+      jd.add(inPanel);
+      jd.pack();
+      jd.setModal(true);
+      jd.setVisible(true);
+      
 
+//        JFrame jifTemp = new JFrame(inPanel.getName());// +"" + intWindowCounter,true,true,true,true);
+//
+//        //JPanel jpTemp = new jpClass();
+//        inPanel.setPreferredSize(new Dimension(400, 400));
+//        jifTemp.add(inPanel);
+//        jifTemp.pack();
+//        //jdpMain.add(jifTemp);
+//        jifTemp.setVisible(true);
+
+        //throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+  }//CreateFrame
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JLabel jLabel1;
@@ -489,18 +509,5 @@ public class jpClass extends javax.swing.JPanel {
     private javax.swing.JTextField jtfPhoneNumber;
     private javax.swing.JTextField jtfStudentID;
     // End of variables declaration//GEN-END:variables
-//    private void CreateFrame(JPanel inPanel) {
-//                //  intWindowCounter++;
-//        
-//        JFrame jifTemp = new jfTempFrames(inPanel.getName());// +"" + intWindowCounter,true,true,true,true);
-//        
-//        //JPanel jpTemp = new jpClass();
-//        inPanel.setPreferredSize(new Dimension(400, 400));
-//        jifTemp.add(inPanel);
-//        jifTemp.pack();
-//        //jdpMain.add(jifTemp);
-//        jifTemp.setVisible(true);
-//        
-//        //throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-//    }//CreateFrame
+
 }
