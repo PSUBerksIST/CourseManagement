@@ -118,6 +118,9 @@ public class jfMain extends JFrame {
         jbAddFrame = new javax.swing.JButton();
         jbTile = new javax.swing.JButton(new TileAction(jdpMain));
         jbCourse = new javax.swing.JButton();
+        jbClass = new javax.swing.JButton();
+        jbAssignments = new javax.swing.JButton();
+        jbDocuments = new javax.swing.JButton();
         jmbMain = new javax.swing.JMenuBar();
         jmFile = new javax.swing.JMenu();
         jmiAddFrame = new javax.swing.JMenuItem();
@@ -166,6 +169,27 @@ public class jfMain extends JFrame {
         jbCourse.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jbCourseActionPerformed(evt);
+            }
+        });
+
+        jbClass.setText("Class");
+        jbClass.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jbClassActionPerformed(evt);
+            }
+        });
+
+        jbAssignments.setText("Assignments");
+        jbAssignments.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jbAssignmentsActionPerformed(evt);
+            }
+        });
+
+        jbDocuments.setText("Documents");
+        jbDocuments.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jbDocumentsActionPerformed(evt);
             }
         });
 
@@ -221,6 +245,12 @@ public class jfMain extends JFrame {
                         .addContainerGap())
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                         .addComponent(jbCourse)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addComponent(jbClass)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(jbAssignments)
+                        .addGap(18, 18, 18)
+                        .addComponent(jbDocuments)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addComponent(jtbMain, javax.swing.GroupLayout.PREFERRED_SIZE, 577, javax.swing.GroupLayout.PREFERRED_SIZE))))
         );
@@ -229,7 +259,11 @@ public class jfMain extends JFrame {
             .addGroup(layout.createSequentialGroup()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                     .addComponent(jtbMain, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jbCourse))
+                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                        .addComponent(jbCourse)
+                        .addComponent(jbClass)
+                        .addComponent(jbAssignments)
+                        .addComponent(jbDocuments)))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jdpMain)
                 .addGap(20, 20, 20))
@@ -279,6 +313,26 @@ public class jfMain extends JFrame {
         CreateFrame(Course,Course.getName());
         // TODO add your handling code here:
     }//GEN-LAST:event_jbCourseActionPerformed
+
+    private void jbClassActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jbClassActionPerformed
+        JPanel Class = new jpClass();
+        Class.setName("Class");
+        CreateFrame(Class,Class.getName());
+        // TODO add your handling code here:
+    }//GEN-LAST:event_jbClassActionPerformed
+
+    private void jbAssignmentsActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jbAssignmentsActionPerformed
+        JPanel Assignment = new jpAssignment();
+        Assignment.setName("Assignment");
+        CreateFrame(Assignment,Assignment.getName());
+        // TODO add your handling code here:
+    }//GEN-LAST:event_jbAssignmentsActionPerformed
+
+    private void jbDocumentsActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jbDocumentsActionPerformed
+        JPanel Document = new jpDocument();
+        Document.setName("Document");
+        CreateFrame(Document,Document.getName());        // TODO add your handling code here:
+    }//GEN-LAST:event_jbDocumentsActionPerformed
 
     private void CreateFrame()
     {
@@ -345,7 +399,10 @@ public class jfMain extends JFrame {
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton jbAddFrame;
+    private javax.swing.JButton jbAssignments;
+    private javax.swing.JButton jbClass;
     private javax.swing.JButton jbCourse;
+    private javax.swing.JButton jbDocuments;
     private javax.swing.JButton jbTile;
     private javax.swing.JDesktopPane jdpMain;
     private javax.swing.JMenu jmEdit;

@@ -97,6 +97,12 @@
                   </Group>
                   <Group type="102" alignment="1" attributes="0">
                       <Component id="jbCourse" min="-2" max="-2" attributes="0"/>
+                      <EmptySpace type="unrelated" max="-2" attributes="0"/>
+                      <Component id="jbClass" min="-2" max="-2" attributes="0"/>
+                      <EmptySpace max="-2" attributes="0"/>
+                      <Component id="jbAssignments" min="-2" max="-2" attributes="0"/>
+                      <EmptySpace type="separate" max="-2" attributes="0"/>
+                      <Component id="jbDocuments" min="-2" max="-2" attributes="0"/>
                       <EmptySpace max="32767" attributes="0"/>
                       <Component id="jtbMain" min="-2" pref="577" max="-2" attributes="0"/>
                   </Group>
@@ -109,7 +115,12 @@
           <Group type="102" attributes="0">
               <Group type="103" groupAlignment="1" attributes="0">
                   <Component id="jtbMain" min="-2" pref="25" max="-2" attributes="0"/>
-                  <Component id="jbCourse" min="-2" max="-2" attributes="0"/>
+                  <Group type="103" groupAlignment="3" attributes="0">
+                      <Component id="jbCourse" alignment="3" min="-2" max="-2" attributes="0"/>
+                      <Component id="jbClass" alignment="3" min="-2" max="-2" attributes="0"/>
+                      <Component id="jbAssignments" alignment="3" min="-2" max="-2" attributes="0"/>
+                      <Component id="jbDocuments" alignment="3" min="-2" max="-2" attributes="0"/>
+                  </Group>
               </Group>
               <EmptySpace max="-2" attributes="0"/>
               <Component id="jdpMain" max="32767" attributes="0"/>
@@ -177,6 +188,30 @@
       </Properties>
       <Events>
         <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="jbCourseActionPerformed"/>
+      </Events>
+    </Component>
+    <Component class="javax.swing.JButton" name="jbClass">
+      <Properties>
+        <Property name="text" type="java.lang.String" value="Class"/>
+      </Properties>
+      <Events>
+        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="jbClassActionPerformed"/>
+      </Events>
+    </Component>
+    <Component class="javax.swing.JButton" name="jbAssignments">
+      <Properties>
+        <Property name="text" type="java.lang.String" value="Assignments"/>
+      </Properties>
+      <Events>
+        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="jbAssignmentsActionPerformed"/>
+      </Events>
+    </Component>
+    <Component class="javax.swing.JButton" name="jbDocuments">
+      <Properties>
+        <Property name="text" type="java.lang.String" value="Documents"/>
+      </Properties>
+      <Events>
+        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="jbDocumentsActionPerformed"/>
       </Events>
     </Component>
   </SubComponents>
