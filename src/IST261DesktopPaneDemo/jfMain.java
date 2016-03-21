@@ -288,6 +288,17 @@ public class jfMain extends JFrame {
         try 
         {
            System.out.println("Made it to test2");
+           
+           while (dbConnection == null)
+           {
+               JOptionPane.showMessageDialog(this, 
+                  "You must connect to a database!", 
+                  "No Database Connection", JOptionPane.ERROR_MESSAGE);
+               jmiOpenDB.doClick();
+           } // check for database connection
+           
+           JOptionPane.showMessageDialog(this, new jpSQLiteDBInfo(dbConnection));
+
            Statement stTest = dbConnection.createStatement();
            String strQuery = "Select * from AttendanceCode";
             
@@ -295,7 +306,7 @@ public class jfMain extends JFrame {
            ResultSet rsAttendance = stTest.executeQuery(strQuery);
            
            
-           int[] arrColsToHide = {0,5,6};
+           int[] arrColsToHide = {};
            jpTableDisplay jpDisplay = new jpTableDisplay(rsAttendance,0, arrColsToHide);    
             
             jpDisplay.setPreferredSize(new Dimension(900, 900));
