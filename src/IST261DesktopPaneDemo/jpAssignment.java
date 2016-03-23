@@ -5,13 +5,8 @@
  */
 package IST261DesktopPaneDemo;
 
-import java.awt.Dialog;
-import java.awt.Dimension;
-import javax.swing.JButton;
-import javax.swing.JDialog;
-import javax.swing.JFrame;
 import javax.swing.JPanel;
-
+import javax.swing.JDialog;
 /**
  *
  * @author Nathan
@@ -109,9 +104,11 @@ public class jpAssignment extends javax.swing.JPanel {
     }// </editor-fold>//GEN-END:initComponents
 
     private void jbAddAssignmentActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jbAddAssignmentActionPerformed
-//        JPanel AddAssignment = new jpAddAssignment();
-//        AddAssignment.setName("Add Assignment");
-//        CreateFrame(AddAssignment);
+        JDialog jdAddAssignment = new JDialog();
+        JPanel AddAssignment = new jpAddAssignment();
+        jdAddAssignment.add(AddAssignment);
+        jdAddAssignment.setSize(500, 400);
+        jdAddAssignment.setVisible(true);
         // TODO add your handling code here:
     }//GEN-LAST:event_jbAddAssignmentActionPerformed
 
