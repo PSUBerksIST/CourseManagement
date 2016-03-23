@@ -6,6 +6,7 @@
 package IST261DesktopPaneDemo;
 
 import java.awt.Dimension;
+import java.sql.Connection;
 import javax.swing.JDialog;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
@@ -19,6 +20,11 @@ public class jpClass extends javax.swing.JPanel {
     /**
      * Creates new form jpClass
      */
+    private Connection dbConnection;
+    public jpClass(Connection inConnection){
+        initComponents();
+        dbConnection = inConnection;
+    }
     public jpClass() {
         initComponents();
     }
@@ -423,7 +429,7 @@ public class jpClass extends javax.swing.JPanel {
     }// </editor-fold>//GEN-END:initComponents
 
     private void jbAddClassActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jbAddClassActionPerformed
-        JPanel AddClass = new jpAddClass();
+        JPanel AddClass = new jpAddClass(dbConnection);
         AddClass.setName("Add Class");
         CreateFrame(AddClass);        // TODO add your handling code here:
     }//GEN-LAST:event_jbAddClassActionPerformed

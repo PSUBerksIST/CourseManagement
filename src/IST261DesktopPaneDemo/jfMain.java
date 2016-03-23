@@ -326,7 +326,7 @@ public class jfMain extends JFrame {
     }//GEN-LAST:event_jbCourseActionPerformed
 
     private void jbClassActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jbClassActionPerformed
-        JPanel Class = new jpClass();
+        JPanel Class = new jpClass(dbConnection);
         Class.setName("Class");
         CreateFrame(Class,Class.getName());
         // TODO add your handling code here:

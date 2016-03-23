@@ -5,6 +5,20 @@
  */
 package IST261DesktopPaneDemo;
 
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
+import java.sql.Time;
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import javax.swing.JComboBox;
+
 /**
  *
  * @author Nathan
@@ -14,8 +28,46 @@ public class jpAddClass extends javax.swing.JPanel {
     /**
      * Creates new form jpAddClass
      */
+    private Connection dbConnection;
+    private Statement st;
+    private PreparedStatement pst;
+    private String[] Times;
+//    private String strCourse;
+//    private String strCampus;
+//    private int intSection;
+//    private int intScheduleNumber;
+//    private String strAngeID;
+//    private String strAngelTitle;
+//    private String strnotes;
+//    private Time tMondayStart;
+//    private Time tTuesdayStart;
+//    private Time tWednesdayStart;
+//    private Time tThursdayStart;
+//    private Time tFridayStart;
+//    private Time tSaturdayStart;
+//    private Time tSundayStart;
+//    private Time tMondayEnd;
+//    private Time tTuesdayEnd;
+//    private Time tWednesdayEnd;
+//    private Time tThursdayEnd;
+//    private Time tFridayEnd;
+//    private Time tSaturdayEnd;
+//    private Time tSundayEnd;
+    
     public jpAddClass() {
+        initComponents(); 
+    }
+
+    jpAddClass(Connection inConnection) {
         initComponents();
+        setdbConnection(inConnection);
+        setjcbCourse();
+        setjcbCampus();
+        setStartFinish();
+        
+        
+        
+        //     throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
     /**
@@ -27,17 +79,55 @@ public class jpAddClass extends javax.swing.JPanel {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        jlClassName = new javax.swing.JLabel();
-        jtfClassName = new javax.swing.JTextField();
         jbAddClassFinish = new javax.swing.JButton();
         jlMeetingLocation = new javax.swing.JLabel();
         jtfMettingLocation = new javax.swing.JTextField();
         jlSection = new javax.swing.JLabel();
         jlScheduleNumber = new javax.swing.JLabel();
-        jTextField1 = new javax.swing.JTextField();
+        jtfSection = new javax.swing.JTextField();
         jlAngelID = new javax.swing.JLabel();
-
-        jlClassName.setText("Class Name");
+        jlAngelTitle = new javax.swing.JLabel();
+        jtfScheduleNumber = new javax.swing.JTextField();
+        jtfAngelID = new javax.swing.JTextField();
+        jtfAngelTitle = new javax.swing.JTextField();
+        jlCourse = new javax.swing.JLabel();
+        jcbCourse = new javax.swing.JComboBox();
+        jchbMonday = new javax.swing.JCheckBox();
+        jchbTuesday = new javax.swing.JCheckBox();
+        jchbWednesday = new javax.swing.JCheckBox();
+        jchbThursday = new javax.swing.JCheckBox();
+        jchbFriday = new javax.swing.JCheckBox();
+        jchbSaturday = new javax.swing.JCheckBox();
+        jchbSunday = new javax.swing.JCheckBox();
+        jlMeetingDays = new javax.swing.JLabel();
+        jlStartTime = new javax.swing.JLabel();
+        jlEndTime = new javax.swing.JLabel();
+        jcbMondayStart = new javax.swing.JComboBox();
+        jcbMondayEnd = new javax.swing.JComboBox();
+        jlMondayTo = new javax.swing.JLabel();
+        jcbTuesdayStart = new javax.swing.JComboBox();
+        jcbWednesdayStart = new javax.swing.JComboBox();
+        jcbThursdayStart = new javax.swing.JComboBox();
+        jcbFridayStart = new javax.swing.JComboBox();
+        jcbSaturdayStart = new javax.swing.JComboBox();
+        jcbSundayStart = new javax.swing.JComboBox();
+        jcbTuesdayEnd = new javax.swing.JComboBox();
+        jcbWednesdayEnd = new javax.swing.JComboBox();
+        jcbThursdayEnd = new javax.swing.JComboBox();
+        jcbFridayEnd = new javax.swing.JComboBox();
+        jcbSaturdayEnd = new javax.swing.JComboBox();
+        jcbSundayEnd = new javax.swing.JComboBox();
+        jlTuesdayTo = new javax.swing.JLabel();
+        jlWednesdayTo = new javax.swing.JLabel();
+        jlThursdayTo = new javax.swing.JLabel();
+        jlFridayTo = new javax.swing.JLabel();
+        jlSaturdayTo = new javax.swing.JLabel();
+        jlSundayTo = new javax.swing.JLabel();
+        jlNotes = new javax.swing.JLabel();
+        jScrollPane1 = new javax.swing.JScrollPane();
+        jtaNotes = new javax.swing.JTextArea();
+        jlCampus = new javax.swing.JLabel();
+        jcbCampus = new javax.swing.JComboBox();
 
         jbAddClassFinish.setText("Finish");
         jbAddClassFinish.addActionListener(new java.awt.event.ActionListener() {
@@ -52,69 +142,640 @@ public class jpAddClass extends javax.swing.JPanel {
 
         jlScheduleNumber.setText("Schedule Number");
 
-        jTextField1.setText("jTextField1");
-
         jlAngelID.setText("ANGEL ID");
+
+        jlAngelTitle.setText("ANGLE Title");
+
+        jlCourse.setText("Course");
+
+        jcbCourse.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
+
+        jchbMonday.setText("Monday");
+        jchbMonday.addChangeListener(new javax.swing.event.ChangeListener() {
+            public void stateChanged(javax.swing.event.ChangeEvent evt) {
+                jchbMondayStateChanged(evt);
+            }
+        });
+
+        jchbTuesday.setText("Tuesday");
+        jchbTuesday.addChangeListener(new javax.swing.event.ChangeListener() {
+            public void stateChanged(javax.swing.event.ChangeEvent evt) {
+                jchbTuesdayStateChanged(evt);
+            }
+        });
+
+        jchbWednesday.setText("Wednesday");
+        jchbWednesday.addChangeListener(new javax.swing.event.ChangeListener() {
+            public void stateChanged(javax.swing.event.ChangeEvent evt) {
+                jchbWednesdayStateChanged(evt);
+            }
+        });
+
+        jchbThursday.setText("Thursday");
+        jchbThursday.addChangeListener(new javax.swing.event.ChangeListener() {
+            public void stateChanged(javax.swing.event.ChangeEvent evt) {
+                jchbThursdayStateChanged(evt);
+            }
+        });
+
+        jchbFriday.setText("Friday");
+        jchbFriday.addChangeListener(new javax.swing.event.ChangeListener() {
+            public void stateChanged(javax.swing.event.ChangeEvent evt) {
+                jchbFridayStateChanged(evt);
+            }
+        });
+
+        jchbSaturday.setText("Saturday");
+        jchbSaturday.addChangeListener(new javax.swing.event.ChangeListener() {
+            public void stateChanged(javax.swing.event.ChangeEvent evt) {
+                jchbSaturdayStateChanged(evt);
+            }
+        });
+
+        jchbSunday.setText("Sunday");
+        jchbSunday.addChangeListener(new javax.swing.event.ChangeListener() {
+            public void stateChanged(javax.swing.event.ChangeEvent evt) {
+                jchbSundayStateChanged(evt);
+            }
+        });
+
+        jlMeetingDays.setText("Meeting Days");
+
+        jlStartTime.setText("Start");
+
+        jlEndTime.setText("End");
+
+        jcbMondayStart.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
+        jcbMondayStart.setEnabled(false);
+
+        jcbMondayEnd.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
+        jcbMondayEnd.setEnabled(false);
+
+        jlMondayTo.setText("to");
+
+        jcbTuesdayStart.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
+        jcbTuesdayStart.setEnabled(false);
+
+        jcbWednesdayStart.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
+        jcbWednesdayStart.setEnabled(false);
+
+        jcbThursdayStart.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
+        jcbThursdayStart.setEnabled(false);
+
+        jcbFridayStart.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
+        jcbFridayStart.setEnabled(false);
+
+        jcbSaturdayStart.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
+        jcbSaturdayStart.setEnabled(false);
+
+        jcbSundayStart.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
+        jcbSundayStart.setEnabled(false);
+
+        jcbTuesdayEnd.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
+        jcbTuesdayEnd.setEnabled(false);
+
+        jcbWednesdayEnd.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
+        jcbWednesdayEnd.setEnabled(false);
+
+        jcbThursdayEnd.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
+        jcbThursdayEnd.setEnabled(false);
+
+        jcbFridayEnd.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
+        jcbFridayEnd.setEnabled(false);
+
+        jcbSaturdayEnd.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
+        jcbSaturdayEnd.setEnabled(false);
+
+        jcbSundayEnd.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
+        jcbSundayEnd.setEnabled(false);
+
+        jlTuesdayTo.setText("to");
+
+        jlWednesdayTo.setText("to");
+
+        jlThursdayTo.setText("to");
+
+        jlFridayTo.setText("to");
+
+        jlSaturdayTo.setText("to");
+
+        jlSundayTo.setText("to");
+
+        jlNotes.setText("Notes");
+
+        jtaNotes.setColumns(20);
+        jtaNotes.setRows(5);
+        jScrollPane1.setViewportView(jtaNotes);
+
+        jlCampus.setText("Campus");
+
+        jcbCampus.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addGap(49, 49, 49)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addComponent(jlAngelID)
-                    .addComponent(jlSection)
-                    .addComponent(jlMeetingLocation)
-                    .addComponent(jlClassName)
-                    .addComponent(jlScheduleNumber))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jbAddClassFinish)
-                    .addComponent(jtfClassName, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jtfMettingLocation, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addContainerGap(164, Short.MAX_VALUE))
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(38, 38, 38)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                            .addComponent(jlCourse)
+                            .addComponent(jlCampus)
+                            .addComponent(jlMeetingLocation)
+                            .addComponent(jlSection)))
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                        .addContainerGap()
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jlScheduleNumber, javax.swing.GroupLayout.Alignment.TRAILING)
+                            .addComponent(jlAngelID, javax.swing.GroupLayout.Alignment.TRAILING)
+                            .addComponent(jlAngelTitle, javax.swing.GroupLayout.Alignment.TRAILING)
+                            .addComponent(jlNotes, javax.swing.GroupLayout.Alignment.TRAILING))))
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(layout.createSequentialGroup()
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(layout.createSequentialGroup()
+                                .addComponent(jbAddClassFinish)
+                                .addGap(0, 0, Short.MAX_VALUE))
+                            .addGroup(layout.createSequentialGroup()
+                                .addComponent(jScrollPane1)
+                                .addGap(102, 102, 102))))
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(4, 4, 4)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jcbCampus, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jcbCourse, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jtfMettingLocation, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jtfSection, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jtfScheduleNumber, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jtfAngelID, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jtfAngelTitle, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 93, Short.MAX_VALUE)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jlMeetingDays)
+                            .addComponent(jchbMonday)
+                            .addComponent(jchbTuesday)
+                            .addComponent(jchbWednesday)
+                            .addComponent(jchbThursday)
+                            .addComponent(jchbFriday)
+                            .addComponent(jchbSaturday)
+                            .addComponent(jchbSunday))
+                        .addGap(12, 12, 12)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(layout.createSequentialGroup()
+                                .addComponent(jcbSundayStart, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGap(18, 18, 18)
+                                .addComponent(jcbSundayEnd, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addGroup(layout.createSequentialGroup()
+                                .addComponent(jcbSaturdayStart, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGap(18, 18, 18)
+                                .addComponent(jcbSaturdayEnd, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addGroup(layout.createSequentialGroup()
+                                .addComponent(jcbFridayStart, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGap(18, 18, 18)
+                                .addComponent(jcbFridayEnd, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addGroup(layout.createSequentialGroup()
+                                .addComponent(jcbThursdayStart, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGap(18, 18, 18)
+                                .addComponent(jcbThursdayEnd, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addGroup(layout.createSequentialGroup()
+                                .addComponent(jcbWednesdayStart, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGap(18, 18, 18)
+                                .addComponent(jcbWednesdayEnd, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addGroup(layout.createSequentialGroup()
+                                .addComponent(jcbTuesdayStart, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGap(18, 18, 18)
+                                .addComponent(jcbTuesdayEnd, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addGroup(layout.createSequentialGroup()
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(jlStartTime)
+                                    .addGroup(layout.createSequentialGroup()
+                                        .addComponent(jcbMondayStart, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                            .addComponent(jlTuesdayTo)
+                                            .addComponent(jlMondayTo)
+                                            .addComponent(jlWednesdayTo)
+                                            .addComponent(jlThursdayTo)
+                                            .addComponent(jlFridayTo)
+                                            .addComponent(jlSaturdayTo)
+                                            .addComponent(jlSundayTo))))
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(jcbMondayEnd, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addComponent(jlEndTime))))
+                        .addGap(40, 40, 40))))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addGap(47, 47, 47)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jlClassName)
-                    .addComponent(jtfClassName, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jlMeetingLocation)
-                    .addComponent(jtfMettingLocation, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jlSection)
-                    .addComponent(jTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jlScheduleNumber)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jlAngelID)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 118, Short.MAX_VALUE)
+                .addGap(50, 50, 50)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addGroup(layout.createSequentialGroup()
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(jlMeetingDays)
+                            .addComponent(jlStartTime)
+                            .addComponent(jlEndTime))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(jchbMonday)
+                            .addComponent(jcbMondayStart, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jcbMondayEnd, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jlMondayTo))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(jchbTuesday)
+                            .addComponent(jcbTuesdayStart, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jcbTuesdayEnd, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jlTuesdayTo))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(jchbWednesday)
+                            .addComponent(jcbWednesdayStart, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jcbWednesdayEnd, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jlWednesdayTo))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(jchbThursday)
+                            .addComponent(jcbThursdayStart, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jcbThursdayEnd, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jlThursdayTo))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(jchbFriday)
+                            .addComponent(jcbFridayStart, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jcbFridayEnd, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jlFridayTo))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(jchbSaturday)
+                            .addComponent(jcbSaturdayStart, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jcbSaturdayEnd, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jlSaturdayTo))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(jchbSunday)
+                            .addComponent(jcbSundayStart, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jcbSundayEnd, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jlSundayTo)))
+                    .addGroup(layout.createSequentialGroup()
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(jlCourse)
+                            .addComponent(jcbCourse, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(jlCampus)
+                            .addComponent(jcbCampus, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(jtfMettingLocation, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jlMeetingLocation))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(jlSection)
+                            .addComponent(jtfSection, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(jlScheduleNumber)
+                            .addComponent(jtfScheduleNumber, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(jlAngelID)
+                            .addComponent(jtfAngelID, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(jlAngelTitle)
+                            .addComponent(jtfAngelTitle, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(jlNotes)))
+                .addGap(12, 12, 12)
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 89, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(jbAddClassFinish))
         );
     }// </editor-fold>//GEN-END:initComponents
+    private void setdbConnection(Connection inConnection){
+        dbConnection = inConnection;
+        try {
+             
+            st = dbConnection.createStatement();
+            
+ 
+        } catch (SQLException ex) {
+            System.out.println(ex);
+        }
+    }
+ 
+    private void setjcbCourse(){
+        jcbCourse.removeAllItems();
+        jcbCourse.addItem("Please Select...");
+ 
+        try {
+             
+            ResultSet rs = st.executeQuery("select Number from Course order by Number asc");
 
+            while (rs.next()) {
+                jcbCourse.addItem(//rs.getString("IST") + " " + 
+                        rs.getString("Number"));
+            }
+        } catch (SQLException sqle) {
+            System.out.println(sqle);
+        }
+    }
+    private void setjcbCampus(){
+        jcbCampus.removeAllItems();
+        jcbCampus.addItem("Please Select...");
+ 
+        try {
+             
+            ResultSet rs = st.executeQuery("select CampusName from Campus order by CampusName asc");
+
+            while (rs.next()) {
+                jcbCampus.addItem(//rs.getString("IST") + " " + 
+                        rs.getString("CampusName"));
+            }
+        } catch (SQLException sqle) {
+            System.out.println(sqle);
+        }
+    }
+    
+    private void setStartFinish(){
+        Times = new String [] 
+        {
+            "8:00:00","8:05am","8:10am","8:15am","8:20am","8:25am","8:30am","8:35am","8:40am","8:45am","8:50am","8:55am",
+            "9:00am","9:05am","9:10am","9:15am","9:20am","9:25am","9:30am","9:35am","9:40am","9:45am","9:50am","9:55am",
+            "10:00am","10:05am","10:10am","10:15am","10:20am","10:25am","10:30am","10:35am","10:40am","10:45am","10:50am","10:55am",
+            "11:00am","11:05am","11:10am","11:15am","11:20am","11:25am","11:30am","11:35am","11:40am","11:45am","11:50am","11:55am",
+            "12:00pm","12:05pm","12:10pm","12:15pm","12:20pm","12:25pm","12:30pm","12:35pm","12:40pm","12:45pm","12:50pm","12:55pm",
+            "1:00pm","1:05pm","1:10pm","1:15pm","1:20pm","1:25pm","1:30pm","1:35pm","1:40pm","1:45pm","1:50pm","1:55pm",
+            "2:00pm","2:05pm","2:10pm","2:15pm","2:20pm","2:25pm","2:30pm","2:35pm","2:40pm","2:45pm","2:50pm","2:55pm",
+            "3:00pm","3:05pm","3:10pm","3:15pm","3:20pm","3:25pm","3:30pm","3:35pm","3:40pm","3:45pm","3:50pm","3:55pm",
+            "4:00pm","4:05pm","4:10pm","4:15pm","4:20pm","4:25pm","4:30pm","4:35pm","4:40pm","4:45pm","4:50pm","4:55pm",
+            "5:00pm","5:05pm","5:10pm","5:15pm","5:20pm","5:25pm","5:30pm","5:35pm","5:40pm","5:45pm","5:50pm","5:55pm",
+            "6:00pm","6:05pm","6:10pm","6:15pm","6:20pm","6:25pm","6:30pm","6:35pm","6:40pm","6:45pm","6:50pm","6:55pm",
+            "7:00pm","7:05pm","7:10pm","7:15pm","7:20pm","7:25pm","7:30pm","7:35pm","7:40pm","7:45pm","7:50pm","7:55pm",
+            "8:00pm","8:05pm","8:10pm","8:15pm","8:20pm","8:25pm","8:30pm","8:35pm","8:40pm","8:45pm","8:50pm","8:55pm",
+            "9:00pm","9:05pm","9:10pm","9:15pm","9:20pm","9:25pm","9:30pm","9:35pm","9:40pm","9:45pm","9:50pm","9:55pm",
+            "10:00pm","10:05pm","10:10pm","10:15pm","10:20pm","10:25pm","10:30pm","10:35pm","10:40pm","10:45pm","10:50pm","10:55pm",
+        };
+        jcbMondayStart.removeAllItems();
+        jcbTuesdayStart.removeAllItems();
+        jcbWednesdayStart.removeAllItems();
+        jcbThursdayStart.removeAllItems();
+        jcbFridayStart.removeAllItems();
+        jcbSaturdayStart.removeAllItems();
+        jcbSundayStart.removeAllItems();
+        jcbMondayEnd.removeAllItems();
+        jcbTuesdayEnd.removeAllItems();
+        jcbWednesdayEnd.removeAllItems();
+        jcbThursdayEnd.removeAllItems();
+        jcbFridayEnd.removeAllItems();
+        jcbSaturdayEnd.removeAllItems();
+        jcbSundayEnd.removeAllItems();
+        for (int i=0;i<Times.length;i++){
+            jcbMondayStart.addItem(Times[i]);
+            jcbTuesdayStart.addItem(Times[i]);
+            jcbWednesdayStart.addItem(Times[i]);
+            jcbThursdayStart.addItem(Times[i]);
+            jcbFridayStart.addItem(Times[i]);
+            jcbSaturdayStart.addItem(Times[i]);
+            jcbSundayStart.addItem(Times[i]);
+            jcbMondayEnd.addItem(Times[i]);
+            jcbTuesdayEnd.addItem(Times[i]);
+            jcbWednesdayEnd.addItem(Times[i]);
+            jcbThursdayEnd.addItem(Times[i]);
+            jcbFridayEnd.addItem(Times[i]);
+            jcbSaturdayEnd.addItem(Times[i]);
+            jcbSundayEnd.addItem(Times[i]);
+        }
+    }
+    private int getCourse(int inCourse){
+        ResultSet rs;
+        int intCourseID = 0;
+        try {
+            rs = st.executeQuery("select ID from Course where Number = "+inCourse);
+            while (rs.next()) {
+                intCourseID = rs.getInt("ID");
+            }
+        } catch (SQLException ex) {
+            Logger.getLogger(jpAddClass.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return intCourseID;
+    }
+    private int getCampus(String inCampus){
+        ResultSet rs;
+        int intCampusID = 0;
+        System.out.println(inCampus);
+        try {
+            rs = st.executeQuery("select ID from Campus where CampusName = '"+inCampus+"'");
+            while (rs.next()) {
+                intCampusID = rs.getInt("ID");
+            }
+        } catch (SQLException ex) {
+            Logger.getLogger(jpAddClass.class.getName()).log(Level.SEVERE, null, ex);
+            System.out.println("");
+        }
+        return intCampusID;
+    }
     private void jbAddClassFinishActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jbAddClassFinishActionPerformed
+        InsertToTable(getCourse(Integer.parseInt(jcbCourse.getSelectedItem()+"")), getCampus(jcbCampus.getSelectedItem()+""), jtfMettingLocation.getText(),Integer.parseInt(jtfSection.getText()),
+                     Integer.parseInt(jtfScheduleNumber.getText()),jtfAngelID.getText(),jtfAngelTitle.getText(),ConvertTime(jcbMondayStart.getSelectedItem()+""),
+                     ConvertTime(jcbMondayEnd.getSelectedItem()+""),ConvertTime(jcbTuesdayStart.getSelectedItem()+""),ConvertTime(jcbTuesdayEnd.getSelectedItem()+""),ConvertTime(jcbWednesdayStart.getSelectedItem()+""),
+                     ConvertTime(jcbWednesdayEnd.getSelectedItem()+""),ConvertTime(jcbThursdayStart.getSelectedItem()+""),ConvertTime(jcbThursdayEnd.getSelectedItem()+""),ConvertTime(jcbFridayStart.getSelectedItem()+""),
+                     ConvertTime(jcbFridayEnd.getSelectedItem()+""),ConvertTime(jcbSaturdayStart.getSelectedItem()+""),ConvertTime(jcbSaturdayEnd.getSelectedItem()+""),ConvertTime(jcbSundayStart.getSelectedItem()+""),
+                     ConvertTime(jcbSundayEnd.getSelectedItem()+""),jtaNotes.getText());
         this.getTopLevelAncestor().setVisible(false);
         // TODO add your handling code here:
     }//GEN-LAST:event_jbAddClassFinishActionPerformed
+    private Time ConvertTime(String instrTime) {
+        System.out.println("instrTime = " + instrTime);
+        DateFormat formatter = new SimpleDateFormat("hh:mma");
+        Time TimeValue = null;
+        if (instrTime=="0"){
+            return null;
+        }
+        
+        
+            Time.valueOf(instrTime);
+            TimeValue = Time.valueOf(instrTime);
+            System.out.println("TimeValue = " + TimeValue);
+        
+        return TimeValue;
+    }
+    private void InsertToTable(int inCourse, int inCampus, String inMeetingLocation, int inSection,
+                               int inScheduleNumber, String inAngelID, String inAngelTitle, Time inMondayStart,
+                               Time inMondayEnd, Time inTuesdayStart, Time inTuesdayEnd, Time inWednesdayStart,
+                               Time inWednesdayEnd, Time inThursdayStart, Time inThursdayEnd, Time inFridayStart,
+                               Time inFridayEnd, Time inSaturdayStart, Time inSaturdayEnd, Time inSundayStart,
+                               Time inSundayEnd, String inNotes){
+        try {
+            String query = " INSERT INTO Class (FKCourse, FKCampus, MeetingLocation, Section, ScheduleNumber, ANGELID, ANGELTitle, tmMondayStart, tmMondayEnd, tmTuesdayStart, tmTuesdayEnd, tmWednesdayStart,tmWednesdayEnd, tmThursdayStart, tmFridayStart, tmFridayEnd, tmSaturdayStart, tmSaturdayEnd, tmSundayStart, tmSundayEnd, Notes, tmThursdayEnd)"
+        + " VALUES (?, ?, ?, ?, ?,?,?,?,?,?,?, ?, ?, ?, ?,?,?,?,?,?,?,?)";//22
+             pst = dbConnection.prepareStatement(query);
+             pst.setInt(1, inCourse);
+             pst.setInt(2, inCampus);
+             pst.setString(3, inMeetingLocation);
+             pst.setInt(4, inSection);
+             pst.setInt(5, inScheduleNumber);
+             pst.setString(6, inAngelID);
+             pst.setString(7, inAngelTitle);
+             pst.setTime(8, inMondayStart);
+             pst.setTime(9, inMondayEnd);
+             pst.setTime(10, inTuesdayStart);
+             pst.setTime(11, inTuesdayEnd);
+             pst.setTime(12, inWednesdayStart);
+             pst.setTime(13, inWednesdayEnd);
+             pst.setTime(14, inThursdayStart);
+             pst.setTime(22, inThursdayEnd);
+             pst.setTime(15, inFridayStart);
+             pst.setTime(16, inFridayEnd);
+             pst.setTime(17, inSaturdayStart);
+             pst.setTime(18, inSaturdayEnd);
+             pst.setTime(19, inSundayStart);
+             pst.setTime(20, inSundayEnd);
+             pst.setString(21, inNotes);
+             pst.execute();
+        } catch (SQLException ex) {
+            Logger.getLogger(jpAddClass.class.getName()).log(Level.SEVERE, null, ex);
+            System.out.println("Failed");
+        }
+        
+    }
+    private void jchbMondayStateChanged(javax.swing.event.ChangeEvent evt) {//GEN-FIRST:event_jchbMondayStateChanged
+        if(jchbMonday.isSelected()){
+            jcbMondayStart.setEnabled(true);
+            jcbMondayEnd.setEnabled(true);
+        }
+        else{
+            jcbMondayStart.setEnabled(false);
+            jcbMondayEnd.setEnabled(false);
+        }
+        // TODO add your handling code here:
+    }//GEN-LAST:event_jchbMondayStateChanged
+
+    private void jchbTuesdayStateChanged(javax.swing.event.ChangeEvent evt) {//GEN-FIRST:event_jchbTuesdayStateChanged
+        // TODO add your handling code here:
+        if(jchbTuesday.isSelected()){
+            jcbTuesdayStart.setEnabled(true);
+            jcbTuesdayEnd.setEnabled(true);
+        }
+        else{
+            jcbTuesdayStart.setEnabled(false);
+            jcbTuesdayEnd.setEnabled(false);
+        }
+    }//GEN-LAST:event_jchbTuesdayStateChanged
+
+    private void jchbSundayStateChanged(javax.swing.event.ChangeEvent evt) {//GEN-FIRST:event_jchbSundayStateChanged
+        // TODO add your handling code here:
+        if(jchbSunday.isSelected()){
+            jcbSundayStart.setEnabled(true);
+            jcbSundayEnd.setEnabled(true);
+        }
+        else{
+            jcbSundayStart.setEnabled(false);
+            jcbSundayEnd.setEnabled(false);
+        }
+    }//GEN-LAST:event_jchbSundayStateChanged
+
+    private void jchbSaturdayStateChanged(javax.swing.event.ChangeEvent evt) {//GEN-FIRST:event_jchbSaturdayStateChanged
+        // TODO add your handling code here:
+        if(jchbSaturday.isSelected()){
+            jcbSaturdayStart.setEnabled(true);
+            jcbSaturdayEnd.setEnabled(true);
+        }
+        else{
+            jcbSaturdayStart.setEnabled(false);
+            jcbSaturdayEnd.setEnabled(false);
+        }
+    }//GEN-LAST:event_jchbSaturdayStateChanged
+
+    private void jchbFridayStateChanged(javax.swing.event.ChangeEvent evt) {//GEN-FIRST:event_jchbFridayStateChanged
+        // TODO add your handling code here:
+        if(jchbFriday.isSelected()){
+            jcbFridayStart.setEnabled(true);
+            jcbFridayEnd.setEnabled(true);
+        }
+        else{
+            jcbFridayStart.setEnabled(false);
+            jcbFridayEnd.setEnabled(false);
+        }
+    }//GEN-LAST:event_jchbFridayStateChanged
+
+    private void jchbThursdayStateChanged(javax.swing.event.ChangeEvent evt) {//GEN-FIRST:event_jchbThursdayStateChanged
+        // TODO add your handling code here:
+        if(jchbThursday.isSelected()){
+            jcbThursdayStart.setEnabled(true);
+            jcbThursdayEnd.setEnabled(true);
+        }
+        else{
+            jcbThursdayStart.setEnabled(false);
+            jcbThursdayEnd.setEnabled(false);
+        }
+    }//GEN-LAST:event_jchbThursdayStateChanged
+
+    private void jchbWednesdayStateChanged(javax.swing.event.ChangeEvent evt) {//GEN-FIRST:event_jchbWednesdayStateChanged
+        // TODO add your handling code here:
+        if(jchbWednesday.isSelected()){
+            jcbWednesdayStart.setEnabled(true);
+            jcbWednesdayEnd.setEnabled(true);
+        }
+        else{
+            jcbWednesdayStart.setEnabled(false);
+            jcbWednesdayEnd.setEnabled(false);
+        }
+    }//GEN-LAST:event_jchbWednesdayStateChanged
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JTextField jTextField1;
+    private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JButton jbAddClassFinish;
+    private javax.swing.JComboBox jcbCampus;
+    private javax.swing.JComboBox jcbCourse;
+    private javax.swing.JComboBox jcbFridayEnd;
+    private javax.swing.JComboBox jcbFridayStart;
+    private javax.swing.JComboBox jcbMondayEnd;
+    private javax.swing.JComboBox jcbMondayStart;
+    private javax.swing.JComboBox jcbSaturdayEnd;
+    private javax.swing.JComboBox jcbSaturdayStart;
+    private javax.swing.JComboBox jcbSundayEnd;
+    private javax.swing.JComboBox jcbSundayStart;
+    private javax.swing.JComboBox jcbThursdayEnd;
+    private javax.swing.JComboBox jcbThursdayStart;
+    private javax.swing.JComboBox jcbTuesdayEnd;
+    private javax.swing.JComboBox jcbTuesdayStart;
+    private javax.swing.JComboBox jcbWednesdayEnd;
+    private javax.swing.JComboBox jcbWednesdayStart;
+    private javax.swing.JCheckBox jchbFriday;
+    private javax.swing.JCheckBox jchbMonday;
+    private javax.swing.JCheckBox jchbSaturday;
+    private javax.swing.JCheckBox jchbSunday;
+    private javax.swing.JCheckBox jchbThursday;
+    private javax.swing.JCheckBox jchbTuesday;
+    private javax.swing.JCheckBox jchbWednesday;
     private javax.swing.JLabel jlAngelID;
-    private javax.swing.JLabel jlClassName;
+    private javax.swing.JLabel jlAngelTitle;
+    private javax.swing.JLabel jlCampus;
+    private javax.swing.JLabel jlCourse;
+    private javax.swing.JLabel jlEndTime;
+    private javax.swing.JLabel jlFridayTo;
+    private javax.swing.JLabel jlMeetingDays;
     private javax.swing.JLabel jlMeetingLocation;
+    private javax.swing.JLabel jlMondayTo;
+    private javax.swing.JLabel jlNotes;
+    private javax.swing.JLabel jlSaturdayTo;
     private javax.swing.JLabel jlScheduleNumber;
     private javax.swing.JLabel jlSection;
-    private javax.swing.JTextField jtfClassName;
+    private javax.swing.JLabel jlStartTime;
+    private javax.swing.JLabel jlSundayTo;
+    private javax.swing.JLabel jlThursdayTo;
+    private javax.swing.JLabel jlTuesdayTo;
+    private javax.swing.JLabel jlWednesdayTo;
+    private javax.swing.JTextArea jtaNotes;
+    private javax.swing.JTextField jtfAngelID;
+    private javax.swing.JTextField jtfAngelTitle;
     private javax.swing.JTextField jtfMettingLocation;
+    private javax.swing.JTextField jtfScheduleNumber;
+    private javax.swing.JTextField jtfSection;
     // End of variables declaration//GEN-END:variables
 }
