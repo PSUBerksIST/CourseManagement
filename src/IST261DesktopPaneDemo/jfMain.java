@@ -10,6 +10,7 @@ import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.Properties;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.ButtonGroup;
@@ -23,6 +24,8 @@ import javax.swing.UIManager;
 import javax.swing.UIManager.LookAndFeelInfo;
 import javax.swing.UnsupportedLookAndFeelException;
 
+import java.util.prefs.*;
+
 /**
  *
  * @author whb108
@@ -30,6 +33,10 @@ import javax.swing.UnsupportedLookAndFeelException;
  * 
  * 
  ******************* MODIFICATION LOG *****************************************
+ * 
+ * 2016 March 26   - Added exit menu item, finalize().  Created Help menu,
+ *                   moved database info to help menu.- WHB 
+ * 2016 March 25   - Added user preferences. - WHB
  * 
  * 2016 February 06 - Added code to dynamically create look and feel menu to
  *                    implement dynamic setting of PLAF. - WHB
@@ -40,14 +47,23 @@ public class jfMain extends JFrame {
     int intWindowCounter = 0;
     ButtonGroup bgLAF = new ButtonGroup();
     
+    private boolean bDebugging = true;
     public Connection dbConnection;
     public DBConnection dbc;
+  //  private Preferences myPrefs;
+    private Properties myProps;
     /**
      * Creates new form jfMain
      */
     public jfMain() 
     {
+                myProps = new Properties();
         initComponents();
+        // Create the user preferences Object
+        
+       // myPrefs = Preferences.userNodeForPackage(this.getClass());
+    //    myPrefs = Preferences.userRoot();
+
         MakeLookAndFeelMenu();
         dbc = new DBConnection(this);
         setLocationByPlatform(true);
@@ -65,9 +81,23 @@ public class jfMain extends JFrame {
                   System.exit(0);
             }
         });
-
+jmiLoadUserOptions.doClick();
+        jmiOpenDB.doClick();
     } // no argument constructor
 
+public void finalize()  
+{
+        try 
+        {
+            jmiSaveUserOptions.doClick();
+            dbConnection.close();
+        } 
+        catch (SQLException ex) 
+        {
+            Logger.getLogger(jfMain.class.getName()).log(Level.SEVERE, null, ex);
+        }
+}
+    
     public void MakeLookAndFeelMenu()
     {
          LookAndFeelInfo[] lfAll = UIManager.getInstalledLookAndFeels();
@@ -87,6 +117,7 @@ public class jfMain extends JFrame {
            jmiTemp.addActionListener((java.awt.event.ActionEvent evt) -> {
               try {
                  UIManager.setLookAndFeel(lfAll1.getClassName());
+                 myProps.setProperty(ApplicationConstants.LAF, lfAll1.getClassName());
                  SwingUtilities.updateComponentTreeUI(this);
                  jbTile.doClick();
          //        this.pack();
@@ -124,12 +155,19 @@ public class jfMain extends JFrame {
         jmbMain = new javax.swing.JMenuBar();
         jmFile = new javax.swing.JMenu();
         jmiAddFrame = new javax.swing.JMenuItem();
-        jmiOpenDB = new javax.swing.JMenuItem(new OpenDatabaseAction(this));
+        jmiOpenDB = new javax.swing.JMenuItem(new OpenDatabaseAction(this, myProps));
         jmiTestTablePanel = new javax.swing.JMenuItem();
+        jSeparator1 = new javax.swing.JPopupMenu.Separator();
+        jmiExit = new javax.swing.JMenuItem();
         jmEdit = new javax.swing.JMenu();
         jmWindows = new javax.swing.JMenu();
         jmiTile = new javax.swing.JMenuItem(new TileAction(jdpMain));
         jmLookAndFeel = new javax.swing.JMenu();
+        jmOptions = new javax.swing.JMenu();
+        jmiLoadUserOptions = new javax.swing.JMenuItem(new GetPropertiesAction(this,myProps));
+        jmiSaveUserOptions = new javax.swing.JMenuItem(new SavePreferencesAction(this, myProps));
+        jmHelp = new javax.swing.JMenu();
+        jmiDatabaseInformation = new javax.swing.JMenuItem();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -205,6 +243,11 @@ public class jfMain extends JFrame {
         jmFile.add(jmiAddFrame);
 
         jmiOpenDB.setText("Open Database");
+        jmiOpenDB.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jmiOpenDBActionPerformed(evt);
+            }
+        });
         jmFile.add(jmiOpenDB);
 
         jmiTestTablePanel.setText("JTable Test");
@@ -214,6 +257,15 @@ public class jfMain extends JFrame {
             }
         });
         jmFile.add(jmiTestTablePanel);
+        jmFile.add(jSeparator1);
+
+        jmiExit.setText("Exit");
+        jmiExit.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jmiExitActionPerformed(evt);
+            }
+        });
+        jmFile.add(jmiExit);
 
         jmbMain.add(jmFile);
 
@@ -230,6 +282,38 @@ public class jfMain extends JFrame {
 
         jmLookAndFeel.setText("Look And Feel");
         jmbMain.add(jmLookAndFeel);
+
+        jmOptions.setText("Options");
+
+        jmiLoadUserOptions.setText("Load Options");
+        jmiLoadUserOptions.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jmiLoadUserOptionsActionPerformed(evt);
+            }
+        });
+        jmOptions.add(jmiLoadUserOptions);
+
+        jmiSaveUserOptions.setText("Save Options");
+        jmiSaveUserOptions.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jmiSaveUserOptionsActionPerformed(evt);
+            }
+        });
+        jmOptions.add(jmiSaveUserOptions);
+
+        jmbMain.add(jmOptions);
+
+        jmHelp.setText("Help");
+
+        jmiDatabaseInformation.setText("DB Info");
+        jmiDatabaseInformation.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jmiDatabaseInformationActionPerformed(evt);
+            }
+        });
+        jmHelp.add(jmiDatabaseInformation);
+
+        jmbMain.add(jmHelp);
 
         setJMenuBar(jmbMain);
 
@@ -297,7 +381,7 @@ public class jfMain extends JFrame {
                jmiOpenDB.doClick();
            } // check for database connection
            
-           JOptionPane.showMessageDialog(this, new jpSQLiteDBInfo(dbConnection));
+
 
            Statement stTest = dbConnection.createStatement();
            String strQuery = "Select * from AttendanceCode";
@@ -345,6 +429,30 @@ public class jfMain extends JFrame {
         CreateFrame(Document,Document.getName());        // TODO add your handling code here:
     }//GEN-LAST:event_jbDocumentsActionPerformed
 
+    private void jmiSaveUserOptionsActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jmiSaveUserOptionsActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_jmiSaveUserOptionsActionPerformed
+
+    private void jmiOpenDBActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jmiOpenDBActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_jmiOpenDBActionPerformed
+
+    private void jmiLoadUserOptionsActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jmiLoadUserOptionsActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_jmiLoadUserOptionsActionPerformed
+
+    private void jmiDatabaseInformationActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jmiDatabaseInformationActionPerformed
+        // TODO add your handling code here:
+         JOptionPane.showMessageDialog(this, new jpSQLiteDBInfo(dbConnection),
+                   "Connection Information for " + myProps.getProperty(ApplicationConstants.LAST_DB),
+                   JOptionPane.INFORMATION_MESSAGE);
+    }//GEN-LAST:event_jmiDatabaseInformationActionPerformed
+
+    private void jmiExitActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jmiExitActionPerformed
+        // TODO add your handling code here:
+        System.exit(0);
+    }//GEN-LAST:event_jmiExitActionPerformed
+
     private void CreateFrame()
     {
         
@@ -377,6 +485,15 @@ public class jfMain extends JFrame {
      * @param args the command line arguments
      */
     public static void main(String args[]) {
+        
+        
+        if (args.length == 1)
+        {
+            String strUserPrefsLocation = args[0];
+            //TODO Open user preferences based on this
+            System.out.println("strUserPrefsLocation = " + strUserPrefsLocation);
+                 
+        }
         /* Set the Nimbus look and feel */
         //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
         /* If Nimbus (introduced in Java SE 6) is not available, stay with the default look and feel.
@@ -409,6 +526,7 @@ public class jfMain extends JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JPopupMenu.Separator jSeparator1;
     private javax.swing.JButton jbAddFrame;
     private javax.swing.JButton jbAssignments;
     private javax.swing.JButton jbClass;
@@ -418,11 +536,17 @@ public class jfMain extends JFrame {
     private javax.swing.JDesktopPane jdpMain;
     private javax.swing.JMenu jmEdit;
     private javax.swing.JMenu jmFile;
+    private javax.swing.JMenu jmHelp;
     private javax.swing.JMenu jmLookAndFeel;
+    private javax.swing.JMenu jmOptions;
     private javax.swing.JMenu jmWindows;
     private javax.swing.JMenuBar jmbMain;
     private javax.swing.JMenuItem jmiAddFrame;
+    private javax.swing.JMenuItem jmiDatabaseInformation;
+    private javax.swing.JMenuItem jmiExit;
+    private javax.swing.JMenuItem jmiLoadUserOptions;
     private javax.swing.JMenuItem jmiOpenDB;
+    private javax.swing.JMenuItem jmiSaveUserOptions;
     private javax.swing.JMenuItem jmiTestTablePanel;
     private javax.swing.JMenuItem jmiTile;
     private javax.swing.JToolBar jtbMain;

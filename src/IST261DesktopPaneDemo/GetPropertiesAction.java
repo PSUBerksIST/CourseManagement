@@ -1,14 +1,6 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
+
 package IST261DesktopPaneDemo;
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
+
 
 
 
@@ -18,34 +10,36 @@ package IST261DesktopPaneDemo;
  * 
  * @version 0.1
  * 
+
  * 
  ********************* MODIFICATION LOG ************************
  *
- * 2016 March 25    -  Added Preferences parameter to allow last used database
- *                     to be set and saved. - WHB
- * 
  * 2016 February 02 -  Initial program creation
 
  */
-
-import java.util.prefs.*;
+import java.awt.Dimension;
 import java.awt.event.ActionEvent;
+import java.beans.PropertyVetoException;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.IOException;
 import java.util.Properties;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.AbstractAction;
 import javax.swing.Action;
 import javax.swing.ImageIcon;
-import javax.swing.JOptionPane;
+import javax.swing.JFrame;
  
-public class OpenDatabaseAction extends AbstractAction {
+public class GetPropertiesAction extends AbstractAction {
      
     private jfMain jfApp; // the desktop to work with
-    Properties propUserProperties;
-     
-    public OpenDatabaseAction(jfMain jfIn, Properties propsIn) 
+    private Properties myProps; 
+    public GetPropertiesAction(jfMain jfIn, Properties propsIn) 
     {
-        super("Open Database");
+        super("Get Properties");
         jfApp = jfIn;
-        propUserProperties = propsIn;
+        myProps = propsIn;
         
          putValue( Action.SMALL_ICON, new ImageIcon(
             getClass().getResource( "../images/DatabaseAdd16.png" ) ) );
@@ -55,9 +49,9 @@ public class OpenDatabaseAction extends AbstractAction {
           
           putValue(Action.LONG_DESCRIPTION,"Tile the frames on the desktop");
           
-          putValue(Action.NAME, "Open DB");
+          putValue(Action.NAME, "Get Properties");
           
-          putValue(Action.SHORT_DESCRIPTION,"Open Database");
+          putValue(Action.SHORT_DESCRIPTION,"Get Properties From File");
           
         /*
         Possible properties for putValue(property, value)
@@ -87,12 +81,23 @@ public class OpenDatabaseAction extends AbstractAction {
       
         
         */
-    } // constructor
+    }
      
     
     public void actionPerformed(ActionEvent ev) 
     {
-        jfApp.dbConnection = jfApp.dbc.connectToDB(propUserProperties);
-                  
+
+        try {
+            String path = new File(".").getCanonicalPath();
+            String strFileName = path + "\\" + ApplicationConstants.PREFS_XML_FILE;
+
+            myProps.loadFromXML(new FileInputStream(strFileName));
+            
+            //TODO Apply each property
+        } catch (IOException ex) {
+            Logger.getLogger(GetPropertiesAction.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        
+        
     } // actionPerformed
 }

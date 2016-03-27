@@ -21,43 +21,46 @@ package IST261DesktopPaneDemo;
  * 
  ********************* MODIFICATION LOG ************************
  *
- * 2016 March 25    -  Added Preferences parameter to allow last used database
- *                     to be set and saved. - WHB
- * 
- * 2016 February 02 -  Initial program creation
+ * 2016 March 25 -  Initial Action creation
 
  */
-
-import java.util.prefs.*;
-import java.awt.event.ActionEvent;
 import java.util.Properties;
-import javax.swing.AbstractAction;
-import javax.swing.Action;
-import javax.swing.ImageIcon;
-import javax.swing.JOptionPane;
+import java.awt.event.ActionEvent;
+import java.beans.PropertyVetoException;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import javax.swing.*;
+//import javax.swing.Action;
+//import javax.swing.ImageIcon;
+//import javax.swing.JFrame;
  
-public class OpenDatabaseAction extends AbstractAction {
+public class SavePreferencesAction extends AbstractAction {
      
+    
     private jfMain jfApp; // the desktop to work with
-    Properties propUserProperties;
-     
-    public OpenDatabaseAction(jfMain jfIn, Properties propsIn) 
+    private Properties myProps;
+    
+    
+    public SavePreferencesAction(jfMain jfIn, Properties propsIn) 
     {
-        super("Open Database");
+        super("Save Properties");
         jfApp = jfIn;
-        propUserProperties = propsIn;
-        
+        myProps = propsIn;    
          putValue( Action.SMALL_ICON, new ImageIcon(
             getClass().getResource( "../images/DatabaseAdd16.png" ) ) );
          
           putValue( Action.LARGE_ICON_KEY, new ImageIcon(
             getClass().getResource( "../images/DatabaseAdd32.png" ) ) );
           
-          putValue(Action.LONG_DESCRIPTION,"Tile the frames on the desktop");
+          putValue(Action.LONG_DESCRIPTION,"Save the user's preferences to a file");
           
-          putValue(Action.NAME, "Open DB");
+          putValue(Action.NAME, "Save Preferences");
           
-          putValue(Action.SHORT_DESCRIPTION,"Open Database");
+          putValue(Action.SHORT_DESCRIPTION,"Save Preverences");
           
         /*
         Possible properties for putValue(property, value)
@@ -87,12 +90,37 @@ public class OpenDatabaseAction extends AbstractAction {
       
         
         */
-    } // constructor
+    }
      
-    
+ 
     public void actionPerformed(ActionEvent ev) 
     {
-        jfApp.dbConnection = jfApp.dbc.connectToDB(propUserProperties);
-                  
+       
+        String strFileName = myProps.getProperty(ApplicationConstants.PREFS_XML_FILE, "");
+        if (strFileName.length()== 0)
+        {
+           JFileChooser myJFC = new JFileChooser();
+           myJFC.setDialogTitle("Save Preferences");
+           if (myJFC.showSaveDialog(jfApp) == JFileChooser.APPROVE_OPTION)
+           {
+               try {
+                   strFileName  = myJFC.getSelectedFile().getCanonicalPath();
+               } catch (IOException ex) {
+                   Logger.getLogger(SavePreferencesAction.class.getName()).log(Level.SEVERE, null, ex);
+               }
+           } // file selected
+        } // if no file name was retrieved from preferences
+        try {
+            
+            myProps.storeToXML(new FileOutputStream(strFileName),"Test");
+        } catch (FileNotFoundException ex) {
+            Logger.getLogger(SavePreferencesAction.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (IOException ex) {
+            Logger.getLogger(SavePreferencesAction.class.getName()).log(Level.SEVERE, null, ex);
+        }
+       
+        
+        
+                
     } // actionPerformed
 }

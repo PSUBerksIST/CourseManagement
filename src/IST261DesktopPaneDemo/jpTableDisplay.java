@@ -7,6 +7,8 @@ package IST261DesktopPaneDemo;
 
 import java.awt.Dimension;
 import java.sql.ResultSet;
+import java.util.Vector;
+import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableColumn;
 import javax.swing.table.TableModel;
 // Downloaded from http://www.4shared.com/file/69Se66yD/rs2xml.html
@@ -21,13 +23,16 @@ import net.proteanit.sql.DbUtils;
 public class jpTableDisplay extends javax.swing.JPanel {
 
     int intKeyColumn;
+    ResultSet rsSource;
     /**
      * Creates new form jpTableDisplay
      */
     public jpTableDisplay(ResultSet rsIn, int intInKeyColumn, int[] arrHideCols) 
     {
         initComponents();
+        rsSource = rsIn;
         TableModel tmResults = DbUtils.resultSetToTableModel(rsIn);
+        
         jtDisplayTable.setModel(tmResults);
         intKeyColumn = intInKeyColumn;
         
@@ -59,7 +64,7 @@ public class jpTableDisplay extends javax.swing.JPanel {
        
        // jScrollPane1.setMaximumSize(new Dimension(500, 500));
         jScrollPane1.doLayout();
-        jtDisplayTable.doLayout();
+      jtDisplayTable.doLayout();
     }
 
     /**
@@ -73,6 +78,8 @@ public class jpTableDisplay extends javax.swing.JPanel {
 
         jScrollPane1 = new javax.swing.JScrollPane();
         jtDisplayTable = new javax.swing.JTable();
+        jToolBar1 = new javax.swing.JToolBar();
+        jbAddRow = new javax.swing.JButton();
 
         addComponentListener(new java.awt.event.ComponentAdapter() {
             public void componentResized(java.awt.event.ComponentEvent evt) {
@@ -94,21 +101,44 @@ public class jpTableDisplay extends javax.swing.JPanel {
         jtDisplayTable.setAutoResizeMode(javax.swing.JTable.AUTO_RESIZE_ALL_COLUMNS);
         jScrollPane1.setViewportView(jtDisplayTable);
 
+        jToolBar1.setRollover(true);
+
+        jbAddRow.setText("Add");
+        jbAddRow.setFocusable(false);
+        jbAddRow.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
+        jbAddRow.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
+        jbAddRow.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jbAddRowActionPerformed(evt);
+            }
+        });
+        jToolBar1.add(jbAddRow);
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 380, Short.MAX_VALUE)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addGap(26, 26, 26)
+                .addComponent(jToolBar1, javax.swing.GroupLayout.PREFERRED_SIZE, 457, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(26, Short.MAX_VALUE))
+            .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addGroup(layout.createSequentialGroup()
+                    .addContainerGap()
+                    .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 489, Short.MAX_VALUE)
+                    .addContainerGap()))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(layout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 278, Short.MAX_VALUE)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                .addContainerGap(381, Short.MAX_VALUE)
+                .addComponent(jToolBar1, javax.swing.GroupLayout.PREFERRED_SIZE, 45, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap())
+            .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addGroup(layout.createSequentialGroup()
+                    .addContainerGap()
+                    .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 333, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addContainerGap(93, Short.MAX_VALUE)))
         );
     }// </editor-fold>//GEN-END:initComponents
 
@@ -118,9 +148,43 @@ public class jpTableDisplay extends javax.swing.JPanel {
         System.out.println("panel resized");
     }//GEN-LAST:event_formComponentResized
 
+    private void jbAddRowActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jbAddRowActionPerformed
+     DefaultTableModel model = (DefaultTableModel) jtDisplayTable.getModel();
 
+    int intNumCols = model.getColumnCount();
+    
+    // Create a Vector of new, empty values corresponding to the table columns
+    Vector row = new Vector();
+    
+    for(int intLCV = 0; intLCV < intNumCols;intLCV++)
+    {
+    row.add("");
+    } // for
+    model.addRow(row);
+                                     
+    // TODO add your handling code here:
+    }//GEN-LAST:event_jbAddRowActionPerformed
+
+/* adding and saving a row
+    
+    private void jbCommitActionPerformed(java.awt.event.ActionEvent evt) {                                         
+        // TODO add column handling code
+    //    rsSource.moveToInsertRow();
+//        
+        // loop through all of the colums
+        /* using appropriate updates
+        result.updateString     (1, "Alex");
+result.updateInt        (2, 55);
+result.updateBigDecimal (3, new BigDecimal("0.1323");
+result.insertRow();
+        */
+                                            
+
+    
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JScrollPane jScrollPane1;
+    private javax.swing.JToolBar jToolBar1;
+    private javax.swing.JButton jbAddRow;
     private javax.swing.JTable jtDisplayTable;
     // End of variables declaration//GEN-END:variables
 }

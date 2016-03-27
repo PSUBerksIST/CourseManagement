@@ -14,6 +14,8 @@ import javax.swing.JDesktopPane;
 import javax.swing.JFileChooser;
 import javax.swing.filechooser.FileNameExtensionFilter;
 
+import java.util.Properties;
+
 
 /**
  *
@@ -50,7 +52,7 @@ public class DBConnection {
         
     }
     
-    public Connection connectToDB(String strDBName)
+    public Connection connectToDB(String strDBName, Properties propsIn)
     {
     
         Connection c = null;
@@ -58,6 +60,7 @@ public class DBConnection {
     try {
       Class.forName(strDBClass);
       c = DriverManager.getConnection(strJDBCString + strDBName);
+      propsIn.setProperty(ApplicationConstants.LAST_DB, strDBName);
       return c;
     } catch ( Exception e ) {
       System.err.println( e.getClass().getName() + ": " + e.getMessage() );
@@ -66,9 +69,15 @@ public class DBConnection {
     }
     } // connectToDB
 
-        public Connection connectToDB()
+        public Connection connectToDB(Properties propsIn)
     {
         JFileChooser myFC = new JFileChooser();
+        String strInFile = propsIn.getProperty(ApplicationConstants.LAST_DB,"");
+        
+        if (strInFile.length() == 0)
+        {
+            
+        
          File file = new File("F:\\NetBeansProjects\\IST261DesktopPaneDemo\\src\\IST261DesktopPaneDemo\\CourseManagement3.db3");
         myFC.setCurrentDirectory(file);
         FileNameExtensionFilter filter = new FileNameExtensionFilter("SQLite DB", "sqlite", "db", "db2", "db3");
@@ -79,17 +88,22 @@ public class DBConnection {
        if (myFC.showOpenDialog(jfApp) == JFileChooser.APPROVE_OPTION)
           {
              File fileSelected = myFC.getSelectedFile();
-             String strInFile = fileSelected.getPath();
-               Connection cn =  connectToDB(strInFile);
-               System.out.println("Connected");
-               System.out.println(getDBInfo(cn));
-               return cn;
+             strInFile = fileSelected.getPath();
+             
           } // user chooses a file
      
         else
        {
            return null;
-       } // else
+       } // else canceled from file selection
+        } // if file name is empty
+       
+             Connection cn =  connectToDB(strInFile, propsIn);
+               System.out.println("Connected");
+               System.out.println(getDBInfo(cn));
+               return cn;
+               
+              
     } // connectToDB
 
     public void printRSMetaData(ResultSet rsIn) throws SQLException
@@ -272,7 +286,8 @@ public class DBConnection {
     
     public static void main( String args[] )
   {
-    String strDBName = "CourseManagement3.db3";
+/*
+      String strDBName = "CourseManagement3.db3";
     DBConnection myDBC = new DBConnection();
     Connection cnMyC = myDBC.connectToDB(strDBName);
     if (cnMyC != null)
@@ -301,5 +316,7 @@ public class DBConnection {
         } catch (SQLException ex) {
             Logger.getLogger(DBConnection.class.getName()).log(Level.SEVERE, null, ex);
         }
-    }  } // main
+    }
+        */
+        } // main
 } // DBConnection class
