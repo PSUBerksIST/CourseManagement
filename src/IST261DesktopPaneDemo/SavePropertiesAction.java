@@ -38,14 +38,14 @@ import javax.swing.*;
 //import javax.swing.ImageIcon;
 //import javax.swing.JFrame;
  
-public class SavePreferencesAction extends AbstractAction {
+public class SavePropertiesAction extends AbstractAction {
      
     
     private jfMain jfApp; // the desktop to work with
     private Properties myProps;
     
     
-    public SavePreferencesAction(jfMain jfIn, Properties propsIn) 
+    public SavePropertiesAction(jfMain jfIn, Properties propsIn) 
     {
         super("Save Properties");
         jfApp = jfIn;
@@ -96,7 +96,17 @@ public class SavePreferencesAction extends AbstractAction {
     public void actionPerformed(ActionEvent ev) 
     {
        
-        String strFileName = myProps.getProperty(ApplicationConstants.PREFS_XML_FILE, "");
+        String strFileName;
+        if (jfApp.strUserPrefsFile != null)
+        {
+            strFileName = jfApp.strUserPrefsFile;
+        }
+        else
+        {
+            
+           strFileName =  myProps.getProperty(ApplicationConstants.PREFS_XML_FILE, "");
+        }
+        
         if (strFileName.length()== 0)
         {
            JFileChooser myJFC = new JFileChooser();
@@ -106,17 +116,18 @@ public class SavePreferencesAction extends AbstractAction {
                try {
                    strFileName  = myJFC.getSelectedFile().getCanonicalPath();
                } catch (IOException ex) {
-                   Logger.getLogger(SavePreferencesAction.class.getName()).log(Level.SEVERE, null, ex);
+                   Logger.getLogger(SavePropertiesAction.class.getName()).log(Level.SEVERE, null, ex);
                }
            } // file selected
         } // if no file name was retrieved from preferences
         try {
-            
-            myProps.storeToXML(new FileOutputStream(strFileName),"Test");
+            String strWarning = "Edit this file at your own risk.  " 
+                    + "It will be overwritten at program exit.";
+            myProps.storeToXML(new FileOutputStream(strFileName),strWarning);
         } catch (FileNotFoundException ex) {
-            Logger.getLogger(SavePreferencesAction.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(SavePropertiesAction.class.getName()).log(Level.SEVERE, null, ex);
         } catch (IOException ex) {
-            Logger.getLogger(SavePreferencesAction.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(SavePropertiesAction.class.getName()).log(Level.SEVERE, null, ex);
         }
        
         

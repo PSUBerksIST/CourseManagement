@@ -24,7 +24,8 @@ import javax.swing.UIManager;
 import javax.swing.UIManager.LookAndFeelInfo;
 import javax.swing.UnsupportedLookAndFeelException;
 
-import java.util.prefs.*;
+import org.apache.commons.cli.*;
+
 
 /**
  *
@@ -41,11 +42,26 @@ import java.util.prefs.*;
  * 2016 February 06 - Added code to dynamically create look and feel menu to
  *                    implement dynamic setting of PLAF. - WHB
  * 
+ * 
+ * 
+ * 
+ * 
+ * 
+ * ****************** ADDITIONAL LIBRARIES NEEDED ******************************
+ * 
+ *      NAME            SOURCE                      USE
+ * 
+ *      rs2xml.jar      https://drive.google.com/file/d/0BzIr4IDDKJEcdDE1YTlzbmtkMzg/view   create table model from ResultSet
+ *      commons-cli-1.3.1.jar   https://commons.apache.org/proper/commons-cli/download_cli.cgi  Command line argument parser
+ *      sqlite-jdbc-3.8.11.2.jar    https://bitbucket.org/xerial/sqlite-jdbc/downloads
  */
 public class jfMain extends JFrame {
 
     int intWindowCounter = 0;
     ButtonGroup bgLAF = new ButtonGroup();
+    
+    CommandLine myCL;
+    String strUserPrefsFile;
     
     private boolean bDebugging = true;
     public Connection dbConnection;
@@ -55,15 +71,11 @@ public class jfMain extends JFrame {
     /**
      * Creates new form jfMain
      */
-    public jfMain() 
+    public jfMain(String[] strArgs) 
     {
                 myProps = new Properties();
         initComponents();
-        // Create the user preferences Object
-        
-       // myPrefs = Preferences.userNodeForPackage(this.getClass());
-    //    myPrefs = Preferences.userRoot();
-
+       
         MakeLookAndFeelMenu();
         dbc = new DBConnection(this);
         setLocationByPlatform(true);
@@ -81,6 +93,14 @@ public class jfMain extends JFrame {
                   System.exit(0);
             }
         });
+        try {
+            myCL = CommandLineOptions.processCommandLine(strArgs);
+            strUserPrefsFile = myCL.getOptionValue("u");
+           HelpFormatter formatter = new HelpFormatter();
+formatter.printHelp( "Course Management", CommandLineOptions.makeOptions() );
+        } catch (ParseException ex) {
+            Logger.getLogger(jfMain.class.getName()).log(Level.SEVERE, null, ex);
+        }
 jmiLoadUserOptions.doClick();
         jmiOpenDB.doClick();
     } // no argument constructor
@@ -165,7 +185,7 @@ public void finalize()
         jmLookAndFeel = new javax.swing.JMenu();
         jmOptions = new javax.swing.JMenu();
         jmiLoadUserOptions = new javax.swing.JMenuItem(new GetPropertiesAction(this,myProps));
-        jmiSaveUserOptions = new javax.swing.JMenuItem(new SavePreferencesAction(this, myProps));
+        jmiSaveUserOptions = new javax.swing.JMenuItem(new SavePropertiesAction(this, myProps));
         jmHelp = new javax.swing.JMenu();
         jmiDatabaseInformation = new javax.swing.JMenuItem();
 
@@ -485,20 +505,10 @@ public void finalize()
      * @param args the command line arguments
      */
     public static void main(String args[]) {
+        //</editor-fold>
         
         
-        if (args.length == 1)
-        {
-            String strUserPrefsLocation = args[0];
-            //TODO Open user preferences based on this
-            System.out.println("strUserPrefsLocation = " + strUserPrefsLocation);
-                 
-        }
-        /* Set the Nimbus look and feel */
-        //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
-        /* If Nimbus (introduced in Java SE 6) is not available, stay with the default look and feel.
-         * For details see http://download.oracle.com/javase/tutorial/uiswing/lookandfeel/plaf.html 
-         */
+
         try {
             for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
                 if ("Nimbus".equals(info.getName())) {
@@ -514,14 +524,12 @@ public void finalize()
             java.util.logging.Logger.getLogger(jfMain.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (javax.swing.UnsupportedLookAndFeelException ex) {
             java.util.logging.Logger.getLogger(jfMain.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        }
-        //</editor-fold>
-
-        /* Create and display the form */
-        java.awt.EventQueue.invokeLater(new Runnable() {
-            public void run() {
-                new jfMain().setVisible(true);
-            }
+        }java.awt.EventQueue.invokeLater(new Runnable() {
+                public void run() {
+                                           
+                    new jfMain(args).setVisible(true);
+                 
+                }
         });
     }
 

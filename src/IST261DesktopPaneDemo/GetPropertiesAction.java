@@ -89,8 +89,19 @@ public class GetPropertiesAction extends AbstractAction {
 
         try {
             String path = new File(".").getCanonicalPath();
-            String strFileName = path + "\\" + ApplicationConstants.PREFS_XML_FILE;
-
+            String strFileName;
+            
+            if(jfApp.strUserPrefsFile != null)
+            {
+                strFileName = jfApp.strUserPrefsFile;
+            }
+            else
+            {
+            strFileName = path + "\\" + ApplicationConstants.PREFS_XML_FILE;
+            jfApp.strUserPrefsFile = strFileName;
+            }
+            
+            
             myProps.loadFromXML(new FileInputStream(strFileName));
             
             //TODO Apply each property
