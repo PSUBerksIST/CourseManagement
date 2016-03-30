@@ -5,6 +5,8 @@
  */
 package IST261DesktopPaneDemo;
 
+import java.sql.Connection;
+
 /**
  *
  * @author Nathan
@@ -14,9 +16,12 @@ public class jpAddAssignment extends javax.swing.JPanel {
     /**
      * Creates new form jpAssignment
      */
-    public jpAddAssignment() {
-        initComponents();
-    }
+        private Connection dbConnection;
+        public jpAddAssignment(Connection inConnection)
+        {
+            initComponents();
+            dbConnection = inConnection;
+        }
 
     /**
      * This method is called from within the constructor to initialize the form.

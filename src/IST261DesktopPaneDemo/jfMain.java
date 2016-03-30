@@ -437,7 +437,7 @@ public void finalize()
     }//GEN-LAST:event_jbClassActionPerformed
 
     private void jbAssignmentsActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jbAssignmentsActionPerformed
-        JPanel Assignment = new jpAssignment();
+        JPanel Assignment = new jpAssignment(dbConnection);
         Assignment.setName("Assignment");
         CreateFrame(Assignment,Assignment.getName());
         // TODO add your handling code here:

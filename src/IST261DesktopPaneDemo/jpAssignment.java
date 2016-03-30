@@ -5,6 +5,7 @@
  */
 package IST261DesktopPaneDemo;
 
+import java.sql.Connection;
 import javax.swing.JPanel;
 import javax.swing.JDialog;
 /**
@@ -16,8 +17,11 @@ public class jpAssignment extends javax.swing.JPanel {
     /**
      * Creates new form jpAssignment
      */
-    public jpAssignment() {
+    private Connection dbConnection;
+    public jpAssignment(Connection inConnection)
+    {
         initComponents();
+        dbConnection = inConnection;
     }
 
     /**
@@ -105,7 +109,7 @@ public class jpAssignment extends javax.swing.JPanel {
 
     private void jbAddAssignmentActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jbAddAssignmentActionPerformed
         JDialog jdAddAssignment = new JDialog();
-        JPanel AddAssignment = new jpAddAssignment();
+        JPanel AddAssignment = new jpAddAssignment(dbConnection);
         jdAddAssignment.add(AddAssignment);
         jdAddAssignment.setSize(500, 400);
         jdAddAssignment.setVisible(true);
