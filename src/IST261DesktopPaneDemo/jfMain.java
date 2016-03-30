@@ -423,7 +423,7 @@ public void finalize()
     }//GEN-LAST:event_jmiTestTablePanelActionPerformed
 
     private void jbCourseActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jbCourseActionPerformed
-        JPanel Course = new jpCourse();
+        JPanel Course = new jpCourse(dbConnection);
         Course.setName("Course");
         CreateFrame(Course,Course.getName());
         // TODO add your handling code here:
