@@ -7,6 +7,7 @@
 package IST261DesktopPaneDemo;
 
 import java.io.File;
+import java.io.IOException;
 import java.sql.*;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -77,8 +78,15 @@ public class DBConnection {
         if (strInFile.length() == 0)
         {
             
-        
-         File file = new File("F:\\NetBeansProjects\\IST261DesktopPaneDemo\\src\\IST261DesktopPaneDemo\\CourseManagement3.db3");
+          String strPath = "";
+            try {
+                strPath = new File(".").getCanonicalPath();
+            } catch (IOException ex) {
+                Logger.getLogger(DBConnection.class.getName()).log(Level.SEVERE, null, ex);
+            }
+
+          String strFileName = strPath + File.separatorChar + ApplicationConstants.DEFAULT_DB_FILE;
+         File file = new File(strFileName);
         myFC.setCurrentDirectory(file);
         FileNameExtensionFilter filter = new FileNameExtensionFilter("SQLite DB", "sqlite", "db", "db2", "db3");
         myFC.addChoosableFileFilter(filter);

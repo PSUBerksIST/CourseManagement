@@ -97,7 +97,7 @@ public class jfMain extends JFrame {
             myCL = CommandLineOptions.processCommandLine(strArgs);
             strUserPrefsFile = myCL.getOptionValue("u");
            HelpFormatter formatter = new HelpFormatter();
-formatter.printHelp( "Course Management", CommandLineOptions.makeOptions() );
+           formatter.printHelp( "Course Management", CommandLineOptions.makeOptions() );
         } catch (ParseException ex) {
             Logger.getLogger(jfMain.class.getName()).log(Level.SEVERE, null, ex);
         }
