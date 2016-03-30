@@ -66,7 +66,7 @@ public class jfMain extends JFrame {
     private boolean bDebugging = true;
     public Connection dbConnection;
     public DBConnection dbc;
-  //  private Preferences myPrefs;
+ 
     private Properties myProps;
     /**
      * Creates new form jfMain
@@ -97,13 +97,13 @@ public class jfMain extends JFrame {
             myCL = CommandLineOptions.processCommandLine(strArgs);
             strUserPrefsFile = myCL.getOptionValue("u");
            HelpFormatter formatter = new HelpFormatter();
-formatter.printHelp( "Course Management", CommandLineOptions.makeOptions() );
+           formatter.printHelp( "Course Management", CommandLineOptions.makeOptions() );
         } catch (ParseException ex) {
             Logger.getLogger(jfMain.class.getName()).log(Level.SEVERE, null, ex);
         }
-jmiLoadUserOptions.doClick();
+        jmiLoadUserOptions.doClick();
         jmiOpenDB.doClick();
-    } // no argument constructor
+    } // 
 
 public void finalize()  
 {
@@ -423,7 +423,7 @@ public void finalize()
     }//GEN-LAST:event_jmiTestTablePanelActionPerformed
 
     private void jbCourseActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jbCourseActionPerformed
-        JPanel Course = new jpCourse();
+        JPanel Course = new jpCourse(dbConnection);
         Course.setName("Course");
         CreateFrame(Course,Course.getName());
         // TODO add your handling code here:
@@ -437,7 +437,7 @@ public void finalize()
     }//GEN-LAST:event_jbClassActionPerformed
 
     private void jbAssignmentsActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jbAssignmentsActionPerformed
-        JPanel Assignment = new jpAssignment();
+        JPanel Assignment = new jpAssignment(dbConnection);
         Assignment.setName("Assignment");
         CreateFrame(Assignment,Assignment.getName());
         // TODO add your handling code here:

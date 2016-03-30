@@ -26,8 +26,9 @@ public class CommandLineOptions
     public static Options makeOptions()
     {
         Options optTemp = new Options();
-        optTemp.addOption("u", true, "User Properties File");
+      
         optTemp.addOption("h", "Display usage information");
+        optTemp.addOption("u", true, "User Properties File");
         return optTemp;
         
     } // makeOptions
@@ -36,7 +37,7 @@ public class CommandLineOptions
     public static CommandLine processCommandLine(String[] args) throws ParseException
     {
        CommandLineParser parser = new DefaultParser();
-       CommandLine cmd = parser.parse( makeOptions(), args);
+       CommandLine cmd = parser.parse( makeOptions(), args);       
        return cmd;
     } // processCommandLine
 } // CommandLineOptions

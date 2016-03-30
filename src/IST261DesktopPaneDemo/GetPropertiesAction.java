@@ -10,16 +10,14 @@ package IST261DesktopPaneDemo;
  * 
  * @version 0.1
  * 
-
+ * Loads the user preferences file into the properties object
  * 
  ********************* MODIFICATION LOG ************************
  *
  * 2016 February 02 -  Initial program creation
 
  */
-import java.awt.Dimension;
 import java.awt.event.ActionEvent;
-import java.beans.PropertyVetoException;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
@@ -29,7 +27,6 @@ import java.util.logging.Logger;
 import javax.swing.AbstractAction;
 import javax.swing.Action;
 import javax.swing.ImageIcon;
-import javax.swing.JFrame;
  
 public class GetPropertiesAction extends AbstractAction {
      
@@ -47,7 +44,7 @@ public class GetPropertiesAction extends AbstractAction {
           putValue( Action.LARGE_ICON_KEY, new ImageIcon(
             getClass().getResource( "../images/DatabaseAdd32.png" ) ) );
           
-          putValue(Action.LONG_DESCRIPTION,"Tile the frames on the desktop");
+          putValue(Action.LONG_DESCRIPTION,"Load the user's properties from a file");
           
           putValue(Action.NAME, "Get Properties");
           
@@ -88,8 +85,15 @@ public class GetPropertiesAction extends AbstractAction {
     {
 
         try {
+            // Gets the path of the running application
+            // TODO Test running the application from the jar file
+            
             String path = new File(".").getCanonicalPath();
             String strFileName;
+            
+            // If a preferences file was indicated from the command line
+            // parameters, use it.  If not set it to the default name
+            // in application path
             
             if(jfApp.strUserPrefsFile != null)
             {

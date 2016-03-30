@@ -1,1 +1,6 @@
+# OSX
+.DS_Store
+# skip distro folder
 /dist/
+/nbproject/private/
+/build/
