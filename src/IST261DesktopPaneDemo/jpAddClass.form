@@ -56,7 +56,7 @@
                       <Group type="103" groupAlignment="0" attributes="0">
                           <Component id="jcbCampus" min="-2" max="-2" attributes="0"/>
                           <Component id="jcbCourse" min="-2" max="-2" attributes="0"/>
-                          <Component id="jtfMettingLocation" alignment="0" min="-2" pref="100" max="-2" attributes="0"/>
+                          <Component id="jtfMeetingLocation" alignment="0" min="-2" pref="100" max="-2" attributes="0"/>
                           <Component id="jtfSection" alignment="0" min="-2" pref="100" max="-2" attributes="0"/>
                           <Component id="jtfScheduleNumber" alignment="0" min="-2" pref="100" max="-2" attributes="0"/>
                           <Component id="jtfAngelID" alignment="0" min="-2" pref="100" max="-2" attributes="0"/>
@@ -207,9 +207,9 @@
                           <Component id="jcbCampus" alignment="3" min="-2" max="-2" attributes="0"/>
                       </Group>
                       <EmptySpace type="unrelated" max="32767" attributes="0"/>
-                      <Group type="103" groupAlignment="3" attributes="0">
-                          <Component id="jtfMettingLocation" alignment="0" min="-2" max="-2" attributes="0"/>
-                          <Component id="jlMeetingLocation" alignment="3" min="-2" max="-2" attributes="0"/>
+                      <Group type="103" groupAlignment="0" attributes="0">
+                          <Component id="jtfMeetingLocation" alignment="0" min="-2" max="-2" attributes="0"/>
+                          <Component id="jlMeetingLocation" min="-2" max="-2" attributes="0"/>
                       </Group>
                       <EmptySpace max="-2" attributes="0"/>
                       <Group type="103" groupAlignment="3" attributes="0">
@@ -257,7 +257,7 @@
         <Property name="text" type="java.lang.String" value="Meeting Location"/>
       </Properties>
     </Component>
-    <Component class="javax.swing.JTextField" name="jtfMettingLocation">
+    <Component class="javax.swing.JTextField" name="jtfMeetingLocation">
     </Component>
     <Component class="javax.swing.JLabel" name="jlSection">
       <Properties>
