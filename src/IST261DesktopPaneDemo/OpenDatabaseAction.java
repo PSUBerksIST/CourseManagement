@@ -53,7 +53,7 @@ public class OpenDatabaseAction extends AbstractAction {
           putValue( Action.LARGE_ICON_KEY, new ImageIcon(
             getClass().getResource( "../images/DatabaseAdd32.png" ) ) );
           
-          putValue(Action.LONG_DESCRIPTION,"Tile the frames on the desktop");
+          putValue(Action.LONG_DESCRIPTION,"Opens and connects to the database");
           
           putValue(Action.NAME, "Open DB");
           

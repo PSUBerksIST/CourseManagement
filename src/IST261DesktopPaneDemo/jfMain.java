@@ -66,7 +66,7 @@ public class jfMain extends JFrame {
     private boolean bDebugging = true;
     public Connection dbConnection;
     public DBConnection dbc;
-  //  private Preferences myPrefs;
+ 
     private Properties myProps;
     /**
      * Creates new form jfMain
@@ -101,9 +101,9 @@ public class jfMain extends JFrame {
         } catch (ParseException ex) {
             Logger.getLogger(jfMain.class.getName()).log(Level.SEVERE, null, ex);
         }
-jmiLoadUserOptions.doClick();
+        jmiLoadUserOptions.doClick();
         jmiOpenDB.doClick();
-    } // no argument constructor
+    } // 
 
 public void finalize()  
 {

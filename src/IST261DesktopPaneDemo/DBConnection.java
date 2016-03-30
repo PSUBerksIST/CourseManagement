@@ -11,7 +11,6 @@ import java.io.IOException;
 import java.sql.*;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import javax.swing.JDesktopPane;
 import javax.swing.JFileChooser;
 import javax.swing.filechooser.FileNameExtensionFilter;
 
@@ -20,7 +19,7 @@ import java.util.Properties;
 
 /**
  *
- * @author admin_whb108
+ * @author whb108
  * 
  * Direct connection to and manipulation of a SQLite database.
  * 
@@ -48,11 +47,7 @@ public class DBConnection {
         jfApp = jfmIn;
     }    
         
-    public DBConnection()
-    {
-        
-    }
-    
+       
     public Connection connectToDB(String strDBName, Properties propsIn)
     {
     
@@ -70,27 +65,44 @@ public class DBConnection {
     }
     } // connectToDB
 
+    
+    
         public Connection connectToDB(Properties propsIn)
     {
         JFileChooser myFC = new JFileChooser();
         String strInFile = propsIn.getProperty(ApplicationConstants.LAST_DB,"");
+        File fTemp = null;
         
-        if (strInFile.length() == 0)
+        if(strInFile.length() > 0)
         {
-            
-          String strPath = "";
-            try {
-                strPath = new File(".").getCanonicalPath();
-            } catch (IOException ex) {
-                Logger.getLogger(DBConnection.class.getName()).log(Level.SEVERE, null, ex);
-            }
+            fTemp = new File(strInFile);
+        } // if file name is longer than zero chars
+        // if there was no value for the last database opened in the properties
+        // or the named file does not exist
+        
+        if ((strInFile.length() == 0) || (fTemp.exists() == false))
+        {
+        // Insure that the path is empty then set it to the application path
+           String strPath = "";
+           try 
+           {
+              strPath = new File(".").getCanonicalPath();
+           } 
+           
+           catch (IOException ex) 
+           {
+              Logger.getLogger(DBConnection.class.getName()).log(Level.SEVERE, null, ex);
+           }
 
-          String strFileName = strPath + File.separatorChar + ApplicationConstants.DEFAULT_DB_FILE;
-         File file = new File(strFileName);
-        myFC.setCurrentDirectory(file);
-        FileNameExtensionFilter filter = new FileNameExtensionFilter("SQLite DB", "sqlite", "db", "db2", "db3");
-        myFC.addChoosableFileFilter(filter);
-        myFC.setFileFilter(filter);
+        // Set the file name to the application path and default file name   
+           String strFileName = strPath + File.separatorChar + ApplicationConstants.DEFAULT_DB_FILE;
+           File file = new File(strFileName);
+           myFC.setCurrentDirectory(file);
+           
+        // Set a filter for the JFileChooser to use standard SQLite file extensions   
+           FileNameExtensionFilter filter = new FileNameExtensionFilter("SQLite DB", "sqlite", "db", "db2", "db3");
+           myFC.addChoosableFileFilter(filter);
+           myFC.setFileFilter(filter);
         
 
        if (myFC.showOpenDialog(jfApp) == JFileChooser.APPROVE_OPTION)
@@ -99,17 +111,19 @@ public class DBConnection {
              strInFile = fileSelected.getPath();
              
           } // user chooses a file
-     
         else
        {
            return null;
-       } // else canceled from file selection
+       }
+        
         } // if file name is empty
        
-             Connection cn =  connectToDB(strInFile, propsIn);
-               System.out.println("Connected");
-               System.out.println(getDBInfo(cn));
-               return cn;
+       
+        // connect to the database
+        Connection cn =  connectToDB(strInFile, propsIn);
+        System.out.println("Connected");
+        System.out.println(getDBInfo(cn));
+        return cn;
                
               
     } // connectToDB
