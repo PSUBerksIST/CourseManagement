@@ -15,6 +15,7 @@ import java.sql.Time;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -69,7 +70,7 @@ public class jpAddClass extends javax.swing.JPanel {
         setdbConnection(inConnection);
         setjcbCourse();
         setjcbCampus();
-        setStartFinish();
+        setStartTimes();
         
         
         
@@ -213,6 +214,11 @@ public class jpAddClass extends javax.swing.JPanel {
 
         jcbMondayStart.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
         jcbMondayStart.setEnabled(false);
+        jcbMondayStart.addItemListener(new java.awt.event.ItemListener() {
+            public void itemStateChanged(java.awt.event.ItemEvent evt) {
+                jcbMondayStartItemStateChanged(evt);
+            }
+        });
 
         jcbMondayEnd.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
         jcbMondayEnd.setEnabled(false);
@@ -221,21 +227,51 @@ public class jpAddClass extends javax.swing.JPanel {
 
         jcbTuesdayStart.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
         jcbTuesdayStart.setEnabled(false);
+        jcbTuesdayStart.addItemListener(new java.awt.event.ItemListener() {
+            public void itemStateChanged(java.awt.event.ItemEvent evt) {
+                jcbTuesdayStartItemStateChanged(evt);
+            }
+        });
 
         jcbWednesdayStart.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
         jcbWednesdayStart.setEnabled(false);
+        jcbWednesdayStart.addItemListener(new java.awt.event.ItemListener() {
+            public void itemStateChanged(java.awt.event.ItemEvent evt) {
+                jcbWednesdayStartItemStateChanged(evt);
+            }
+        });
 
         jcbThursdayStart.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
         jcbThursdayStart.setEnabled(false);
+        jcbThursdayStart.addItemListener(new java.awt.event.ItemListener() {
+            public void itemStateChanged(java.awt.event.ItemEvent evt) {
+                jcbThursdayStartItemStateChanged(evt);
+            }
+        });
 
         jcbFridayStart.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
         jcbFridayStart.setEnabled(false);
+        jcbFridayStart.addItemListener(new java.awt.event.ItemListener() {
+            public void itemStateChanged(java.awt.event.ItemEvent evt) {
+                jcbFridayStartItemStateChanged(evt);
+            }
+        });
 
         jcbSaturdayStart.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
         jcbSaturdayStart.setEnabled(false);
+        jcbSaturdayStart.addItemListener(new java.awt.event.ItemListener() {
+            public void itemStateChanged(java.awt.event.ItemEvent evt) {
+                jcbSaturdayStartItemStateChanged(evt);
+            }
+        });
 
         jcbSundayStart.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
         jcbSundayStart.setEnabled(false);
+        jcbSundayStart.addItemListener(new java.awt.event.ItemListener() {
+            public void itemStateChanged(java.awt.event.ItemEvent evt) {
+                jcbSundayStartItemStateChanged(evt);
+            }
+        });
 
         jcbTuesdayEnd.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
         jcbTuesdayEnd.setEnabled(false);
@@ -664,7 +700,7 @@ public class jpAddClass extends javax.swing.JPanel {
     }
     
 // This sets all the State and Finish drop down times for the each day of the week
-    private void setStartFinish(){
+    private void setStartTimes(){
         Times = new String [] 
         {
             "8:00","8:05","8:10","8:15","8:20","8:25","8:30","8:35","8:40","8:45","8:50","8:55",
@@ -697,7 +733,7 @@ public class jpAddClass extends javax.swing.JPanel {
         jcbFridayEnd.removeAllItems();
         jcbSaturdayEnd.removeAllItems();
         jcbSundayEnd.removeAllItems();
-        for (int i=0;i<Times.length;i++){
+        for (int i=0;i<Times.length-23;i++){
             jcbMondayStart.addItem(Times[i]);
             jcbTuesdayStart.addItem(Times[i]);
             jcbWednesdayStart.addItem(Times[i]);
@@ -715,6 +751,12 @@ public class jpAddClass extends javax.swing.JPanel {
         }
     }
     
+    private void setEndTime(JComboBox injcb, int StartIndex, String[] inTimes){
+        injcb.removeAllItems();
+        for(int i = 0; i<inTimes.length;i++){
+            injcb.addItem(inTimes[i]);
+        }
+    }
 //This gets the course Id by passing it the course number.
     private int getCourseID(int inCourse){
         ResultSet rs;
@@ -920,6 +962,55 @@ public class jpAddClass extends javax.swing.JPanel {
             jcbWednesdayEnd.setEnabled(false);
         }
     }//GEN-LAST:event_jchbWednesdayStateChanged
+
+    private void jcbMondayStartItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_jcbMondayStartItemStateChanged
+        // TODO add your handling code here:
+        if(jcbMondayStart.getSelectedIndex()>=0){
+            setEndTime(jcbMondayEnd,jcbMondayStart.getSelectedIndex(),Arrays.copyOfRange(Times, jcbMondayStart.getSelectedIndex()+1, Times.length));
+        }
+    }//GEN-LAST:event_jcbMondayStartItemStateChanged
+
+    private void jcbTuesdayStartItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_jcbTuesdayStartItemStateChanged
+        // TODO add your handling code here:
+        if(jcbTuesdayStart.getSelectedIndex()>=0){
+            setEndTime(jcbTuesdayEnd,jcbTuesdayStart.getSelectedIndex(),Arrays.copyOfRange(Times, jcbTuesdayStart.getSelectedIndex()+1, Times.length));
+        }
+    }//GEN-LAST:event_jcbTuesdayStartItemStateChanged
+
+    private void jcbWednesdayStartItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_jcbWednesdayStartItemStateChanged
+        // TODO add your handling code here:
+        if(jcbWednesdayStart.getSelectedIndex()>=0){
+            setEndTime(jcbWednesdayEnd,jcbWednesdayStart.getSelectedIndex(),Arrays.copyOfRange(Times, jcbWednesdayStart.getSelectedIndex()+1, Times.length));
+        }
+    }//GEN-LAST:event_jcbWednesdayStartItemStateChanged
+
+    private void jcbThursdayStartItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_jcbThursdayStartItemStateChanged
+        // TODO add your handling code here:
+        if(jcbThursdayStart.getSelectedIndex()>=0){
+            setEndTime(jcbThursdayEnd,jcbThursdayStart.getSelectedIndex(),Arrays.copyOfRange(Times, jcbThursdayStart.getSelectedIndex()+1, Times.length));
+        }
+    }//GEN-LAST:event_jcbThursdayStartItemStateChanged
+
+    private void jcbFridayStartItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_jcbFridayStartItemStateChanged
+        // TODO add your handling code here:
+        if(jcbFridayStart.getSelectedIndex()>=0){
+            setEndTime(jcbFridayEnd,jcbFridayStart.getSelectedIndex(),Arrays.copyOfRange(Times, jcbFridayStart.getSelectedIndex()+1, Times.length));
+        }
+    }//GEN-LAST:event_jcbFridayStartItemStateChanged
+
+    private void jcbSaturdayStartItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_jcbSaturdayStartItemStateChanged
+        // TODO add your handling code here:
+        if(jcbSaturdayStart.getSelectedIndex()>=0){
+            setEndTime(jcbSaturdayEnd,jcbSaturdayStart.getSelectedIndex(),Arrays.copyOfRange(Times, jcbSaturdayStart.getSelectedIndex()+1, Times.length));
+        }
+    }//GEN-LAST:event_jcbSaturdayStartItemStateChanged
+
+    private void jcbSundayStartItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_jcbSundayStartItemStateChanged
+        // TODO add your handling code here:
+        if(jcbSundayStart.getSelectedIndex()>=0){
+            setEndTime(jcbSundayEnd,jcbSundayStart.getSelectedIndex(),Arrays.copyOfRange(Times, jcbSundayStart.getSelectedIndex()+1, Times.length));
+        }
+    }//GEN-LAST:event_jcbSundayStartItemStateChanged
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
