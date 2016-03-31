@@ -7,6 +7,9 @@ package IST261DesktopPaneDemo;
 
 import java.awt.Dimension;
 import java.sql.Connection;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
 import javax.swing.JDialog;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
@@ -20,13 +23,70 @@ public class jpClass extends javax.swing.JPanel {
     /**
      * Creates new form jpClass
      */
+    
+    private Statement st;
+    
     private Connection dbConnection;
-    public jpClass(Connection inConnection){
-        initComponents();
-        dbConnection = inConnection;
-    }
+    
     public jpClass() {
         initComponents();
+    }
+    
+    public jpClass(Connection inConnection){
+        initComponents();
+        setdbConnection(inConnection);;
+        setjcbCourse();
+        
+    }
+    // This sets the local datbase connection
+    private void setdbConnection(Connection inConnection){
+        dbConnection = inConnection;
+        try {             
+            st = dbConnection.createStatement();
+        } catch (SQLException ex) {
+            System.out.println(ex);
+        }
+    }
+    // fill the course drop down box
+    private void setjcbCourse(){
+        jcbCourse.removeAllItems();
+        jcbCourse.addItem("Select Course");
+        System.out.println("got here 1");
+ 
+        try {
+             
+            ResultSet rs = st.executeQuery("select Number from Course order by Number asc");
+
+            while (rs.next()) {
+                jcbCourse.addItem(//rs.getString("IST") + " " + 
+                        rs.getString("Number"));
+            }
+            
+        } catch (SQLException sqle) {
+            System.out.println(sqle);
+            System.out.println("got here 2");
+        }
+    }
+    // fills the class drop down box
+    private void setjcbClass(){
+        jcbClass.removeAllItems();
+        jcbClass.addItem("Select Class");
+ 
+        try {
+            int intSelectedCourse = Integer.parseInt(jcbCourse.getSelectedItem()+"");
+            int intSelectedCourseID = 0;
+            ResultSet rs = st.executeQuery("select ID from Course where Number  = "+intSelectedCourse);
+            while (rs.next()) {
+                intSelectedCourseID = rs.getInt("ID");
+            }
+            st.executeQuery("select Section from Class where FKCourse ="+intSelectedCourseID);
+            while (rs.next()) {
+                jcbClass.addItem(//rs.getString("IST") + " " + 
+                        rs.getString("Section"));
+            }
+        } catch (SQLException sqle) {
+            System.out.println(sqle);
+        }
     }
 
     /**
@@ -78,8 +138,10 @@ public class jpClass extends javax.swing.JPanel {
         jbDeleteAssignment = new javax.swing.JButton();
         jbRefreshAssignment = new javax.swing.JButton();
         jbChangeAssignment = new javax.swing.JButton();
+        jcbCourse = new javax.swing.JComboBox();
 
         jcbClass.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Open Class", "Item 1", "Item 2", "Item 3", "Item 4" }));
+        jcbClass.setEnabled(false);
 
         jbAddClass.setText("Add Class");
         jbAddClass.addActionListener(new java.awt.event.ActionListener() {
@@ -402,6 +464,13 @@ public class jpClass extends javax.swing.JPanel {
 
         jTabbedPane1.addTab("Assignemnts", jpClassAssignmentTab);
 
+        jcbCourse.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Open Course", "Item 1", "Item 2", "Item 3", "Item 4" }));
+        jcbCourse.addItemListener(new java.awt.event.ItemListener() {
+            public void itemStateChanged(java.awt.event.ItemEvent evt) {
+                jcbCourseItemStateChanged(evt);
+            }
+        });
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
         layout.setHorizontalGroup(
@@ -409,20 +478,21 @@ public class jpClass extends javax.swing.JPanel {
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                 .addContainerGap()
                 .addComponent(jbAddClass, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jcbCourse, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jcbClass, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addGap(168, 168, 168))
+                .addGap(70, 70, 70))
             .addComponent(jTabbedPane1)
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(layout.createSequentialGroup()
-                        .addGap(3, 3, 3)
-                        .addComponent(jcbClass))
-                    .addComponent(jbAddClass))
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jbAddClass)
+                    .addComponent(jcbClass)
+                    .addComponent(jcbCourse))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jTabbedPane1))
         );
@@ -452,6 +522,17 @@ public class jpClass extends javax.swing.JPanel {
     private void jtfFirstNameActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jtfFirstNameActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_jtfFirstNameActionPerformed
+
+    private void jcbCourseItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_jcbCourseItemStateChanged
+        if(jcbCourse.getSelectedIndex()>0){
+            jcbClass.setEnabled(true);
+            setjcbClass();
+        }
+        else{
+            jcbClass.setEnabled(false);
+        }
+        // TODO add your handling code here:
+    }//GEN-LAST:event_jcbCourseItemStateChanged
   private void CreateFrame(JPanel inPanel) {
                 //  intWindowCounter++;
       JDialog jd = new JDialog();
@@ -459,18 +540,6 @@ public class jpClass extends javax.swing.JPanel {
       jd.pack();
       jd.setModal(true);
       jd.setVisible(true);
-      
-
-//        JFrame jifTemp = new JFrame(inPanel.getName());// +"" + intWindowCounter,true,true,true,true);
-//
-//        //JPanel jpTemp = new jpClass();
-//        inPanel.setPreferredSize(new Dimension(400, 400));
-//        jifTemp.add(inPanel);
-//        jifTemp.pack();
-//        //jdpMain.add(jifTemp);
-//        jifTemp.setVisible(true);
-
-        //throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
   }//CreateFrame
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
@@ -500,6 +569,7 @@ public class jpClass extends javax.swing.JPanel {
     private javax.swing.JButton jbSave;
     private javax.swing.JButton jbSaveGrades;
     private javax.swing.JComboBox jcbClass;
+    private javax.swing.JComboBox jcbCourse;
     private javax.swing.JLabel jlAssignments;
     private javax.swing.JLabel jlGroupAssignments;
     private javax.swing.JPanel jpClassAssignmentTab;
