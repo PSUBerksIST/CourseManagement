@@ -51,7 +51,6 @@ public class jpClass extends javax.swing.JPanel {
     private void setjcbCourse(){
         jcbCourse.removeAllItems();
         jcbCourse.addItem("Select Course");
-        System.out.println("got here 1");
  
         try {
              
@@ -64,7 +63,6 @@ public class jpClass extends javax.swing.JPanel {
             
         } catch (SQLException sqle) {
             System.out.println(sqle);
-            System.out.println("got here 2");
         }
     }
     // fills the class drop down box
