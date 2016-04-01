@@ -33,11 +33,15 @@ public class jpAddClass extends javax.swing.JPanel {
     /**
      * Creates new form jpAddClass
      */
+    //Database vars.
     private Connection dbConnection;
     private Statement st;
     private PreparedStatement pst;
+    
+    //Standard Vars.
     private String[] Times;
-    // variables that get passed to the database
+    
+    // vars that get passed to the database
     private int intCourse;
     private String strCampus;
     private String strMeetingLocation = null;
@@ -61,19 +65,17 @@ public class jpAddClass extends javax.swing.JPanel {
     private String strSaturdayEnd = null;
     private String strSundayEnd = null;
     
+    // This is a standard empty constructor
     public jpAddClass() {
         initComponents(); 
     }
-
+    //Constructor that takes in the DB connection and sets up the screen
     public jpAddClass(Connection inConnection) {
         initComponents();
         setdbConnection(inConnection);
         setjcbCourse();
         setjcbCampus();
         setStartTimes();
-        
-        
-        
         //     throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
@@ -497,18 +499,38 @@ public class jpAddClass extends javax.swing.JPanel {
                 .addComponent(jbAddClassFinish))
         );
     }// </editor-fold>//GEN-END:initComponents
-   
+ // This sets the local datbase connection
+    private void setdbConnection(Connection inConnection){
+        dbConnection = inConnection;
+        try {
+             
+            st = dbConnection.createStatement();
+            
+ 
+        } catch (SQLException ex) {
+            System.out.println(ex);
+        }
+    }  
+    
+    //*** These following methods set the vars that will get passed to the DB
+    
+    //This sets the Course from the drop down on the screen
     private void setCourse(JComboBox injcbCourse){
         String selected = injcbCourse.getSelectedItem()+"";
         intCourse = Integer.parseInt(selected);
     }
-
+    
+    // this sets the Campus from the drop down on the screen
     private void setCampus(JComboBox injcbCampus){
         strCampus = injcbCampus.getSelectedItem()+"";
     }
+    
+    // This sets the Metting Location based on the Users input.
     private void setMeetingLocation(JTextField injtfMeetingLocation){
         strMeetingLocation = injtfMeetingLocation.getText();
     }
+    
+    // This sets the Section based on the Users input.
     private void setSection(JTextField injtfSection){
         if(injtfSection.getText().equals("")){
             intSection = 0;
@@ -517,6 +539,8 @@ public class jpAddClass extends javax.swing.JPanel {
             intSection = Integer.parseInt(injtfSection.getText());
         }
     }
+    
+    // This sets the Schedule Number based on the Users input.
     private void setScheduleNumber(JTextField injtfScheduleNumber){
         if(injtfScheduleNumber.getText().equals("")){
             intScheduleNumber = 0;
@@ -524,26 +548,34 @@ public class jpAddClass extends javax.swing.JPanel {
         else{
             intScheduleNumber = Integer.parseInt(injtfScheduleNumber.getText());
         }
-        
-        
     }
+    
+    // This sets the Angel ID based on the Users input.
     private void setAngelID(JTextField injtfAngelID){
         strAngelID = injtfAngelID.getText();
     }
+    
+    // This sets the Angel Title based on the Users input.
     private void setAngelTitle(JTextField injtfAngelTitle){
         strAngelTitle = injtfAngelTitle.getText();
     }
+    
+    // This sets the Notes based on the Users input.
     private void setNotes(JTextArea injtaNotes){
         strNotes = injtaNotes.getText();
     }
-    private void setMondayStart(JComboBox injcbMondayStart){
+    
+    // This sets the Monday Start Time based on the Users input.
+    private void setMondayStart(JComboBox injcbDayTime){
         if(jchbMonday.isSelected()){
-            strMondayStart = injcbMondayStart.getSelectedItem()+"";
+            strMondayStart = injcbDayTime.getSelectedItem()+"";
         }
         else{
             strMondayStart = null;
         }
     }
+    
+    // This sets the Monday End Time based on the Users input.
     private void setMondayEnd(JComboBox injcbMondayEnd){
         if(jchbMonday.isSelected()){
             strMondayEnd = injcbMondayEnd.getSelectedItem()+"";
@@ -552,6 +584,8 @@ public class jpAddClass extends javax.swing.JPanel {
             strMondayStart = null;
         }
     }
+    
+    // This sets the Tuesday Start Time based on the Users input.
     private void setTuesdayStart(JComboBox injcbTuesdayStart){
         if(jchbTuesday.isSelected()){
             strTuesdayStart = injcbTuesdayStart.getSelectedItem()+"";
@@ -560,6 +594,8 @@ public class jpAddClass extends javax.swing.JPanel {
             strTuesdayStart = null;
         }
     }
+    
+    // This sets the Tuesday End Time based on the Users input.
     private void setTuesdayEnd(JComboBox injcbTuesdayEnd){
         if(jchbTuesday.isSelected()){
             strTuesdayEnd = injcbTuesdayEnd.getSelectedItem()+"";
@@ -568,6 +604,8 @@ public class jpAddClass extends javax.swing.JPanel {
             strTuesdayStart = null;
         }
     }
+    
+    // This sets the Wednesday Start Time based on the Users input.
     private void setWednesdayStart(JComboBox injcbWednesdayStart){
         if(jchbWednesday.isSelected()){
             strWednesdayStart = injcbWednesdayStart.getSelectedItem()+"";
@@ -576,6 +614,8 @@ public class jpAddClass extends javax.swing.JPanel {
             strWednesdayStart = null;
         }
     }
+    
+    // This sets the Wednesday End Time based on the Users input.
     private void setWednesdayEnd(JComboBox injcbWednesdayEnd){
         if(jchbWednesday.isSelected()){
             strWednesdayEnd = injcbWednesdayEnd.getSelectedItem()+"";
@@ -584,6 +624,8 @@ public class jpAddClass extends javax.swing.JPanel {
             strWednesdayStart = null;
         }
     }
+    
+    // This sets the Thursday Start Time based on the Users input.
     private void setThursdayStart(JComboBox injcbThursdayStart){
         if(jchbThursday.isSelected()){
             strThursdayStart = injcbThursdayStart.getSelectedItem()+"";
@@ -592,6 +634,8 @@ public class jpAddClass extends javax.swing.JPanel {
             strThursdayStart = null;
         }
     }
+    
+    // This sets the Thursday End Time based on the Users input.
     private void setThursdayEnd(JComboBox injcbThursdayEnd){
         if(jchbThursday.isSelected()){
             strThursdayEnd = injcbThursdayEnd.getSelectedItem()+"";
@@ -600,6 +644,8 @@ public class jpAddClass extends javax.swing.JPanel {
             strThursdayStart = null;
         }
     }
+    
+    // This sets the Friday Start Time based on the Users input.
     private void setFridayStart(JComboBox injcbFridayStart){
         if(jchbFriday.isSelected()){
             strFridayStart = injcbFridayStart.getSelectedItem()+"";
@@ -608,6 +654,8 @@ public class jpAddClass extends javax.swing.JPanel {
             strFridayStart = null;
         }
     }
+    
+    // This sets the Friday End Time based on the Users input.
     private void setFridayEnd(JComboBox injcbFridayEnd){
         if(jchbFriday.isSelected()){
             strFridayEnd = injcbFridayEnd.getSelectedItem()+"";
@@ -616,6 +664,8 @@ public class jpAddClass extends javax.swing.JPanel {
             strFridayStart = null;
         }
     }
+    
+    // This sets the Monday Start Time based on the Users input.
     private void setSaturdayStart(JComboBox injcbSaturdayStart){
         if(jchbSaturday.isSelected()){
             strSaturdayStart = injcbSaturdayStart.getSelectedItem()+"";
@@ -648,21 +698,7 @@ public class jpAddClass extends javax.swing.JPanel {
             strSundayStart = null;
         }
     }
-    
-    
-// This sets the local datbase connection
-    private void setdbConnection(Connection inConnection){
-        dbConnection = inConnection;
-        try {
-             
-            st = dbConnection.createStatement();
-            
- 
-        } catch (SQLException ex) {
-            System.out.println(ex);
-        }
-    }
-    
+   
 // This populates the Course drop down box
     private void setjcbCourse(){
         jcbCourse.removeAllItems();
@@ -750,13 +786,15 @@ public class jpAddClass extends javax.swing.JPanel {
             jcbSundayEnd.addItem(Times[i]);
         }
     }
-    
+
+// This sets the end time for the day based on what is selected in the Start time    
     private void setEndTime(JComboBox injcb, int StartIndex, String[] inTimes){
         injcb.removeAllItems();
         for(int i = 0; i<inTimes.length;i++){
             injcb.addItem(inTimes[i]);
         }
     }
+
 //This gets the course Id by passing it the course number.
     private int getCourseID(int inCourse){
         ResultSet rs;
@@ -788,6 +826,7 @@ public class jpAddClass extends javax.swing.JPanel {
         }
         return intCampusID;
     }
+//**** Methods that takes the screen data and puts in the database
     
 // This is the class that sets all the local variables that will get inserted into the database. 
     private void jbAddClassFinishActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jbAddClassFinishActionPerformed
@@ -837,6 +876,7 @@ public class jpAddClass extends javax.swing.JPanel {
         // TODO add your handling code here:
     }//GEN-LAST:event_jbAddClassFinishActionPerformed
 
+// this inserts all the data into the class table in the DB
     private void InsertToTable(int inCourseID, int inCampusID, String inMeetingLocation, int inSection,
                                int inScheduleNumber, String inAngelID, String inAngelTitle, String inMondayStart,
                                String inMondayEnd, String inTuesdayStart, String inTuesdayEnd, String inWednesdayStart,
@@ -879,6 +919,10 @@ public class jpAddClass extends javax.swing.JPanel {
         }
         
     }
+    
+ //*** Methods that are based on State Changes
+    
+//This is enables and disables the Monday times
     private void jchbMondayStateChanged(javax.swing.event.ChangeEvent evt) {//GEN-FIRST:event_jchbMondayStateChanged
         if(jchbMonday.isSelected()){
             jcbMondayStart.setEnabled(true);
@@ -891,6 +935,7 @@ public class jpAddClass extends javax.swing.JPanel {
         // TODO add your handling code here:
     }//GEN-LAST:event_jchbMondayStateChanged
 
+//This is enables and disables the Tuesday times
     private void jchbTuesdayStateChanged(javax.swing.event.ChangeEvent evt) {//GEN-FIRST:event_jchbTuesdayStateChanged
         // TODO add your handling code here:
         if(jchbTuesday.isSelected()){
@@ -903,6 +948,7 @@ public class jpAddClass extends javax.swing.JPanel {
         }
     }//GEN-LAST:event_jchbTuesdayStateChanged
 
+//This is enables and disables the Sunday times
     private void jchbSundayStateChanged(javax.swing.event.ChangeEvent evt) {//GEN-FIRST:event_jchbSundayStateChanged
         // TODO add your handling code here:
         if(jchbSunday.isSelected()){
@@ -915,6 +961,7 @@ public class jpAddClass extends javax.swing.JPanel {
         }
     }//GEN-LAST:event_jchbSundayStateChanged
 
+//This is enables and disables the Saturday times
     private void jchbSaturdayStateChanged(javax.swing.event.ChangeEvent evt) {//GEN-FIRST:event_jchbSaturdayStateChanged
         // TODO add your handling code here:
         if(jchbSaturday.isSelected()){
@@ -927,6 +974,7 @@ public class jpAddClass extends javax.swing.JPanel {
         }
     }//GEN-LAST:event_jchbSaturdayStateChanged
 
+//This is enables and disables the Friday times
     private void jchbFridayStateChanged(javax.swing.event.ChangeEvent evt) {//GEN-FIRST:event_jchbFridayStateChanged
         // TODO add your handling code here:
         if(jchbFriday.isSelected()){
@@ -939,6 +987,7 @@ public class jpAddClass extends javax.swing.JPanel {
         }
     }//GEN-LAST:event_jchbFridayStateChanged
 
+//This is enables and disables the Thursday times
     private void jchbThursdayStateChanged(javax.swing.event.ChangeEvent evt) {//GEN-FIRST:event_jchbThursdayStateChanged
         // TODO add your handling code here:
         if(jchbThursday.isSelected()){
@@ -951,6 +1000,7 @@ public class jpAddClass extends javax.swing.JPanel {
         }
     }//GEN-LAST:event_jchbThursdayStateChanged
 
+//This is enables and disables the Wednesday times
     private void jchbWednesdayStateChanged(javax.swing.event.ChangeEvent evt) {//GEN-FIRST:event_jchbWednesdayStateChanged
         // TODO add your handling code here:
         if(jchbWednesday.isSelected()){
@@ -963,6 +1013,7 @@ public class jpAddClass extends javax.swing.JPanel {
         }
     }//GEN-LAST:event_jchbWednesdayStateChanged
 
+//calls method to set end time for day
     private void jcbMondayStartItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_jcbMondayStartItemStateChanged
         // TODO add your handling code here:
         if(jcbMondayStart.getSelectedIndex()>=0){
@@ -970,6 +1021,7 @@ public class jpAddClass extends javax.swing.JPanel {
         }
     }//GEN-LAST:event_jcbMondayStartItemStateChanged
 
+//calls method to set end time for day
     private void jcbTuesdayStartItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_jcbTuesdayStartItemStateChanged
         // TODO add your handling code here:
         if(jcbTuesdayStart.getSelectedIndex()>=0){
@@ -977,6 +1029,7 @@ public class jpAddClass extends javax.swing.JPanel {
         }
     }//GEN-LAST:event_jcbTuesdayStartItemStateChanged
 
+//calls method to set end time for day
     private void jcbWednesdayStartItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_jcbWednesdayStartItemStateChanged
         // TODO add your handling code here:
         if(jcbWednesdayStart.getSelectedIndex()>=0){
@@ -984,6 +1037,7 @@ public class jpAddClass extends javax.swing.JPanel {
         }
     }//GEN-LAST:event_jcbWednesdayStartItemStateChanged
 
+//calls method to set end time for day
     private void jcbThursdayStartItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_jcbThursdayStartItemStateChanged
         // TODO add your handling code here:
         if(jcbThursdayStart.getSelectedIndex()>=0){
@@ -991,6 +1045,7 @@ public class jpAddClass extends javax.swing.JPanel {
         }
     }//GEN-LAST:event_jcbThursdayStartItemStateChanged
 
+//calls method to set end time for day
     private void jcbFridayStartItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_jcbFridayStartItemStateChanged
         // TODO add your handling code here:
         if(jcbFridayStart.getSelectedIndex()>=0){
@@ -998,6 +1053,7 @@ public class jpAddClass extends javax.swing.JPanel {
         }
     }//GEN-LAST:event_jcbFridayStartItemStateChanged
 
+//calls method to set end time for day
     private void jcbSaturdayStartItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_jcbSaturdayStartItemStateChanged
         // TODO add your handling code here:
         if(jcbSaturdayStart.getSelectedIndex()>=0){
@@ -1005,6 +1061,7 @@ public class jpAddClass extends javax.swing.JPanel {
         }
     }//GEN-LAST:event_jcbSaturdayStartItemStateChanged
 
+//calls method to set end time for day
     private void jcbSundayStartItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_jcbSundayStartItemStateChanged
         // TODO add your handling code here:
         if(jcbSundayStart.getSelectedIndex()>=0){
