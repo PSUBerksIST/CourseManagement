@@ -185,7 +185,7 @@ public void finalize()
         jmLookAndFeel = new javax.swing.JMenu();
         jmOptions = new javax.swing.JMenu();
         jmiLoadUserOptions = new javax.swing.JMenuItem(new GetPropertiesAction(this,myProps));
-        jmiSaveUserOptions = new javax.swing.JMenuItem(new SavePropertiesAction(this, myProps));
+        jmiSaveUserOptions = new javax.swing.JMenuItem(new IST261DesktopPaneDemo.SavePropertiesAction(this, myProps));
         jmHelp = new javax.swing.JMenu();
         jmiDatabaseInformation = new javax.swing.JMenuItem();
 
@@ -215,10 +215,11 @@ public void finalize()
         });
         jtbMain.add(jbAddFrame);
 
-        jbTile.setText("Tile");
+        jbTile.setText("");
         jbTile.setToolTipText("");
         jbTile.setFocusable(false);
         jbTile.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
+        jbTile.setIconTextGap(-17);
         jbTile.setMinimumSize(new java.awt.Dimension(36, 36));
         jbTile.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
         jtbMain.add(jbTile);
@@ -362,12 +363,12 @@ public void finalize()
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addComponent(jtbMain, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                         .addComponent(jbCourse)
                         .addComponent(jbClass)
                         .addComponent(jbAssignments)
-                        .addComponent(jbDocuments)))
+                        .addComponent(jbDocuments))
+                    .addComponent(jtbMain, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jdpMain)
                 .addGap(20, 20, 20))

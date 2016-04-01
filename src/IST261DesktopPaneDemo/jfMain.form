@@ -173,13 +173,13 @@
       <Group type="103" groupAlignment="0" attributes="0">
           <Group type="102" attributes="0">
               <Group type="103" groupAlignment="1" attributes="0">
-                  <Component id="jtbMain" min="-2" pref="25" max="-2" attributes="0"/>
                   <Group type="103" groupAlignment="3" attributes="0">
                       <Component id="jbCourse" alignment="3" min="-2" max="-2" attributes="0"/>
                       <Component id="jbClass" alignment="3" min="-2" max="-2" attributes="0"/>
                       <Component id="jbAssignments" alignment="3" min="-2" max="-2" attributes="0"/>
                       <Component id="jbDocuments" alignment="3" min="-2" max="-2" attributes="0"/>
                   </Group>
+                  <Component id="jtbMain" min="-2" pref="25" max="-2" attributes="0"/>
               </Group>
               <EmptySpace max="-2" attributes="0"/>
               <Component id="jdpMain" max="32767" attributes="0"/>
@@ -225,11 +225,12 @@
         <Component class="javax.swing.JButton" name="jbTile">
           <Properties>
             <Property name="text" type="java.lang.String" editor="org.netbeans.modules.form.RADConnectionPropertyEditor">
-              <Connection code="&quot;Tile&quot;" type="code"/>
+              <Connection code="&quot;&quot;" type="code"/>
             </Property>
             <Property name="toolTipText" type="java.lang.String" value=""/>
             <Property name="focusable" type="boolean" value="false"/>
             <Property name="horizontalTextPosition" type="int" value="0"/>
+            <Property name="iconTextGap" type="int" value="-17"/>
             <Property name="minimumSize" type="java.awt.Dimension" editor="org.netbeans.beaninfo.editors.DimensionEditor">
               <Dimension value="[36, 36]"/>
             </Property>
