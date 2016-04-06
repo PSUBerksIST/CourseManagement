@@ -22,7 +22,7 @@ public class jpSQLiteDBInfo extends javax.swing.JPanel {
     /**
      * Creates new form jpSQLiteDBInfo
      */
-    public jpSQLiteDBInfo(Connection inConnection) 
+    public jpSQLiteDBInfo(Connection inConnection, Properties myProps) 
     {
         
         try {
@@ -37,6 +37,7 @@ public class jpSQLiteDBInfo extends javax.swing.JPanel {
             else
             {
                initComponents();
+               jtaDBName.setText(myProps.getProperty(ApplicationConstants.LAST_DB));
 jtfDBProductName.setText(dbmdInfo.getDatabaseProductName());
 jtfDBProductVersion.setText(dbmdInfo.getDatabaseProductVersion());
 jtfDBMajorVersion.setText(Integer.toString(dbmdInfo.getDatabaseMajorVersion()));
@@ -64,6 +65,8 @@ jtfDriverMinorVersion.setText(Integer.toString(dbmdInfo.getDriverMinorVersion())
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
+        jScrollPane1 = new javax.swing.JScrollPane();
+        jTextArea1 = new javax.swing.JTextArea();
         jtfDBProductName = new javax.swing.JTextField();
         jlProductName = new javax.swing.JLabel();
         jtfDBProductVersion = new javax.swing.JTextField();
@@ -82,6 +85,13 @@ jtfDriverMinorVersion.setText(Integer.toString(dbmdInfo.getDriverMinorVersion())
         jlDriverVersion = new javax.swing.JLabel();
         jlDriverMajorVersion = new javax.swing.JLabel();
         jLabel5 = new javax.swing.JLabel();
+        jlDBName = new javax.swing.JLabel();
+        jScrollPane2 = new javax.swing.JScrollPane();
+        jtaDBName = new javax.swing.JTextArea();
+
+        jTextArea1.setColumns(20);
+        jTextArea1.setRows(5);
+        jScrollPane1.setViewportView(jTextArea1);
 
         jtfDBProductName.setEditable(false);
         jtfDBProductName.addActionListener(new java.awt.event.ActionListener() {
@@ -137,51 +147,62 @@ jtfDriverMinorVersion.setText(Integer.toString(dbmdInfo.getDriverMinorVersion())
         jLabel5.setLabelFor(jtfDriverMinorVersion);
         jLabel5.setText("Minor Version");
 
+        jlDBName.setLabelFor(jtaDBName);
+        jlDBName.setText("Database File");
+
+        jtaDBName.setColumns(20);
+        jtaDBName.setRows(5);
+        jScrollPane2.setViewportView(jtaDBName);
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                        .addGroup(layout.createSequentialGroup()
-                            .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                .addGroup(layout.createSequentialGroup()
-                                    .addGap(29, 29, 29)
-                                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                        .addComponent(jlDriverVersion)
-                                        .addComponent(jlDriverName))
-                                    .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                                .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                                    .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                                        .addComponent(jLabel5)
-                                        .addComponent(jlDriverMajorVersion))
-                                    .addGap(18, 18, 18)))
-                            .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                .addComponent(jtfDriverMajorVersion)
-                                .addComponent(jtfDriverVersion)
-                                .addComponent(jtfDriverName)
-                                .addComponent(jtfDriverMinorVersion, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 206, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                        .addGroup(javax.swing.GroupLayout.Alignment.LEADING, layout.createSequentialGroup()
-                            .addGap(29, 29, 29)
-                            .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                .addComponent(jlProductName)
-                                .addComponent(jlProductVersion)
-                                .addComponent(jlDBMajorVersion)
-                                .addComponent(jlDBMinorVersion))
-                            .addGap(18, 18, 18)
-                            .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                                .addComponent(jtfDBMajorVersion)
-                                .addComponent(jtfDBProductVersion)
-                                .addComponent(jtfDBProductName)
-                                .addComponent(jtfDBMinorVersion, javax.swing.GroupLayout.PREFERRED_SIZE, 206, javax.swing.GroupLayout.PREFERRED_SIZE))))
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(layout.createSequentialGroup()
+                                .addGap(29, 29, 29)
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(jlDriverVersion)
+                                    .addComponent(jlDriverName))
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                                    .addComponent(jLabel5)
+                                    .addComponent(jlDriverMajorVersion))
+                                .addGap(18, 18, 18)))
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jtfDriverMajorVersion)
+                            .addComponent(jtfDriverVersion)
+                            .addComponent(jtfDriverName)
+                            .addComponent(jtfDriverMinorVersion, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 206, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGap(121, 121, 121))
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(29, 29, 29)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jlProductName)
+                            .addComponent(jlProductVersion)
+                            .addComponent(jlDBMajorVersion)
+                            .addComponent(jlDBMinorVersion))
+                        .addGap(18, 18, 18)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                            .addComponent(jtfDBMajorVersion)
+                            .addComponent(jtfDBProductVersion)
+                            .addComponent(jtfDBProductName)
+                            .addComponent(jtfDBMinorVersion, javax.swing.GroupLayout.PREFERRED_SIZE, 206, javax.swing.GroupLayout.PREFERRED_SIZE)))
                     .addGroup(layout.createSequentialGroup()
                         .addContainerGap()
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jLabel2)
                             .addComponent(jLabel1)
-                            .addComponent(jLabel2))))
-                .addContainerGap(131, Short.MAX_VALUE))
+                            .addGroup(layout.createSequentialGroup()
+                                .addComponent(jlDBName)
+                                .addGap(35, 35, 35)
+                                .addComponent(jScrollPane2)))))
+                .addContainerGap())
         );
 
         layout.linkSize(javax.swing.SwingConstants.HORIZONTAL, new java.awt.Component[] {jtfDriverMajorVersion, jtfDriverMinorVersion, jtfDriverName, jtfDriverVersion});
@@ -189,7 +210,11 @@ jtfDriverMinorVersion.setText(Integer.toString(dbmdInfo.getDriverMinorVersion())
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addContainerGap()
+                .addGap(52, 52, 52)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jlDBName)
+                    .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 38, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jLabel1)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
@@ -200,7 +225,7 @@ jtfDriverMinorVersion.setText(Integer.toString(dbmdInfo.getDriverMinorVersion())
                     .addComponent(jtfDBProductVersion, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jlProductVersion))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(jtfDBMajorVersion, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jlDBMajorVersion))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
@@ -225,7 +250,7 @@ jtfDriverMinorVersion.setText(Integer.toString(dbmdInfo.getDriverMinorVersion())
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(jtfDriverMinorVersion, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jLabel5))
-                .addContainerGap(170, Short.MAX_VALUE))
+                .addContainerGap(85, Short.MAX_VALUE))
         );
     }// </editor-fold>//GEN-END:initComponents
 
@@ -250,13 +275,18 @@ jtfDriverMinorVersion.setText(Integer.toString(dbmdInfo.getDriverMinorVersion())
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel5;
+    private javax.swing.JScrollPane jScrollPane1;
+    private javax.swing.JScrollPane jScrollPane2;
+    private javax.swing.JTextArea jTextArea1;
     private javax.swing.JLabel jlDBMajorVersion;
     private javax.swing.JLabel jlDBMinorVersion;
+    private javax.swing.JLabel jlDBName;
     private javax.swing.JLabel jlDriverMajorVersion;
     private javax.swing.JLabel jlDriverName;
     private javax.swing.JLabel jlDriverVersion;
     private javax.swing.JLabel jlProductName;
     private javax.swing.JLabel jlProductVersion;
+    private javax.swing.JTextArea jtaDBName;
     private javax.swing.JTextField jtfDBMajorVersion;
     private javax.swing.JTextField jtfDBMinorVersion;
     private javax.swing.JTextField jtfDBProductName;

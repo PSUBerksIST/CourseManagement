@@ -464,7 +464,7 @@ public void finalize()
 
     private void jmiDatabaseInformationActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jmiDatabaseInformationActionPerformed
         // TODO add your handling code here:
-         JOptionPane.showMessageDialog(this, new jpSQLiteDBInfo(dbConnection),
+         JOptionPane.showMessageDialog(this, new jpSQLiteDBInfo(dbConnection, myProps),
                    "Connection Information for " + myProps.getProperty(ApplicationConstants.LAST_DB),
                    JOptionPane.INFORMATION_MESSAGE);
     }//GEN-LAST:event_jmiDatabaseInformationActionPerformed

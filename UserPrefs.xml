@@ -2,6 +2,6 @@
 <!DOCTYPE properties SYSTEM "http://java.sun.com/dtd/properties.dtd">
 <properties>
 <comment>Edit this file at your own risk.  It will be overwritten at program exit.</comment>
-<entry key="LastConnectedDatabase">F:\NetBeansProjects\IST261DesktopPaneDemo\src\IST261DesktopPaneDemo\CourseManagement3.db3</entry>
+<entry key="LastConnectedDatabase">F:\NetBeansProjects\CourseManagement\src\IST261DesktopPaneDemo\CourseManagement3.db3</entry>
 <entry key="LookAndFeel">com.sun.java.swing.plaf.windows.WindowsClassicLookAndFeel</entry>
 </properties>
