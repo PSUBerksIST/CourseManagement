@@ -17,6 +17,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.swing.JDialog;
 
 /**
  *
@@ -194,9 +195,9 @@ public class jpCourse extends JPanel{
     }// </editor-fold>//GEN-END:initComponents
 
     private void jbAddCourseActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jbAddCourseActionPerformed
-    //    JPanel AddCourse = new jpAddCourse();
-    //    AddCourse.setName("Add Course");
-    //    CreateFrame(AddCourse);
+        JPanel AddCourse = new jpAddCourse(dbConnection);
+        AddCourse.setName("Add Course");
+        CreateFrame(AddCourse);
         // TODO add your handling code here:
     }//GEN-LAST:event_jbAddCourseActionPerformed
 
@@ -226,6 +227,14 @@ public class jpCourse extends JPanel{
 
     
     private void CreateFrame(JPanel inPanel) {
+        
+        
+                //  intWindowCounter++;
+      JDialog jd = new JDialog();
+      jd.add(inPanel);
+      jd.pack();
+      jd.setModal(true);
+      jd.setVisible(true);
 //                //  intWindowCounter++;
 //        
 //        JFrame jifTemp = new jfTempFrames(inPanel.getName());// +"" + intWindowCounter,true,true,true,true);
