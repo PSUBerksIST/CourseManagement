@@ -11,10 +11,10 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import javax.swing.JComboBox;
 import javax.swing.JTextArea;
 import javax.swing.JTextField;
 import javax.swing.JCheckBox;
+import javax.swing.JSpinner;
 
 /**
  *
@@ -25,14 +25,16 @@ public class jpAddAssignment extends javax.swing.JPanel {
     /**
      * Creates new form jpAssignment
      */
-        private Connection dbConnection;
-        public jpAddAssignment(Connection inConnection)
-        {
-            initComponents();
-            dbConnection = inConnection;
-        }
-        private Statement st;
-        private PreparedStatement pst;
+    
+    private Connection dbConnection;
+    public jpAddAssignment(Connection inConnection){
+        initComponents();
+        dbConnection = inConnection;
+    }// jpAddAssignment
+        
+    //Statement values    
+    private Statement st;
+    private PreparedStatement pst;
          
 
     // vars that get passed to the database
@@ -42,75 +44,68 @@ public class jpAddAssignment extends javax.swing.JPanel {
     private String strNotes = null;
     private String strGradeNotes = null;
     private int intPoints = 0;
-    private String strAttendance = null;
-    private String strGroup = null;
+    private boolean blAttendance = false;
+    private boolean blGroup = false;
         
     
-    //This sets the Course from the drop down on the screen
+    //This sets the Assignment name from user input.
     private void setAssignment(JTextField injtfAssignment){
-        String selected = injtfAssignment.getSelectedText();
+        String selected = injtfAssignment.getText();
         strAssignment = selected;
-    }
+    }// setAssignment
     
-    //This sets the Course from the drop down on the screen
-    private void setMaxPoints(JTextField injtfMaxPoints){
-        int selected = Integer.parseInt(injtfMaxPoints.getSelectedText());
+    //This sets the Point value for the assignment from user input.
+    private void setMaxPoints(JSpinner injsPoints){
+        int selected = (Integer)injsPoints.getValue();
         intPoints = selected;
     } //setMaxPoints
     
     
-    //This sets the Course from the drop down on the screen
+    //This sets attendance required boolean from checkbox.
     private void setAttendance(JCheckBox jcbAttendance){
         if (jcbAttendance.isSelected()){
-            strAttendance = "yes";
+            blAttendance = true;
         }// if
-        else{    
-            strAttendance = "no";
-        };// else   
     }// setAttendance
     
     
-    //This sets the Course from the drop down on the screen
+    //This sets group grade boolean from checkbox.
     private void setGroup(JCheckBox jcbGroup){
         if (jcbGroup.isSelected()){
-            strGroup = "yes";
-        }// if
-        else{    
-            strGroup = "no";
-        };// else
-        
-    }
+            blGroup = true;
+        }// if       
+    }// setGroup
     
     
-    // This sets the Assignment Name based on the User's input.
+    // This sets description area based on user input.
     private void setDescription(JTextArea injtaDescription){
-        strAssignment = injtaDescription.getText();
+        strDescription = injtaDescription.getText();
     }// setDescription
     
     
-    // This sets the Assignment Name based on the User's input.
+    // This sets the specification area based on user input.
     private void setSpecification(JTextArea injtaSpecification){
-        strAssignment = injtaSpecification.getText();
+        strSpecification = injtaSpecification.getText();
     }// setSpecification
     
     
-    // This sets the Assignment Name based on the User's input.
+    // This sets the notes area based on user input.
     private void setNotes(JTextArea injtaNotes){
-        strAssignment = injtaNotes.getText();
+        strNotes = injtaNotes.getText();
     }// setNotes
     
     
-    // This sets the Assignment Name based on the User's input.
+    // This sets the gradenotes area based on user input.
     private void setGradeNotes(JTextArea injtaGradeNotes){
-        strAssignment = injtaGradeNotes.getText();
+        strGradeNotes = injtaGradeNotes.getText();
     }//setGradeNotes
     
-    // this inserts all the data into the class table in the DB
-    private void InsertToTable(String inAssignment, String inDescription, String inSpecification, int inPoints, String inNotes, String inGradeNotes, String inAttendance, String inGroup){
+    // This inserts all the data into the Assignments table in the DB
+    private void InsertToTable(String inAssignment, String inDescription, String inSpecification, int inPoints, String inNotes, String inGradeNotes, boolean inAttendance, boolean inGroup){
         try {
-            String query = " INSERT INTO Assignments (ShortName, Description, Specification, MaximumPoints, Notes,"
-                           + " GradingNotes, AttendanceRequired, GroupAssignment"
-                           + " VALUES (?, ?, ?, ?, ?, ?, ?, ?)";//8
+            String query = "INSERT INTO Assignments (ShortName, Description, Specification, MaximumPoints, Notes, GradingNotes, \n" +
+                            " AttendanceRequired, GroupAssignment)\n" +
+                            " VALUES (?, ?, ?, ?, ?, ?, ?, ?)";//8
              pst = dbConnection.prepareStatement(query);
              pst.setString(1, inAssignment);
              pst.setString(2, inDescription);
@@ -118,15 +113,15 @@ public class jpAddAssignment extends javax.swing.JPanel {
              pst.setInt(4, inPoints);
              pst.setString(5, inNotes);
              pst.setString(6, inGradeNotes);
-             pst.setString(7, inAttendance);
-             pst.setString(8, inGroup);
+             pst.setBoolean(7, inAttendance);
+             pst.setBoolean(8, inGroup);
              pst.execute();
         } catch (SQLException ex) {
             Logger.getLogger(jpAddClass.class.getName()).log(Level.SEVERE, null, ex);
             System.out.println("Failed");
-        }
+        }// try/catch
         
-    }
+    }// insertToTable
     
     
     
@@ -149,7 +144,6 @@ public class jpAddAssignment extends javax.swing.JPanel {
         jchbGroupAssignment = new javax.swing.JCheckBox();
         jbAddAssignmentFinish = new javax.swing.JButton();
         jlMaxPoints = new javax.swing.JLabel();
-        jtfPoints = new javax.swing.JTextField();
         jlDescription = new javax.swing.JLabel();
         jScrollPane1 = new javax.swing.JScrollPane();
         jtaDescription = new javax.swing.JTextArea();
@@ -163,10 +157,13 @@ public class jpAddAssignment extends javax.swing.JPanel {
         jtaGradingNotes = new javax.swing.JTextArea();
         jlGradingNotes = new javax.swing.JLabel();
         jchAttendanceRequired = new javax.swing.JCheckBox();
+        jsMaxPoints = new javax.swing.JSpinner();
 
         jTextArea1.setColumns(20);
         jTextArea1.setRows(5);
         jScrollPane2.setViewportView(jTextArea1);
+
+        setMinimumSize(new java.awt.Dimension(432, 508));
 
         jlAssignmentName.setText("Name");
 
@@ -177,7 +174,7 @@ public class jpAddAssignment extends javax.swing.JPanel {
             }
         });
 
-        jbAddAssignmentFinish.setText("Finsih");
+        jbAddAssignmentFinish.setText("Finish");
         jbAddAssignmentFinish.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jbAddAssignmentFinishActionPerformed(evt);
@@ -219,42 +216,38 @@ public class jpAddAssignment extends javax.swing.JPanel {
             .addGroup(layout.createSequentialGroup()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
-                        .addGap(87, 87, 87)
-                        .addComponent(jlNotes)
-                        .addGap(152, 152, 152)
-                        .addComponent(jlGradingNotes))
-                    .addGroup(layout.createSequentialGroup()
-                        .addGap(24, 24, 24)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                            .addComponent(jchbGroupAssignment)
-                            .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                                .addComponent(jScrollPane1)
-                                .addComponent(jScrollPane4)))
-                        .addGap(38, 38, 38)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                            .addComponent(jScrollPane5, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(jchAttendanceRequired, javax.swing.GroupLayout.Alignment.LEADING)))
-                    .addGroup(layout.createSequentialGroup()
-                        .addGap(64, 64, 64)
-                        .addComponent(jlDescription)
-                        .addGap(145, 145, 145)
-                        .addComponent(jlSpecification))
-                    .addGroup(layout.createSequentialGroup()
                         .addGap(181, 181, 181)
                         .addComponent(jlAssignmentName))
-                    .addGroup(layout.createSequentialGroup()
-                        .addGap(147, 147, 147)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jlMaxPoints)
-                            .addComponent(jtfPoints, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE)))
                     .addGroup(layout.createSequentialGroup()
                         .addGap(81, 81, 81)
                         .addComponent(jtfAssignmentName, javax.swing.GroupLayout.PREFERRED_SIZE, 239, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addGroup(layout.createSequentialGroup()
-                        .addGap(179, 179, 179)
-                        .addComponent(jbAddAssignmentFinish)))
-                .addContainerGap(25, Short.MAX_VALUE))
+                        .addGap(147, 147, 147)
+                        .addComponent(jlMaxPoints))
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(165, 165, 165)
+                        .addComponent(jsMaxPoints, javax.swing.GroupLayout.PREFERRED_SIZE, 64, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(175, 175, 175)
+                        .addComponent(jbAddAssignmentFinish))
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(24, 24, 24)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                                .addComponent(jScrollPane1)
+                                .addComponent(jScrollPane4)
+                                .addComponent(jchAttendanceRequired))
+                            .addComponent(jlDescription)
+                            .addComponent(jlNotes))
+                        .addGap(38, 38, 38)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jlGradingNotes)
+                            .addComponent(jlSpecification)
+                            .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                                .addComponent(jScrollPane5, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addComponent(jchbGroupAssignment, javax.swing.GroupLayout.Alignment.LEADING)))))
+                .addContainerGap(38, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -266,7 +259,7 @@ public class jpAddAssignment extends javax.swing.JPanel {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jlMaxPoints)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jtfPoints, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(jsMaxPoints, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(18, 18, 18)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                     .addComponent(jlDescription)
@@ -281,15 +274,17 @@ public class jpAddAssignment extends javax.swing.JPanel {
                     .addComponent(jlGradingNotes))
                 .addGap(1, 1, 1)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jScrollPane5, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jScrollPane4, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(18, 18, 18)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jchbGroupAssignment)
-                    .addComponent(jchAttendanceRequired))
+                    .addGroup(layout.createSequentialGroup()
+                        .addComponent(jScrollPane5, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addComponent(jchbGroupAssignment))
+                    .addGroup(layout.createSequentialGroup()
+                        .addComponent(jScrollPane4, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addComponent(jchAttendanceRequired)))
                 .addGap(18, 18, 18)
                 .addComponent(jbAddAssignmentFinish)
-                .addContainerGap(54, Short.MAX_VALUE))
+                .addContainerGap(58, Short.MAX_VALUE))
         );
     }// </editor-fold>//GEN-END:initComponents
 
@@ -299,7 +294,7 @@ public class jpAddAssignment extends javax.swing.JPanel {
 
         setAssignment(jtfAssignmentName);
         setDescription(jtaDescription);
-        setMaxPoints(jtfPoints);
+        setMaxPoints(jsMaxPoints);
         setSpecification(jtaSpecification);
         setNotes(jtaNotes);
         setGradeNotes(jtaGradingNotes);
@@ -307,7 +302,7 @@ public class jpAddAssignment extends javax.swing.JPanel {
         setGroup(jchbGroupAssignment);
         
         
-        InsertToTable(strAssignment, strDescription, strSpecification, intPoints, strNotes, strGradeNotes, strAttendance, strGroup);
+        InsertToTable(strAssignment, strDescription, strSpecification, intPoints, strNotes, strGradeNotes, blAttendance, blGroup);
     }//GEN-LAST:event_jbAddAssignmentFinishActionPerformed
 
     private void jchbGroupAssignmentActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jchbGroupAssignmentActionPerformed
@@ -331,11 +326,11 @@ public class jpAddAssignment extends javax.swing.JPanel {
     private javax.swing.JLabel jlMaxPoints;
     private javax.swing.JLabel jlNotes;
     private javax.swing.JLabel jlSpecification;
+    private javax.swing.JSpinner jsMaxPoints;
     private javax.swing.JTextArea jtaDescription;
     private javax.swing.JTextArea jtaGradingNotes;
     private javax.swing.JTextArea jtaNotes;
     private javax.swing.JTextArea jtaSpecification;
     private javax.swing.JTextField jtfAssignmentName;
-    private javax.swing.JTextField jtfPoints;
     // End of variables declaration//GEN-END:variables
 }
