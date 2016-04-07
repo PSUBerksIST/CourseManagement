@@ -35,6 +35,8 @@ import org.apache.commons.cli.*;
  * 
  ******************* MODIFICATION LOG *****************************************
  * 
+ * 2016 April 07   - Added library and loaded plaf for Pago Soft plaf. - WHB
+ * 
  * 2016 March 26   - Added exit menu item, finalize().  Created Help menu,
  *                   moved database info to help menu.- WHB 
  * 2016 March 25   - Added user preferences. - WHB
@@ -54,6 +56,7 @@ import org.apache.commons.cli.*;
  *      rs2xml.jar      https://drive.google.com/file/d/0BzIr4IDDKJEcdDE1YTlzbmtkMzg/view   create table model from ResultSet
  *      commons-cli-1.3.1.jar   https://commons.apache.org/proper/commons-cli/download_cli.cgi  Command line argument parser
  *      sqlite-jdbc-3.8.11.2.jar    https://bitbucket.org/xerial/sqlite-jdbc/downloads
+ *      pgslookandfeel-1.1.2.jar http://www.pagosoft.com/projects/pgslookandfeel/
  */
 public class jfMain extends JFrame {
 
@@ -120,6 +123,8 @@ public void finalize()
     
     public void MakeLookAndFeelMenu()
     {
+        
+        UIManager.installLookAndFeel("Pago Soft", "com.pagosoft.plaf.PgsLookAndFeel");
          LookAndFeelInfo[] lfAll = UIManager.getInstalledLookAndFeels();
         
          
