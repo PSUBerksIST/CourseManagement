@@ -45,7 +45,7 @@ import javax.swing.JDialog;
 public class jpCourse extends JPanel{
     
     // Contain active course selection
-    private String selectedCourse = "";
+    private int selectedCourse;
     
     // Database and init params
     private Connection dbConnection;
@@ -86,20 +86,19 @@ public class jpCourse extends JPanel{
      */
     private void setCourseList()
     {
-        
-        jcbCourse.removeAllItems();
-        
+
+        courses.clear();
         // Grab the courses from the database and display them
         try {
             ResultSet result = st.executeQuery("SELECT course.id, department.departmentname, course.number FROM course, department WHERE course.fkdepartment = department.id ORDER BY course.id asc");
-            
+
             int i = 0;
             while (result.next()) {
                 courses.add(result.getString(2) + " " + result.getString(3));
                 courseIds.put(i, result.getInt(1));
                 i++;
             }
-            
+
             jcbCourse.setModel(new DefaultComboBoxModel(courses.toArray()));
            
             // By default set the selected item to be nothing
@@ -224,11 +223,13 @@ public class jpCourse extends JPanel{
      */
     private void jcbCourseActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jcbCourseActionPerformed
         // TODO add your handling code here:
+        
         if(jcbCourse.getSelectedItem() != null)
         {
-            selectedCourse = courseIds.get(jcbCourse.getSelectedIndex()).toString();
+            selectedCourse = Integer.parseInt(courseIds.get(jcbCourse.getSelectedIndex()).toString());
             System.out.println(selectedCourse);
         }
+        
 
     }//GEN-LAST:event_jcbCourseActionPerformed
 
