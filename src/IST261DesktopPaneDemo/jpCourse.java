@@ -227,7 +227,10 @@ public class jpCourse extends JPanel{
         if(jcbCourse.getSelectedItem() != null)
         {
             selectedCourse = Integer.parseInt(courseIds.get(jcbCourse.getSelectedIndex()).toString());
-            System.out.println(selectedCourse);
+            System.out.println("Active Course Selected: (int) " + selectedCourse);
+            
+            // An action has been performed. Update tabs!
+
         }
         
 
