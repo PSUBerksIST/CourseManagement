@@ -15,6 +15,7 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Statement;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JDialog;
@@ -48,34 +49,49 @@ public class jpCourse extends JPanel{
     
     // Database and init params
     private Connection dbConnection;
+    private Statement st;
     private HashMap<Integer, Integer> courseIds = new HashMap<>();
     private static List<String> courses = new ArrayList<String>();
     
     /**
      * Creates new form jpCourse
      */
-    public jpCourse(Connection inConnection) {
+    public jpCourse() {
         
         initComponents();
-        dbConnection = inConnection;
-        
-        // init course dropdown
-        createCourseList();
         
     }
     
-
+    public jpCourse(Connection inConnection) {
+        
+        initComponents();
+        setdbConnection(inConnection);
+        setCourseList();
+        
+    }
+    
+    // This sets the local datbase connection
+    private void setdbConnection(Connection inConnection){
+        dbConnection = inConnection;
+        try {             
+            st = dbConnection.createStatement();
+        } catch (SQLException ex) {
+            System.out.println(ex);
+        }
+    }
+    
     /**
      * createCourseList.
      * Builds an array of all courses and displays them in a jComboBox
      */
-    public void createCourseList()
+    private void setCourseList()
     {
+        
+        jcbCourse.removeAllItems();
+        
         // Grab the courses from the database and display them
         try {
-            
-            PreparedStatement query = dbConnection.prepareStatement("SELECT course.id, department.departmentname, course.number FROM course, department WHERE course.fkdepartment = department.id");
-            ResultSet result = query.executeQuery();
+            ResultSet result = st.executeQuery("SELECT course.id, department.departmentname, course.number FROM course, department WHERE course.fkdepartment = department.id ORDER BY course.id asc");
             
             int i = 0;
             while (result.next()) {
