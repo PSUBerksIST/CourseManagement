@@ -41,7 +41,7 @@ public class jpAssignment extends javax.swing.JPanel {
         jbSave = new javax.swing.JButton();
         jlAssignments = new javax.swing.JLabel();
 
-        jbAddAssignment.setText("Add Assignment");
+        jbAddAssignment.setText("Create New");
         jbAddAssignment.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jbAddAssignmentActionPerformed(evt);
