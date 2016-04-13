@@ -3,5 +3,5 @@
 <properties>
 <comment>Edit this file at your own risk.  It will be overwritten at program exit.</comment>
 <entry key="LastConnectedDatabase">F:\NetBeansProjects\CourseManagement\src\IST261DesktopPaneDemo\CourseManagement3.db3</entry>
-<entry key="LookAndFeel">com.sun.java.swing.plaf.windows.WindowsClassicLookAndFeel</entry>
+<entry key="LookAndFeel">javax.swing.plaf.nimbus.NimbusLookAndFeel</entry>
 </properties>

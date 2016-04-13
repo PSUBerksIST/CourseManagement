@@ -57,6 +57,7 @@ import org.apache.commons.cli.*;
  *      commons-cli-1.3.1.jar   https://commons.apache.org/proper/commons-cli/download_cli.cgi  Command line argument parser
  *      sqlite-jdbc-3.8.11.2.jar    https://bitbucket.org/xerial/sqlite-jdbc/downloads
  *      pgslookandfeel-1.1.2.jar http://www.pagosoft.com/projects/pgslookandfeel/
+ *      JavaGPE_3DLF-2.5.jar  http://www.markus-hillenbrand.de/3dlf/
  */
 public class jfMain extends JFrame {
 
@@ -76,23 +77,26 @@ public class jfMain extends JFrame {
      */
     public jfMain(String[] strArgs) 
     {
-                myProps = new Properties();
-        initComponents();
-       
-        MakeLookAndFeelMenu();
-        dbc = new DBConnection(this);
-        setLocationByPlatform(true);
-        addWindowListener(new java.awt.event.WindowAdapter() {
-            public void windowClosing(java.awt.event.WindowEvent e) 
-            {
-                try {
-                    if (dbConnection != null)
-                        dbConnection.close();
-                    
-                  
-                } catch (SQLException ex) {
-                    Logger.getLogger(jfMain.class.getName()).log(Level.SEVERE, null, ex);
-                }
+       myProps = new Properties();
+       initComponents();
+       addAdditionalPLAF();
+     
+       dbc = new DBConnection(this);
+       setLocationByPlatform(true);
+       addWindowListener(new java.awt.event.WindowAdapter() 
+       {
+          public void windowClosing(java.awt.event.WindowEvent e) 
+          {
+             try 
+             {
+                  jmiSaveUserOptions.doClick();
+                if (dbConnection != null)
+                   dbConnection.close();
+             } // try to close the database connection
+             catch (SQLException ex) 
+             {
+                Logger.getLogger(jfMain.class.getName()).log(Level.SEVERE, null, ex);
+             } // catch
                   System.exit(0);
             }
         });
@@ -101,11 +105,14 @@ public class jfMain extends JFrame {
             strUserPrefsFile = myCL.getOptionValue("u");
            HelpFormatter formatter = new HelpFormatter();
            formatter.printHelp( "Course Management", CommandLineOptions.makeOptions() );
-        } catch (ParseException ex) {
+        } 
+        catch (ParseException ex) 
+        {
             Logger.getLogger(jfMain.class.getName()).log(Level.SEVERE, null, ex);
         }
         jmiLoadUserOptions.doClick();
         jmiOpenDB.doClick();
+          MakeLookAndFeelMenu();
     } // 
 
 public void finalize()  
@@ -120,11 +127,18 @@ public void finalize()
             Logger.getLogger(jfMain.class.getName()).log(Level.SEVERE, null, ex);
         }
 }
+
+
+public void addAdditionalPLAF()
+{
+     UIManager.installLookAndFeel("Pago Soft", "com.pagosoft.plaf.PgsLookAndFeel");
+        UIManager.installLookAndFeel("3D", "de.hillenbrand.swing.plaf.threeD.ThreeDLookAndFeel");
+}
     
     public void MakeLookAndFeelMenu()
     {
         
-        UIManager.installLookAndFeel("Pago Soft", "com.pagosoft.plaf.PgsLookAndFeel");
+       
          LookAndFeelInfo[] lfAll = UIManager.getInstalledLookAndFeels();
         
          
@@ -134,7 +148,11 @@ public void finalize()
               + " Class - " + lfAll1.getClassName());
           JRadioButtonMenuItem jmiTemp = new JRadioButtonMenuItem(); 
           jmiTemp.setText(lfAll1.getName());
-          if (UIManager.getLookAndFeel().getName().equalsIgnoreCase(lfAll1.getName()))
+          String strLAF = UIManager.getLookAndFeel().getClass().getName();
+     //       System.out.println("strLAF = " + strLAF); 
+     //       System.out.println("LAF Info name = " + lfAll1.getName());
+     //       System.out.println("LAF Info class name = " + lfAll1.getClassName());
+          if (strLAF.equalsIgnoreCase(lfAll1.getClassName()))
           {
              jmiTemp.setSelected(true);
           } // is this the current L&F?
@@ -149,6 +167,7 @@ public void finalize()
                 
                  JRadioButtonMenuItem jrbTemp = (JRadioButtonMenuItem)evt.getSource();
                  jrbTemp.setSelected(true);
+                  jmiSaveUserOptions.doClick();
               } 
               
               catch (ClassNotFoundException | InstantiationException | IllegalAccessException | UnsupportedLookAndFeelException ex) {
@@ -546,7 +565,7 @@ public void finalize()
     private javax.swing.JButton jbClass;
     private javax.swing.JButton jbCourse;
     private javax.swing.JButton jbDocuments;
-    private javax.swing.JButton jbTile;
+    public javax.swing.JButton jbTile;
     private javax.swing.JDesktopPane jdpMain;
     private javax.swing.JMenu jmEdit;
     private javax.swing.JMenu jmFile;
