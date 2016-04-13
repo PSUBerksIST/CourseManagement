@@ -111,7 +111,7 @@ public class jpAssignment extends javax.swing.JPanel {
         JDialog jdAddAssignment = new JDialog();
         JPanel AddAssignment = new jpAddAssignment(dbConnection);
         jdAddAssignment.add(AddAssignment);
-        jdAddAssignment.setSize(500, 400);
+        jdAddAssignment.setSize(565, 580);
         jdAddAssignment.setVisible(true);
         // TODO add your handling code here:
     }//GEN-LAST:event_jbAddAssignmentActionPerformed
