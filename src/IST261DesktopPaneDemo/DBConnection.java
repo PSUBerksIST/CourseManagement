@@ -15,6 +15,7 @@ import javax.swing.JFileChooser;
 import javax.swing.filechooser.FileNameExtensionFilter;
 
 import java.util.Properties;
+import javax.swing.JOptionPane;
 
 
 /**
@@ -69,7 +70,25 @@ public class DBConnection {
     
         public Connection connectToDB(Properties propsIn)
     {
-        JFileChooser myFC = new JFileChooser();
+        boolean bNewConnection = false;
+        
+        if (jfApp.dbConnection != null)
+        {
+            bNewConnection = (JOptionPane.showConfirmDialog(jfApp, 
+                   "You are currently connected to " 
+                      + propsIn.getProperty(ApplicationConstants.LAST_DB,"")
+                   + "\n\n Do you want to connect to a different DB?", 
+                   "Connect to New Database?", JOptionPane.YES_NO_OPTION,
+                   JOptionPane.WARNING_MESSAGE)
+                == JOptionPane.YES_OPTION);
+            if (bNewConnection == false)
+            {
+                return jfApp.dbConnection;
+            } // don't connect to a new DB
+        } // if there is an existing connection
+   
+        
+
         String strInFile = propsIn.getProperty(ApplicationConstants.LAST_DB,"");
         File fTemp = null;
         
@@ -80,7 +99,9 @@ public class DBConnection {
         // if there was no value for the last database opened in the properties
         // or the named file does not exist
         
-        if ((strInFile.length() == 0) || (fTemp.exists() == false))
+        if ((strInFile.length() == 0) 
+         || (fTemp.exists() == false) 
+         || (bNewConnection == true))
         {
         // Insure that the path is empty then set it to the application path
            String strPath = "";
@@ -97,6 +118,7 @@ public class DBConnection {
         // Set the file name to the application path and default file name   
            String strFileName = strPath + File.separatorChar + ApplicationConstants.DEFAULT_DB_FILE;
            File file = new File(strFileName);
+                   JFileChooser myFC = new JFileChooser();
            myFC.setCurrentDirectory(file);
            
         // Set a filter for the JFileChooser to use standard SQLite file extensions   

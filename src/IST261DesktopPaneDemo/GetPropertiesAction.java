@@ -21,12 +21,16 @@ import java.awt.event.ActionEvent;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
+import java.util.Enumeration;
 import java.util.Properties;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.AbstractAction;
 import javax.swing.Action;
 import javax.swing.ImageIcon;
+import javax.swing.SwingUtilities;
+import javax.swing.UIManager;
+import javax.swing.UnsupportedLookAndFeelException;
  
 public class GetPropertiesAction extends AbstractAction {
      
@@ -107,12 +111,47 @@ public class GetPropertiesAction extends AbstractAction {
             
             
             myProps.loadFromXML(new FileInputStream(strFileName));
-            
+            applyProperties(myProps);
             //TODO Apply each property
-        } catch (IOException ex) {
+        } 
+        catch (IOException ex) 
+        {
             Logger.getLogger(GetPropertiesAction.class.getName()).log(Level.SEVERE, null, ex);
         }
         
         
     } // actionPerformed
-}
+    
+    private void applyProperties(Properties inProps)
+    {
+       Enumeration e = inProps.propertyNames();
+
+       while (e.hasMoreElements()) 
+       {
+         String key = (String) e.nextElement();
+         
+         switch(key)
+         {
+             case "LookAndFeel":
+         {
+             try 
+             {
+                 UIManager.setLookAndFeel(inProps.getProperty(key));
+             } 
+             catch (ClassNotFoundException 
+                  | InstantiationException 
+                  | IllegalAccessException
+                  | UnsupportedLookAndFeelException   
+                     ex) 
+             {
+                 Logger.getLogger(GetPropertiesAction.class.getName()).log(Level.SEVERE, null, ex);
+             } 
+         }
+                SwingUtilities.updateComponentTreeUI(jfApp);
+                jfApp.jbTile.doClick();
+                break;        
+         } // switch
+         System.out.println(key + " -- " + inProps.getProperty(key));
+       } // while
+    } // applyProperties
+} // class GetPropertiesAction
