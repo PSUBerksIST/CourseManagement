@@ -101,6 +101,8 @@ public class jpClass extends javax.swing.JPanel {
         jTabbedPane1 = new javax.swing.JTabbedPane();
         jpClassOverviewTab = new javax.swing.JPanel();
         jLabel6 = new javax.swing.JLabel();
+        jScrollPane6 = new javax.swing.JScrollPane();
+        jTable3 = new javax.swing.JTable();
         jpClassStudentsTab = new javax.swing.JPanel();
         jScrollPane5 = new javax.swing.JScrollPane();
         jTable1 = new javax.swing.JTable();
@@ -148,23 +150,44 @@ public class jpClass extends javax.swing.JPanel {
             }
         });
 
-        jLabel6.setText("Calendar MAYBE");
+        jTable3.setModel(new javax.swing.table.DefaultTableModel(
+            new Object [][] {
+                {"UD 1", "100%"},
+                {"UD 2", "75%"}
+            },
+            new String [] {
+                "Assignments Submitted", "Percentage of class submission"
+            }
+        ) {
+            Class[] types = new Class [] {
+                java.lang.String.class, java.lang.String.class
+            };
+
+            public Class getColumnClass(int columnIndex) {
+                return types [columnIndex];
+            }
+        });
+        jScrollPane6.setViewportView(jTable3);
 
         javax.swing.GroupLayout jpClassOverviewTabLayout = new javax.swing.GroupLayout(jpClassOverviewTab);
         jpClassOverviewTab.setLayout(jpClassOverviewTabLayout);
         jpClassOverviewTabLayout.setHorizontalGroup(
             jpClassOverviewTabLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jpClassOverviewTabLayout.createSequentialGroup()
-                .addGap(71, 71, 71)
+                .addContainerGap()
+                .addComponent(jScrollPane6, javax.swing.GroupLayout.PREFERRED_SIZE, 357, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jLabel6)
-                .addContainerGap(225, Short.MAX_VALUE))
+                .addContainerGap(71, Short.MAX_VALUE))
         );
         jpClassOverviewTabLayout.setVerticalGroup(
             jpClassOverviewTabLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jpClassOverviewTabLayout.createSequentialGroup()
                 .addGap(44, 44, 44)
-                .addComponent(jLabel6)
-                .addContainerGap(559, Short.MAX_VALUE))
+                .addGroup(jpClassOverviewTabLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jScrollPane6, javax.swing.GroupLayout.PREFERRED_SIZE, 236, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel6))
+                .addContainerGap(337, Short.MAX_VALUE))
         );
 
         jTabbedPane1.addTab("Overview", jpClassOverviewTab);
@@ -460,7 +483,7 @@ public class jpClass extends javax.swing.JPanel {
                 .addContainerGap(319, Short.MAX_VALUE))
         );
 
-        jTabbedPane1.addTab("Assignemnts", jpClassAssignmentTab);
+        jTabbedPane1.addTab("Assignments", jpClassAssignmentTab);
 
         jcbCourse.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Open Course", "Item 1", "Item 2", "Item 3", "Item 4" }));
         jcbCourse.addItemListener(new java.awt.event.ItemListener() {
@@ -554,9 +577,11 @@ public class jpClass extends javax.swing.JPanel {
     private javax.swing.JScrollPane jScrollPane3;
     private javax.swing.JScrollPane jScrollPane4;
     private javax.swing.JScrollPane jScrollPane5;
+    private javax.swing.JScrollPane jScrollPane6;
     private javax.swing.JTabbedPane jTabbedPane1;
     private javax.swing.JTable jTable1;
     private javax.swing.JTable jTable2;
+    private javax.swing.JTable jTable3;
     private javax.swing.JButton jbAddClass;
     private javax.swing.JButton jbChangeAssignment;
     private javax.swing.JButton jbDelete;
