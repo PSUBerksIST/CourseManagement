@@ -5,6 +5,8 @@
  */
 package IST261DesktopPaneDemo;
 
+import java.awt.BorderLayout;
+import java.awt.Component;
 import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -12,7 +14,11 @@ import java.sql.Statement;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.DefaultComboBoxModel;
+import javax.swing.JCheckBox;
+import javax.swing.JPanel;
+import javax.swing.JTable;
 import javax.swing.table.DefaultTableModel;
+import javax.swing.table.TableCellRenderer;
 
 /**
  *
@@ -53,7 +59,7 @@ public class jpAddAssignmentsToCourse extends javax.swing.JPanel {
     {
 
         try {
-            
+
             DefaultTableModel model = (DefaultTableModel) jtAssignments.getModel();
 
             // Reset the JTable in case we are coming back a second time
@@ -63,14 +69,31 @@ public class jpAddAssignmentsToCourse extends javax.swing.JPanel {
             // Result Set 
             ResultSet result = st.executeQuery("");
 
+            jtAssignments.getColumnModel().getColumn(1).setCellRenderer(new CourseChekbox());
 
 
         }
-        catch (SQLException ex) {
+        catch (SQLException ex) 
+        {
             Logger.getLogger(DBConnection.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
-
+    
+    // @Credit & Thanks http://stackoverflow.com/questions/32780154/java-resultset-to-jtable-with-checkbox
+    private class CourseChekbox implements TableCellRenderer {
+    @Override
+    public Component getTableCellRendererComponent(JTable table,
+            Object value, boolean isSelected, boolean hasFocus, int row,
+            int column) {
+        
+        JPanel cbPanel = new JPanel();
+        JCheckBox checkbox = new JCheckBox("Add");
+        cbPanel.setLayout(new BorderLayout());
+        cbPanel.add(checkbox, BorderLayout.WEST);
+        
+        return cbPanel;
+    }
+}
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
