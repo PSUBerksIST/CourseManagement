@@ -5,6 +5,15 @@
  */
 package IST261DesktopPaneDemo;
 
+import java.sql.Connection;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import javax.swing.DefaultComboBoxModel;
+import javax.swing.table.DefaultTableModel;
+
 /**
  *
  * @author David Regimbal, Aras Masalaitis, Jesse Wasko, Sumedh Savanur, Gauri
@@ -12,11 +21,54 @@ package IST261DesktopPaneDemo;
  */
 public class jpAddAssignmentsToCourse extends javax.swing.JPanel {
 
+    private Connection dbConnection;
+    private Statement st;
+    
     /**
      * Creates new form jpAddAssignmentsToCourse
      */
     public jpAddAssignmentsToCourse() {
         initComponents();
+    }
+    
+    public jpAddAssignmentsToCourse(Connection inConnection) {
+        
+        initComponents();
+        setdbConnection(inConnection);
+        setAssignments();
+        
+    }
+    
+    // This sets the local datbase connection
+    private void setdbConnection(Connection inConnection){
+        dbConnection = inConnection;
+        try {             
+            st = dbConnection.createStatement();
+        } catch (SQLException ex) {
+            System.out.println(ex);
+        }
+    }
+    
+    public void setAssignments()
+    {
+
+        try {
+            
+            DefaultTableModel model = (DefaultTableModel) jtAssignments.getModel();
+
+            // Reset the JTable in case we are coming back a second time
+            model.setColumnCount(0);
+            model.setRowCount(0);
+        
+            // Result Set 
+            ResultSet result = st.executeQuery("");
+
+
+
+        }
+        catch (SQLException ex) {
+            Logger.getLogger(DBConnection.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }
 
     /**
