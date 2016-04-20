@@ -164,8 +164,16 @@ public class jpAddAssignment extends javax.swing.JPanel {
         jScrollPane2.setViewportView(jTextArea1);
 
         setMinimumSize(new java.awt.Dimension(432, 508));
+        addComponentListener(new java.awt.event.ComponentAdapter() {
+            public void componentResized(java.awt.event.ComponentEvent evt) {
+                formComponentResized(evt);
+            }
+        });
+        setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
-        jlAssignmentName.setText("Name");
+        jlAssignmentName.setText("Assignment Name");
+        add(jlAssignmentName, new org.netbeans.lib.awtextra.AbsoluteConstraints(40, 30, -1, 20));
+        add(jtfAssignmentName, new org.netbeans.lib.awtextra.AbsoluteConstraints(40, 50, 239, 30));
 
         jchbGroupAssignment.setText("Group Assignment");
         jchbGroupAssignment.addActionListener(new java.awt.event.ActionListener() {
@@ -173,6 +181,7 @@ public class jpAddAssignment extends javax.swing.JPanel {
                 jchbGroupAssignmentActionPerformed(evt);
             }
         });
+        add(jchbGroupAssignment, new org.netbeans.lib.awtextra.AbsoluteConstraints(60, 450, -1, -1));
 
         jbAddAssignmentFinish.setText("Finish");
         jbAddAssignmentFinish.addActionListener(new java.awt.event.ActionListener() {
@@ -180,112 +189,50 @@ public class jpAddAssignment extends javax.swing.JPanel {
                 jbAddAssignmentFinishActionPerformed(evt);
             }
         });
+        add(jbAddAssignmentFinish, new org.netbeans.lib.awtextra.AbsoluteConstraints(370, 440, -1, -1));
 
         jlMaxPoints.setText("Maximum Points");
+        add(jlMaxPoints, new org.netbeans.lib.awtextra.AbsoluteConstraints(350, 30, -1, 20));
 
         jlDescription.setText("Description");
+        add(jlDescription, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 100, -1, 30));
 
         jtaDescription.setColumns(20);
         jtaDescription.setRows(5);
         jScrollPane1.setViewportView(jtaDescription);
 
+        add(jScrollPane1, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 280, 240, 120));
+
         jtaSpecification.setColumns(20);
         jtaSpecification.setRows(5);
         jScrollPane3.setViewportView(jtaSpecification);
 
+        add(jScrollPane3, new org.netbeans.lib.awtextra.AbsoluteConstraints(280, 130, 240, 120));
+
         jlSpecification.setText("Specification");
+        add(jlSpecification, new org.netbeans.lib.awtextra.AbsoluteConstraints(280, 100, -1, 30));
 
         jtaNotes.setColumns(20);
         jtaNotes.setRows(5);
         jScrollPane4.setViewportView(jtaNotes);
 
+        add(jScrollPane4, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 130, 240, 120));
+
         jlNotes.setText("Notes");
+        add(jlNotes, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 250, -1, 30));
 
         jtaGradingNotes.setColumns(20);
         jtaGradingNotes.setRows(5);
         jScrollPane5.setViewportView(jtaGradingNotes);
 
+        add(jScrollPane5, new org.netbeans.lib.awtextra.AbsoluteConstraints(280, 280, 240, 120));
+
         jlGradingNotes.setText("Grading Notes");
+        add(jlGradingNotes, new org.netbeans.lib.awtextra.AbsoluteConstraints(280, 250, -1, 30));
 
         jchAttendanceRequired.setText("Attendance Required");
-
-        javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
-        this.setLayout(layout);
-        layout.setHorizontalGroup(
-            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(layout.createSequentialGroup()
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(layout.createSequentialGroup()
-                        .addGap(181, 181, 181)
-                        .addComponent(jlAssignmentName))
-                    .addGroup(layout.createSequentialGroup()
-                        .addGap(81, 81, 81)
-                        .addComponent(jtfAssignmentName, javax.swing.GroupLayout.PREFERRED_SIZE, 239, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addGroup(layout.createSequentialGroup()
-                        .addGap(147, 147, 147)
-                        .addComponent(jlMaxPoints))
-                    .addGroup(layout.createSequentialGroup()
-                        .addGap(165, 165, 165)
-                        .addComponent(jsMaxPoints, javax.swing.GroupLayout.PREFERRED_SIZE, 64, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addGroup(layout.createSequentialGroup()
-                        .addGap(175, 175, 175)
-                        .addComponent(jbAddAssignmentFinish))
-                    .addGroup(layout.createSequentialGroup()
-                        .addGap(24, 24, 24)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                                .addComponent(jScrollPane1)
-                                .addComponent(jScrollPane4)
-                                .addComponent(jchAttendanceRequired))
-                            .addComponent(jlDescription)
-                            .addComponent(jlNotes))
-                        .addGap(38, 38, 38)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jlGradingNotes)
-                            .addComponent(jlSpecification)
-                            .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                                .addComponent(jScrollPane5, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addComponent(jchbGroupAssignment, javax.swing.GroupLayout.Alignment.LEADING)))))
-                .addContainerGap(38, Short.MAX_VALUE))
-        );
-        layout.setVerticalGroup(
-            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(layout.createSequentialGroup()
-                .addGap(19, 19, 19)
-                .addComponent(jlAssignmentName)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jtfAssignmentName, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jlMaxPoints)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jsMaxPoints, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(18, 18, 18)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addComponent(jlDescription)
-                    .addComponent(jlSpecification))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jlNotes)
-                    .addComponent(jlGradingNotes))
-                .addGap(1, 1, 1)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(layout.createSequentialGroup()
-                        .addComponent(jScrollPane5, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addComponent(jchbGroupAssignment))
-                    .addGroup(layout.createSequentialGroup()
-                        .addComponent(jScrollPane4, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addComponent(jchAttendanceRequired)))
-                .addGap(18, 18, 18)
-                .addComponent(jbAddAssignmentFinish)
-                .addContainerGap(58, Short.MAX_VALUE))
-        );
+        add(jchAttendanceRequired, new org.netbeans.lib.awtextra.AbsoluteConstraints(60, 420, -1, -1));
+        add(jsMaxPoints, new org.netbeans.lib.awtextra.AbsoluteConstraints(350, 50, 64, 30));
     }// </editor-fold>//GEN-END:initComponents
 
     private void jbAddAssignmentFinishActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jbAddAssignmentFinishActionPerformed
@@ -308,6 +255,10 @@ public class jpAddAssignment extends javax.swing.JPanel {
     private void jchbGroupAssignmentActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jchbGroupAssignmentActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_jchbGroupAssignmentActionPerformed
+
+    private void formComponentResized(java.awt.event.ComponentEvent evt) {//GEN-FIRST:event_formComponentResized
+        // TODO add your handling code here:
+    }//GEN-LAST:event_formComponentResized
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables

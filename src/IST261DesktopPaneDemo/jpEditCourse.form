@@ -1,0 +1,249 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+
+<Form version="1.3" maxVersion="1.9" type="org.netbeans.modules.form.forminfo.JPanelFormInfo">
+  <NonVisualComponents>
+    <Container class="javax.swing.JScrollPane" name="jScrollPane1">
+      <AuxValues>
+        <AuxValue name="autoScrollPane" type="java.lang.Boolean" value="true"/>
+      </AuxValues>
+
+      <Layout class="org.netbeans.modules.form.compat2.layouts.support.JScrollPaneSupportLayout"/>
+      <SubComponents>
+        <Component class="javax.swing.JTextArea" name="jTextArea1">
+          <Properties>
+            <Property name="columns" type="int" value="20"/>
+            <Property name="rows" type="int" value="5"/>
+          </Properties>
+        </Component>
+      </SubComponents>
+    </Container>
+  </NonVisualComponents>
+  <AuxValues>
+    <AuxValue name="FormSettings_autoResourcing" type="java.lang.Integer" value="0"/>
+    <AuxValue name="FormSettings_autoSetComponentName" type="java.lang.Boolean" value="false"/>
+    <AuxValue name="FormSettings_generateFQN" type="java.lang.Boolean" value="true"/>
+    <AuxValue name="FormSettings_generateMnemonicsCode" type="java.lang.Boolean" value="false"/>
+    <AuxValue name="FormSettings_i18nAutoMode" type="java.lang.Boolean" value="false"/>
+    <AuxValue name="FormSettings_layoutCodeTarget" type="java.lang.Integer" value="1"/>
+    <AuxValue name="FormSettings_listenerGenerationStyle" type="java.lang.Integer" value="0"/>
+    <AuxValue name="FormSettings_variablesLocal" type="java.lang.Boolean" value="false"/>
+    <AuxValue name="FormSettings_variablesModifier" type="java.lang.Integer" value="2"/>
+  </AuxValues>
+
+  <Layout>
+    <DimensionLayout dim="0">
+      <Group type="103" groupAlignment="0" attributes="0">
+          <Group type="102" alignment="0" attributes="0">
+              <EmptySpace max="-2" attributes="0"/>
+              <Group type="103" groupAlignment="1" attributes="0">
+                  <Component id="jbUpdateButton" min="-2" max="-2" attributes="0"/>
+                  <Group type="102" attributes="0">
+                      <Group type="103" groupAlignment="1" attributes="0">
+                          <Component id="jlbNotes" min="-2" max="-2" attributes="0"/>
+                          <Component id="jlbPrerequisites" min="-2" max="-2" attributes="0"/>
+                          <Component id="jlbObjectives" min="-2" max="-2" attributes="0"/>
+                          <Component id="jlbDepartment" min="-2" max="-2" attributes="0"/>
+                          <Component id="jlbCourseNumber" min="-2" max="-2" attributes="0"/>
+                          <Component id="jlbCourseTitle" min="-2" max="-2" attributes="0"/>
+                          <Component id="jlbCourseDescription" min="-2" max="-2" attributes="0"/>
+                      </Group>
+                      <EmptySpace max="-2" attributes="0"/>
+                      <Group type="103" groupAlignment="0" max="-2" attributes="0">
+                          <Component id="jcbDepartment" alignment="0" min="-2" pref="75" max="-2" attributes="0"/>
+                          <Component id="jtfPrerequisites" alignment="0" max="32767" attributes="0"/>
+                          <Component id="jtfObjectives" alignment="0" max="32767" attributes="0"/>
+                          <Component id="jtfCourseTitle" alignment="0" max="32767" attributes="0"/>
+                          <Group type="102" alignment="0" attributes="0">
+                              <Component id="jtfCourseNumber" min="-2" pref="45" max="-2" attributes="0"/>
+                              <EmptySpace pref="55" max="32767" attributes="0"/>
+                              <Component id="jlbCredits" min="-2" max="-2" attributes="0"/>
+                              <EmptySpace max="-2" attributes="0"/>
+                              <Component id="jcbCredits" min="-2" pref="43" max="-2" attributes="0"/>
+                              <EmptySpace min="-2" pref="35" max="-2" attributes="0"/>
+                              <Component id="jlbWritingEmphasis" min="-2" max="-2" attributes="0"/>
+                              <EmptySpace max="-2" attributes="0"/>
+                              <Component id="jcbWritingEmphasis" min="-2" pref="57" max="-2" attributes="0"/>
+                          </Group>
+                          <Component id="jtfNotes" alignment="0" max="32767" attributes="0"/>
+                          <Component id="jScrollPane2" max="32767" attributes="0"/>
+                      </Group>
+                  </Group>
+              </Group>
+              <EmptySpace max="32767" attributes="0"/>
+          </Group>
+      </Group>
+    </DimensionLayout>
+    <DimensionLayout dim="1">
+      <Group type="103" groupAlignment="0" attributes="0">
+          <Group type="102" alignment="0" attributes="0">
+              <EmptySpace max="-2" attributes="0"/>
+              <Group type="103" groupAlignment="3" attributes="0">
+                  <Component id="jlbCourseTitle" alignment="3" min="-2" max="-2" attributes="0"/>
+                  <Component id="jtfCourseTitle" alignment="3" min="-2" max="-2" attributes="0"/>
+              </Group>
+              <EmptySpace max="-2" attributes="0"/>
+              <Group type="103" groupAlignment="0" attributes="0">
+                  <Component id="jlbCourseDescription" min="-2" max="-2" attributes="0"/>
+                  <Component id="jScrollPane2" min="-2" pref="88" max="-2" attributes="0"/>
+              </Group>
+              <EmptySpace pref="59" max="32767" attributes="0"/>
+              <Group type="103" groupAlignment="3" attributes="0">
+                  <Component id="jtfCourseNumber" alignment="3" min="-2" max="-2" attributes="0"/>
+                  <Component id="jlbCourseNumber" alignment="3" min="-2" max="-2" attributes="0"/>
+                  <Component id="jlbCredits" alignment="3" min="-2" max="-2" attributes="0"/>
+                  <Component id="jcbCredits" alignment="3" min="-2" max="-2" attributes="0"/>
+                  <Component id="jlbWritingEmphasis" alignment="3" min="-2" max="-2" attributes="0"/>
+                  <Component id="jcbWritingEmphasis" alignment="3" min="-2" max="-2" attributes="0"/>
+              </Group>
+              <EmptySpace type="separate" max="-2" attributes="0"/>
+              <Group type="103" groupAlignment="3" attributes="0">
+                  <Component id="jcbDepartment" alignment="3" min="-2" max="-2" attributes="0"/>
+                  <Component id="jlbDepartment" alignment="3" min="-2" max="-2" attributes="0"/>
+              </Group>
+              <EmptySpace type="unrelated" max="-2" attributes="0"/>
+              <Group type="103" groupAlignment="0" attributes="0">
+                  <Component id="jlbObjectives" min="-2" max="-2" attributes="0"/>
+                  <Component id="jtfObjectives" min="-2" pref="43" max="-2" attributes="0"/>
+              </Group>
+              <EmptySpace min="-2" pref="6" max="-2" attributes="0"/>
+              <Group type="103" groupAlignment="3" attributes="0">
+                  <Component id="jlbPrerequisites" alignment="3" min="-2" max="-2" attributes="0"/>
+                  <Component id="jtfPrerequisites" alignment="3" min="-2" max="-2" attributes="0"/>
+              </Group>
+              <EmptySpace max="-2" attributes="0"/>
+              <Group type="103" groupAlignment="3" attributes="0">
+                  <Component id="jtfNotes" alignment="3" min="-2" max="-2" attributes="0"/>
+                  <Component id="jlbNotes" alignment="3" min="-2" max="-2" attributes="0"/>
+              </Group>
+              <EmptySpace type="separate" max="-2" attributes="0"/>
+              <Component id="jbUpdateButton" min="-2" max="-2" attributes="0"/>
+              <EmptySpace max="-2" attributes="0"/>
+          </Group>
+      </Group>
+    </DimensionLayout>
+  </Layout>
+  <SubComponents>
+    <Component class="javax.swing.JLabel" name="jlbCourseTitle">
+      <Properties>
+        <Property name="text" type="java.lang.String" value="Course Title"/>
+      </Properties>
+    </Component>
+    <Component class="javax.swing.JTextField" name="jtfCourseTitle">
+      <Events>
+        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="jtfCourseTitleActionPerformed"/>
+      </Events>
+    </Component>
+    <Component class="javax.swing.JLabel" name="jlbCourseDescription">
+      <Properties>
+        <Property name="text" type="java.lang.String" value="Course Description"/>
+      </Properties>
+    </Component>
+    <Component class="javax.swing.JLabel" name="jlbCourseNumber">
+      <Properties>
+        <Property name="text" type="java.lang.String" value="Course Number"/>
+      </Properties>
+    </Component>
+    <Component class="javax.swing.JTextField" name="jtfCourseNumber">
+    </Component>
+    <Component class="javax.swing.JLabel" name="jlbCredits">
+      <Properties>
+        <Property name="text" type="java.lang.String" value="Credits"/>
+      </Properties>
+    </Component>
+    <Component class="javax.swing.JComboBox" name="jcbCredits">
+      <Properties>
+        <Property name="model" type="javax.swing.ComboBoxModel" editor="org.netbeans.modules.form.RADConnectionPropertyEditor">
+          <Connection code="new javax.swing.DefaultComboBoxModel&lt;&gt;(new String[] { &quot;1&quot;,&quot;2&quot;,&quot;3&quot;,&quot;4&quot; })" type="code"/>
+        </Property>
+      </Properties>
+      <Events>
+        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="jcbCreditsActionPerformed"/>
+      </Events>
+      <AuxValues>
+        <AuxValue name="JavaCodeGenerator_TypeParameters" type="java.lang.String" value="&lt;String&gt;"/>
+      </AuxValues>
+    </Component>
+    <Component class="javax.swing.JLabel" name="jlbWritingEmphasis">
+      <Properties>
+        <Property name="text" type="java.lang.String" value="Writing Emphasis"/>
+      </Properties>
+    </Component>
+    <Component class="javax.swing.JComboBox" name="jcbWritingEmphasis">
+      <Properties>
+        <Property name="model" type="javax.swing.ComboBoxModel" editor="org.netbeans.modules.form.RADConnectionPropertyEditor">
+          <Connection code="new javax.swing.DefaultComboBoxModel&lt;&gt;(new String[] { &quot;No&quot;, &quot;Yes&quot; })" type="code"/>
+        </Property>
+      </Properties>
+      <AuxValues>
+        <AuxValue name="JavaCodeGenerator_TypeParameters" type="java.lang.String" value="&lt;String&gt;"/>
+      </AuxValues>
+    </Component>
+    <Component class="javax.swing.JLabel" name="jlbDepartment">
+      <Properties>
+        <Property name="text" type="java.lang.String" value="Department"/>
+      </Properties>
+    </Component>
+    <Component class="javax.swing.JComboBox" name="jcbDepartment">
+      <Properties>
+        <Property name="model" type="javax.swing.ComboBoxModel" editor="org.netbeans.modules.form.RADConnectionPropertyEditor">
+          <Connection code="new javax.swing.DefaultComboBoxModel&lt;&gt;(new String[] { &quot;Default Item&quot;})" type="code"/>
+        </Property>
+      </Properties>
+      <Events>
+        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="jcbDepartmentActionPerformed"/>
+      </Events>
+      <AuxValues>
+        <AuxValue name="JavaCodeGenerator_TypeParameters" type="java.lang.String" value="&lt;String&gt;"/>
+      </AuxValues>
+    </Component>
+    <Component class="javax.swing.JLabel" name="jlbObjectives">
+      <Properties>
+        <Property name="text" type="java.lang.String" value="Objectives"/>
+      </Properties>
+    </Component>
+    <Component class="javax.swing.JTextField" name="jtfObjectives">
+    </Component>
+    <Component class="javax.swing.JLabel" name="jlbPrerequisites">
+      <Properties>
+        <Property name="text" type="java.lang.String" value="Prerequisites"/>
+      </Properties>
+    </Component>
+    <Component class="javax.swing.JTextField" name="jtfPrerequisites">
+      <Events>
+        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="jtfPrerequisitesActionPerformed"/>
+      </Events>
+    </Component>
+    <Component class="javax.swing.JLabel" name="jlbNotes">
+      <Properties>
+        <Property name="text" type="java.lang.String" value="Notes"/>
+      </Properties>
+    </Component>
+    <Component class="javax.swing.JTextField" name="jtfNotes">
+    </Component>
+    <Component class="javax.swing.JButton" name="jbUpdateButton">
+      <Properties>
+        <Property name="text" type="java.lang.String" value="Update"/>
+      </Properties>
+      <Events>
+        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="jbUpdateButtonActionPerformed"/>
+      </Events>
+    </Component>
+    <Container class="javax.swing.JScrollPane" name="jScrollPane2">
+      <AuxValues>
+        <AuxValue name="autoScrollPane" type="java.lang.Boolean" value="true"/>
+      </AuxValues>
+
+      <Layout class="org.netbeans.modules.form.compat2.layouts.support.JScrollPaneSupportLayout"/>
+      <SubComponents>
+        <Component class="javax.swing.JTextArea" name="jtaDescription">
+          <Properties>
+            <Property name="columns" type="int" editor="org.netbeans.modules.form.RADConnectionPropertyEditor">
+              <Connection code="20" type="code"/>
+            </Property>
+            <Property name="rows" type="int" value="5"/>
+          </Properties>
+        </Component>
+      </SubComponents>
+    </Container>
+  </SubComponents>
+</Form>
