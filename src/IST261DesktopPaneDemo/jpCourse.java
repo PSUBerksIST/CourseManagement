@@ -19,7 +19,6 @@ import java.sql.Statement;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JDialog;
-import net.proteanit.sql.DbUtils;
 
 /**
  *
@@ -112,7 +111,7 @@ public class jpCourse extends JPanel{
         }
 
     }
-    
+
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -127,10 +126,8 @@ public class jpCourse extends JPanel{
         jTabbedPane1 = new javax.swing.JTabbedPane();
         jPanel1 = new javax.swing.JPanel();
         jPanel2 = new javax.swing.JPanel();
-        jScrollPane1 = new javax.swing.JScrollPane();
-        jtAssignments = new javax.swing.JTable();
-        btnAddAssignment = new javax.swing.JButton();
         jPanel3 = new javax.swing.JPanel();
+        jbEditCourse = new javax.swing.JButton();
 
         jcbCourse.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Select Course", "Item 1", "Item 2", "Item 3", "Item 4" }));
         jcbCourse.addActionListener(new java.awt.event.ActionListener() {
@@ -154,50 +151,20 @@ public class jpCourse extends JPanel{
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 234, Short.MAX_VALUE)
+            .addGap(0, 200, Short.MAX_VALUE)
         );
 
         jTabbedPane1.addTab("Overview", jPanel1);
-
-        jtAssignments.setModel(new javax.swing.table.DefaultTableModel(
-            new Object [][] {
-                {null, null, null, null},
-                {null, null, null, null},
-                {null, null, null, null},
-                {null, null, null, null}
-            },
-            new String [] {
-                "Title 1", "Title 2", "Title 3", "Title 4"
-            }
-        ));
-        jScrollPane1.setViewportView(jtAssignments);
-
-        btnAddAssignment.setText("Add Assignment");
-        btnAddAssignment.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnAddAssignmentActionPerformed(evt);
-            }
-        });
 
         javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
         jPanel2.setLayout(jPanel2Layout);
         jPanel2Layout.setHorizontalGroup(
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel2Layout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 363, Short.MAX_VALUE)
-                .addContainerGap())
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel2Layout.createSequentialGroup()
-                .addGap(0, 0, Short.MAX_VALUE)
-                .addComponent(btnAddAssignment))
+            .addGap(0, 375, Short.MAX_VALUE)
         );
         jPanel2Layout.setVerticalGroup(
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel2Layout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 145, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 54, Short.MAX_VALUE)
-                .addComponent(btnAddAssignment))
+            .addGap(0, 200, Short.MAX_VALUE)
         );
 
         jTabbedPane1.addTab("Assignments", jPanel2);
@@ -210,10 +177,17 @@ public class jpCourse extends JPanel{
         );
         jPanel3Layout.setVerticalGroup(
             jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 234, Short.MAX_VALUE)
+            .addGap(0, 200, Short.MAX_VALUE)
         );
 
         jTabbedPane1.addTab("People", jPanel3);
+
+        jbEditCourse.setText("Edit Course");
+        jbEditCourse.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jbEditCourseActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
@@ -227,7 +201,8 @@ public class jpCourse extends JPanel{
                         .addComponent(jbAddCourse)
                         .addGap(18, 18, 18)
                         .addComponent(jcbCourse, javax.swing.GroupLayout.PREFERRED_SIZE, 179, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(0, 0, Short.MAX_VALUE)))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(jbEditCourse)))
                 .addContainerGap())
         );
         layout.setVerticalGroup(
@@ -236,7 +211,8 @@ public class jpCourse extends JPanel{
                 .addGap(27, 27, 27)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jcbCourse, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jbAddCourse))
+                    .addComponent(jbAddCourse)
+                    .addComponent(jbEditCourse))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(jTabbedPane1)
                 .addContainerGap())
@@ -264,53 +240,26 @@ public class jpCourse extends JPanel{
             System.out.println("Active Course Selected: (int) " + selectedCourse);
             
             // An action has been performed. Update tabs!
-            setAssignments();
 
         }
-       
+        
+
     }//GEN-LAST:event_jcbCourseActionPerformed
 
-    private void btnAddAssignmentActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAddAssignmentActionPerformed
-        // TODO add your handling code here:
-        
-        
-        JDialog jdAddAssignments = new JDialog();
-        JPanel AddAssignments = new jpAddAssignmentsToCourse(dbConnection);
-        jdAddAssignments.add(AddAssignments);
-        jdAddAssignments.setSize(500, 400);
-        jdAddAssignments.setVisible(true);
-        
-    }//GEN-LAST:event_btnAddAssignmentActionPerformed
+    private void jbEditCourseActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jbEditCourseActionPerformed
+        JPanel EditCourse = new jpEditCourse(dbConnection, selectedCourse);
+        EditCourse.setName("Edit Course");
+        CreateFrame(EditCourse);
+    }//GEN-LAST:event_jbEditCourseActionPerformed
 
-    private void setAssignments()
-    {
-        System.out.println("setAssignments fired! Course ID: " + selectedCourse);
-        
-        // Grab the courses from the database and display them
-        try {
-            ResultSet result = st.executeQuery("SELECT Assignments.* FROM Assignments JOIN courseAssignmentLink on Assignments.ID = courseAssignmentLink.FKCourseID WHERE courseAssignmentLink.FKCourseID = "+selectedCourse);
-
-            jtAssignments.setModel(DbUtils.resultSetToTableModel(result));
-            
-        }
-        catch (SQLException ex) {
-            Logger.getLogger(DBConnection.class.getName()).log(Level.SEVERE, null, ex);
-        }
-    
-    }
-    
-    
-    
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JButton btnAddAssignment;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;
     private javax.swing.JPanel jPanel3;
-    private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JTabbedPane jTabbedPane1;
     private javax.swing.JButton jbAddCourse;
+    private javax.swing.JButton jbEditCourse;
     private javax.swing.JComboBox jcbCourse;
-    private javax.swing.JTable jtAssignments;
     // End of variables declaration//GEN-END:variables
 
     
