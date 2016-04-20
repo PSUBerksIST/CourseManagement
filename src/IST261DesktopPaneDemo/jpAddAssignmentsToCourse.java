@@ -9,22 +9,21 @@ import java.awt.BorderLayout;
 import java.awt.Component;
 import java.sql.Connection;
 import java.sql.ResultSet;
+import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.Vector;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.swing.DefaultCellEditor;
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.JCheckBox;
 import javax.swing.JPanel;
 import javax.swing.JTable;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableCellRenderer;
+import net.proteanit.sql.DbUtils;
 
-/**
- *
- * @author David Regimbal, Aras Masalaitis, Jesse Wasko, Sumedh Savanur, Gauri
- * Khawadkar <bk.psu.edu>
- */
 public class jpAddAssignmentsToCourse extends javax.swing.JPanel {
 
     private Connection dbConnection;
@@ -65,12 +64,20 @@ public class jpAddAssignmentsToCourse extends javax.swing.JPanel {
             // Reset the JTable in case we are coming back a second time
             model.setColumnCount(0);
             model.setRowCount(0);
-        
+            
             // Result Set 
-            ResultSet result = st.executeQuery("");
+            ResultSet result = st.executeQuery("SELECT Assignments.ShortName, Assignments.Description as 'AssignmentDescriotion', Assignments.Specification, Assignments.MaximumPoints, Assignments.GroupAssignment, -1 as 'isDirty'\n" +
+"FROM Assignments;");
 
-            jtAssignments.getColumnModel().getColumn(1).setCellRenderer(new CourseChekbox());
+            jtAssignments.setModel(DbUtils.resultSetToTableModel(result));
+            
+           // jtAssignments.getColumnModel().getColumn(0).setCellRenderer(new CourseChekbox());
+           
+           JCheckBox checkBox = new javax.swing.JCheckBox();
+ 
 
+            jtAssignments.getColumnModel().getColumn(5).setCellRenderer(new CourseCheckbox()); 
+           
 
         }
         catch (SQLException ex) 
@@ -80,16 +87,34 @@ public class jpAddAssignmentsToCourse extends javax.swing.JPanel {
     }
     
     // @Credit & Thanks http://stackoverflow.com/questions/32780154/java-resultset-to-jtable-with-checkbox
-    private class CourseChekbox implements TableCellRenderer {
+    private class CourseCheckbox implements TableCellRenderer {
     @Override
     public Component getTableCellRendererComponent(JTable table,
             Object value, boolean isSelected, boolean hasFocus, int row,
             int column) {
         
         JPanel cbPanel = new JPanel();
-        JCheckBox checkbox = new JCheckBox("Add");
+        JCheckBox checkbox = new JCheckBox();
         cbPanel.setLayout(new BorderLayout());
         cbPanel.add(checkbox, BorderLayout.WEST);
+        
+            if (value != null) {
+                if (value instanceof String) {
+                    int valStr = Integer.parseInt((String) value);
+                    
+                    System.out.println("valStr = " + valStr);
+                    
+                    if(valStr == 1)
+                    {
+                        checkbox.setSelected(true);
+                    }
+                    else
+                    {
+                        checkbox.setSelected(false);
+                    }
+                    
+                }
+            }
         
         return cbPanel;
     }
@@ -121,6 +146,11 @@ public class jpAddAssignmentsToCourse extends javax.swing.JPanel {
         jScrollPane1.setViewportView(jtAssignments);
 
         btnAddAssignments.setText("Add Assignments");
+        btnAddAssignments.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnAddAssignmentsActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
@@ -144,6 +174,10 @@ public class jpAddAssignmentsToCourse extends javax.swing.JPanel {
                 .addContainerGap())
         );
     }// </editor-fold>//GEN-END:initComponents
+
+    private void btnAddAssignmentsActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAddAssignmentsActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_btnAddAssignmentsActionPerformed
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
