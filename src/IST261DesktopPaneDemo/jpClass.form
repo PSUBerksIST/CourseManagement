@@ -57,6 +57,10 @@
         </Property>
         <Property name="enabled" type="boolean" value="false"/>
       </Properties>
+      <Events>
+        <EventHandler event="itemStateChanged" listener="java.awt.event.ItemListener" parameters="java.awt.event.ItemEvent" handler="jcbClassItemStateChanged"/>
+        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="jcbClassActionPerformed"/>
+      </Events>
     </Component>
     <Component class="javax.swing.JButton" name="jbAddClass">
       <Properties>
@@ -666,40 +670,14 @@
                 <Component class="javax.swing.JTable" name="jtIndividualAssignments">
                   <Properties>
                     <Property name="model" type="javax.swing.table.TableModel" editor="org.netbeans.modules.form.editors2.TableModelEditor">
-                      <Table columnCount="4" rowCount="4">
-                        <Column editable="true" title="Name" type="java.lang.Object">
-                          <Data value="UID 1"/>
-                          <Data value="UID 2"/>
-                          <Data value="Networking"/>
-                          <Data value="null"/>
-                        </Column>
-                        <Column editable="true" title="Due Date" type="java.lang.Object">
-                          <Data value="1/15/16"/>
-                          <Data value="1/25/16"/>
-                          <Data value="2/12/16"/>
-                          <Data value="null"/>
-                        </Column>
-                        <Column editable="true" title="Description" type="java.lang.Object">
-                          <Data value="Get Detail"/>
-                          <Data value="Get Detail"/>
-                          <Data value="Get Detail"/>
-                          <Data value="null"/>
-                        </Column>
-                        <Column editable="true" title="Points" type="java.lang.Object">
-                          <Data value="2"/>
-                          <Data value="2"/>
-                          <Data value="10"/>
-                          <Data value="null"/>
-                        </Column>
+                      <Table columnCount="3" rowCount="1">
+                        <Column editable="true" title="Name" type="java.lang.Object"/>
+                        <Column editable="true" title="Description" type="java.lang.Object"/>
+                        <Column editable="true" title="Points" type="java.lang.Object"/>
                       </Table>
                     </Property>
                     <Property name="columnModel" type="javax.swing.table.TableColumnModel" editor="org.netbeans.modules.form.editors2.TableColumnModelEditor">
                       <TableColumnModel selectionModel="0">
-                        <Column maxWidth="-1" minWidth="-1" prefWidth="-1" resizable="true">
-                          <Title/>
-                          <Editor/>
-                          <Renderer/>
-                        </Column>
                         <Column maxWidth="-1" minWidth="-1" prefWidth="-1" resizable="true">
                           <Title/>
                           <Editor/>
@@ -744,40 +722,14 @@
                 <Component class="javax.swing.JTable" name="jtGroupAssignments">
                   <Properties>
                     <Property name="model" type="javax.swing.table.TableModel" editor="org.netbeans.modules.form.editors2.TableModelEditor">
-                      <Table columnCount="4" rowCount="4">
-                        <Column editable="true" title="Name" type="java.lang.Object">
-                          <Data value="Team Charter"/>
-                          <Data value="Proposal"/>
-                          <Data value="System Users Tasks"/>
-                          <Data value="null"/>
-                        </Column>
-                        <Column editable="true" title="Due Date" type="java.lang.Object">
-                          <Data value="1/15/16"/>
-                          <Data value="1/25/16"/>
-                          <Data value="2/12/16"/>
-                          <Data value="null"/>
-                        </Column>
-                        <Column editable="true" title="Description" type="java.lang.Object">
-                          <Data value="Get Detail"/>
-                          <Data value="Get Detail"/>
-                          <Data value="Get Detail"/>
-                          <Data value="null"/>
-                        </Column>
-                        <Column editable="true" title="Points" type="java.lang.Object">
-                          <Data value="5"/>
-                          <Data value="10"/>
-                          <Data value="10"/>
-                          <Data value="null"/>
-                        </Column>
+                      <Table columnCount="3" rowCount="1">
+                        <Column editable="true" title="Name" type="java.lang.Object"/>
+                        <Column editable="true" title="Description" type="java.lang.Object"/>
+                        <Column editable="true" title="Points" type="java.lang.Object"/>
                       </Table>
                     </Property>
                     <Property name="columnModel" type="javax.swing.table.TableColumnModel" editor="org.netbeans.modules.form.editors2.TableColumnModelEditor">
                       <TableColumnModel selectionModel="0">
-                        <Column maxWidth="-1" minWidth="-1" prefWidth="-1" resizable="true">
-                          <Title/>
-                          <Editor/>
-                          <Renderer/>
-                        </Column>
                         <Column maxWidth="-1" minWidth="-1" prefWidth="-1" resizable="true">
                           <Title/>
                           <Editor/>
@@ -819,6 +771,9 @@
               <Properties>
                 <Property name="text" type="java.lang.String" value="Refresh"/>
               </Properties>
+              <Events>
+                <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="jbRefreshAssignmentActionPerformed"/>
+              </Events>
             </Component>
             <Component class="javax.swing.JButton" name="jbChangeAssignment">
               <Properties>
@@ -843,6 +798,7 @@
       </Properties>
       <Events>
         <EventHandler event="itemStateChanged" listener="java.awt.event.ItemListener" parameters="java.awt.event.ItemEvent" handler="jcbCourseItemStateChanged"/>
+        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="jcbCourseActionPerformed"/>
       </Events>
     </Component>
   </SubComponents>

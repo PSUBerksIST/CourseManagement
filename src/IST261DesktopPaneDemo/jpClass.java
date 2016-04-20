@@ -5,21 +5,30 @@
  */
 package IST261DesktopPaneDemo;
 
+import java.awt.BorderLayout;
+import java.awt.Component;
 import java.awt.Dimension;
 import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import javax.swing.JCheckBox;
 import javax.swing.JDialog;
 import javax.swing.JFrame;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
+import javax.swing.JTable;
+import javax.swing.table.TableCellRenderer;
+import net.proteanit.sql.DbUtils;
 
 /**
  *
  * @author Nathan
  */
 public class jpClass extends javax.swing.JPanel {
-
+    
     /**
      * Creates new form jpClass
      */
@@ -27,6 +36,10 @@ public class jpClass extends javax.swing.JPanel {
     private Statement st;
     
     private Connection dbConnection;
+    
+    private int intSelectedClassID;
+    
+    private int intSelectedCourseID;
     
     public jpClass() {
         initComponents();
@@ -71,19 +84,91 @@ public class jpClass extends javax.swing.JPanel {
         jcbClass.addItem("Select Class");
  
         try {
-            int intSelectedCourse = Integer.parseInt(jcbCourse.getSelectedItem()+"");
-            int intSelectedCourseID = 0;
-            ResultSet rs = st.executeQuery("select ID from Course where Number  = "+intSelectedCourse);
-            while (rs.next()) {
-                intSelectedCourseID = rs.getInt("ID");
-            }
-            st.executeQuery("select Section from Class where FKCourse ="+intSelectedCourseID);
+
+            ResultSet rs = st.executeQuery("select Section from Class where FKCourse ="+intSelectedCourseID);
             while (rs.next()) {
                 jcbClass.addItem(//rs.getString("IST") + " " + 
                         rs.getString("Section"));
             }
+
         } catch (SQLException sqle) {
             System.out.println(sqle);
+        }
+    }
+    
+    private void setGroupAssignments()
+    {
+        System.out.println("setGroupAssignments fired! Class ID: " + intSelectedCourseID);
+        
+        // Grab the courses from the database and display them
+        try {
+            ResultSet result = st.executeQuery("SELECT -1 as 'Select', Assignments.ShortName AS Name, Assignments.Description, Assignments.MaximumPoints AS Points FROM Assignments, ClassAssignmentLink WHERE Assignments.id = ClassAssignmentLink.FKAssignmentID AND Assignments.GroupAssignment = 1 AND ClassAssignmentLink.FKClassID = "+intSelectedClassID);
+
+            jtGroupAssignments.setModel(DbUtils.resultSetToTableModel(result));
+            
+            jtGroupAssignments.getColumnModel().getColumn(0).setCellRenderer(new ClassCheckbox()); 
+            
+        }
+        catch (SQLException ex) {
+            Logger.getLogger(DBConnection.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+    
+    private void setIndividualAssignments()
+    {
+        System.out.println("setIndividualAssignments fired! Class ID: " + intSelectedClassID);
+        
+        // Grab the courses from the database and display them
+        try {
+            ResultSet result = st.executeQuery("SELECT -1 AS 'Select', Assignments.ShortName AS Name, Assignments.Description, Assignments.MaximumPoints AS Points FROM Assignments, ClassAssignmentLink WHERE Assignments.id = ClassAssignmentLink.FKAssignmentID AND Assignments.GroupAssignment = -1 AND ClassAssignmentLink.FKClassID = "+intSelectedClassID);
+
+            jtIndividualAssignments.setModel(DbUtils.resultSetToTableModel(result));
+            
+            
+
+            
+            jtIndividualAssignments.getColumnModel().getColumn(0).setCellRenderer(new ClassCheckbox());
+            
+            
+            
+            
+        }
+        catch (SQLException ex) {
+            Logger.getLogger(DBConnection.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+    
+        // @Credit & Thanks http://stackoverflow.com/questions/32780154/java-resultset-to-jtable-with-checkbox
+        private class ClassCheckbox implements TableCellRenderer {
+        @Override
+        public Component getTableCellRendererComponent(JTable table,
+                Object value, boolean isSelected, boolean hasFocus, int row,
+                int column) {
+
+            JPanel cbPanel = new JPanel();
+            JCheckBox checkbox = new JCheckBox();
+            cbPanel.setLayout(new BorderLayout());
+            cbPanel.add(checkbox, BorderLayout.WEST);
+
+                if (value != null) {
+                    if (value instanceof String) {
+                        int valStr = Integer.parseInt((String) value);
+
+                        System.out.println("valStr = " + valStr);
+
+                        if(valStr == 1)
+                        {
+                            checkbox.setSelected(true);
+                        }
+                        else
+                        {
+                            checkbox.setSelected(false);
+                        }
+
+                    }
+                }
+
+            return cbPanel;
         }
     }
 
@@ -142,6 +227,16 @@ public class jpClass extends javax.swing.JPanel {
 
         jcbClass.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Open Class", "Item 1", "Item 2", "Item 3", "Item 4" }));
         jcbClass.setEnabled(false);
+        jcbClass.addItemListener(new java.awt.event.ItemListener() {
+            public void itemStateChanged(java.awt.event.ItemEvent evt) {
+                jcbClassItemStateChanged(evt);
+            }
+        });
+        jcbClass.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jcbClassActionPerformed(evt);
+            }
+        });
 
         jbAddClass.setText("Add Class");
         jbAddClass.addActionListener(new java.awt.event.ActionListener() {
@@ -393,13 +488,10 @@ public class jpClass extends javax.swing.JPanel {
 
         jtIndividualAssignments.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
-                {"UID 1", "1/15/16", "Get Detail", "2"},
-                {"UID 2", "1/25/16", "Get Detail", "2"},
-                {"Networking", "2/12/16", "Get Detail", "10"},
-                {null, null, null, null}
+                {null, null, null}
             },
             new String [] {
-                "Name", "Due Date", "Description", "Points"
+                "Name", "Description", "Points"
             }
         ));
         jScrollPane1.setViewportView(jtIndividualAssignments);
@@ -410,13 +502,10 @@ public class jpClass extends javax.swing.JPanel {
 
         jtGroupAssignments.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
-                {"Team Charter", "1/15/16", "Get Detail", "5"},
-                {"Proposal", "1/25/16", "Get Detail", "10"},
-                {"System Users Tasks", "2/12/16", "Get Detail", "10"},
-                {null, null, null, null}
+                {null, null, null}
             },
             new String [] {
-                "Name", "Due Date", "Description", "Points"
+                "Name", "Description", "Points"
             }
         ));
         jScrollPane2.setViewportView(jtGroupAssignments);
@@ -431,6 +520,11 @@ public class jpClass extends javax.swing.JPanel {
         jbDeleteAssignment.setText("Delete");
 
         jbRefreshAssignment.setText("Refresh");
+        jbRefreshAssignment.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jbRefreshAssignmentActionPerformed(evt);
+            }
+        });
 
         jbChangeAssignment.setText("Change");
 
@@ -491,6 +585,11 @@ public class jpClass extends javax.swing.JPanel {
                 jcbCourseItemStateChanged(evt);
             }
         });
+        jcbCourse.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jcbCourseActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
@@ -526,10 +625,13 @@ public class jpClass extends javax.swing.JPanel {
     }//GEN-LAST:event_jbAddClassActionPerformed
 
     private void jbNewAssignmentActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jbNewAssignmentActionPerformed
-//        JPanel SelectAssignment = new jpSelectAssignment();
-//        SelectAssignment.setName("Select Assignment");
-//        CreateFrame(SelectAssignment);         
-//        // TODO add your handling code here:
+
+        JDialog jdAddAssignments = new JDialog();
+        JPanel AddAssignments = new jpAddAssignmentsToClass(intSelectedClassID, dbConnection);
+        jdAddAssignments.add(AddAssignments);
+        jdAddAssignments.setSize(500, 400);
+        jdAddAssignments.setVisible(true);
+        
     }//GEN-LAST:event_jbNewAssignmentActionPerformed
 
     private void jtfStudentIDActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jtfStudentIDActionPerformed
@@ -547,6 +649,11 @@ public class jpClass extends javax.swing.JPanel {
     private void jcbCourseItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_jcbCourseItemStateChanged
         if(jcbCourse.getSelectedIndex()>0){
             jcbClass.setEnabled(true);
+            
+            intSelectedCourseID = jcbCourse.getSelectedIndex();
+            
+            System.out.println("Active Course ID Selected: (int) " + intSelectedCourseID);
+            
             setjcbClass();
         }
         else{
@@ -554,6 +661,41 @@ public class jpClass extends javax.swing.JPanel {
         }
         // TODO add your handling code here:
     }//GEN-LAST:event_jcbCourseItemStateChanged
+
+    private void jcbCourseActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jcbCourseActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_jcbCourseActionPerformed
+
+    private void jcbClassActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jcbClassActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_jcbClassActionPerformed
+
+    private void jcbClassItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_jcbClassItemStateChanged
+        // TODO add your handling code here:
+        if(jcbClass.getSelectedIndex()>0){
+            
+            intSelectedClassID = jcbClass.getSelectedIndex();
+            
+            System.out.println("Active Class ID Selected: (int) " + intSelectedClassID);
+            
+            // Set panels here
+            setGroupAssignments();
+            setIndividualAssignments();
+        }
+        
+    }//GEN-LAST:event_jcbClassItemStateChanged
+
+    private void jbRefreshAssignmentActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jbRefreshAssignmentActionPerformed
+        // TODO add your handling code here:
+        
+        // Any panel you want to refresh under assignments tab when asked, set here
+        setGroupAssignments();
+        setIndividualAssignments();
+        
+        JFrame PopUp = new JFrame();
+        JOptionPane.showMessageDialog(PopUp,"Refresh complete!");  
+        
+    }//GEN-LAST:event_jbRefreshAssignmentActionPerformed
   private void CreateFrame(JPanel inPanel) {
                 //  intWindowCounter++;
       JDialog jd = new JDialog();
