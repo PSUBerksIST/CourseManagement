@@ -12,6 +12,9 @@ import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JCheckBox;
@@ -20,7 +23,11 @@ import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTable;
+import javax.swing.event.TableModelEvent;
+import javax.swing.event.TableModelListener;
+import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableCellRenderer;
+import javax.swing.table.TableColumn;
 import net.proteanit.sql.DbUtils;
 
 /**
@@ -40,6 +47,10 @@ public class jpClass extends javax.swing.JPanel {
     private int intSelectedClassID;
     
     private int intSelectedCourseID;
+    
+    // Assignment Tab Declarations
+    List<Integer> assignmentTab_SelectedAssignmentIDs = new ArrayList<Integer>();
+    List<Integer> assignmentTab_SelectedGroupAssignmentIDs = new ArrayList<Integer>();
     
     public jpClass() {
         initComponents();
@@ -102,12 +113,92 @@ public class jpClass extends javax.swing.JPanel {
         
         // Grab the courses from the database and display them
         try {
-            ResultSet result = st.executeQuery("SELECT -1 as 'Select', Assignments.ShortName AS Name, Assignments.Description, Assignments.MaximumPoints AS Points FROM Assignments, ClassAssignmentLink WHERE Assignments.id = ClassAssignmentLink.FKAssignmentID AND Assignments.GroupAssignment = 1 AND ClassAssignmentLink.FKClassID = "+intSelectedClassID);
+            
+            DefaultTableModel model = (DefaultTableModel) jtGroupAssignments.getModel();
 
-            jtGroupAssignments.setModel(DbUtils.resultSetToTableModel(result));
+            // Reset the JTable in case we are coming back a second time
+            model.setColumnCount(0);
+            model.setRowCount(0);
             
-            jtGroupAssignments.getColumnModel().getColumn(0).setCellRenderer(new ClassCheckbox()); 
+            // Create our columns
+            model.addColumn("Select");
+            model.addColumn("ID");
+            model.addColumn("Name");
+            model.addColumn("Description");
+            model.addColumn("Points");
             
+            // Set our model and also create our listeners
+            jtGroupAssignments.getModel().addTableModelListener(new TableModelListener() {
+            @Override
+            public void tableChanged(TableModelEvent e) {
+                    int lead = jtIndividualAssignments.getSelectedRow();
+                    if(lead > -1)
+                    {
+                        // On a table change update our local store of selectedAssignmentIDs
+                        for(int i = 0; i < jtGroupAssignments.getModel().getRowCount(); i++)
+                        {
+
+                            int assignmentId = Integer.parseInt(jtGroupAssignments.getModel().getValueAt(i,1).toString());
+
+                            if ((Boolean) jtGroupAssignments.getModel().getValueAt(i,0))
+                            {  
+
+                                System.out.println("Selected ID: " + assignmentId);
+
+                                // Add the ID if we do not have it already
+                                if(!assignmentTab_SelectedGroupAssignmentIDs.contains(assignmentId))
+                                {
+                                    assignmentTab_SelectedGroupAssignmentIDs.add(assignmentId);
+                                }
+
+                            }
+                            else
+                            {
+
+                                System.out.println("Selected ID: " + assignmentId);
+
+                                for (Iterator<Integer> iterator = assignmentTab_SelectedGroupAssignmentIDs.iterator(); iterator.hasNext(); ) {
+                                    Integer id = iterator.next();
+                                    if (id == assignmentId) 
+                                    {
+                                        iterator.remove();
+                                    }
+                                }
+
+                          }
+
+                        }   
+                    
+                    }//if lead
+                    
+                    // Show the programmer what IDs are selected
+                    System.out.println(assignmentTab_SelectedGroupAssignmentIDs);
+                }
+
+            });
+            
+            // JTable will make our checkboxes for us
+            TableColumn tc = jtGroupAssignments.getColumnModel().getColumn(0);
+            tc.setCellEditor(jtGroupAssignments.getDefaultEditor(Boolean.class));  
+            tc.setCellRenderer(jtGroupAssignments.getDefaultRenderer(Boolean.class)); 
+            
+            // Result Set 
+            ResultSet result = st.executeQuery("SELECT -1 AS 'Select', Assignments.id AS ID, Assignments.ShortName AS Name, Assignments.Description, Assignments.MaximumPoints AS Points FROM Assignments, ClassAssignmentLink WHERE Assignments.id = ClassAssignmentLink.FKAssignmentID AND Assignments.GroupAssignment = 1 AND ClassAssignmentLink.FKClassID = " + intSelectedClassID);
+
+            int i = 0;
+            while (result.next()) 
+            {
+                
+                // SQLite won't do Booleans so lets convert it to one
+                boolean b = (Integer.parseInt(result.getString("Select")) != -1);
+                // Add our row to the JTable
+                model.addRow(new Object[]{ b, result.getString("ID"), result.getString("Name"), result.getString("Description"), result.getString("Points")});
+                // Authorize the checkbox to be editable
+                model.isCellEditable(i, 0);
+                i++;   
+                
+            }
+
         }
         catch (SQLException ex) {
             Logger.getLogger(DBConnection.class.getName()).log(Level.SEVERE, null, ex);
@@ -120,55 +211,98 @@ public class jpClass extends javax.swing.JPanel {
         
         // Grab the courses from the database and display them
         try {
-            ResultSet result = st.executeQuery("SELECT -1 AS 'Select', Assignments.ShortName AS Name, Assignments.Description, Assignments.MaximumPoints AS Points FROM Assignments, ClassAssignmentLink WHERE Assignments.id = ClassAssignmentLink.FKAssignmentID AND Assignments.GroupAssignment = -1 AND ClassAssignmentLink.FKClassID = "+intSelectedClassID);
+            //ResultSet result = st.executeQuery("SELECT -1 AS 'Select', Assignments.ShortName AS Name, Assignments.Description, Assignments.MaximumPoints AS Points FROM Assignments, ClassAssignmentLink WHERE Assignments.id = ClassAssignmentLink.FKAssignmentID AND Assignments.GroupAssignment = -1 AND ClassAssignmentLink.FKClassID = "+intSelectedClassID);
 
-            jtIndividualAssignments.setModel(DbUtils.resultSetToTableModel(result));
-            
-            
+            DefaultTableModel model = (DefaultTableModel) jtIndividualAssignments.getModel();
 
+            // Reset the JTable in case we are coming back a second time
+            model.setColumnCount(0);
+            model.setRowCount(0);
             
-            jtIndividualAssignments.getColumnModel().getColumn(0).setCellRenderer(new ClassCheckbox());
+            // Create our columns
+            model.addColumn("Select");
+            model.addColumn("ID");
+            model.addColumn("Name");
+            model.addColumn("Description");
+            model.addColumn("Points");
             
+            // Set our model and also create our listeners
+            jtIndividualAssignments.getModel().addTableModelListener(new TableModelListener() {
+            @Override
+            public void tableChanged(TableModelEvent e) {
+                
+                // On a table change update our local store of selectedAssignmentIDs
+                    int lead = jtIndividualAssignments.getSelectedRow();
+                    
+                    if(lead > -1)
+                    {
+
+                        for(int i = 0; i < jtIndividualAssignments.getModel().getRowCount(); i++)
+                        {
+
+                            int assignmentId = Integer.parseInt(jtIndividualAssignments.getModel().getValueAt(i,1).toString());
+
+                            if ((Boolean) jtIndividualAssignments.getModel().getValueAt(i,0))
+                            {  
+
+                                System.out.println("Selected ID: " + assignmentId);
+
+                                // Add the ID if we do not have it already
+                                if(!assignmentTab_SelectedAssignmentIDs.contains(assignmentId))
+                                {
+                                    assignmentTab_SelectedAssignmentIDs.add(assignmentId);
+                                }
+
+                            }
+                            else
+                            {
+
+                                System.out.println("Selected ID: " + assignmentId);
+
+                                for (Iterator<Integer> iterator = assignmentTab_SelectedAssignmentIDs.iterator(); iterator.hasNext(); ) {
+                                    Integer id = iterator.next();
+                                    if (id == assignmentId) 
+                                    {
+                                        iterator.remove();
+                                    }
+                                }
+
+                          }
+
+                        }    
+                    }//if lead
+                    
+                    // Show the programmer what IDs are selected
+                    System.out.println(assignmentTab_SelectedAssignmentIDs);
+                }
+
+            });
             
+            // JTable will make our checkboxes for us
+            TableColumn tc = jtIndividualAssignments.getColumnModel().getColumn(0);
+            tc.setCellEditor(jtIndividualAssignments.getDefaultEditor(Boolean.class));  
+            tc.setCellRenderer(jtIndividualAssignments.getDefaultRenderer(Boolean.class)); 
             
+            // Result Set 
+            ResultSet result = st.executeQuery("SELECT -1 AS 'Select', Assignments.id AS ID, Assignments.ShortName AS Name, Assignments.Description, Assignments.MaximumPoints AS Points FROM Assignments, ClassAssignmentLink WHERE Assignments.id = ClassAssignmentLink.FKAssignmentID AND Assignments.GroupAssignment = -1 AND ClassAssignmentLink.FKClassID = " + intSelectedClassID);
+
+            int i = 0;
+            while (result.next()) 
+            {
+                
+                // SQLite won't do Booleans so lets convert it to one
+                boolean b = (Integer.parseInt(result.getString("Select")) != -1);
+                // Add our row to the JTable
+                model.addRow(new Object[]{ b, result.getString("ID"), result.getString("Name"), result.getString("Description"), result.getString("Points")});
+                // Authorize the checkbox to be editable
+                model.isCellEditable(i, 0);
+                i++;   
+                
+            }
             
         }
         catch (SQLException ex) {
             Logger.getLogger(DBConnection.class.getName()).log(Level.SEVERE, null, ex);
-        }
-    }
-    
-        // @Credit & Thanks http://stackoverflow.com/questions/32780154/java-resultset-to-jtable-with-checkbox
-        private class ClassCheckbox implements TableCellRenderer {
-        @Override
-        public Component getTableCellRendererComponent(JTable table,
-                Object value, boolean isSelected, boolean hasFocus, int row,
-                int column) {
-
-            JPanel cbPanel = new JPanel();
-            JCheckBox checkbox = new JCheckBox();
-            cbPanel.setLayout(new BorderLayout());
-            cbPanel.add(checkbox, BorderLayout.WEST);
-
-                if (value != null) {
-                    if (value instanceof String) {
-                        int valStr = Integer.parseInt((String) value);
-
-                        System.out.println("valStr = " + valStr);
-
-                        if(valStr == 1)
-                        {
-                            checkbox.setSelected(true);
-                        }
-                        else
-                        {
-                            checkbox.setSelected(false);
-                        }
-
-                    }
-                }
-
-            return cbPanel;
         }
     }
 
@@ -222,7 +356,6 @@ public class jpClass extends javax.swing.JPanel {
         jbNewAssignment = new javax.swing.JButton();
         jbDeleteAssignment = new javax.swing.JButton();
         jbRefreshAssignment = new javax.swing.JButton();
-        jbChangeAssignment = new javax.swing.JButton();
         jcbCourse = new javax.swing.JComboBox();
 
         jcbClass.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Open Class", "Item 1", "Item 2", "Item 3", "Item 4" }));
@@ -273,7 +406,7 @@ public class jpClass extends javax.swing.JPanel {
                 .addComponent(jScrollPane6, javax.swing.GroupLayout.PREFERRED_SIZE, 357, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jLabel6)
-                .addContainerGap(71, Short.MAX_VALUE))
+                .addContainerGap(86, Short.MAX_VALUE))
         );
         jpClassOverviewTabLayout.setVerticalGroup(
             jpClassOverviewTabLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -282,7 +415,7 @@ public class jpClass extends javax.swing.JPanel {
                 .addGroup(jpClassOverviewTabLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(jScrollPane6, javax.swing.GroupLayout.PREFERRED_SIZE, 236, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jLabel6))
-                .addContainerGap(337, Short.MAX_VALUE))
+                .addContainerGap(104, Short.MAX_VALUE))
         );
 
         jTabbedPane1.addTab("Overview", jpClassOverviewTab);
@@ -331,6 +464,11 @@ public class jpClass extends javax.swing.JPanel {
         jbImportStudents.setText("Import");
 
         jbSave.setText("Save");
+        jbSave.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jbSaveActionPerformed(evt);
+            }
+        });
 
         jbDelete.setText("Delete");
 
@@ -341,7 +479,7 @@ public class jpClass extends javax.swing.JPanel {
             .addGroup(jpClassStudentsTabLayout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(jpClassStudentsTabLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jScrollPane5, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE)
+                    .addComponent(jScrollPane5, javax.swing.GroupLayout.DEFAULT_SIZE, 449, Short.MAX_VALUE)
                     .addGroup(jpClassStudentsTabLayout.createSequentialGroup()
                         .addGroup(jpClassStudentsTabLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(jLabel10, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
@@ -358,22 +496,20 @@ public class jpClass extends javax.swing.JPanel {
                                 .addComponent(jLabel3, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                                 .addGap(19, 19, 19)))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addGroup(jpClassStudentsTabLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addGroup(jpClassStudentsTabLayout.createSequentialGroup()
-                                .addGroup(jpClassStudentsTabLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addComponent(jtfFirstName)
-                                    .addComponent(jtfLastName)
-                                    .addComponent(jtfStudentID)
-                                    .addComponent(jtfEmail)
-                                    .addComponent(jtfPhoneNumber))
-                                .addGap(97, 97, 97))
-                            .addGroup(jpClassStudentsTabLayout.createSequentialGroup()
-                                .addComponent(jbImportStudents, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(jbSave, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(jbDelete, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
-                        .addGap(88, 88, 88))))
+                        .addGroup(jpClassStudentsTabLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                            .addComponent(jtfEmail, javax.swing.GroupLayout.DEFAULT_SIZE, 176, Short.MAX_VALUE)
+                            .addComponent(jtfStudentID, javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jtfLastName, javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jtfFirstName, javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jtfPhoneNumber))
+                        .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
+            .addGroup(jpClassStudentsTabLayout.createSequentialGroup()
+                .addComponent(jbImportStudents, javax.swing.GroupLayout.PREFERRED_SIZE, 144, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jbSave, javax.swing.GroupLayout.PREFERRED_SIZE, 142, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(jbDelete, javax.swing.GroupLayout.PREFERRED_SIZE, 144, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap())
         );
         jpClassStudentsTabLayout.setVerticalGroup(
             jpClassStudentsTabLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -386,36 +522,30 @@ public class jpClass extends javax.swing.JPanel {
                         .addGap(6, 6, 6)
                         .addComponent(jLabel3, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                     .addComponent(jtfFirstName, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(jpClassStudentsTabLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jLabel4, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addGroup(jpClassStudentsTabLayout.createSequentialGroup()
-                        .addGap(6, 6, 6)
-                        .addComponent(jLabel4, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                    .addComponent(jtfLastName, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addGroup(jpClassStudentsTabLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(jpClassStudentsTabLayout.createSequentialGroup()
-                        .addGap(6, 6, 6)
-                        .addComponent(jLabel8, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                    .addComponent(jtfStudentID, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addGroup(jpClassStudentsTabLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(jpClassStudentsTabLayout.createSequentialGroup()
-                        .addGap(6, 6, 6)
-                        .addComponent(jLabel9, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                    .addComponent(jtfEmail, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addGroup(jpClassStudentsTabLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(jpClassStudentsTabLayout.createSequentialGroup()
-                        .addGap(6, 6, 6)
-                        .addComponent(jLabel10, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                    .addComponent(jtfPhoneNumber, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGap(0, 0, Short.MAX_VALUE)
+                        .addComponent(jtfLastName, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(jpClassStudentsTabLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jtfStudentID, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel8, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(jpClassStudentsTabLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jtfEmail, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel9, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(jpClassStudentsTabLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jtfPhoneNumber, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel10, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(jpClassStudentsTabLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jbImportStudents, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(jbSave, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(jbDelete, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                .addGap(281, 281, 281))
+                .addGap(328, 328, 328))
         );
 
         jTabbedPane1.addTab("Students", jpClassStudentsTab);
@@ -460,13 +590,17 @@ public class jpClass extends javax.swing.JPanel {
             .addGroup(jpClassGradesTabLayout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(jpClassGradesTabLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(jpClassGradesTabLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                        .addComponent(jlAssignments)
-                        .addComponent(jScrollPane4, javax.swing.GroupLayout.DEFAULT_SIZE, 355, Short.MAX_VALUE)
-                        .addComponent(jLabel1)
-                        .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE))
-                    .addComponent(jbSaveGrades))
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                    .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE)
+                    .addGroup(jpClassGradesTabLayout.createSequentialGroup()
+                        .addGroup(jpClassGradesTabLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jlAssignments)
+                            .addComponent(jLabel1))
+                        .addGap(0, 357, Short.MAX_VALUE))
+                    .addComponent(jScrollPane4, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE))
+                .addContainerGap())
+            .addGroup(jpClassGradesTabLayout.createSequentialGroup()
+                .addComponent(jbSaveGrades)
+                .addGap(0, 0, Short.MAX_VALUE))
         );
         jpClassGradesTabLayout.setVerticalGroup(
             jpClassGradesTabLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -474,26 +608,45 @@ public class jpClass extends javax.swing.JPanel {
                 .addContainerGap()
                 .addComponent(jlAssignments)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, 153, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(18, 18, 18)
+                .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, 110, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(jLabel1)
-                .addGap(18, 18, 18)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(jScrollPane4, javax.swing.GroupLayout.PREFERRED_SIZE, 113, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(18, 18, 18)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jbSaveGrades)
-                .addContainerGap(224, Short.MAX_VALUE))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
         jTabbedPane1.addTab("Grades", jpClassGradesTab);
 
         jtIndividualAssignments.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
-                {null, null, null}
+                {null, null, null, null, null},
+                {null, null, null, null, null},
+                {null, null, null, null, null},
+                {null, null, null, null, null},
+                {null, null, null, null, null}
             },
             new String [] {
-                "Name", "Description", "Points"
+                "Select", "ID", "Name", "Description", "Points"
             }
-        ));
+        ) {
+            Class[] types = new Class [] {
+                java.lang.Boolean.class, java.lang.Object.class, java.lang.Object.class, java.lang.Object.class, java.lang.Object.class
+            };
+            boolean[] canEdit = new boolean [] {
+                true, false, false, false, false
+            };
+
+            public Class getColumnClass(int columnIndex) {
+                return types [columnIndex];
+            }
+
+            public boolean isCellEditable(int rowIndex, int columnIndex) {
+                return canEdit [columnIndex];
+            }
+        });
         jScrollPane1.setViewportView(jtIndividualAssignments);
 
         jlGroupAssignments.setText("Group Assignments:");
@@ -502,22 +655,41 @@ public class jpClass extends javax.swing.JPanel {
 
         jtGroupAssignments.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
-                {null, null, null}
+                { new Boolean(false), null, null, null, null},
+                {null, null, null, null, null},
+                {null, null, null, null, null},
+                {null, null, null, null, null},
+                {null, null, null, null, null}
             },
             new String [] {
-                "Name", "Description", "Points"
+                "Select", "ID", "Name", "Description", "Points"
             }
-        ));
+        ) {
+            Class[] types = new Class [] {
+                java.lang.Boolean.class, java.lang.Object.class, java.lang.Object.class, java.lang.Object.class, java.lang.Object.class
+            };
+            boolean[] canEdit = new boolean [] {
+                true, false, false, false, false
+            };
+
+            public Class getColumnClass(int columnIndex) {
+                return types [columnIndex];
+            }
+
+            public boolean isCellEditable(int rowIndex, int columnIndex) {
+                return canEdit [columnIndex];
+            }
+        });
         jScrollPane2.setViewportView(jtGroupAssignments);
 
-        jbNewAssignment.setText("New");
+        jbNewAssignment.setText("Manage");
         jbNewAssignment.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jbNewAssignmentActionPerformed(evt);
             }
         });
 
-        jbDeleteAssignment.setText("Delete");
+        jbDeleteAssignment.setText("Delete Selected");
 
         jbRefreshAssignment.setText("Refresh");
         jbRefreshAssignment.addActionListener(new java.awt.event.ActionListener() {
@@ -526,36 +698,27 @@ public class jpClass extends javax.swing.JPanel {
             }
         });
 
-        jbChangeAssignment.setText("Change");
-
         javax.swing.GroupLayout jpClassAssignmentTabLayout = new javax.swing.GroupLayout(jpClassAssignmentTab);
         jpClassAssignmentTab.setLayout(jpClassAssignmentTabLayout);
         jpClassAssignmentTabLayout.setHorizontalGroup(
             jpClassAssignmentTabLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jpClassAssignmentTabLayout.createSequentialGroup()
                 .addGroup(jpClassAssignmentTabLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jScrollPane2, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE)
+                    .addComponent(jScrollPane1, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE)
                     .addGroup(jpClassAssignmentTabLayout.createSequentialGroup()
                         .addContainerGap()
-                        .addComponent(jlGroupAssignments))
+                        .addGroup(jpClassAssignmentTabLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jlGroupAssignments)
+                            .addComponent(jLabel7))
+                        .addGap(0, 0, Short.MAX_VALUE))
                     .addGroup(jpClassAssignmentTabLayout.createSequentialGroup()
-                        .addContainerGap()
-                        .addComponent(jLabel7))
-                    .addGroup(jpClassAssignmentTabLayout.createSequentialGroup()
-                        .addContainerGap()
-                        .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 308, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addGroup(jpClassAssignmentTabLayout.createSequentialGroup()
-                        .addGap(33, 33, 33)
-                        .addComponent(jbNewAssignment)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jbDeleteAssignment)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jbRefreshAssignment)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jbChangeAssignment))
-                    .addGroup(jpClassAssignmentTabLayout.createSequentialGroup()
-                        .addContainerGap()
-                        .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 308, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                        .addComponent(jbNewAssignment, javax.swing.GroupLayout.PREFERRED_SIZE, 137, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 20, Short.MAX_VALUE)
+                        .addComponent(jbDeleteAssignment, javax.swing.GroupLayout.PREFERRED_SIZE, 137, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(18, 18, 18)
+                        .addComponent(jbRefreshAssignment, javax.swing.GroupLayout.PREFERRED_SIZE, 137, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addContainerGap())
         );
         jpClassAssignmentTabLayout.setVerticalGroup(
             jpClassAssignmentTabLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -571,10 +734,9 @@ public class jpClass extends javax.swing.JPanel {
                 .addGap(18, 18, 18)
                 .addGroup(jpClassAssignmentTabLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jbNewAssignment)
-                    .addComponent(jbDeleteAssignment)
                     .addComponent(jbRefreshAssignment)
-                    .addComponent(jbChangeAssignment))
-                .addContainerGap(319, Short.MAX_VALUE))
+                    .addComponent(jbDeleteAssignment))
+                .addContainerGap())
         );
 
         jTabbedPane1.addTab("Assignments", jpClassAssignmentTab);
@@ -614,7 +776,7 @@ public class jpClass extends javax.swing.JPanel {
                     .addComponent(jcbClass)
                     .addComponent(jcbCourse))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jTabbedPane1))
+                .addComponent(jTabbedPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 430, javax.swing.GroupLayout.PREFERRED_SIZE))
         );
     }// </editor-fold>//GEN-END:initComponents
 
@@ -696,6 +858,28 @@ public class jpClass extends javax.swing.JPanel {
         JOptionPane.showMessageDialog(PopUp,"Refresh complete!");  
         
     }//GEN-LAST:event_jbRefreshAssignmentActionPerformed
+
+    private void jbSaveActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jbSaveActionPerformed
+        // TODO add your handling code here:
+        
+        String fName = jtfFirstName.getText();
+        
+        try
+        {
+            st.execute("INSERT INTO....");
+            
+            JFrame PopUp = new JFrame();
+            JOptionPane.showMessageDialog(PopUp,"Student added!"); 
+            
+        }
+        catch (SQLException ex) {
+            Logger.getLogger(DBConnection.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        
+ 
+        
+        
+    }//GEN-LAST:event_jbSaveActionPerformed
   private void CreateFrame(JPanel inPanel) {
                 //  intWindowCounter++;
       JDialog jd = new JDialog();
@@ -725,7 +909,6 @@ public class jpClass extends javax.swing.JPanel {
     private javax.swing.JTable jTable2;
     private javax.swing.JTable jTable3;
     private javax.swing.JButton jbAddClass;
-    private javax.swing.JButton jbChangeAssignment;
     private javax.swing.JButton jbDelete;
     private javax.swing.JButton jbDeleteAssignment;
     private javax.swing.JButton jbImportStudents;
