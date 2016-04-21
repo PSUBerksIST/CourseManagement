@@ -19,19 +19,21 @@
           <Group type="102" attributes="0">
               <EmptySpace max="-2" attributes="0"/>
               <Group type="103" groupAlignment="0" attributes="0">
-                  <Component id="jScrollPane1" min="-2" pref="375" max="-2" attributes="0"/>
-                  <Group type="102" alignment="0" attributes="0">
+                  <Group type="102" attributes="0">
+                      <Group type="103" groupAlignment="0" attributes="0">
+                          <Component id="jScrollPane1" min="-2" pref="375" max="-2" attributes="0"/>
+                          <Component id="jlAssignments" alignment="0" min="-2" max="-2" attributes="0"/>
+                      </Group>
+                      <EmptySpace max="32767" attributes="0"/>
+                  </Group>
+                  <Group type="102" attributes="0">
                       <Component id="jbAddAssignment" min="-2" max="-2" attributes="0"/>
                       <EmptySpace max="-2" attributes="0"/>
-                      <Component id="jbDelete" min="-2" max="-2" attributes="0"/>
+                      <Component id="jbDelete" max="32767" attributes="0"/>
                       <EmptySpace max="-2" attributes="0"/>
-                      <Component id="jbRefresh" min="-2" max="-2" attributes="0"/>
-                      <EmptySpace max="-2" attributes="0"/>
-                      <Component id="jbSave" min="-2" max="-2" attributes="0"/>
+                      <Component id="jbRefresh" min="-2" pref="102" max="-2" attributes="0"/>
                   </Group>
-                  <Component id="jlAssignments" alignment="0" min="-2" max="-2" attributes="0"/>
               </Group>
-              <EmptySpace pref="15" max="32767" attributes="0"/>
           </Group>
       </Group>
     </DimensionLayout>
@@ -47,7 +49,6 @@
                   <Component id="jbAddAssignment" alignment="3" min="-2" max="-2" attributes="0"/>
                   <Component id="jbDelete" alignment="3" min="-2" max="-2" attributes="0"/>
                   <Component id="jbRefresh" alignment="3" min="-2" max="-2" attributes="0"/>
-                  <Component id="jbSave" alignment="3" min="-2" max="-2" attributes="0"/>
               </Group>
               <EmptySpace pref="78" max="32767" attributes="0"/>
           </Group>
@@ -57,7 +58,7 @@
   <SubComponents>
     <Component class="javax.swing.JButton" name="jbAddAssignment">
       <Properties>
-        <Property name="text" type="java.lang.String" value="Create New"/>
+        <Property name="text" type="java.lang.String" value="Create Assignment"/>
       </Properties>
       <Events>
         <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="jbAddAssignmentActionPerformed"/>
@@ -70,46 +71,30 @@
 
       <Layout class="org.netbeans.modules.form.compat2.layouts.support.JScrollPaneSupportLayout"/>
       <SubComponents>
-        <Component class="javax.swing.JTable" name="jTable1">
+        <Component class="javax.swing.JTable" name="jtAssignments">
           <Properties>
             <Property name="model" type="javax.swing.table.TableModel" editor="org.netbeans.modules.form.editors2.TableModelEditor">
-              <Table columnCount="4" rowCount="6">
-                <Column editable="true" title="Name" type="java.lang.Object">
-                  <Data value="UID 1"/>
-                  <Data value="Team Charter"/>
-                  <Data value="Proposal"/>
-                  <Data value="UID2"/>
-                  <Data value="Networking"/>
-                  <Data value="System Users Tasks"/>
-                </Column>
-                <Column editable="true" title="Description" type="java.lang.Object">
-                  <Data value="Get Detail"/>
-                  <Data value="Get Detail"/>
-                  <Data value="Get Detail"/>
-                  <Data value="Get Detail"/>
-                  <Data value="Get Detail"/>
-                  <Data value="Get Detail"/>
-                </Column>
-                <Column editable="true" title="Points" type="java.lang.Object">
-                  <Data value="2"/>
-                  <Data value="5"/>
-                  <Data value="10"/>
-                  <Data value="2"/>
-                  <Data value="10"/>
-                  <Data value="10"/>
-                </Column>
-                <Column editable="true" title="Group" type="java.lang.Object">
-                  <Data value="no"/>
-                  <Data value="yes"/>
-                  <Data value="yes"/>
-                  <Data value="no"/>
-                  <Data value="no"/>
-                  <Data value="yes"/>
-                </Column>
+              <Table columnCount="6" rowCount="6">
+                <Column editable="true" title="Select" type="java.lang.Boolean"/>
+                <Column editable="false" title="ID" type="java.lang.Object"/>
+                <Column editable="false" title="Name" type="java.lang.Object"/>
+                <Column editable="false" title="Description" type="java.lang.Object"/>
+                <Column editable="false" title="Points" type="java.lang.Object"/>
+                <Column editable="false" title="Group" type="java.lang.Object"/>
               </Table>
             </Property>
             <Property name="columnModel" type="javax.swing.table.TableColumnModel" editor="org.netbeans.modules.form.editors2.TableColumnModelEditor">
               <TableColumnModel selectionModel="0">
+                <Column maxWidth="-1" minWidth="-1" prefWidth="-1" resizable="true">
+                  <Title/>
+                  <Editor/>
+                  <Renderer/>
+                </Column>
+                <Column maxWidth="-1" minWidth="-1" prefWidth="-1" resizable="true">
+                  <Title/>
+                  <Editor/>
+                  <Renderer/>
+                </Column>
                 <Column maxWidth="-1" minWidth="-1" prefWidth="-1" resizable="true">
                   <Title/>
                   <Editor/>
@@ -143,16 +128,17 @@
       <Properties>
         <Property name="text" type="java.lang.String" value="Delete"/>
       </Properties>
+      <Events>
+        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="jbDeleteActionPerformed"/>
+      </Events>
     </Component>
     <Component class="javax.swing.JButton" name="jbRefresh">
       <Properties>
         <Property name="text" type="java.lang.String" value="Refresh"/>
       </Properties>
-    </Component>
-    <Component class="javax.swing.JButton" name="jbSave">
-      <Properties>
-        <Property name="text" type="java.lang.String" value="Save"/>
-      </Properties>
+      <Events>
+        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="jbRefreshActionPerformed"/>
+      </Events>
     </Component>
     <Component class="javax.swing.JLabel" name="jlAssignments">
       <Properties>

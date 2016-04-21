@@ -211,7 +211,6 @@ public class jpClass extends javax.swing.JPanel {
         
         // Grab the courses from the database and display them
         try {
-            //ResultSet result = st.executeQuery("SELECT -1 AS 'Select', Assignments.ShortName AS Name, Assignments.Description, Assignments.MaximumPoints AS Points FROM Assignments, ClassAssignmentLink WHERE Assignments.id = ClassAssignmentLink.FKAssignmentID AND Assignments.GroupAssignment = -1 AND ClassAssignmentLink.FKClassID = "+intSelectedClassID);
 
             DefaultTableModel model = (DefaultTableModel) jtIndividualAssignments.getModel();
 
@@ -284,7 +283,7 @@ public class jpClass extends javax.swing.JPanel {
             tc.setCellRenderer(jtIndividualAssignments.getDefaultRenderer(Boolean.class)); 
             
             // Result Set 
-            ResultSet result = st.executeQuery("SELECT -1 AS 'Select', Assignments.id AS ID, Assignments.ShortName AS Name, Assignments.Description, Assignments.MaximumPoints AS Points FROM Assignments, ClassAssignmentLink WHERE Assignments.id = ClassAssignmentLink.FKAssignmentID AND Assignments.GroupAssignment = -1 AND ClassAssignmentLink.FKClassID = " + intSelectedClassID);
+            ResultSet result = st.executeQuery("SELECT -1 AS 'Select', Assignments.id AS ID, Assignments.ShortName AS Name, Assignments.Description, Assignments.MaximumPoints AS Points FROM Assignments, ClassAssignmentLink WHERE Assignments.id = ClassAssignmentLink.FKAssignmentID AND Assignments.GroupAssignment != 1 AND ClassAssignmentLink.FKClassID = " + intSelectedClassID);
 
             int i = 0;
             while (result.next()) 
@@ -690,6 +689,11 @@ public class jpClass extends javax.swing.JPanel {
         });
 
         jbDeleteAssignment.setText("Delete Selected");
+        jbDeleteAssignment.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jbDeleteAssignmentActionPerformed(evt);
+            }
+        });
 
         jbRefreshAssignment.setText("Refresh");
         jbRefreshAssignment.addActionListener(new java.awt.event.ActionListener() {
@@ -854,9 +858,6 @@ public class jpClass extends javax.swing.JPanel {
         setGroupAssignments();
         setIndividualAssignments();
         
-        JFrame PopUp = new JFrame();
-        JOptionPane.showMessageDialog(PopUp,"Refresh complete!");  
-        
     }//GEN-LAST:event_jbRefreshAssignmentActionPerformed
 
     private void jbSaveActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jbSaveActionPerformed
@@ -880,6 +881,38 @@ public class jpClass extends javax.swing.JPanel {
         
         
     }//GEN-LAST:event_jbSaveActionPerformed
+
+    private void jbDeleteAssignmentActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jbDeleteAssignmentActionPerformed
+        try {
+            System.out.println("Remove Selected Assignments fired! Class ID: " + intSelectedClassID);
+            
+
+            if(!assignmentTab_SelectedAssignmentIDs.isEmpty())
+            {
+                for (Iterator<Integer> iterator = assignmentTab_SelectedAssignmentIDs.iterator(); iterator.hasNext(); ) {
+                    Integer id = iterator.next();
+                    iterator.remove();
+                    st.execute("DELETE FROM ClassAssignmentLink WHERE FKClassID = " + intSelectedClassID + " AND FKAssignmentID = " + id);
+                }
+            }
+            
+            if(!assignmentTab_SelectedGroupAssignmentIDs.isEmpty())
+            {
+                for (Iterator<Integer> iterator = assignmentTab_SelectedGroupAssignmentIDs.iterator(); iterator.hasNext(); ) {
+                    Integer id = iterator.next();
+                    iterator.remove();
+                    st.execute("DELETE FROM ClassAssignmentLink WHERE FKClassID = " + intSelectedClassID + " AND FKAssignmentID = " + id);
+                }
+            }
+            
+            // Let the user know we have taken care of it
+            JFrame PopUp = new JFrame();
+            JOptionPane.showMessageDialog(PopUp,"Assignments Updated!");  
+            
+        } catch (SQLException ex) {
+            Logger.getLogger(jpAddAssignmentsToClass.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }//GEN-LAST:event_jbDeleteAssignmentActionPerformed
   private void CreateFrame(JPanel inPanel) {
                 //  intWindowCounter++;
       JDialog jd = new JDialog();

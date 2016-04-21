@@ -94,7 +94,7 @@
     </Container>
     <Component class="javax.swing.JButton" name="btnAddAssignments">
       <Properties>
-        <Property name="text" type="java.lang.String" value="Add Selected Assignments"/>
+        <Property name="text" type="java.lang.String" value="Update Active Assignments"/>
       </Properties>
       <Events>
         <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btnAddAssignmentsActionPerformed"/>

@@ -208,7 +208,7 @@ public class jpAddAssignmentsToClass extends javax.swing.JPanel {
         });
         jScrollPane1.setViewportView(jtAssignments);
 
-        btnAddAssignments.setText("Add Selected Assignments");
+        btnAddAssignments.setText("Update Active Assignments");
         btnAddAssignments.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnAddAssignmentsActionPerformed(evt);
