@@ -215,6 +215,10 @@ public class jpClass extends javax.swing.JPanel {
             DefaultTableModel model = (DefaultTableModel) jtIndividualAssignments.getModel();
 
             // Reset the JTable in case we are coming back a second time
+            int rowCount = model.getRowCount();
+            for (int i = rowCount - 1; i >= 0; i--) {
+                model.removeRow(i);
+            }
             model.setColumnCount(0);
             model.setRowCount(0);
             
