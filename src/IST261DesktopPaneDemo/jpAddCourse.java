@@ -12,6 +12,7 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import javax.swing.JOptionPane;
 
+
 public class jpAddCourse extends javax.swing.JPanel 
 {
     private Connection dbLocalConnection; //database connection passed from jpCourse
