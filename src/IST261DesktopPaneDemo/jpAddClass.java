@@ -37,11 +37,13 @@ public class jpAddClass extends javax.swing.JPanel {
     private Connection dbConnection;
     private Statement st;
     private PreparedStatement pst;
-    
+    private ResultSet rs;
     //Standard Vars.
     private String[] Times;
     
     // vars that get passed to the database
+    private int intCourseUpdate;
+    private int intSectionUpdate;
     private int intCourse;
     private String strCampus;
     private String strMeetingLocation = null;
@@ -78,7 +80,22 @@ public class jpAddClass extends javax.swing.JPanel {
         setStartTimes();
         //     throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
-
+    
+    public jpAddClass(Connection inConnection, int incourseid, int insectionnumber) {
+        
+        intCourseUpdate = incourseid;
+        intSectionUpdate = insectionnumber;
+        System.out.println(incourseid);
+        initComponents();
+        setdbConnection(inConnection);
+        setjcbCourse(incourseid);
+        setjcbCampus();
+        setStartTimes();
+        getclassinfo(incourseid, insectionnumber);
+        jbAddClassFinish.setVisible(false);
+        
+        //     throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
      /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -137,6 +154,7 @@ public class jpAddClass extends javax.swing.JPanel {
         jtaNotes = new javax.swing.JTextArea();
         jlCampus = new javax.swing.JLabel();
         jcbCampus = new javax.swing.JComboBox();
+        jbUpdateClass = new javax.swing.JButton();
 
         jbAddClassFinish.setText("Finish");
         jbAddClassFinish.addActionListener(new java.awt.event.ActionListener() {
@@ -315,6 +333,13 @@ public class jpAddClass extends javax.swing.JPanel {
 
         jcbCampus.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
 
+        jbUpdateClass.setText("Update");
+        jbUpdateClass.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jbUpdateClassActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
         layout.setHorizontalGroup(
@@ -341,6 +366,8 @@ public class jpAddClass extends javax.swing.JPanel {
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addGroup(layout.createSequentialGroup()
                                 .addComponent(jbAddClassFinish)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                                .addComponent(jbUpdateClass)
                                 .addGap(0, 0, Short.MAX_VALUE))
                             .addGroup(layout.createSequentialGroup()
                                 .addComponent(jScrollPane1)
@@ -496,7 +523,9 @@ public class jpAddClass extends javax.swing.JPanel {
                 .addGap(12, 12, 12)
                 .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 89, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(jbAddClassFinish))
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jbAddClassFinish)
+                    .addComponent(jbUpdateClass)))
         );
     }// </editor-fold>//GEN-END:initComponents
  // This sets the local datbase connection
@@ -706,7 +735,7 @@ public class jpAddClass extends javax.swing.JPanel {
  
         try {
              
-            ResultSet rs = st.executeQuery("select Number from Course order by Number asc");
+            ResultSet rs = st.executeQuery("select Number from Course order by ID asc");
 
             while (rs.next()) {
                 jcbCourse.addItem(//rs.getString("IST") + " " + 
@@ -716,6 +745,135 @@ public class jpAddClass extends javax.swing.JPanel {
             System.out.println(sqle);
         }
     }
+    private void setjcbCourse(int incourseid)
+    {
+        setjcbCourse();
+        jcbCourse.setSelectedIndex(incourseid);
+    }
+    
+    private void getclassinfo(int inCourseID, int inSection)
+    {
+        try {
+            rs = st.executeQuery("select FKCampus, MeetingLocation, ScheduleNumber, ANGELID, ANGELTitle, tmMondayStart, tmMondayEnd, tmTuesdayStart, tmTuesdayEnd, tmWednesdayStart, tmWednesdayEnd, tmThursdayStart, tmFridayStart, tmFridayEnd, tmSaturdayStart, tmSaturdayEnd, tmSundayStart, tmSundayEnd, Notes, tmThursdayEnd from Class Where FKCourse = "+inCourseID+" and Section = "+inSection+";");
+           
+            while(rs.next())
+            {
+               
+                
+                int intCampus = rs.getInt("FKCampus");
+                System.out.println("intCampus = " + intCampus);
+                jcbCampus.setSelectedIndex(intCampus);
+                strMeetingLocation = rs.getString("MeetingLocation");
+                jtfMeetingLocation.setText(strMeetingLocation + "");
+                jtfSection.setText(inSection + "");
+                intScheduleNumber = rs.getInt("ScheduleNumber");
+                jtfScheduleNumber.setText(intScheduleNumber + "");
+                strAngelID = rs.getString("AngelID");
+                jtfAngelID.setText(strAngelID + "");
+                strAngelTitle = rs.getString("AngelTitle");
+                jtfAngelTitle.setText(strAngelTitle + "");
+                
+                strMondayStart = rs.getString("tmMondayStart");
+                if (strMondayStart != null)
+                {
+                    strMondayEnd = rs.getString("tmMondayEnd");
+                    jchbMonday.setSelected(true);
+                    jcbMondayStart.setSelectedItem(strMondayStart);
+                    jcbMondayEnd.setSelectedItem(strMondayEnd);
+                }
+                else
+                {
+                    jchbMonday.setSelected(false);
+                }
+                
+                strTuesdayStart = rs.getString("tmTuesdayStart");
+                if (strTuesdayStart != null)
+                {
+                    strTuesdayEnd = rs.getString("tmTuesdayEnd");
+                    jchbTuesday.setSelected(true);
+                    jcbTuesdayStart.setSelectedItem(strTuesdayStart);
+                    jcbTuesdayEnd.setSelectedItem(strTuesdayEnd);
+                }
+                else
+                {
+                    jchbTuesday.setSelected(false);
+                }
+                
+                strWednesdayStart = rs.getString("tmWednesdayStart");
+                   if (strWednesdayStart != null)
+                {
+                    strWednesdayEnd = rs.getString("tmWednesdayEnd");
+                    jchbWednesday.setSelected(true);
+                    jcbWednesdayStart.setSelectedItem(strWednesdayStart);
+                    jcbWednesdayEnd.setSelectedItem(strWednesdayEnd);
+                }
+                else
+                {
+                    jchbWednesday.setSelected(false);
+                }
+                
+                strThursdayStart = rs.getString("tmThursdayStart");
+                    if (strThursdayStart != null)
+                {
+                    strThursdayEnd = rs.getString("tmThursdayEnd");
+                    jchbThursday.setSelected(true);
+                    jcbThursdayStart.setSelectedItem(strThursdayStart);
+                    jcbThursdayEnd.setSelectedItem(strThursdayEnd);
+                }
+                else
+                {
+                    jchbThursday.setSelected(false);
+                }
+                
+                strFridayStart = rs.getString("tmFridayStart");
+                    if (strFridayStart != null)
+                {
+                    strFridayEnd = rs.getString("tmFridayEnd");
+                    jchbFriday.setSelected(true);
+                    jcbFridayStart.setSelectedItem(strFridayStart);
+                    jcbFridayEnd.setSelectedItem(strFridayEnd);
+                }
+                else
+                {
+                    jchbFriday.setSelected(false);
+                }
+                
+                strSaturdayStart = rs.getString("tmSaturdayStart");
+                    if (strSaturdayStart != null)
+                {
+                    strSaturdayEnd = rs.getString("tmSaturdayEnd");
+                    jchbSaturday.setSelected(true);
+                    jcbSaturdayStart.setSelectedItem(strSaturdayStart);
+                    jcbSaturdayEnd.setSelectedItem(strSaturdayEnd);
+                }
+                else
+                {
+                    jchbSaturday.setSelected(false);
+                }
+                
+                strSundayStart = rs.getString("tmSundayStart");
+                    if (strSundayStart != null)
+                {
+                    strSundayEnd = rs.getString("tmSundayEnd");
+                    jchbSunday.setSelected(true);
+                    jcbSundayStart.setSelectedItem(strSundayStart);
+                    jcbSundayEnd.setSelectedItem(strSundayEnd);
+                }
+                else
+                {
+                    jchbSunday.setSelected(false);
+                }
+                
+                strNotes = rs.getString("Notes");
+                jtaNotes.setText(strNotes);
+                
+                
+                
+            }
+        } catch (SQLException ex) {
+            Logger.getLogger(jpAddClass.class.getName()).log(Level.SEVERE, null, ex);
+        } 
+    }
     
 //This populates the Campus drop down box. 
     private void setjcbCampus(){
@@ -724,7 +882,7 @@ public class jpAddClass extends javax.swing.JPanel {
  
         try {
              
-            ResultSet rs = st.executeQuery("select CampusName from Campus order by CampusName asc");
+            ResultSet rs = st.executeQuery("select CampusName from Campus order by ID asc");
 
             while (rs.next()) {
                 jcbCampus.addItem(//rs.getString("IST") + " " + 
@@ -1069,10 +1227,102 @@ public class jpAddClass extends javax.swing.JPanel {
         }
     }//GEN-LAST:event_jcbSundayStartItemStateChanged
 
+    private void jbUpdateClassActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jbUpdateClassActionPerformed
+        if(jcbCourse.getSelectedIndex() > 0){
+            setCourse(jcbCourse);
+        }
+        else{
+            Component frame = null;
+            JOptionPane.showMessageDialog(frame, "Please select a course.");
+            return;
+        }
+        if(jcbCampus.getSelectedIndex() > 0){
+            setCampus(jcbCampus);
+        }
+        else{
+            Component frame = null;
+            JOptionPane.showMessageDialog(frame, "Please select a Campus.");
+            return;
+        }
+        setMeetingLocation(jtfMeetingLocation);
+        setSection(jtfSection);
+        setScheduleNumber(jtfScheduleNumber);
+        setAngelID(jtfAngelID);
+        setAngelTitle(jtfAngelTitle);
+        setMondayStart(jcbMondayStart);
+        setMondayEnd(jcbMondayEnd);
+        setTuesdayStart(jcbTuesdayStart);
+        setTuesdayEnd(jcbTuesdayEnd);
+        setWednesdayStart(jcbWednesdayStart);
+        setWednesdayEnd(jcbWednesdayEnd);
+        setThursdayStart(jcbThursdayStart);
+        setThursdayEnd(jcbThursdayEnd);
+        setFridayStart(jcbFridayStart);
+        setFridayEnd(jcbFridayEnd);
+        setSaturdayStart(jcbSaturdayStart);
+        setSaturdayEnd(jcbSaturdayEnd);
+        setSundayStart(jcbSundayStart);
+        setSundayEnd(jcbSundayEnd);
+        setNotes(jtaNotes);
+        
+        
+        UpdateToTable(getCourseID(intCourse), getCampusID(strCampus), strMeetingLocation,intSection,intScheduleNumber,
+                     strAngelID,strAngelTitle,strMondayStart,strMondayEnd,strTuesdayStart,strTuesdayEnd,strWednesdayStart,
+                     strWednesdayEnd,strThursdayStart,strThursdayEnd,strFridayStart,strFridayEnd,strSaturdayStart,
+                     strSaturdayEnd,strSundayStart,strSundayEnd,strNotes);
+        
+        this.getTopLevelAncestor().setVisible(false);
+        
+        // TODO add your handling code here:
+    }//GEN-LAST:event_jbUpdateClassActionPerformed
+
+    private void UpdateToTable(int inCourseID, int inCampusID, String inMeetingLocation, int inSection,
+                               int inScheduleNumber, String inAngelID, String inAngelTitle, String inMondayStart,
+                               String inMondayEnd, String inTuesdayStart, String inTuesdayEnd, String inWednesdayStart,
+                               String inWednesdayEnd, String inThursdayStart, String inThursdayEnd, String inFridayStart,
+                               String inFridayEnd, String inSaturdayStart, String inSaturdayEnd, String inSundayStart,
+                               String inSundayEnd, String inNotes){
+        try {
+            String query = " UPDATE Class set FKCourse = ?, FKCampus = ?, MeetingLocation = ?, Section = ?, ScheduleNumber = ?,"
+                           + " ANGELID = ?, ANGELTitle = ?, tmMondayStart = ?, tmMondayEnd = ?, tmTuesdayStart = ?, tmTuesdayEnd = ?,"
+                           + " tmWednesdayStart = ?,tmWednesdayEnd = ?, tmThursdayStart = ?, tmFridayStart = ?, tmFridayEnd = ?, "
+                           + "tmSaturdayStart = ?, tmSaturdayEnd = ?, tmSundayStart = ?, tmSundayEnd = ?, Notes = ?, tmThursdayEnd = ? WHERE FKCourse = " + intCourseUpdate + " AND Section = " + intSectionUpdate + ";";
+                           
+             pst = dbConnection.prepareStatement(query);
+             pst.setInt(1, inCourseID);
+             pst.setInt(2, inCampusID);
+             pst.setString(3, inMeetingLocation);
+             pst.setInt(4, inSection);
+             pst.setInt(5, inScheduleNumber);
+             pst.setString(6, inAngelID);
+             pst.setString(7, inAngelTitle);
+             pst.setString(8, inMondayStart);
+             pst.setString(9, inMondayEnd);
+             pst.setString(10, inTuesdayStart);
+             pst.setString(11, inTuesdayEnd);
+             pst.setString(12, inWednesdayStart);
+             pst.setString(13, inWednesdayEnd);
+             pst.setString(14, inThursdayStart);
+             pst.setString(22, inThursdayEnd);
+             pst.setString(15, inFridayStart);
+             pst.setString(16, inFridayEnd);
+             pst.setString(17, inSaturdayStart);
+             pst.setString(18, inSaturdayEnd);
+             pst.setString(19, inSundayStart);
+             pst.setString(20, inSundayEnd);
+             pst.setString(21, inNotes);
+             pst.executeUpdate();
+        } catch (SQLException ex) {
+            Logger.getLogger(jpAddClass.class.getName()).log(Level.SEVERE, null, ex);
+            System.out.println("Failed");
+        }
+        
+    }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JButton jbAddClassFinish;
+    private javax.swing.JButton jbUpdateClass;
     private javax.swing.JComboBox jcbCampus;
     private javax.swing.JComboBox jcbCourse;
     private javax.swing.JComboBox jcbFridayEnd;

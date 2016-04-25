@@ -20,10 +20,12 @@
               <EmptySpace min="-2" max="-2" attributes="0"/>
               <Component id="jbAddClass" max="32767" attributes="0"/>
               <EmptySpace max="-2" attributes="0"/>
-              <Component id="jcbCourse" max="32767" attributes="0"/>
+              <Component id="jcbCourse" min="-2" pref="118" max="-2" attributes="0"/>
               <EmptySpace max="-2" attributes="0"/>
-              <Component id="jcbClass" max="32767" attributes="0"/>
-              <EmptySpace min="-2" pref="70" max="-2" attributes="0"/>
+              <Component id="jcbClass" min="-2" pref="89" max="-2" attributes="0"/>
+              <EmptySpace max="-2" attributes="0"/>
+              <Component id="jbEditClass" min="-2" max="-2" attributes="0"/>
+              <EmptySpace min="-2" pref="35" max="-2" attributes="0"/>
           </Group>
           <Component id="jTabbedPane1" alignment="0" max="32767" attributes="0"/>
       </Group>
@@ -36,6 +38,7 @@
                   <Component id="jbAddClass" alignment="3" min="-2" max="-2" attributes="0"/>
                   <Component id="jcbClass" alignment="3" max="32767" attributes="0"/>
                   <Component id="jcbCourse" alignment="3" max="32767" attributes="0"/>
+                  <Component id="jbEditClass" alignment="3" min="-2" max="-2" attributes="0"/>
               </Group>
               <EmptySpace max="-2" attributes="0"/>
               <Component id="jTabbedPane1" min="-2" pref="430" max="-2" attributes="0"/>
@@ -813,6 +816,14 @@
       <Events>
         <EventHandler event="itemStateChanged" listener="java.awt.event.ItemListener" parameters="java.awt.event.ItemEvent" handler="jcbCourseItemStateChanged"/>
         <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="jcbCourseActionPerformed"/>
+      </Events>
+    </Component>
+    <Component class="javax.swing.JButton" name="jbEditClass">
+      <Properties>
+        <Property name="text" type="java.lang.String" value="Edit Class"/>
+      </Properties>
+      <Events>
+        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="jbEditClassActionPerformed"/>
       </Events>
     </Component>
   </SubComponents>

@@ -78,7 +78,7 @@ public class jpClass extends javax.swing.JPanel {
  
         try {
              
-            ResultSet rs = st.executeQuery("select Number from Course order by Number asc");
+            ResultSet rs = st.executeQuery("select Number from Course order by ID asc");
 
             while (rs.next()) {
                 jcbCourse.addItem(//rs.getString("IST") + " " + 
@@ -360,6 +360,7 @@ public class jpClass extends javax.swing.JPanel {
         jbDeleteAssignment = new javax.swing.JButton();
         jbRefreshAssignment = new javax.swing.JButton();
         jcbCourse = new javax.swing.JComboBox();
+        jbEditClass = new javax.swing.JButton();
 
         jcbClass.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Open Class", "Item 1", "Item 2", "Item 3", "Item 4" }));
         jcbClass.setEnabled(false);
@@ -761,6 +762,13 @@ public class jpClass extends javax.swing.JPanel {
             }
         });
 
+        jbEditClass.setText("Edit Class");
+        jbEditClass.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jbEditClassActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
         layout.setHorizontalGroup(
@@ -769,10 +777,12 @@ public class jpClass extends javax.swing.JPanel {
                 .addContainerGap()
                 .addComponent(jbAddClass, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jcbCourse, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(jcbCourse, javax.swing.GroupLayout.PREFERRED_SIZE, 118, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jcbClass, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addGap(70, 70, 70))
+                .addComponent(jcbClass, javax.swing.GroupLayout.PREFERRED_SIZE, 89, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jbEditClass)
+                .addGap(35, 35, 35))
             .addComponent(jTabbedPane1)
         );
         layout.setVerticalGroup(
@@ -782,7 +792,8 @@ public class jpClass extends javax.swing.JPanel {
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jbAddClass)
                     .addComponent(jcbClass)
-                    .addComponent(jcbCourse))
+                    .addComponent(jcbCourse)
+                    .addComponent(jbEditClass))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jTabbedPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 430, javax.swing.GroupLayout.PREFERRED_SIZE))
         );
@@ -843,7 +854,7 @@ public class jpClass extends javax.swing.JPanel {
     private void jcbClassItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_jcbClassItemStateChanged
         // TODO add your handling code here:
         if(jcbClass.getSelectedIndex()>0){
-            
+            jbEditClass.setEnabled(true);
             intSelectedClassID = jcbClass.getSelectedIndex();
             
             System.out.println("Active Class ID Selected: (int) " + intSelectedClassID);
@@ -851,6 +862,10 @@ public class jpClass extends javax.swing.JPanel {
             // Set panels here
             setGroupAssignments();
             setIndividualAssignments();
+        }
+        else
+        {
+            jbEditClass.setEnabled(false);
         }
         
     }//GEN-LAST:event_jcbClassItemStateChanged
@@ -917,6 +932,13 @@ public class jpClass extends javax.swing.JPanel {
             Logger.getLogger(jpAddAssignmentsToClass.class.getName()).log(Level.SEVERE, null, ex);
         }
     }//GEN-LAST:event_jbDeleteAssignmentActionPerformed
+
+    private void jbEditClassActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jbEditClassActionPerformed
+        JPanel AddClass = new jpAddClass(dbConnection,  jcbCourse.getSelectedIndex(), Integer.parseInt(jcbClass.getSelectedItem() + ""));
+        AddClass.setName("Add Class");
+        CreateFrame(AddClass); 
+        // TODO add your handling code here:
+    }//GEN-LAST:event_jbEditClassActionPerformed
   private void CreateFrame(JPanel inPanel) {
                 //  intWindowCounter++;
       JDialog jd = new JDialog();
@@ -948,6 +970,7 @@ public class jpClass extends javax.swing.JPanel {
     private javax.swing.JButton jbAddClass;
     private javax.swing.JButton jbDelete;
     private javax.swing.JButton jbDeleteAssignment;
+    private javax.swing.JButton jbEditClass;
     private javax.swing.JButton jbImportStudents;
     private javax.swing.JButton jbNewAssignment;
     private javax.swing.JButton jbRefreshAssignment;
