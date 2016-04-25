@@ -1,6 +1,6 @@
 /*
     On click of "Add Course" button under the course panel jpAddCourse pops up a window that takes information
-    and saves it to the database when done to create a new course.
+    and saves it to the database to create a new course.
  */
 // @author dmg5572
 package IST261DesktopPaneDemo;
@@ -46,7 +46,7 @@ public class jpAddCourse extends javax.swing.JPanel
     {
         setDBConnection(inConnection);//receives database connection from jpCourse, sets it up locally
         initComponents();
-        setJcbDepartment();//SQL Select to pull list of departments and configure the department drop down
+        setJCBDepartment();//SQL Select to pull list of departments and configure the department drop down
     }
 
     @SuppressWarnings("unchecked")
@@ -253,8 +253,8 @@ public class jpAddCourse extends javax.swing.JPanel
     }// </editor-fold>//GEN-END:initComponents
 
     private void jbAddCourseButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jbAddCourseButtonActionPerformed
-        String strSelectedDepartment = "default value"; //string for inserting to FKDemartment field of Course
-        int intSelectedDepartment = 123456789; //int derived from strSelectedDepartment for inserting to FKDemartment field of Course
+        String strSelectedDepartment = "default value"; //string for inserting to FKDepartment field of Course
+        int intSelectedDepartment = 123456789; //int derived from strSelectedDepartment for inserting to FKDepartment field of Course
 
         getInput();
         strSelectedDepartment = String.valueOf(jcbDepartment.getSelectedItem());
@@ -313,8 +313,8 @@ private void getInput()
             intWritingEmphasis = 0;
         }//if        
         
-        strCredits = String.valueOf(jcbCredits.getSelectedItem());//pulling string from java text field
-        intCredits = Integer.parseInt(strCredits);//set integet to java text field input
+        strCredits = String.valueOf(jcbCredits.getSelectedItem());//pulling string from jcbCredits
+        intCredits = Integer.parseInt(strCredits);//set intCredits to java text field input
         
         strCourseTitle = jtfCourseTitle.getText();
         strDescription = jtaDescription.getText();
@@ -329,7 +329,6 @@ private void databaseInsert(int inFKDepartmentInt)
     {
         String query = " INSERT INTO Course (FKDepartment, Number, WritingEmphasis, Credits, Title, Description, Objectives, Prerequisite, Notes)" + " VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?);";
         pst = dbLocalConnection.prepareStatement(query);
-        //stmAddClassStatement.executeUpdate("INSERT INTO Course VALUES ('" + strCourseTitle + "', " + );
         pst.setInt(1, inFKDepartmentInt);
         pst.setInt(2, intCourseNumber);
         pst.setInt(3, intWritingEmphasis);
@@ -383,7 +382,7 @@ private int getFKDepartment(String inSelectedDepartment)
     return intSelectedDepartment;
 }//getFKDepartment
 
-private void setJcbDepartment() //SQL Select to pull list of departments and configure the department drop down
+private void setJCBDepartment() //SQL Select to pull list of departments and configure the department drop down
 {
     jcbDepartment.removeAllItems();
     try
@@ -400,7 +399,7 @@ private void setJcbDepartment() //SQL Select to pull list of departments and con
         System.err.println("jpAddCourse SQL Exception detected in setJcbDepartment().");
         System.out.println(sqle);
     }//catch SQL exceptions
-}//setJcbDepartment
+}//setJCBDepartment
     
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JScrollPane jScrollPane1;
@@ -429,7 +428,4 @@ private void setJcbDepartment() //SQL Select to pull list of departments and con
     private javax.swing.JTextField jtfNotes;
     private javax.swing.JTextField jtfPrerequisites;
     // End of variables declaration//GEN-END:variables
-
-    
-    
-}
+}//jpAddCourse class
