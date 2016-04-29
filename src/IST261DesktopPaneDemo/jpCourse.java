@@ -60,6 +60,7 @@ public class jpCourse extends JPanel{
     
     // Assignment Tab Declarations
     List<Integer> selectedAssignmentIDs = new ArrayList<Integer>();
+    List<Integer> selectedResources = new ArrayList<Integer>();
     
     /**
      * Creates new form jpCourse
@@ -225,6 +226,109 @@ public class jpCourse extends JPanel{
             Logger.getLogger(DBConnection.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
+    
+    
+    public void setResources(int inCourse)
+    {
+        try {
+
+            DefaultTableModel model = (DefaultTableModel) jtResources.getModel();
+
+            // Reset the JTable in case we are coming back a second time
+            int rowCount = model.getRowCount();
+            for (int i = rowCount - 1; i >= 0; i--) {
+                model.removeRow(i);
+            }
+            model.setColumnCount(0);
+            model.setRowCount(0);
+            
+            // Create our columns
+            model.addColumn("Select");
+            model.addColumn("ID");
+            //model.addColumn("Name");
+            model.addColumn("Description");
+            //model.addColumn("Points");
+            //model.addColumn("Group");
+            
+            // Set our model and also create our listeners
+            jtResources.getModel().addTableModelListener(new TableModelListener() {
+            @Override
+            public void tableChanged(TableModelEvent e) {
+
+                // On a table change update our local store of selectedAssignmentIDs
+                    for(int i = 0; i < jtResources.getModel().getRowCount(); i++)
+                    {
+
+                        int ResourceId = Integer.parseInt(jtResources.getModel().getValueAt(i,1).toString());
+
+                        if ((Boolean) jtResources.getModel().getValueAt(i,0))
+                        {  
+
+                            System.out.println("Selected ID: " + ResourceId);
+
+                            // Add the ID if we do not have it already
+                            if(!selectedResources.contains(ResourceId))
+                            {
+                                selectedResources.add(ResourceId);
+                            }
+
+                        }
+                        else
+                        {
+
+                            System.out.println("Selected ID: " + ResourceId);
+
+                            for (Iterator<Integer> iterator = selectedResources.iterator(); iterator.hasNext(); ) {
+                                Integer id = iterator.next();
+                                if (id == ResourceId) 
+                                {
+                                    iterator.remove();
+                                }
+                            }
+
+                      }
+
+                    }     
+                    
+                    // Show the programmer what IDs are selected
+                    System.out.println(selectedResources);
+                }
+
+            });
+            
+            // JTable will make our checkboxes for us
+            TableColumn tc = jtResources.getColumnModel().getColumn(0);
+            tc.setCellEditor(jtResources.getDefaultEditor(Boolean.class));  
+            tc.setCellRenderer(jtResources.getDefaultRenderer(Boolean.class)); 
+            ResultSet result1 = st.executeQuery("Select FKResourcesID FROM CourseResourcesLink Where FKCourseID = "+inCourse+" order by FKResourcesID asc;");
+            while (result1.next()){
+                int ResourcesID  = result1.getInt("FKResourcesID");
+                // Result Set 
+                Statement st1 = dbConnection.createStatement();
+                ResultSet result = st1.executeQuery("SELECT -1 AS 'Select', ID,  Description  FROM Resources Where ID = "+ResourcesID+" order by ID asc;");
+
+                int i = 0;
+                while (result.next()) 
+                {
+
+                    // SQLite won't do Booleans so lets convert it to one
+                    boolean b = (Integer.parseInt(result.getString("Select")) != -1);
+                   // boolean g = (Integer.parseInt(result.getString("Group")) != 1);
+                   // String group = (g) ? "no" : "yes";
+                    // Add our row to the JTable
+                    model.addRow(new Object[]{ b, result.getString("ID"), result.getString("Description")});
+                    // Authorize the checkbox to be editable
+                    model.isCellEditable(i, 0);
+                    i++;   
+                }
+            }
+
+        }
+        catch (SQLException ex) 
+        {
+            Logger.getLogger(DBConnection.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
 
     /**
      * This method is called from within the constructor to initialize the form.
@@ -246,6 +350,12 @@ public class jpCourse extends JPanel{
         btnDeleteAssignments = new javax.swing.JButton();
         btnRefreshAssignments = new javax.swing.JButton();
         jPanel3 = new javax.swing.JPanel();
+        jPanel4 = new javax.swing.JPanel();
+        jbAddResource = new javax.swing.JButton();
+        jbDeleteDocument = new javax.swing.JButton();
+        jbRefresh = new javax.swing.JButton();
+        jScrollPane2 = new javax.swing.JScrollPane();
+        jtResources = new javax.swing.JTable();
         jbEditCourse = new javax.swing.JButton();
 
         jcbCourse.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Select Course", "Item 1", "Item 2", "Item 3", "Item 4" }));
@@ -270,7 +380,7 @@ public class jpCourse extends JPanel{
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 245, Short.MAX_VALUE)
+            .addGap(0, 201, Short.MAX_VALUE)
         );
 
         jTabbedPane1.addTab("Overview", jPanel1);
@@ -304,6 +414,11 @@ public class jpCourse extends JPanel{
             }
         });
         jScrollPane1.setViewportView(jtAssignments);
+        if (jtAssignments.getColumnModel().getColumnCount() > 0) {
+            jtAssignments.getColumnModel().getColumn(2).setHeaderValue("Name");
+            jtAssignments.getColumnModel().getColumn(4).setHeaderValue("Points");
+            jtAssignments.getColumnModel().getColumn(5).setHeaderValue("Group");
+        }
 
         btnAddAssignments.setText("Add Assignments");
         btnAddAssignments.addActionListener(new java.awt.event.ActionListener() {
@@ -352,7 +467,7 @@ public class jpCourse extends JPanel{
                     .addComponent(btnAddAssignments)
                     .addComponent(btnDeleteAssignments)
                     .addComponent(btnRefreshAssignments))
-                .addGap(0, 42, Short.MAX_VALUE))
+                .addGap(0, 4, Short.MAX_VALUE))
         );
 
         jTabbedPane1.addTab("Assignments", jPanel2);
@@ -365,10 +480,90 @@ public class jpCourse extends JPanel{
         );
         jPanel3Layout.setVerticalGroup(
             jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 245, Short.MAX_VALUE)
+            .addGap(0, 201, Short.MAX_VALUE)
         );
 
         jTabbedPane1.addTab("People", jPanel3);
+
+        jbAddResource.setText("Add Resource");
+        jbAddResource.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jbAddResourceActionPerformed(evt);
+            }
+        });
+
+        jbDeleteDocument.setText("Delete");
+        jbDeleteDocument.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jbDeleteDocumentActionPerformed(evt);
+            }
+        });
+
+        jbRefresh.setText("Refresh");
+        jbRefresh.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jbRefreshActionPerformed(evt);
+            }
+        });
+
+        jtResources.setModel(new javax.swing.table.DefaultTableModel(
+            new Object [][] {
+                {null, null, null},
+                {null, null, null},
+                {null, null, null},
+                {null, null, null},
+                {null, null, null},
+                {null, null, null}
+            },
+            new String [] {
+                "Select", "ID", "Description"
+            }
+        ) {
+            Class[] types = new Class [] {
+                java.lang.Boolean.class, java.lang.Object.class, java.lang.Object.class
+            };
+            boolean[] canEdit = new boolean [] {
+                true, false, false
+            };
+
+            public Class getColumnClass(int columnIndex) {
+                return types [columnIndex];
+            }
+
+            public boolean isCellEditable(int rowIndex, int columnIndex) {
+                return canEdit [columnIndex];
+            }
+        });
+        jScrollPane2.setViewportView(jtResources);
+
+        javax.swing.GroupLayout jPanel4Layout = new javax.swing.GroupLayout(jPanel4);
+        jPanel4.setLayout(jPanel4Layout);
+        jPanel4Layout.setHorizontalGroup(
+            jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel4Layout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(jbAddResource)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jbDeleteDocument)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jbRefresh)
+                .addContainerGap(119, Short.MAX_VALUE))
+            .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE)
+        );
+        jPanel4Layout.setVerticalGroup(
+            jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel4Layout.createSequentialGroup()
+                .addGap(6, 6, 6)
+                .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 150, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jbAddResource)
+                    .addComponent(jbDeleteDocument)
+                    .addComponent(jbRefresh))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+        );
+
+        jTabbedPane1.addTab("Resources", jPanel4);
 
         jbEditCourse.setText("Edit Course");
         jbEditCourse.addActionListener(new java.awt.event.ActionListener() {
@@ -403,7 +598,7 @@ public class jpCourse extends JPanel{
                     .addComponent(jbEditCourse))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(jTabbedPane1)
-                .addContainerGap())
+                .addGap(167, 167, 167))
         );
     }// </editor-fold>//GEN-END:initComponents
 
@@ -429,6 +624,7 @@ public class jpCourse extends JPanel{
             
             // An action has been performed. Update tabs!
             setAssignments();
+            setResources(selectedCourse);
 
         }
         
@@ -487,6 +683,58 @@ public class jpCourse extends JPanel{
         }
     }//GEN-LAST:event_btnDeleteAssignmentsActionPerformed
 
+    private void jbAddResourceActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jbAddResourceActionPerformed
+        JDialog jdAddResources = new JDialog();
+        JPanel AddAssignments = new jpAddResourceToCourse(selectedCourse, dbConnection);
+        jdAddResources.add(AddAssignments);
+        jdAddResources.setSize(500, 400);
+        jdAddResources.setVisible(true);
+        // TODO add your handling code here:
+    }//GEN-LAST:event_jbAddResourceActionPerformed
+
+    private void jbDeleteDocumentActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jbDeleteDocumentActionPerformed
+
+        if(!selectedResources.isEmpty())
+        {
+            String options[] = {"Yes","No"};
+
+            int PromptResult = JOptionPane.showOptionDialog(null,"Are you sure you want to delete?","Resources",JOptionPane.DEFAULT_OPTION,JOptionPane.WARNING_MESSAGE,null,options,options[1]);
+            if(PromptResult==JOptionPane.YES_OPTION)
+            {
+
+                try {
+                    System.out.println("Delete Selected Resources fired!");
+
+                    if(!selectedResources.isEmpty())
+                    {
+                        for (Iterator<Integer> iterator = selectedResources.iterator(); iterator.hasNext(); ) {
+                            Integer id = iterator.next();
+                            iterator.remove();
+                            st.execute("DELETE FROM CourseResourcesLink WHERE FKResourcesID = " + id + " AND FKCourseID = "+selectedCourse);
+                        }
+                    }
+
+                    setResources(selectedCourse);
+
+                } catch (SQLException ex) {
+                    Logger.getLogger(jpResources.class.getName()).log(Level.SEVERE, null, ex);
+                }
+            }
+        }
+        else
+        {
+            JFrame PopUp = new JFrame();
+            JOptionPane.showMessageDialog(PopUp,"Select Resources first!");
+        }
+
+        // TODO add your handling code here:
+    }//GEN-LAST:event_jbDeleteDocumentActionPerformed
+
+    private void jbRefreshActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jbRefreshActionPerformed
+        setResources(selectedCourse);
+        // TODO add your handling code here:
+    }//GEN-LAST:event_jbRefreshActionPerformed
+
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnAddAssignments;
     private javax.swing.JButton btnDeleteAssignments;
@@ -494,12 +742,18 @@ public class jpCourse extends JPanel{
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;
     private javax.swing.JPanel jPanel3;
+    private javax.swing.JPanel jPanel4;
     private javax.swing.JScrollPane jScrollPane1;
+    private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JTabbedPane jTabbedPane1;
     private javax.swing.JButton jbAddCourse;
+    private javax.swing.JButton jbAddResource;
+    private javax.swing.JButton jbDeleteDocument;
     private javax.swing.JButton jbEditCourse;
+    private javax.swing.JButton jbRefresh;
     private javax.swing.JComboBox jcbCourse;
     private javax.swing.JTable jtAssignments;
+    private javax.swing.JTable jtResources;
     // End of variables declaration//GEN-END:variables
 
     

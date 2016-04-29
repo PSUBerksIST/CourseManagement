@@ -269,7 +269,7 @@ public void addAdditionalPLAF()
             }
         });
 
-        jbDocuments.setText("Documents");
+        jbDocuments.setText("Resources");
         jbDocuments.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jbDocumentsActionPerformed(evt);
@@ -469,9 +469,9 @@ public void addAdditionalPLAF()
     }//GEN-LAST:event_jbAssignmentsActionPerformed
 
     private void jbDocumentsActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jbDocumentsActionPerformed
-        JPanel Document = new jpDocument();
-        Document.setName("Document");
-        CreateFrame(Document,Document.getName());        // TODO add your handling code here:
+        JPanel Resources = new jpResources(dbConnection);
+        Resources.setName("Resources");
+        CreateFrame(Resources,Resources.getName());        // TODO add your handling code here:
     }//GEN-LAST:event_jbDocumentsActionPerformed
 
     private void jmiSaveUserOptionsActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jmiSaveUserOptionsActionPerformed
