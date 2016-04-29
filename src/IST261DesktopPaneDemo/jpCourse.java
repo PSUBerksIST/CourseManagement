@@ -685,6 +685,8 @@ public class jpCourse extends JPanel{
                         st.execute("DELETE FROM CourseAssignmentLink WHERE FKCourseID = " + selectedCourse + " AND FKAssignmentID = " + id);
                     }
                 }
+                
+                setAssignments();
             }
             else
             {
