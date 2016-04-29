@@ -1046,6 +1046,9 @@ public class jpClass extends javax.swing.JPanel {
                 }
             }
             
+            setIndividualAssignments();
+            setGroupAssignments();
+            
             // Let the user know we have taken care of it
             JFrame PopUp = new JFrame();
             JOptionPane.showMessageDialog(PopUp,"Assignments Updated!");  

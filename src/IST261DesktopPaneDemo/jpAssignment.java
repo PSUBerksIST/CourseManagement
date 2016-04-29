@@ -5,6 +5,8 @@
  */
 package IST261DesktopPaneDemo;
 
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
 import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -18,6 +20,7 @@ import javax.swing.JPanel;
 import javax.swing.JDialog;
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
+import static javax.swing.WindowConstants.DISPOSE_ON_CLOSE;
 import javax.swing.event.TableModelEvent;
 import javax.swing.event.TableModelListener;
 import javax.swing.table.DefaultTableModel;
@@ -269,6 +272,16 @@ public class jpAssignment extends javax.swing.JPanel {
         jdAddAssignment.setSize(565, 580);
         jdAddAssignment.setVisible(true);
         // TODO add your handling code here:
+        // on close reset the table to refresh 
+        jdAddAssignment.setDefaultCloseOperation(DISPOSE_ON_CLOSE);
+        jdAddAssignment.addWindowListener(new WindowAdapter() {
+            @Override
+            public void windowClosed(WindowEvent e) {
+                System.out.println("Window closed!");
+                // Update the table
+                setAssignments();
+            }
+        });
     }//GEN-LAST:event_jbAddAssignmentActionPerformed
 
     private void jbDeleteActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jbDeleteActionPerformed
