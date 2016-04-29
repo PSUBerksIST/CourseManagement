@@ -8,6 +8,8 @@ package IST261DesktopPaneDemo;
 import java.awt.BorderLayout;
 import java.awt.Component;
 import java.awt.Dimension;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
 import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -23,6 +25,8 @@ import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTable;
+import static javax.swing.WindowConstants.DISPOSE_ON_CLOSE;
+import static javax.swing.WindowConstants.DO_NOTHING_ON_CLOSE;
 import javax.swing.event.TableModelEvent;
 import javax.swing.event.TableModelListener;
 import javax.swing.table.DefaultTableModel;
@@ -51,6 +55,10 @@ public class jpClass extends javax.swing.JPanel {
     // Assignment Tab Declarations
     List<Integer> assignmentTab_SelectedAssignmentIDs = new ArrayList<Integer>();
     List<Integer> assignmentTab_SelectedGroupAssignmentIDs = new ArrayList<Integer>();
+    
+    // Student Tab Declarations
+    List<Integer> studentTab_SelectedAssignmentIDs = new ArrayList<Integer>();
+    List<Integer> studentTab_SelectedGroupAssignmentIDs = new ArrayList<Integer>();
     
     public jpClass() {
         initComponents();
@@ -107,7 +115,107 @@ public class jpClass extends javax.swing.JPanel {
         }
     }
     
-    private void setGroupAssignments()
+    private void setStudents()
+    {
+        System.out.println("setStudents fired! Class ID: " + intSelectedCourseID);
+       
+        // Grab the courses from the database and display them
+        try {
+            
+            DefaultTableModel model = (DefaultTableModel) jtStudents.getModel();
+
+            // Reset the JTable in case we are coming back a second time
+            model.setColumnCount(0);
+            model.setRowCount(0);
+            
+            // Create our columns
+            model.addColumn("Select");
+            model.addColumn("ID");
+            model.addColumn("First Name");
+            model.addColumn("Last Name");
+            model.addColumn("Student ID");
+            
+            // Set our model and also create our listeners
+            jtStudents.getModel().addTableModelListener(new TableModelListener() {
+            @Override
+            public void tableChanged(TableModelEvent e) {
+                    int lead = jtStudents.getSelectedRow();
+                    if(lead > -1)
+                    {
+                        // On a table change update our local store of selectedAssignmentIDs
+                        for(int i = 0; i < jtStudents.getModel().getRowCount(); i++)
+                        {
+
+                            int assignmentId = Integer.parseInt(jtStudents.getModel().getValueAt(i,1).toString());
+
+                            if ((Boolean) jtStudents.getModel().getValueAt(i,0))
+                            {  
+
+                                System.out.println("Selected ID: " + assignmentId);
+
+                                // Add the ID if we do not have it already
+                                if(!studentTab_SelectedGroupAssignmentIDs.contains(assignmentId))
+                                {
+                                    studentTab_SelectedGroupAssignmentIDs.add(assignmentId);
+                                }
+
+                            }
+                            else
+                            {
+
+                                System.out.println("Selected ID: " + assignmentId);
+
+                                for (Iterator<Integer> iterator = studentTab_SelectedGroupAssignmentIDs.iterator(); iterator.hasNext(); ) {
+                                    Integer id = iterator.next();
+                                    if (id == assignmentId) 
+                                    {
+                                        iterator.remove();
+                                    }
+                                }
+
+                          }
+
+                        }   
+                    
+                    }//if lead
+                    
+                    // Show the programmer what IDs are selected
+                    System.out.println(studentTab_SelectedGroupAssignmentIDs);
+                }
+
+            });
+            
+            // JTable will make our checkboxes for us
+            TableColumn tc = jtGroupAssignments.getColumnModel().getColumn(0);
+            tc.setCellEditor(jtGroupAssignments.getDefaultEditor(Boolean.class));  
+            tc.setCellRenderer(jtGroupAssignments.getDefaultRenderer(Boolean.class)); 
+            
+            // Result Set 
+            // SELECT * FROM vClassAllStudents WHERE ClassID = 1
+            ResultSet result = st.executeQuery("SELECT -1 AS 'Select', Assignments.id AS ID, Assignments.ShortName AS Name, Assignments.Description, Assignments.MaximumPoints AS Points FROM Assignments, ClassAssignmentLink WHERE Assignments.id = ClassAssignmentLink.FKAssignmentID AND Assignments.GroupAssignment = 1 AND ClassAssignmentLink.FKClassID = " + intSelectedClassID);
+
+            int i = 0;
+            while (result.next()) 
+            {
+                
+                // SQLite won't do Booleans so lets convert it to one
+                boolean b = (Integer.parseInt(result.getString("Select")) != -1);
+                // Add our row to the JTable
+                model.addRow(new Object[]{ b, result.getString("ID"), result.getString("Name"), result.getString("Description"), result.getString("Points")});
+                // Authorize the checkbox to be editable
+                model.isCellEditable(i, 0);
+                i++;   
+                
+            }
+
+        }
+        catch (SQLException ex) {
+            Logger.getLogger(DBConnection.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        
+    }
+    
+    public void setGroupAssignments()
     {
         System.out.println("setGroupAssignments fired! Class ID: " + intSelectedCourseID);
         
@@ -205,7 +313,7 @@ public class jpClass extends javax.swing.JPanel {
         }
     }
     
-    private void setIndividualAssignments()
+    public void setIndividualAssignments()
     {
         System.out.println("setIndividualAssignments fired! Class ID: " + intSelectedClassID);
         
@@ -327,7 +435,7 @@ public class jpClass extends javax.swing.JPanel {
         jTable3 = new javax.swing.JTable();
         jpClassStudentsTab = new javax.swing.JPanel();
         jScrollPane5 = new javax.swing.JScrollPane();
-        jTable1 = new javax.swing.JTable();
+        jtStudents = new javax.swing.JTable();
         jLabel3 = new javax.swing.JLabel();
         jLabel4 = new javax.swing.JLabel();
         jLabel8 = new javax.swing.JLabel();
@@ -424,7 +532,7 @@ public class jpClass extends javax.swing.JPanel {
 
         jTabbedPane1.addTab("Overview", jpClassOverviewTab);
 
-        jTable1.setModel(new javax.swing.table.DefaultTableModel(
+        jtStudents.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
                 {"Nathan", "Faust", "NRF5061"},
                 {"Nick", "Youndt", "NZY5033"},
@@ -435,7 +543,7 @@ public class jpClass extends javax.swing.JPanel {
                 "First Name", "Last Name", "ID"
             }
         ));
-        jScrollPane5.setViewportView(jTable1);
+        jScrollPane5.setViewportView(jtStudents);
 
         jLabel3.setText("First Name");
 
@@ -813,6 +921,18 @@ public class jpClass extends javax.swing.JPanel {
         jdAddAssignments.setSize(500, 400);
         jdAddAssignments.setVisible(true);
         
+        // on close reset the table to refresh 
+        jdAddAssignments.setDefaultCloseOperation(DISPOSE_ON_CLOSE);
+        jdAddAssignments.addWindowListener(new WindowAdapter() {
+            @Override
+            public void windowClosed(WindowEvent e) {
+                System.out.println("Window closed!");
+                // Update the table
+                setGroupAssignments();
+                setIndividualAssignments();
+            }
+        });
+        
     }//GEN-LAST:event_jbNewAssignmentActionPerformed
 
     private void jtfStudentIDActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jtfStudentIDActionPerformed
@@ -860,6 +980,7 @@ public class jpClass extends javax.swing.JPanel {
             System.out.println("Active Class ID Selected: (int) " + intSelectedClassID);
             
             // Set panels here
+            setStudents();
             setGroupAssignments();
             setIndividualAssignments();
         }
@@ -874,6 +995,7 @@ public class jpClass extends javax.swing.JPanel {
         // TODO add your handling code here:
         
         // Any panel you want to refresh under assignments tab when asked, set here
+        setStudents();
         setGroupAssignments();
         setIndividualAssignments();
         
@@ -964,7 +1086,6 @@ public class jpClass extends javax.swing.JPanel {
     private javax.swing.JScrollPane jScrollPane5;
     private javax.swing.JScrollPane jScrollPane6;
     private javax.swing.JTabbedPane jTabbedPane1;
-    private javax.swing.JTable jTable1;
     private javax.swing.JTable jTable2;
     private javax.swing.JTable jTable3;
     private javax.swing.JButton jbAddClass;
@@ -987,6 +1108,7 @@ public class jpClass extends javax.swing.JPanel {
     private javax.swing.JTable jtAssignments;
     private javax.swing.JTable jtGroupAssignments;
     private javax.swing.JTable jtIndividualAssignments;
+    private javax.swing.JTable jtStudents;
     private javax.swing.JTextField jtfEmail;
     private javax.swing.JTextField jtfFirstName;
     private javax.swing.JTextField jtfLastName;
