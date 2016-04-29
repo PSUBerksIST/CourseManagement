@@ -91,99 +91,118 @@ public class jpAddResourceToCourse extends javax.swing.JPanel {
             
             // Set our model and also create our listeners
             jtResources.getModel().addTableModelListener(new TableModelListener() {
-            @Override
-            public void tableChanged(TableModelEvent e) {
+                @Override
+                public void tableChanged(TableModelEvent e) {
 
-                // On a table change update our local store of selectedAssignmentIDs
-                    for(int i = 0; i < jtResources.getModel().getRowCount(); i++)
-                    {
-                       // System.out.println("jtResources.getModel().getRowCount() = " + jtResources.getModel().getRowCount());
+                    // On a table change update our local store of selectedAssignmentIDs
+                        for(int i = 0; i < jtResources.getModel().getRowCount(); i++)
+                        {
+                           // System.out.println("jtResources.getModel().getRowCount() = " + jtResources.getModel().getRowCount());
 
-                        int ResourcesId = Integer.parseInt(jtResources.getModel().getValueAt(i,1).toString());
-                        //System.out.println(selectedResources);
-                        if ((Boolean) jtResources.getModel().getValueAt(i,0))
-                        {  
+                            int ResourcesId = Integer.parseInt(jtResources.getModel().getValueAt(i,1).toString());
+                            //System.out.println(selectedResources);
+                            if ((Boolean) jtResources.getModel().getValueAt(i,0))
+                            {  
 
-                          //  System.out.println("Selected ID1: " + ResourcesId);
+                              //  System.out.println("Selected ID1: " + ResourcesId);
 
-                            // Add the ID if we do not have it already
-                            if(!selectedResources.contains(ResourcesId))
-                            {
-                                selectedResources.add(ResourcesId);
+                                // Add the ID if we do not have it already
+                                if(!selectedResources.contains(ResourcesId))
+                                {
+                                    selectedResources.add(ResourcesId);
+                                }
+
                             }
+                            else
+                            {
+
+                            //    System.out.println("Selected ID2: " + ResourcesId);
+
+                                for (Iterator<Integer> iterator = selectedResources.iterator(); iterator.hasNext(); ) {
+                                    Integer id = iterator.next();
+                                    if (id == ResourcesId) 
+                                    {
+                                        iterator.remove();
+                                    }
+                                }
+
+                          }
+
+                        }     
+
+                        // Show the programmer what IDs are selected
+                       // System.out.println(selectedResources);
+                    }
+
+                });
+
+                // JTable will make our checkboxes for us
+                TableColumn tc = jtResources.getColumnModel().getColumn(0);
+                tc.setCellEditor(jtResources.getDefaultEditor(Boolean.class));  
+                tc.setCellRenderer(jtResources.getDefaultRenderer(Boolean.class)); 
+
+                // Result Set 
+                ResultSet result1  = st.executeQuery("Select FKResourcesID FROM CourseResourcesLink WHERE FKCourseID = "+intSelectedCourseID+" order by FKResourcesID asc;");
+                String ResourceIDForWhere = "";
+                int Counter =0;
+                    while(result1.next()){
+                        System.out.println("got here");
+                        Counter = Counter+1;
+                        int ResourceID = result1.getInt("FKResourcesID");
+                        if(Counter <2){
+                            ResourceIDForWhere = "ID != "+ResourceID;
+                        }
+                        else{
+                            ResourceIDForWhere = ResourceIDForWhere + " AND ID != "+ResourceID;
+                        }
+                        Statement st1 = dbConnection.createStatement();
+                        System.out.println("ResourceID = " + ResourceID);
+                        ResultSet result = st1.executeQuery("SELECT ID, Description,\n" +
+                            "CASE WHEN Resources.ID = "+ResourceID+" THEN 1 ELSE -1 END AS 'Select'\n" +
+                            "FROM Resources Where ID = "+ResourceID+" order by ID asc;");
+                        System.out.println("got here 2");
+
+                        int i = 0;
+                        while (result.next()) 
+                        {
+                            // SQLite won't do Booleans so lets convert it to one
+                            boolean b = (Integer.parseInt(result.getString("Select")) != -1);
+                            model.addRow(new Object[]{ b, result.getString("ID"), result.getString("Description")});
+                            // Authorize the checkbox to be editable
+                            model.isCellEditable(i, 0);
+                            i++;   
 
                         }
-                        else
+                    } 
+                    if(Counter > 0){
+                        ResultSet result = st.executeQuery("SELECT -1 AS 'Select', ID, Description FROM Resources Where "+ResourceIDForWhere+" order by ID asc;");
+
+                        int i = 0;
+                        while (result.next()) 
                         {
+                            // SQLite won't do Booleans so lets convert it to one
+                            boolean b = (Integer.parseInt(result.getString("Select")) != -1);
+                            model.addRow(new Object[]{ b, result.getString("ID"), result.getString("Description")});
+                            // Authorize the checkbox to be editable
+                            model.isCellEditable(i, 0);
+                            i++;   
+                        }
+                    }
+                    else{
+                        ResultSet result2 = st.executeQuery("SELECT -1 AS 'Select', ID, Description FROM Resources order by ID asc;");
 
-                        //    System.out.println("Selected ID2: " + ResourcesId);
-
-                            for (Iterator<Integer> iterator = selectedResources.iterator(); iterator.hasNext(); ) {
-                                Integer id = iterator.next();
-                                if (id == ResourcesId) 
-                                {
-                                    iterator.remove();
-                                }
-                            }
-
-                      }
-
-                    }     
-                    
-                    // Show the programmer what IDs are selected
-                   // System.out.println(selectedResources);
-                }
-
-            });
-            
-            // JTable will make our checkboxes for us
-            TableColumn tc = jtResources.getColumnModel().getColumn(0);
-            tc.setCellEditor(jtResources.getDefaultEditor(Boolean.class));  
-            tc.setCellRenderer(jtResources.getDefaultRenderer(Boolean.class)); 
-            
-            // Result Set 
-            ResultSet result1  = st.executeQuery("Select FKResourcesID FROM CourseResourcesLink WHERE FKCourseID = "+intSelectedCourseID+" order by FKResourcesID asc;");
-            String ResourceIDForWhere = "";
-            int Counter =0;
-            while(result1.next()){
-                Counter = Counter+1;
-                int ResourceID = result1.getInt("FKResourcesID");
-                if(Counter <2){
-                    ResourceIDForWhere = "ID != "+ResourceID;
-                }
-                else{
-                    ResourceIDForWhere = ResourceIDForWhere + " AND ID != "+ResourceID;
-                }
-                Statement st1 = dbConnection.createStatement();
-                ResultSet result = st1.executeQuery("SELECT ID, Description,\n" +
-                    "CASE WHEN Resources.ID = "+ResourceID+" THEN 1 ELSE -1 END AS 'Select'\n" +
-                    "FROM Resources Where ID = "+ResourceID+" order by ID asc;");
-
-                int i = 0;
-                while (result.next()) 
-                {
-                    // SQLite won't do Booleans so lets convert it to one
-                    boolean b = (Integer.parseInt(result.getString("Select")) != -1);
-                    model.addRow(new Object[]{ b, result.getString("ID"), result.getString("Description")});
-                    // Authorize the checkbox to be editable
-                    model.isCellEditable(i, 0);
-                    i++;   
-
-                }
-            } 
-            ResultSet result = st.executeQuery("SELECT -1 AS 'Select', ID, Description FROM Resources Where "+ResourceIDForWhere+" order by ID asc;");
-
-                int i = 0;
-                while (result.next()) 
-                {
-                    // SQLite won't do Booleans so lets convert it to one
-                    boolean b = (Integer.parseInt(result.getString("Select")) != -1);
-                    model.addRow(new Object[]{ b, result.getString("ID"), result.getString("Description")});
-                    // Authorize the checkbox to be editable
-                    model.isCellEditable(i, 0);
-                    i++;   
-                }
-        }
+                        int num = 0;
+                        while (result2.next()) 
+                        {
+                            // SQLite won't do Booleans so lets convert it to one
+                            boolean b = (Integer.parseInt(result2.getString("Select")) != -1);
+                            model.addRow(new Object[]{ b, result2.getString("ID"), result2.getString("Description")});
+                            // Authorize the checkbox to be editable
+                            model.isCellEditable(num, 0);
+                            num++;   
+                        }
+                    }
+            }
         catch (SQLException ex) 
         {
             Logger.getLogger(DBConnection.class.getName()).log(Level.SEVERE, null, ex);

@@ -64,7 +64,7 @@
                           <Component id="jtfAngelID" alignment="0" min="-2" pref="100" max="-2" attributes="0"/>
                           <Component id="jtfAngelTitle" min="-2" pref="100" max="-2" attributes="0"/>
                       </Group>
-                      <EmptySpace pref="93" max="32767" attributes="0"/>
+                      <EmptySpace pref="89" max="32767" attributes="0"/>
                       <Group type="103" groupAlignment="0" attributes="0">
                           <Component id="jlMeetingDays" alignment="0" min="-2" max="-2" attributes="0"/>
                           <Component id="jchbMonday" alignment="0" min="-2" max="-2" attributes="0"/>
@@ -77,59 +77,37 @@
                       </Group>
                       <EmptySpace min="-2" pref="12" max="-2" attributes="0"/>
                       <Group type="103" groupAlignment="0" attributes="0">
-                          <Group type="102" attributes="0">
-                              <Component id="jcbSundayStart" min="-2" max="-2" attributes="0"/>
-                              <EmptySpace type="separate" max="-2" attributes="0"/>
-                              <Component id="jcbSundayEnd" min="-2" max="-2" attributes="0"/>
-                          </Group>
-                          <Group type="102" attributes="0">
-                              <Component id="jcbSaturdayStart" min="-2" max="-2" attributes="0"/>
-                              <EmptySpace type="separate" max="-2" attributes="0"/>
-                              <Component id="jcbSaturdayEnd" min="-2" max="-2" attributes="0"/>
-                          </Group>
-                          <Group type="102" attributes="0">
-                              <Component id="jcbFridayStart" min="-2" max="-2" attributes="0"/>
-                              <EmptySpace type="separate" max="-2" attributes="0"/>
-                              <Component id="jcbFridayEnd" min="-2" max="-2" attributes="0"/>
-                          </Group>
-                          <Group type="102" attributes="0">
-                              <Component id="jcbThursdayStart" min="-2" max="-2" attributes="0"/>
-                              <EmptySpace type="separate" max="-2" attributes="0"/>
-                              <Component id="jcbThursdayEnd" min="-2" max="-2" attributes="0"/>
-                          </Group>
-                          <Group type="102" attributes="0">
-                              <Component id="jcbWednesdayStart" min="-2" max="-2" attributes="0"/>
-                              <EmptySpace type="separate" max="-2" attributes="0"/>
-                              <Component id="jcbWednesdayEnd" min="-2" max="-2" attributes="0"/>
-                          </Group>
-                          <Group type="102" attributes="0">
-                              <Component id="jcbTuesdayStart" min="-2" max="-2" attributes="0"/>
-                              <EmptySpace type="separate" max="-2" attributes="0"/>
-                              <Component id="jcbTuesdayEnd" min="-2" max="-2" attributes="0"/>
-                          </Group>
-                          <Group type="102" attributes="0">
-                              <Group type="103" groupAlignment="0" attributes="0">
-                                  <Component id="jlStartTime" alignment="0" min="-2" max="-2" attributes="0"/>
-                                  <Group type="102" alignment="0" attributes="0">
-                                      <Component id="jcbMondayStart" min="-2" max="-2" attributes="0"/>
-                                      <EmptySpace max="-2" attributes="0"/>
-                                      <Group type="103" groupAlignment="0" attributes="0">
-                                          <Component id="jlTuesdayTo" min="-2" max="-2" attributes="0"/>
-                                          <Component id="jlMondayTo" min="-2" max="-2" attributes="0"/>
-                                          <Component id="jlWednesdayTo" alignment="0" min="-2" max="-2" attributes="0"/>
-                                          <Component id="jlThursdayTo" alignment="0" min="-2" max="-2" attributes="0"/>
-                                          <Component id="jlFridayTo" alignment="0" min="-2" max="-2" attributes="0"/>
-                                          <Component id="jlSaturdayTo" alignment="0" min="-2" max="-2" attributes="0"/>
-                                          <Component id="jlSundayTo" alignment="0" min="-2" max="-2" attributes="0"/>
-                                      </Group>
-                                  </Group>
-                              </Group>
+                          <Component id="jlStartTime" alignment="0" min="-2" max="-2" attributes="0"/>
+                          <Group type="102" alignment="0" attributes="0">
+                              <Component id="jcbMondayStart" min="-2" max="-2" attributes="0"/>
                               <EmptySpace max="-2" attributes="0"/>
                               <Group type="103" groupAlignment="0" attributes="0">
-                                  <Component id="jcbMondayEnd" min="-2" max="-2" attributes="0"/>
-                                  <Component id="jlEndTime" min="-2" max="-2" attributes="0"/>
+                                  <Component id="jlTuesdayTo" min="-2" max="-2" attributes="0"/>
+                                  <Component id="jlMondayTo" min="-2" max="-2" attributes="0"/>
+                                  <Component id="jlWednesdayTo" alignment="0" min="-2" max="-2" attributes="0"/>
+                                  <Component id="jlThursdayTo" alignment="0" min="-2" max="-2" attributes="0"/>
+                                  <Component id="jlFridayTo" alignment="0" min="-2" max="-2" attributes="0"/>
+                                  <Component id="jlSaturdayTo" alignment="0" min="-2" max="-2" attributes="0"/>
+                                  <Component id="jlSundayTo" alignment="0" min="-2" max="-2" attributes="0"/>
                               </Group>
                           </Group>
+                          <Component id="jcbTuesdayStart" alignment="0" min="-2" max="-2" attributes="0"/>
+                          <Component id="jcbWednesdayStart" alignment="0" min="-2" max="-2" attributes="0"/>
+                          <Component id="jcbThursdayStart" alignment="0" min="-2" max="-2" attributes="0"/>
+                          <Component id="jcbFridayStart" alignment="0" min="-2" max="-2" attributes="0"/>
+                          <Component id="jcbSaturdayStart" alignment="0" min="-2" max="-2" attributes="0"/>
+                          <Component id="jcbSundayStart" alignment="0" min="-2" max="-2" attributes="0"/>
+                      </Group>
+                      <EmptySpace type="unrelated" max="-2" attributes="0"/>
+                      <Group type="103" groupAlignment="0" attributes="0">
+                          <Component id="jcbMondayEnd" min="-2" max="-2" attributes="0"/>
+                          <Component id="jlEndTime" min="-2" max="-2" attributes="0"/>
+                          <Component id="jcbTuesdayEnd" min="-2" max="-2" attributes="0"/>
+                          <Component id="jcbWednesdayEnd" min="-2" max="-2" attributes="0"/>
+                          <Component id="jcbThursdayEnd" min="-2" max="-2" attributes="0"/>
+                          <Component id="jcbFridayEnd" min="-2" max="-2" attributes="0"/>
+                          <Component id="jcbSaturdayEnd" min="-2" max="-2" attributes="0"/>
+                          <Component id="jcbSundayEnd" min="-2" max="-2" attributes="0"/>
                       </Group>
                       <EmptySpace min="-2" pref="40" max="-2" attributes="0"/>
                   </Group>
@@ -522,6 +500,9 @@
         </Property>
         <Property name="enabled" type="boolean" value="false"/>
       </Properties>
+      <Events>
+        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="jcbTuesdayEndActionPerformed"/>
+      </Events>
     </Component>
     <Component class="javax.swing.JComboBox" name="jcbWednesdayEnd">
       <Properties>
