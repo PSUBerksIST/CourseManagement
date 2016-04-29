@@ -6,6 +6,8 @@
 package IST261DesktopPaneDemo;
 
 import java.awt.Dimension;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
 import java.util.*;
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.JFrame;
@@ -20,6 +22,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JDialog;
 import javax.swing.JOptionPane;
+import static javax.swing.WindowConstants.DISPOSE_ON_CLOSE;
 import javax.swing.event.TableModelEvent;
 import javax.swing.event.TableModelListener;
 import javax.swing.table.DefaultTableModel;
@@ -644,6 +647,17 @@ public class jpCourse extends JPanel{
         jdAddAssignments.add(AddAssignments);
         jdAddAssignments.setSize(500, 400);
         jdAddAssignments.setVisible(true);
+        
+        // on close reset the table to refresh 
+        jdAddAssignments.setDefaultCloseOperation(DISPOSE_ON_CLOSE);
+        jdAddAssignments.addWindowListener(new WindowAdapter() {
+            @Override
+            public void windowClosed(WindowEvent e) {
+                System.out.println("Window closed!");
+                // Update the table
+                setAssignments();
+            }
+        });
         
     }//GEN-LAST:event_btnAddAssignmentsActionPerformed
 
