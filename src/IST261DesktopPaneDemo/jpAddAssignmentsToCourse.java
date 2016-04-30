@@ -150,7 +150,19 @@ public class jpAddAssignmentsToCourse extends javax.swing.JPanel {
                 
                 // SQLite won't do Booleans so lets convert it to one
                 boolean b = (Integer.parseInt(result.getString("Select")) != -1);
-                boolean g = (Integer.parseInt(result.getString("Group")) != 1);
+                System.out.println(result.getString("Group"));
+                
+                boolean g = false;
+                if(result.getString("Group") == null || Integer.parseInt(result.getString("Group")) != 1)
+                {
+                   g = false;
+                }
+                else
+                {
+                    g = true;
+                }
+                
+                //boolean g = (Integer.parseInt(result.getString("Group")) != 1);
                 String group = (g) ? "no" : "yes";
                 // Add our row to the JTable
                 model.addRow(new Object[]{ b, result.getString("ID"), result.getString("Name"), result.getString("Description"), result.getString("Points"), group});

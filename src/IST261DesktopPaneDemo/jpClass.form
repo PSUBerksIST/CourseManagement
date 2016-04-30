@@ -94,7 +94,7 @@
                       <Component id="jScrollPane6" min="-2" pref="357" max="-2" attributes="0"/>
                       <EmptySpace max="-2" attributes="0"/>
                       <Component id="jLabel6" min="-2" max="-2" attributes="0"/>
-                      <EmptySpace pref="86" max="32767" attributes="0"/>
+                      <EmptySpace pref="89" max="32767" attributes="0"/>
                   </Group>
               </Group>
             </DimensionLayout>
@@ -172,46 +172,14 @@
               <Group type="103" groupAlignment="0" attributes="0">
                   <Group type="102" attributes="0">
                       <EmptySpace max="-2" attributes="0"/>
-                      <Group type="103" groupAlignment="0" attributes="0">
-                          <Component id="jScrollPane5" pref="449" max="32767" attributes="0"/>
-                          <Group type="102" attributes="0">
-                              <Group type="103" groupAlignment="0" attributes="0">
-                                  <Component id="jLabel10" alignment="0" max="32767" attributes="0"/>
-                                  <Group type="102" alignment="0" attributes="0">
-                                      <Component id="jLabel9" max="32767" attributes="0"/>
-                                      <EmptySpace min="46" pref="46" max="-2" attributes="0"/>
-                                  </Group>
-                                  <Group type="102" alignment="0" attributes="0">
-                                      <Component id="jLabel8" max="32767" attributes="0"/>
-                                      <EmptySpace min="18" pref="18" max="-2" attributes="0"/>
-                                  </Group>
-                                  <Group type="102" alignment="0" attributes="0">
-                                      <Component id="jLabel4" max="32767" attributes="0"/>
-                                      <EmptySpace min="20" pref="20" max="-2" attributes="0"/>
-                                  </Group>
-                                  <Group type="102" alignment="0" attributes="0">
-                                      <Component id="jLabel3" max="32767" attributes="0"/>
-                                      <EmptySpace min="19" pref="19" max="-2" attributes="0"/>
-                                  </Group>
-                              </Group>
-                              <EmptySpace type="unrelated" min="-2" max="-2" attributes="0"/>
-                              <Group type="103" groupAlignment="1" max="-2" attributes="0">
-                                  <Component id="jtfEmail" pref="176" max="32767" attributes="0"/>
-                                  <Component id="jtfStudentID" alignment="0" max="32767" attributes="0"/>
-                                  <Component id="jtfLastName" alignment="0" max="32767" attributes="0"/>
-                                  <Component id="jtfFirstName" alignment="0" max="32767" attributes="0"/>
-                                  <Component id="jtfPhoneNumber" max="32767" attributes="0"/>
-                              </Group>
-                              <EmptySpace max="32767" attributes="0"/>
-                          </Group>
-                      </Group>
+                      <Component id="jScrollPane5" pref="449" max="32767" attributes="0"/>
                   </Group>
-                  <Group type="102" attributes="0">
-                      <Component id="jbImportStudents" min="-2" pref="144" max="-2" attributes="0"/>
-                      <EmptySpace max="-2" attributes="0"/>
+                  <Group type="102" alignment="0" attributes="0">
                       <Component id="jbSave" min="-2" pref="142" max="-2" attributes="0"/>
-                      <EmptySpace max="32767" attributes="0"/>
+                      <EmptySpace type="unrelated" max="-2" attributes="0"/>
                       <Component id="jbDelete" min="-2" pref="144" max="-2" attributes="0"/>
+                      <EmptySpace type="separate" max="-2" attributes="0"/>
+                      <Component id="jbRefresh" pref="136" max="32767" attributes="0"/>
                       <EmptySpace max="-2" attributes="0"/>
                   </Group>
               </Group>
@@ -221,42 +189,11 @@
                   <Group type="102" alignment="0" attributes="0">
                       <EmptySpace min="-2" pref="12" max="-2" attributes="0"/>
                       <Component id="jScrollPane5" min="-2" pref="140" max="-2" attributes="0"/>
-                      <EmptySpace min="-2" max="-2" attributes="0"/>
-                      <Group type="103" groupAlignment="0" attributes="0">
-                          <Group type="102" alignment="0" attributes="0">
-                              <EmptySpace min="6" pref="6" max="-2" attributes="0"/>
-                              <Component id="jLabel3" max="32767" attributes="0"/>
-                          </Group>
-                          <Component id="jtfFirstName" min="-2" max="-2" attributes="0"/>
-                      </Group>
-                      <EmptySpace max="-2" attributes="0"/>
-                      <Group type="103" groupAlignment="0" attributes="0">
-                          <Component id="jLabel4" max="32767" attributes="0"/>
-                          <Group type="102" attributes="0">
-                              <EmptySpace min="0" pref="0" max="32767" attributes="0"/>
-                              <Component id="jtfLastName" min="-2" max="-2" attributes="0"/>
-                          </Group>
-                      </Group>
-                      <EmptySpace max="-2" attributes="0"/>
+                      <EmptySpace max="32767" attributes="0"/>
                       <Group type="103" groupAlignment="3" attributes="0">
-                          <Component id="jtfStudentID" alignment="3" min="-2" max="-2" attributes="0"/>
-                          <Component id="jLabel8" alignment="3" max="32767" attributes="0"/>
-                      </Group>
-                      <EmptySpace max="-2" attributes="0"/>
-                      <Group type="103" groupAlignment="3" attributes="0">
-                          <Component id="jtfEmail" alignment="3" min="-2" max="-2" attributes="0"/>
-                          <Component id="jLabel9" alignment="3" max="32767" attributes="0"/>
-                      </Group>
-                      <EmptySpace max="-2" attributes="0"/>
-                      <Group type="103" groupAlignment="3" attributes="0">
-                          <Component id="jtfPhoneNumber" alignment="3" min="-2" max="-2" attributes="0"/>
-                          <Component id="jLabel10" alignment="3" max="32767" attributes="0"/>
-                      </Group>
-                      <EmptySpace type="unrelated" max="-2" attributes="0"/>
-                      <Group type="103" groupAlignment="3" attributes="0">
-                          <Component id="jbImportStudents" alignment="3" max="32767" attributes="0"/>
                           <Component id="jbSave" alignment="3" max="32767" attributes="0"/>
                           <Component id="jbDelete" alignment="3" max="32767" attributes="0"/>
+                          <Component id="jbRefresh" alignment="3" min="-2" max="-2" attributes="0"/>
                       </Group>
                       <EmptySpace min="-2" pref="328" max="-2" attributes="0"/>
                   </Group>
@@ -274,29 +211,20 @@
                 <Component class="javax.swing.JTable" name="jtStudents">
                   <Properties>
                     <Property name="model" type="javax.swing.table.TableModel" editor="org.netbeans.modules.form.editors2.TableModelEditor">
-                      <Table columnCount="3" rowCount="4">
-                        <Column editable="true" title="First Name" type="java.lang.Object">
-                          <Data value="Nathan"/>
-                          <Data value="Nick"/>
-                          <Data value="Derek"/>
-                          <Data value="null"/>
-                        </Column>
-                        <Column editable="true" title="Last Name" type="java.lang.Object">
-                          <Data value="Faust"/>
-                          <Data value="Youndt"/>
-                          <Data value="Goodman"/>
-                          <Data value="null"/>
-                        </Column>
-                        <Column editable="true" title="ID" type="java.lang.Object">
-                          <Data value="NRF5061"/>
-                          <Data value="NZY5033"/>
-                          <Data value="DMG5572"/>
-                          <Data value="null"/>
-                        </Column>
+                      <Table columnCount="4" rowCount="4">
+                        <Column editable="true" title="Select" type="java.lang.Boolean"/>
+                        <Column editable="false" title="First Name" type="java.lang.Object"/>
+                        <Column editable="false" title="Last Name" type="java.lang.Object"/>
+                        <Column editable="false" title="Student ID" type="java.lang.Object"/>
                       </Table>
                     </Property>
                     <Property name="columnModel" type="javax.swing.table.TableColumnModel" editor="org.netbeans.modules.form.editors2.TableColumnModelEditor">
                       <TableColumnModel selectionModel="0">
+                        <Column maxWidth="-1" minWidth="-1" prefWidth="-1" resizable="true">
+                          <Title/>
+                          <Editor/>
+                          <Renderer/>
+                        </Column>
                         <Column maxWidth="-1" minWidth="-1" prefWidth="-1" resizable="true">
                           <Title/>
                           <Editor/>
@@ -321,58 +249,9 @@
                 </Component>
               </SubComponents>
             </Container>
-            <Component class="javax.swing.JLabel" name="jLabel3">
-              <Properties>
-                <Property name="text" type="java.lang.String" value="First Name"/>
-              </Properties>
-            </Component>
-            <Component class="javax.swing.JLabel" name="jLabel4">
-              <Properties>
-                <Property name="text" type="java.lang.String" value="Last Name"/>
-              </Properties>
-            </Component>
-            <Component class="javax.swing.JLabel" name="jLabel8">
-              <Properties>
-                <Property name="text" type="java.lang.String" value="Student ID"/>
-              </Properties>
-            </Component>
-            <Component class="javax.swing.JLabel" name="jLabel9">
-              <Properties>
-                <Property name="text" type="java.lang.String" value="Email"/>
-              </Properties>
-            </Component>
-            <Component class="javax.swing.JLabel" name="jLabel10">
-              <Properties>
-                <Property name="text" type="java.lang.String" value="Phone Number"/>
-              </Properties>
-            </Component>
-            <Component class="javax.swing.JTextField" name="jtfPhoneNumber">
-            </Component>
-            <Component class="javax.swing.JTextField" name="jtfEmail">
-              <Events>
-                <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="jtfEmailActionPerformed"/>
-              </Events>
-            </Component>
-            <Component class="javax.swing.JTextField" name="jtfStudentID">
-              <Events>
-                <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="jtfStudentIDActionPerformed"/>
-              </Events>
-            </Component>
-            <Component class="javax.swing.JTextField" name="jtfLastName">
-            </Component>
-            <Component class="javax.swing.JTextField" name="jtfFirstName">
-              <Events>
-                <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="jtfFirstNameActionPerformed"/>
-              </Events>
-            </Component>
-            <Component class="javax.swing.JButton" name="jbImportStudents">
-              <Properties>
-                <Property name="text" type="java.lang.String" value="Import"/>
-              </Properties>
-            </Component>
             <Component class="javax.swing.JButton" name="jbSave">
               <Properties>
-                <Property name="text" type="java.lang.String" value="Save"/>
+                <Property name="text" type="java.lang.String" value="Manage Students"/>
               </Properties>
               <Events>
                 <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="jbSaveActionPerformed"/>
@@ -380,8 +259,19 @@
             </Component>
             <Component class="javax.swing.JButton" name="jbDelete">
               <Properties>
-                <Property name="text" type="java.lang.String" value="Delete"/>
+                <Property name="text" type="java.lang.String" value="Drop Selected"/>
               </Properties>
+              <Events>
+                <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="jbDeleteActionPerformed"/>
+              </Events>
+            </Component>
+            <Component class="javax.swing.JButton" name="jbRefresh">
+              <Properties>
+                <Property name="text" type="java.lang.String" value="Refresh"/>
+              </Properties>
+              <Events>
+                <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="jbRefreshActionPerformed"/>
+              </Events>
             </Component>
           </SubComponents>
         </Container>
@@ -406,7 +296,7 @@
                                   <Component id="jlAssignments" min="-2" max="-2" attributes="0"/>
                                   <Component id="jLabel1" alignment="0" min="-2" max="-2" attributes="0"/>
                               </Group>
-                              <EmptySpace min="0" pref="357" max="32767" attributes="0"/>
+                              <EmptySpace min="0" pref="360" max="32767" attributes="0"/>
                           </Group>
                           <Component id="jScrollPane4" alignment="0" pref="0" max="32767" attributes="0"/>
                       </Group>
@@ -616,7 +506,7 @@
                           </Group>
                           <Group type="102" alignment="0" attributes="0">
                               <Component id="jbNewAssignment" min="-2" pref="137" max="-2" attributes="0"/>
-                              <EmptySpace pref="20" max="32767" attributes="0"/>
+                              <EmptySpace pref="23" max="32767" attributes="0"/>
                               <Component id="jbDeleteAssignment" min="-2" pref="137" max="-2" attributes="0"/>
                               <EmptySpace type="separate" max="-2" attributes="0"/>
                               <Component id="jbRefreshAssignment" min="-2" pref="137" max="-2" attributes="0"/>

@@ -57,8 +57,7 @@ public class jpClass extends javax.swing.JPanel {
     List<Integer> assignmentTab_SelectedGroupAssignmentIDs = new ArrayList<Integer>();
     
     // Student Tab Declarations
-    List<Integer> studentTab_SelectedAssignmentIDs = new ArrayList<Integer>();
-    List<Integer> studentTab_SelectedGroupAssignmentIDs = new ArrayList<Integer>();
+    List<Integer> studentTab_SelectedStudentIDs = new ArrayList<Integer>();
     
     public jpClass() {
         initComponents();
@@ -125,12 +124,15 @@ public class jpClass extends javax.swing.JPanel {
             DefaultTableModel model = (DefaultTableModel) jtStudents.getModel();
 
             // Reset the JTable in case we are coming back a second time
+            int rowCount = model.getRowCount();
+            for (int i = rowCount - 1; i >= 0; i--) {
+                model.removeRow(i);
+            }
             model.setColumnCount(0);
             model.setRowCount(0);
             
             // Create our columns
             model.addColumn("Select");
-            model.addColumn("ID");
             model.addColumn("First Name");
             model.addColumn("Last Name");
             model.addColumn("Student ID");
@@ -146,28 +148,28 @@ public class jpClass extends javax.swing.JPanel {
                         for(int i = 0; i < jtStudents.getModel().getRowCount(); i++)
                         {
 
-                            int assignmentId = Integer.parseInt(jtStudents.getModel().getValueAt(i,1).toString());
+                            int studentId = Integer.parseInt(jtStudents.getModel().getValueAt(i,3).toString());
 
                             if ((Boolean) jtStudents.getModel().getValueAt(i,0))
                             {  
 
-                                System.out.println("Selected ID: " + assignmentId);
+                                System.out.println("Selected Student ID: " + studentId);
 
                                 // Add the ID if we do not have it already
-                                if(!studentTab_SelectedGroupAssignmentIDs.contains(assignmentId))
+                                if(!studentTab_SelectedStudentIDs.contains(studentId))
                                 {
-                                    studentTab_SelectedGroupAssignmentIDs.add(assignmentId);
+                                    studentTab_SelectedStudentIDs.add(studentId);
                                 }
 
                             }
                             else
                             {
 
-                                System.out.println("Selected ID: " + assignmentId);
+                                System.out.println("Selected Student ID: " + studentId);
 
-                                for (Iterator<Integer> iterator = studentTab_SelectedGroupAssignmentIDs.iterator(); iterator.hasNext(); ) {
+                                for (Iterator<Integer> iterator = studentTab_SelectedStudentIDs.iterator(); iterator.hasNext(); ) {
                                     Integer id = iterator.next();
-                                    if (id == assignmentId) 
+                                    if (id == studentId) 
                                     {
                                         iterator.remove();
                                     }
@@ -180,19 +182,18 @@ public class jpClass extends javax.swing.JPanel {
                     }//if lead
                     
                     // Show the programmer what IDs are selected
-                    System.out.println(studentTab_SelectedGroupAssignmentIDs);
+                    System.out.println(studentTab_SelectedStudentIDs);
                 }
 
             });
             
             // JTable will make our checkboxes for us
-            TableColumn tc = jtGroupAssignments.getColumnModel().getColumn(0);
-            tc.setCellEditor(jtGroupAssignments.getDefaultEditor(Boolean.class));  
-            tc.setCellRenderer(jtGroupAssignments.getDefaultRenderer(Boolean.class)); 
+            TableColumn tc = jtStudents.getColumnModel().getColumn(0);
+            tc.setCellEditor(jtStudents.getDefaultEditor(Boolean.class));  
+            tc.setCellRenderer(jtStudents.getDefaultRenderer(Boolean.class)); 
             
             // Result Set 
-            // SELECT * FROM vClassAllStudents WHERE ClassID = 1
-            ResultSet result = st.executeQuery("SELECT -1 AS 'Select', Assignments.id AS ID, Assignments.ShortName AS Name, Assignments.Description, Assignments.MaximumPoints AS Points FROM Assignments, ClassAssignmentLink WHERE Assignments.id = ClassAssignmentLink.FKAssignmentID AND Assignments.GroupAssignment = 1 AND ClassAssignmentLink.FKClassID = " + intSelectedClassID);
+            ResultSet result = st.executeQuery("SELECT -1 AS 'Select', vClassAllStudents.FirstName, vClassAllStudents.LastName, vClassAllStudents.StudentID FROM vClassAllStudents WHERE ClassID = " + intSelectedClassID);
 
             int i = 0;
             while (result.next()) 
@@ -201,7 +202,7 @@ public class jpClass extends javax.swing.JPanel {
                 // SQLite won't do Booleans so lets convert it to one
                 boolean b = (Integer.parseInt(result.getString("Select")) != -1);
                 // Add our row to the JTable
-                model.addRow(new Object[]{ b, result.getString("ID"), result.getString("Name"), result.getString("Description"), result.getString("Points")});
+                model.addRow(new Object[]{ b, result.getString("FirstName"), result.getString("LastName"), result.getString("StudentID")});
                 // Authorize the checkbox to be editable
                 model.isCellEditable(i, 0);
                 i++;   
@@ -225,6 +226,10 @@ public class jpClass extends javax.swing.JPanel {
             DefaultTableModel model = (DefaultTableModel) jtGroupAssignments.getModel();
 
             // Reset the JTable in case we are coming back a second time
+            int rowCount = model.getRowCount();
+            for (int i = rowCount - 1; i >= 0; i--) {
+                model.removeRow(i);
+            }
             model.setColumnCount(0);
             model.setRowCount(0);
             
@@ -436,19 +441,9 @@ public class jpClass extends javax.swing.JPanel {
         jpClassStudentsTab = new javax.swing.JPanel();
         jScrollPane5 = new javax.swing.JScrollPane();
         jtStudents = new javax.swing.JTable();
-        jLabel3 = new javax.swing.JLabel();
-        jLabel4 = new javax.swing.JLabel();
-        jLabel8 = new javax.swing.JLabel();
-        jLabel9 = new javax.swing.JLabel();
-        jLabel10 = new javax.swing.JLabel();
-        jtfPhoneNumber = new javax.swing.JTextField();
-        jtfEmail = new javax.swing.JTextField();
-        jtfStudentID = new javax.swing.JTextField();
-        jtfLastName = new javax.swing.JTextField();
-        jtfFirstName = new javax.swing.JTextField();
-        jbImportStudents = new javax.swing.JButton();
         jbSave = new javax.swing.JButton();
         jbDelete = new javax.swing.JButton();
+        jbRefresh = new javax.swing.JButton();
         jpClassGradesTab = new javax.swing.JPanel();
         jScrollPane3 = new javax.swing.JScrollPane();
         jtAssignments = new javax.swing.JTable();
@@ -518,7 +513,7 @@ public class jpClass extends javax.swing.JPanel {
                 .addComponent(jScrollPane6, javax.swing.GroupLayout.PREFERRED_SIZE, 357, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jLabel6)
-                .addContainerGap(86, Short.MAX_VALUE))
+                .addContainerGap(89, Short.MAX_VALUE))
         );
         jpClassOverviewTabLayout.setVerticalGroup(
             jpClassOverviewTabLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -534,55 +529,52 @@ public class jpClass extends javax.swing.JPanel {
 
         jtStudents.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
-                {"Nathan", "Faust", "NRF5061"},
-                {"Nick", "Youndt", "NZY5033"},
-                {"Derek", "Goodman", "DMG5572"},
-                {null, null, null}
+                {null, null, null, null},
+                {null, null, null, null},
+                {null, null, null, null},
+                {null, null, null, null}
             },
             new String [] {
-                "First Name", "Last Name", "ID"
+                "Select", "First Name", "Last Name", "Student ID"
             }
-        ));
+        ) {
+            Class[] types = new Class [] {
+                java.lang.Boolean.class, java.lang.Object.class, java.lang.Object.class, java.lang.Object.class
+            };
+            boolean[] canEdit = new boolean [] {
+                true, false, false, false
+            };
+
+            public Class getColumnClass(int columnIndex) {
+                return types [columnIndex];
+            }
+
+            public boolean isCellEditable(int rowIndex, int columnIndex) {
+                return canEdit [columnIndex];
+            }
+        });
         jScrollPane5.setViewportView(jtStudents);
 
-        jLabel3.setText("First Name");
-
-        jLabel4.setText("Last Name");
-
-        jLabel8.setText("Student ID");
-
-        jLabel9.setText("Email");
-
-        jLabel10.setText("Phone Number");
-
-        jtfEmail.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jtfEmailActionPerformed(evt);
-            }
-        });
-
-        jtfStudentID.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jtfStudentIDActionPerformed(evt);
-            }
-        });
-
-        jtfFirstName.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jtfFirstNameActionPerformed(evt);
-            }
-        });
-
-        jbImportStudents.setText("Import");
-
-        jbSave.setText("Save");
+        jbSave.setText("Manage Students");
         jbSave.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jbSaveActionPerformed(evt);
             }
         });
 
-        jbDelete.setText("Delete");
+        jbDelete.setText("Drop Selected");
+        jbDelete.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jbDeleteActionPerformed(evt);
+            }
+        });
+
+        jbRefresh.setText("Refresh");
+        jbRefresh.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jbRefreshActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout jpClassStudentsTabLayout = new javax.swing.GroupLayout(jpClassStudentsTab);
         jpClassStudentsTab.setLayout(jpClassStudentsTabLayout);
@@ -590,37 +582,13 @@ public class jpClass extends javax.swing.JPanel {
             jpClassStudentsTabLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jpClassStudentsTabLayout.createSequentialGroup()
                 .addContainerGap()
-                .addGroup(jpClassStudentsTabLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jScrollPane5, javax.swing.GroupLayout.DEFAULT_SIZE, 449, Short.MAX_VALUE)
-                    .addGroup(jpClassStudentsTabLayout.createSequentialGroup()
-                        .addGroup(jpClassStudentsTabLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jLabel10, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addGroup(jpClassStudentsTabLayout.createSequentialGroup()
-                                .addComponent(jLabel9, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                .addGap(46, 46, 46))
-                            .addGroup(jpClassStudentsTabLayout.createSequentialGroup()
-                                .addComponent(jLabel8, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                .addGap(18, 18, 18))
-                            .addGroup(jpClassStudentsTabLayout.createSequentialGroup()
-                                .addComponent(jLabel4, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                .addGap(20, 20, 20))
-                            .addGroup(jpClassStudentsTabLayout.createSequentialGroup()
-                                .addComponent(jLabel3, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                .addGap(19, 19, 19)))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addGroup(jpClassStudentsTabLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
-                            .addComponent(jtfEmail, javax.swing.GroupLayout.DEFAULT_SIZE, 176, Short.MAX_VALUE)
-                            .addComponent(jtfStudentID, javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jtfLastName, javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jtfFirstName, javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jtfPhoneNumber))
-                        .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
+                .addComponent(jScrollPane5, javax.swing.GroupLayout.DEFAULT_SIZE, 449, Short.MAX_VALUE))
             .addGroup(jpClassStudentsTabLayout.createSequentialGroup()
-                .addComponent(jbImportStudents, javax.swing.GroupLayout.PREFERRED_SIZE, 144, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jbSave, javax.swing.GroupLayout.PREFERRED_SIZE, 142, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(jbDelete, javax.swing.GroupLayout.PREFERRED_SIZE, 144, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(18, 18, 18)
+                .addComponent(jbRefresh, javax.swing.GroupLayout.DEFAULT_SIZE, 136, Short.MAX_VALUE)
                 .addContainerGap())
         );
         jpClassStudentsTabLayout.setVerticalGroup(
@@ -628,35 +596,11 @@ public class jpClass extends javax.swing.JPanel {
             .addGroup(jpClassStudentsTabLayout.createSequentialGroup()
                 .addGap(12, 12, 12)
                 .addComponent(jScrollPane5, javax.swing.GroupLayout.PREFERRED_SIZE, 140, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(jpClassStudentsTabLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(jpClassStudentsTabLayout.createSequentialGroup()
-                        .addGap(6, 6, 6)
-                        .addComponent(jLabel3, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                    .addComponent(jtfFirstName, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(jpClassStudentsTabLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jLabel4, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addGroup(jpClassStudentsTabLayout.createSequentialGroup()
-                        .addGap(0, 0, Short.MAX_VALUE)
-                        .addComponent(jtfLastName, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addGroup(jpClassStudentsTabLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jtfStudentID, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jLabel8, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(jpClassStudentsTabLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jtfEmail, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jLabel9, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(jpClassStudentsTabLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jtfPhoneNumber, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jLabel10, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addGroup(jpClassStudentsTabLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jbImportStudents, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(jbSave, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(jbDelete, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                    .addComponent(jbDelete, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(jbRefresh))
                 .addGap(328, 328, 328))
         );
 
@@ -707,7 +651,7 @@ public class jpClass extends javax.swing.JPanel {
                         .addGroup(jpClassGradesTabLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(jlAssignments)
                             .addComponent(jLabel1))
-                        .addGap(0, 357, Short.MAX_VALUE))
+                        .addGap(0, 360, Short.MAX_VALUE))
                     .addComponent(jScrollPane4, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE))
                 .addContainerGap())
             .addGroup(jpClassGradesTabLayout.createSequentialGroup()
@@ -831,7 +775,7 @@ public class jpClass extends javax.swing.JPanel {
                         .addGap(0, 0, Short.MAX_VALUE))
                     .addGroup(jpClassAssignmentTabLayout.createSequentialGroup()
                         .addComponent(jbNewAssignment, javax.swing.GroupLayout.PREFERRED_SIZE, 137, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 20, Short.MAX_VALUE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 23, Short.MAX_VALUE)
                         .addComponent(jbDeleteAssignment, javax.swing.GroupLayout.PREFERRED_SIZE, 137, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(18, 18, 18)
                         .addComponent(jbRefreshAssignment, javax.swing.GroupLayout.PREFERRED_SIZE, 137, javax.swing.GroupLayout.PREFERRED_SIZE)))
@@ -935,18 +879,6 @@ public class jpClass extends javax.swing.JPanel {
         
     }//GEN-LAST:event_jbNewAssignmentActionPerformed
 
-    private void jtfStudentIDActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jtfStudentIDActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_jtfStudentIDActionPerformed
-
-    private void jtfEmailActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jtfEmailActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_jtfEmailActionPerformed
-
-    private void jtfFirstNameActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jtfFirstNameActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_jtfFirstNameActionPerformed
-
     private void jcbCourseItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_jcbCourseItemStateChanged
         if(jcbCourse.getSelectedIndex()>0){
             jcbClass.setEnabled(true);
@@ -1004,11 +936,35 @@ public class jpClass extends javax.swing.JPanel {
     private void jbSaveActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jbSaveActionPerformed
         // TODO add your handling code here:
         
-        String fName = jtfFirstName.getText();
+        JDialog jdAddStudents = new JDialog();
+        JPanel AddStudents = new jpAddStudent(intSelectedClassID, dbConnection);
+        jdAddStudents.add(AddStudents);
+        jdAddStudents.setSize(500, 400);
+        jdAddStudents.setVisible(true);
+        
+        // on close reset the table to refresh 
+        jdAddStudents.setDefaultCloseOperation(DISPOSE_ON_CLOSE);
+        jdAddStudents.addWindowListener(new WindowAdapter() {
+            @Override
+            public void windowClosed(WindowEvent e) {
+                System.out.println("Window closed!");
+                // Update the table
+                setStudents();
+            }
+        });
+        
+        /*
+        String firstName = jtfFirstName.getText();
+        String lastName = jtfLastName.getText();
+        String email = jtfEmail.getText();
+        String studentId = jtfStudentID.getText();
+        String tel = jtfPhoneNumber.getText();
         
         try
         {
-            st.execute("INSERT INTO....");
+            st.execute("INSERT INTO Student (FirstName,LastName,EmailName,StudentID,PhoneNumber) VALUES (\""+firstName+"\", \""+lastName+"\", \""+email+"\", \""+studentId+"\", \""+tel+"\")");
+            
+            setStudents();
             
             JFrame PopUp = new JFrame();
             JOptionPane.showMessageDialog(PopUp,"Student added!"); 
@@ -1017,7 +973,7 @@ public class jpClass extends javax.swing.JPanel {
         catch (SQLException ex) {
             Logger.getLogger(DBConnection.class.getName()).log(Level.SEVERE, null, ex);
         }
-        
+        */
  
         
         
@@ -1064,6 +1020,48 @@ public class jpClass extends javax.swing.JPanel {
         CreateFrame(AddClass); 
         // TODO add your handling code here:
     }//GEN-LAST:event_jbEditClassActionPerformed
+
+    private void jbDeleteActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jbDeleteActionPerformed
+        // TODO add your handling code here:
+        
+        try {
+            System.out.println("Remove Selected Students fired! Class ID: " + intSelectedClassID);
+            
+
+            if(!studentTab_SelectedStudentIDs.isEmpty())
+            {
+                String options[] = {"Yes","No"};
+
+                int PromptResult = JOptionPane.showOptionDialog(null,"Are you sure you want to drop these students?","Students",JOptionPane.DEFAULT_OPTION,JOptionPane.WARNING_MESSAGE,null,options,options[1]);
+                if(PromptResult==JOptionPane.YES_OPTION)
+                {
+                    for (Iterator<Integer> iterator = studentTab_SelectedStudentIDs.iterator(); iterator.hasNext(); ) {
+                        Integer id = iterator.next();
+                        iterator.remove();
+                        st.execute("DELETE FROM ClassStudentLink WHERE FKClass = " + intSelectedClassID + " AND FKStudent = " + id);
+                    }
+                    
+                    setStudents();
+            
+                    // Let the user know we have taken care of it
+                    JFrame PopUp = new JFrame();
+                    JOptionPane.showMessageDialog(PopUp,"Students Updated!"); 
+                    
+                }
+
+            }
+             
+            
+        } catch (SQLException ex) {
+            Logger.getLogger(jpAddAssignmentsToClass.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        
+        
+    }//GEN-LAST:event_jbDeleteActionPerformed
+
+    private void jbRefreshActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jbRefreshActionPerformed
+        setStudents();
+    }//GEN-LAST:event_jbRefreshActionPerformed
   private void CreateFrame(JPanel inPanel) {
                 //  intWindowCounter++;
       JDialog jd = new JDialog();
@@ -1075,13 +1073,8 @@ public class jpClass extends javax.swing.JPanel {
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JLabel jLabel1;
-    private javax.swing.JLabel jLabel10;
-    private javax.swing.JLabel jLabel3;
-    private javax.swing.JLabel jLabel4;
     private javax.swing.JLabel jLabel6;
     private javax.swing.JLabel jLabel7;
-    private javax.swing.JLabel jLabel8;
-    private javax.swing.JLabel jLabel9;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JScrollPane jScrollPane3;
@@ -1095,8 +1088,8 @@ public class jpClass extends javax.swing.JPanel {
     private javax.swing.JButton jbDelete;
     private javax.swing.JButton jbDeleteAssignment;
     private javax.swing.JButton jbEditClass;
-    private javax.swing.JButton jbImportStudents;
     private javax.swing.JButton jbNewAssignment;
+    private javax.swing.JButton jbRefresh;
     private javax.swing.JButton jbRefreshAssignment;
     private javax.swing.JButton jbSave;
     private javax.swing.JButton jbSaveGrades;
@@ -1112,11 +1105,6 @@ public class jpClass extends javax.swing.JPanel {
     private javax.swing.JTable jtGroupAssignments;
     private javax.swing.JTable jtIndividualAssignments;
     private javax.swing.JTable jtStudents;
-    private javax.swing.JTextField jtfEmail;
-    private javax.swing.JTextField jtfFirstName;
-    private javax.swing.JTextField jtfLastName;
-    private javax.swing.JTextField jtfPhoneNumber;
-    private javax.swing.JTextField jtfStudentID;
     // End of variables declaration//GEN-END:variables
 
 }
