@@ -332,6 +332,33 @@ public class jpCourse extends JPanel{
             Logger.getLogger(DBConnection.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
+    
+    /**
+     * setOverview() This function gives brief description about the course selected from the drop down list.
+     * @param None
+     * @return None
+     * 
+     */
+    private void setOverview()
+    {
+       try
+        {
+            ResultSet rs = st.executeQuery("SELECT Number, Title, Description FROM Course WHERE ID = " + selectedCourse);
+          
+            while (rs.next())
+            {
+                jlNumber.setText("IST "+ rs.getString("Number"));
+                jlTitle.setText(rs.getString("Title"));
+                jtDescription.setText(rs.getString("Description"));
+            }//while
+          
+        }//try
+       
+       catch (SQLException ex) 
+        {
+            Logger.getLogger(DBConnection.class.getName()).log(Level.SEVERE, null, ex);
+        }//catch
+    } //setOverview()
 
     /**
      * This method is called from within the constructor to initialize the form.
@@ -346,6 +373,10 @@ public class jpCourse extends JPanel{
         jbAddCourse = new javax.swing.JButton();
         jTabbedPane1 = new javax.swing.JTabbedPane();
         jPanel1 = new javax.swing.JPanel();
+        jlNumber = new javax.swing.JLabel();
+        jlTitle = new javax.swing.JLabel();
+        jScrollPane4 = new javax.swing.JScrollPane();
+        jtDescription = new javax.swing.JTextArea();
         jPanel2 = new javax.swing.JPanel();
         jScrollPane1 = new javax.swing.JScrollPane();
         jtAssignments = new javax.swing.JTable();
@@ -375,15 +406,34 @@ public class jpCourse extends JPanel{
             }
         });
 
+        jtDescription.setEditable(false);
+        jtDescription.setColumns(20);
+        jtDescription.setLineWrap(true);
+        jtDescription.setRows(5);
+        jtDescription.setWrapStyleWord(true);
+        jScrollPane4.setViewportView(jtDescription);
+
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
         jPanel1Layout.setHorizontalGroup(
-            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 375, Short.MAX_VALUE)
+            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+            .addGroup(jPanel1Layout.createSequentialGroup()
+                .addGap(4, 4, 4)
+                .addComponent(jlNumber, javax.swing.GroupLayout.PREFERRED_SIZE, 56, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jlTitle, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addContainerGap())
+            .addComponent(jScrollPane4, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 374, Short.MAX_VALUE)
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 201, Short.MAX_VALUE)
+            .addGroup(jPanel1Layout.createSequentialGroup()
+                .addGap(20, 20, 20)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addComponent(jlNumber, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(jlTitle, javax.swing.GroupLayout.DEFAULT_SIZE, 24, Short.MAX_VALUE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jScrollPane4, javax.swing.GroupLayout.PREFERRED_SIZE, 231, javax.swing.GroupLayout.PREFERRED_SIZE))
         );
 
         jTabbedPane1.addTab("Overview", jPanel1);
@@ -470,7 +520,7 @@ public class jpCourse extends JPanel{
                     .addComponent(btnAddAssignments)
                     .addComponent(btnDeleteAssignments)
                     .addComponent(btnRefreshAssignments))
-                .addGap(0, 4, Short.MAX_VALUE))
+                .addGap(0, 84, Short.MAX_VALUE))
         );
 
         jTabbedPane1.addTab("Assignments", jPanel2);
@@ -483,7 +533,7 @@ public class jpCourse extends JPanel{
         );
         jPanel3Layout.setVerticalGroup(
             jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 201, Short.MAX_VALUE)
+            .addGap(0, 281, Short.MAX_VALUE)
         );
 
         jTabbedPane1.addTab("People", jPanel3);
@@ -600,8 +650,7 @@ public class jpCourse extends JPanel{
                     .addComponent(jbAddCourse)
                     .addComponent(jbEditCourse))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(jTabbedPane1)
-                .addGap(167, 167, 167))
+                .addComponent(jTabbedPane1))
         );
     }// </editor-fold>//GEN-END:initComponents
 
@@ -627,6 +676,7 @@ public class jpCourse extends JPanel{
             
             // An action has been performed. Update tabs!
             setAssignments();
+            setOverview();
             setResources(selectedCourse);
 
         }
@@ -761,6 +811,7 @@ public class jpCourse extends JPanel{
     private javax.swing.JPanel jPanel4;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JScrollPane jScrollPane2;
+    private javax.swing.JScrollPane jScrollPane4;
     private javax.swing.JTabbedPane jTabbedPane1;
     private javax.swing.JButton jbAddCourse;
     private javax.swing.JButton jbAddResource;
@@ -768,7 +819,10 @@ public class jpCourse extends JPanel{
     private javax.swing.JButton jbEditCourse;
     private javax.swing.JButton jbRefresh;
     private javax.swing.JComboBox jcbCourse;
+    private javax.swing.JLabel jlNumber;
+    private javax.swing.JLabel jlTitle;
     private javax.swing.JTable jtAssignments;
+    private javax.swing.JTextArea jtDescription;
     private javax.swing.JTable jtResources;
     // End of variables declaration//GEN-END:variables
 
