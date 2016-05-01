@@ -421,6 +421,80 @@ public class jpClass extends javax.swing.JPanel {
             Logger.getLogger(DBConnection.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
+    
+    /**
+    * setOverview() This function sets the Overview Tab under Class with the Course, Title, Class, Meeting Location and Meeting Times. It executes the query which is hard-coded in this function and populates the corresponding fields.
+    * @param None
+    * @return None
+    * 
+    */
+   private void setOverview()
+   {
+        try
+        {
+            ResultSet rs = st.executeQuery("SELECT Course.Number, Course.Title, Class.MeetingLocation," +
+                                           " Class.tmMondayStart, Class.tmMondayEnd," +
+                                           " Class.tmTuesdayStart, Class.tmTuesdayEnd," +
+                                           " Class.tmWednesdayStart, Class.tmWednesdayEnd," +
+                                           " Class.tmThursdayStart, Class.tmThursdayEnd," +
+                                           " Class.tmFridayStart, Class.tmFridayEnd," +
+                                           " Class.tmSaturdayStart, Class.tmSaturdayEnd,"+
+                                           " Class.tmSundayStart, Class.tmSundayEnd" +
+                                           " FROM Course, Class WHERE Course.ID = " + intSelectedCourseID + 
+                                           " AND Class.ID = " + intSelectedClassID); 
+         
+        
+            jlCourseNumber.setText("Course: IST "+ rs.getString("Number"));
+            jlCourseTitle.setText(rs.getString("Title"));
+            jlMeetingLocation.setText("Meeting Location: " + rs.getString("MeetingLocation"));
+            jlTime.setText("Meeting Times: ");
+            jtStartEndTime.setText("");
+            while (rs.next())
+            {
+                if(rs.getString("tmMondayStart")!= null)
+                {
+                    jtStartEndTime.append("Monday: " + rs.getString("tmMondayStart")+" - "+ rs.getString("tmMondayEnd")+"\n");
+                } //Get Monday Start and End Times
+
+                if(rs.getString("tmTuesdayStart")!= null)
+                {
+                    jtStartEndTime.append("Tuesday: " + rs.getString("tmTuesdayStart")+" - "+ rs.getString("tmTuesdayEnd")+"\n");
+                } //Get Tuesday Start and End Times
+                
+                if(rs.getString("tmWednesdayStart")!= null)
+                {
+                    jtStartEndTime.append("Wednesday : " + rs.getString("tmWednesdayStart")+" - "+rs.getString("tmWednesdayEnd")+"\n");
+                } //Get Wednesday Start and End Times
+                
+                if(rs.getString("tmThursdayStart")!= null)
+                {
+                    jtStartEndTime.append("Thursday: " + rs.getString("tmThursdayStart")+" - "+ rs.getString("tmThursdayEnd")+"\n");
+                }  //Get Thursday Start and End Times
+
+                if(rs.getString("tmFridayStart")!= null)
+                {
+                    jtStartEndTime.append("Friday: " + rs.getString("tmFridayStart")+" - "+ rs.getString("tmFridayEnd")+"\n");
+                }  //Get Friday Start and End Times
+                
+                if(rs.getString("tmSaturdayStart")!= null)
+                {
+                    jtStartEndTime.append("Saturday: " + rs.getString("tmSaturdayStart")+" - "+ rs.getString("tmSaturdayEnd")+"\n");
+                }  //Get Saturday Start and End Times
+                
+                   if(rs.getString("tmSundayStart")!= null)
+                {
+                    jtStartEndTime.append("Sunday: " + rs.getString("tmSundayStart")+" - "+ rs.getString("tmSundayEnd")+"\n");
+                }  //Get Sunday Start and End Times
+         
+          } // while(rs.next)
+            
+       } // try
+       catch (SQLException ex) 
+        {
+            Logger.getLogger(DBConnection.class.getName()).log(Level.SEVERE, null, ex);
+        }//catch
+        
+    } //setOverview()
 
     /**
      * This method is called from within the constructor to initialize the form.
@@ -436,8 +510,12 @@ public class jpClass extends javax.swing.JPanel {
         jTabbedPane1 = new javax.swing.JTabbedPane();
         jpClassOverviewTab = new javax.swing.JPanel();
         jLabel6 = new javax.swing.JLabel();
-        jScrollPane6 = new javax.swing.JScrollPane();
-        jTable3 = new javax.swing.JTable();
+        jlCourseNumber = new javax.swing.JLabel();
+        jlCourseTitle = new javax.swing.JLabel();
+        jlMeetingLocation = new javax.swing.JLabel();
+        jlTime = new javax.swing.JLabel();
+        jScrollPane7 = new javax.swing.JScrollPane();
+        jtStartEndTime = new javax.swing.JTextArea();
         jpClassStudentsTab = new javax.swing.JPanel();
         jScrollPane5 = new javax.swing.JScrollPane();
         jtStudents = new javax.swing.JTable();
@@ -485,44 +563,60 @@ public class jpClass extends javax.swing.JPanel {
             }
         });
 
-        jTable3.setModel(new javax.swing.table.DefaultTableModel(
-            new Object [][] {
-                {"UD 1", "100%"},
-                {"UD 2", "75%"}
-            },
-            new String [] {
-                "Assignments Submitted", "Percentage of class submission"
-            }
-        ) {
-            Class[] types = new Class [] {
-                java.lang.String.class, java.lang.String.class
-            };
+        jlCourseNumber.setText("Course:");
 
-            public Class getColumnClass(int columnIndex) {
-                return types [columnIndex];
-            }
-        });
-        jScrollPane6.setViewportView(jTable3);
+        jlMeetingLocation.setText("Meeting Location:     ");
+
+        jlTime.setText("Meeting Times:");
+
+        jtStartEndTime.setEditable(false);
+        jtStartEndTime.setColumns(20);
+        jtStartEndTime.setLineWrap(true);
+        jtStartEndTime.setRows(5);
+        jtStartEndTime.setWrapStyleWord(true);
+        jScrollPane7.setViewportView(jtStartEndTime);
 
         javax.swing.GroupLayout jpClassOverviewTabLayout = new javax.swing.GroupLayout(jpClassOverviewTab);
         jpClassOverviewTab.setLayout(jpClassOverviewTabLayout);
         jpClassOverviewTabLayout.setHorizontalGroup(
             jpClassOverviewTabLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jpClassOverviewTabLayout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(jScrollPane6, javax.swing.GroupLayout.PREFERRED_SIZE, 357, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jLabel6)
-                .addContainerGap(89, Short.MAX_VALUE))
+                .addGroup(jpClassOverviewTabLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(jpClassOverviewTabLayout.createSequentialGroup()
+                        .addGap(371, 371, 371)
+                        .addComponent(jLabel6))
+                    .addGroup(jpClassOverviewTabLayout.createSequentialGroup()
+                        .addGap(18, 18, 18)
+                        .addGroup(jpClassOverviewTabLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(jpClassOverviewTabLayout.createSequentialGroup()
+                                .addComponent(jlCourseNumber, javax.swing.GroupLayout.PREFERRED_SIZE, 96, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(jlCourseTitle, javax.swing.GroupLayout.PREFERRED_SIZE, 321, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGap(0, 0, Short.MAX_VALUE))
+                            .addComponent(jlMeetingLocation, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addGroup(jpClassOverviewTabLayout.createSequentialGroup()
+                                .addComponent(jlTime, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                .addGap(18, 18, 18)
+                                .addComponent(jScrollPane7, javax.swing.GroupLayout.PREFERRED_SIZE, 192, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGap(128, 128, 128)))))
+                .addContainerGap(21, Short.MAX_VALUE))
         );
         jpClassOverviewTabLayout.setVerticalGroup(
             jpClassOverviewTabLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jpClassOverviewTabLayout.createSequentialGroup()
-                .addGap(44, 44, 44)
+                .addGap(19, 19, 19)
+                .addGroup(jpClassOverviewTabLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addComponent(jlCourseTitle, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(jlCourseNumber, javax.swing.GroupLayout.DEFAULT_SIZE, 19, Short.MAX_VALUE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jLabel6)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(jlMeetingLocation, javax.swing.GroupLayout.PREFERRED_SIZE, 24, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(18, 18, 18)
                 .addGroup(jpClassOverviewTabLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jScrollPane6, javax.swing.GroupLayout.PREFERRED_SIZE, 236, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jLabel6))
-                .addContainerGap(104, Short.MAX_VALUE))
+                    .addComponent(jlTime, javax.swing.GroupLayout.PREFERRED_SIZE, 22, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jScrollPane7, javax.swing.GroupLayout.PREFERRED_SIZE, 117, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addContainerGap(188, Short.MAX_VALUE))
         );
 
         jTabbedPane1.addTab("Overview", jpClassOverviewTab);
@@ -582,13 +676,13 @@ public class jpClass extends javax.swing.JPanel {
             jpClassStudentsTabLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jpClassStudentsTabLayout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(jScrollPane5, javax.swing.GroupLayout.DEFAULT_SIZE, 449, Short.MAX_VALUE))
+                .addComponent(jScrollPane5))
             .addGroup(jpClassStudentsTabLayout.createSequentialGroup()
                 .addComponent(jbSave, javax.swing.GroupLayout.PREFERRED_SIZE, 142, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(jbDelete, javax.swing.GroupLayout.PREFERRED_SIZE, 144, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(18, 18, 18)
-                .addComponent(jbRefresh, javax.swing.GroupLayout.DEFAULT_SIZE, 136, Short.MAX_VALUE)
+                .addComponent(jbRefresh, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addContainerGap())
         );
         jpClassStudentsTabLayout.setVerticalGroup(
@@ -775,7 +869,7 @@ public class jpClass extends javax.swing.JPanel {
                         .addGap(0, 0, Short.MAX_VALUE))
                     .addGroup(jpClassAssignmentTabLayout.createSequentialGroup()
                         .addComponent(jbNewAssignment, javax.swing.GroupLayout.PREFERRED_SIZE, 137, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 23, Short.MAX_VALUE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addComponent(jbDeleteAssignment, javax.swing.GroupLayout.PREFERRED_SIZE, 137, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(18, 18, 18)
                         .addComponent(jbRefreshAssignment, javax.swing.GroupLayout.PREFERRED_SIZE, 137, javax.swing.GroupLayout.PREFERRED_SIZE)))
@@ -915,6 +1009,7 @@ public class jpClass extends javax.swing.JPanel {
             setStudents();
             setGroupAssignments();
             setIndividualAssignments();
+            setOverview();
         }
         else
         {
@@ -1080,10 +1175,9 @@ public class jpClass extends javax.swing.JPanel {
     private javax.swing.JScrollPane jScrollPane3;
     private javax.swing.JScrollPane jScrollPane4;
     private javax.swing.JScrollPane jScrollPane5;
-    private javax.swing.JScrollPane jScrollPane6;
+    private javax.swing.JScrollPane jScrollPane7;
     private javax.swing.JTabbedPane jTabbedPane1;
     private javax.swing.JTable jTable2;
-    private javax.swing.JTable jTable3;
     private javax.swing.JButton jbAddClass;
     private javax.swing.JButton jbDelete;
     private javax.swing.JButton jbDeleteAssignment;
@@ -1096,7 +1190,11 @@ public class jpClass extends javax.swing.JPanel {
     private javax.swing.JComboBox jcbClass;
     private javax.swing.JComboBox jcbCourse;
     private javax.swing.JLabel jlAssignments;
+    private javax.swing.JLabel jlCourseNumber;
+    private javax.swing.JLabel jlCourseTitle;
     private javax.swing.JLabel jlGroupAssignments;
+    private javax.swing.JLabel jlMeetingLocation;
+    private javax.swing.JLabel jlTime;
     private javax.swing.JPanel jpClassAssignmentTab;
     private javax.swing.JPanel jpClassGradesTab;
     private javax.swing.JPanel jpClassOverviewTab;
@@ -1104,6 +1202,7 @@ public class jpClass extends javax.swing.JPanel {
     private javax.swing.JTable jtAssignments;
     private javax.swing.JTable jtGroupAssignments;
     private javax.swing.JTable jtIndividualAssignments;
+    private javax.swing.JTextArea jtStartEndTime;
     private javax.swing.JTable jtStudents;
     // End of variables declaration//GEN-END:variables
 
