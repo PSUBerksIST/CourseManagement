@@ -49,7 +49,7 @@
     <DimensionLayout dim="0">
       <Group type="103" groupAlignment="0" attributes="0">
           <Group type="102" alignment="1" attributes="0">
-              <EmptySpace max="32767" attributes="0"/>
+              <EmptySpace pref="12" max="32767" attributes="0"/>
               <Group type="103" groupAlignment="1" attributes="0">
                   <Component id="jlbObjectives" alignment="1" min="-2" max="-2" attributes="0"/>
                   <Component id="jlbPrerequisites" alignment="1" min="-2" max="-2" attributes="0"/>
@@ -77,10 +77,10 @@
                       <Component id="jtfNotes" min="-2" pref="338" max="-2" attributes="0"/>
                   </Group>
                   <Component id="jScrollPane3" alignment="0" min="-2" pref="339" max="-2" attributes="0"/>
-                  <Group type="103" alignment="0" groupAlignment="1" max="-2" attributes="0">
-                      <Group type="102" alignment="0" attributes="0">
-                          <Component id="jtfCourseNumber" min="-2" pref="66" max="-2" attributes="0"/>
-                          <EmptySpace max="-2" attributes="0"/>
+                  <Group type="103" alignment="0" groupAlignment="0" max="-2" attributes="0">
+                      <Group type="102" attributes="0">
+                          <Component id="jspCourseNumber" min="-2" pref="69" max="-2" attributes="0"/>
+                          <EmptySpace type="unrelated" max="-2" attributes="0"/>
                           <Component id="jlbCredits" min="-2" max="-2" attributes="0"/>
                           <EmptySpace type="unrelated" max="-2" attributes="0"/>
                           <Component id="jcbCredits" min="-2" max="-2" attributes="0"/>
@@ -89,7 +89,7 @@
                           <EmptySpace max="32767" attributes="0"/>
                           <Component id="jcbWritingEmphasis" min="-2" max="-2" attributes="0"/>
                       </Group>
-                      <Component id="jtfCourseTitle" alignment="0" min="-2" pref="338" max="-2" attributes="0"/>
+                      <Component id="jtfCourseTitle" min="-2" pref="338" max="-2" attributes="0"/>
                   </Group>
               </Group>
               <EmptySpace max="-2" attributes="0"/>
@@ -100,17 +100,15 @@
       <Group type="103" groupAlignment="0" attributes="0">
           <Group type="102" alignment="1" attributes="0">
               <EmptySpace pref="12" max="32767" attributes="0"/>
-              <Group type="103" groupAlignment="0" max="-2" attributes="0">
-                  <Group type="103" groupAlignment="3" attributes="0">
-                      <Component id="jlCourseNumber" alignment="3" min="-2" max="-2" attributes="0"/>
-                      <Component id="jlbCredits" alignment="3" min="-2" max="-2" attributes="0"/>
-                      <Component id="jcbCredits" alignment="3" min="-2" max="-2" attributes="0"/>
-                      <Component id="jcbWritingEmphasis" alignment="3" min="-2" max="-2" attributes="0"/>
-                      <Component id="jlWritingEmphasis" alignment="3" min="-2" max="-2" attributes="0"/>
-                  </Group>
-                  <Component id="jtfCourseNumber" pref="30" max="32767" attributes="0"/>
+              <Group type="103" groupAlignment="3" attributes="0">
+                  <Component id="jlCourseNumber" alignment="3" min="-2" max="-2" attributes="0"/>
+                  <Component id="jlbCredits" alignment="3" min="-2" max="-2" attributes="0"/>
+                  <Component id="jcbCredits" alignment="3" min="-2" max="-2" attributes="0"/>
+                  <Component id="jcbWritingEmphasis" alignment="3" min="-2" max="-2" attributes="0"/>
+                  <Component id="jlWritingEmphasis" alignment="3" min="-2" max="-2" attributes="0"/>
+                  <Component id="jspCourseNumber" alignment="3" min="-2" max="-2" attributes="0"/>
               </Group>
-              <EmptySpace max="-2" attributes="0"/>
+              <EmptySpace min="-2" pref="16" max="-2" attributes="0"/>
               <Group type="103" groupAlignment="3" attributes="0">
                   <Component id="jtfCourseTitle" alignment="3" min="-2" max="-2" attributes="0"/>
                   <Component id="jlCourseName" alignment="3" min="-2" max="-2" attributes="0"/>
@@ -171,16 +169,6 @@
       <Properties>
         <Property name="text" type="java.lang.String" value="Course  Number"/>
       </Properties>
-    </Component>
-    <Component class="javax.swing.JTextField" name="jtfCourseNumber">
-      <Properties>
-        <Property name="preferredSize" type="java.awt.Dimension" editor="org.netbeans.beaninfo.editors.DimensionEditor">
-          <Dimension value="[6, 18]"/>
-        </Property>
-      </Properties>
-      <Events>
-        <EventHandler event="mouseClicked" listener="java.awt.event.MouseListener" parameters="java.awt.event.MouseEvent" handler="jtfCourseNumberMouseClicked"/>
-      </Events>
     </Component>
     <Component class="javax.swing.JComboBox" name="jcbDepartment">
       <Properties>
@@ -294,5 +282,7 @@
         </Component>
       </SubComponents>
     </Container>
+    <Component class="javax.swing.JSpinner" name="jspCourseNumber">
+    </Component>
   </SubComponents>
 </Form>

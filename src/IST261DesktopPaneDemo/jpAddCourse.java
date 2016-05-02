@@ -2,7 +2,6 @@
     On click of "Add Course" button under the course panel jpAddCourse pops up a window that takes information
     and saves it to the database to create a new course.
  */
-// @author dmg5572
 package IST261DesktopPaneDemo;
 import java.awt.Component;
 import java.sql.Connection;
@@ -12,7 +11,10 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import javax.swing.JOptionPane;
 
-
+/**
+ *
+ * @author dmg5572
+ */
 public class jpAddCourse extends javax.swing.JPanel 
 {
     private Connection dbLocalConnection; //database connection passed from jpCourse
@@ -23,7 +25,7 @@ public class jpAddCourse extends javax.swing.JPanel
     private String strDepartment = "default value";//string to receive input from GUI boxes
     private int intDepartment = 123456789; //int to convert strDepartment for passing to database
         
-    String strCourseNumber = "default value";//string to receive input from GUI boxes
+
     int intCourseNumber = 123456789;//int to convert strDepartment for passing to database
         
     int intWritingEmphasis = 123456789;
@@ -62,7 +64,6 @@ public class jpAddCourse extends javax.swing.JPanel
         jtfCourseTitle = new javax.swing.JTextField();
         jbAddCourseButton = new javax.swing.JButton();
         jlCourseNumber = new javax.swing.JLabel();
-        jtfCourseNumber = new javax.swing.JTextField();
         jcbDepartment = new javax.swing.JComboBox();
         jlWritingEmphasis = new javax.swing.JLabel();
         jcbWritingEmphasis = new javax.swing.JComboBox();
@@ -79,6 +80,7 @@ public class jpAddCourse extends javax.swing.JPanel
         jtaDescription = new javax.swing.JTextArea();
         jScrollPane4 = new javax.swing.JScrollPane();
         jtaObjectives = new javax.swing.JTextArea();
+        jspCourseNumber = new javax.swing.JSpinner();
 
         jTextArea1.setColumns(20);
         jTextArea1.setRows(5);
@@ -108,15 +110,6 @@ public class jpAddCourse extends javax.swing.JPanel
         });
 
         jlCourseNumber.setText("Course  Number");
-
-        jtfCourseNumber.setPreferredSize(new java.awt.Dimension(6, 18));
-        jtfCourseNumber.addMouseListener(new java.awt.event.MouseAdapter()
-        {
-            public void mouseClicked(java.awt.event.MouseEvent evt)
-            {
-                jtfCourseNumberMouseClicked(evt);
-            }
-        });
 
         jcbDepartment.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Default Item" }));
 
@@ -173,7 +166,7 @@ public class jpAddCourse extends javax.swing.JPanel
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addContainerGap(12, Short.MAX_VALUE)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                     .addComponent(jlbObjectives)
                     .addComponent(jlbPrerequisites)
@@ -196,10 +189,10 @@ public class jpAddCourse extends javax.swing.JPanel
                             .addComponent(jScrollPane4, javax.swing.GroupLayout.PREFERRED_SIZE, 339, javax.swing.GroupLayout.PREFERRED_SIZE))
                         .addComponent(jtfNotes, javax.swing.GroupLayout.PREFERRED_SIZE, 338, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, 339, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
-                        .addGroup(javax.swing.GroupLayout.Alignment.LEADING, layout.createSequentialGroup()
-                            .addComponent(jtfCourseNumber, javax.swing.GroupLayout.PREFERRED_SIZE, 66, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                        .addGroup(layout.createSequentialGroup()
+                            .addComponent(jspCourseNumber, javax.swing.GroupLayout.PREFERRED_SIZE, 69, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                             .addComponent(jlbCredits)
                             .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                             .addComponent(jcbCredits, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -207,22 +200,21 @@ public class jpAddCourse extends javax.swing.JPanel
                             .addComponent(jlWritingEmphasis)
                             .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                             .addComponent(jcbWritingEmphasis, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addComponent(jtfCourseTitle, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.PREFERRED_SIZE, 338, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                        .addComponent(jtfCourseTitle, javax.swing.GroupLayout.PREFERRED_SIZE, 338, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addContainerGap())
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                 .addContainerGap(12, Short.MAX_VALUE)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                        .addComponent(jlCourseNumber)
-                        .addComponent(jlbCredits)
-                        .addComponent(jcbCredits, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addComponent(jcbWritingEmphasis, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addComponent(jlWritingEmphasis))
-                    .addComponent(jtfCourseNumber, javax.swing.GroupLayout.DEFAULT_SIZE, 30, Short.MAX_VALUE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jlCourseNumber)
+                    .addComponent(jlbCredits)
+                    .addComponent(jcbCredits, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jcbWritingEmphasis, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jlWritingEmphasis)
+                    .addComponent(jspCourseNumber, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(16, 16, 16)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jtfCourseTitle, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jlCourseName))
@@ -259,16 +251,9 @@ public class jpAddCourse extends javax.swing.JPanel
         getInput();
         strSelectedDepartment = String.valueOf(jcbDepartment.getSelectedItem());
         intSelectedDepartment = getFKDepartment(strSelectedDepartment);
-
-        if ( (strDepartment == null) || (strCourseNumber == null)  )
-        {      Component frame = null;
-        JOptionPane.showMessageDialog(frame,
-    "Eggs are not supposed to be green.",
-    "Inane error",
-    JOptionPane.ERROR_MESSAGE);
-        }
         
         databaseInsert(intSelectedDepartment);
+        
         this.getTopLevelAncestor().setVisible(false);
     }//GEN-LAST:event_jbAddCourseButtonActionPerformed
 
@@ -292,16 +277,11 @@ public class jpAddCourse extends javax.swing.JPanel
         // TODO add your handling code here:
     }//GEN-LAST:event_jtfCourseTitleActionPerformed
 
-    private void jtfCourseNumberMouseClicked(java.awt.event.MouseEvent evt)//GEN-FIRST:event_jtfCourseNumberMouseClicked
-    {//GEN-HEADEREND:event_jtfCourseNumberMouseClicked
-        // TODO add your handling code here:
-    }//GEN-LAST:event_jtfCourseNumberMouseClicked
-
 private void getInput()
 {
         //-----pull fields from UI, place contents into class variables to pass to database----
-        strCourseNumber = jtfCourseNumber.getText();//pulling string from java text field
-        intCourseNumber = Integer.parseInt(strCourseNumber);//set integer to java text field input  
+        intCourseNumber = (Integer)jspCourseNumber.getValue();//pulling entered value from Course Number spinner
+ 
         
         //check jcbWritingEmphasis for selected value, put integer into intWritingEmphasis for database
         if (jcbWritingEmphasis.getSelectedItem() == "Yes")
@@ -421,9 +401,9 @@ private void setJCBDepartment() //SQL Select to pull list of departments and con
     private javax.swing.JLabel jlbNotes;
     private javax.swing.JLabel jlbObjectives;
     private javax.swing.JLabel jlbPrerequisites;
+    private javax.swing.JSpinner jspCourseNumber;
     private javax.swing.JTextArea jtaDescription;
     private javax.swing.JTextArea jtaObjectives;
-    private javax.swing.JTextField jtfCourseNumber;
     private javax.swing.JTextField jtfCourseTitle;
     private javax.swing.JTextField jtfNotes;
     private javax.swing.JTextField jtfPrerequisites;

@@ -836,6 +836,7 @@ public class jpCourse extends JPanel{
       jd.pack();
       jd.setModal(true);
       jd.setVisible(true);
+      setCourseList();
 //                //  intWindowCounter++;
 //        
 //        JFrame jifTemp = new jfTempFrames(inPanel.getName());// +"" + intWindowCounter,true,true,true,true);
