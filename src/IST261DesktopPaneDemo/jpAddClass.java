@@ -28,6 +28,8 @@ import javax.swing.JTextField;
  *
  * @author Nathan
  */
+
+
 public class jpAddClass extends javax.swing.JPanel {
 
     /**
@@ -744,6 +746,9 @@ public class jpAddClass extends javax.swing.JPanel {
         jcbCourse.setSelectedIndex(incourseid);
     }
     
+  
+    
+    // this method gets the info of the class and populates the feilds 
     private void getclassinfo(int inCourseID, int inSection)
     {
         try {
@@ -1273,6 +1278,8 @@ public class jpAddClass extends javax.swing.JPanel {
         // TODO add your handling code here:
     }//GEN-LAST:event_jcbTuesdayEndActionPerformed
 
+    
+    //this method updates the class info after it has been modified 
     private void UpdateToTable(int inCourseID, int inCampusID, String inMeetingLocation, int inSection,
                                int inScheduleNumber, String inAngelID, String inAngelTitle, String inMondayStart,
                                String inMondayEnd, String inTuesdayStart, String inTuesdayEnd, String inWednesdayStart,
