@@ -441,7 +441,7 @@ public class jpClass extends javax.swing.JPanel {
                                            " Class.tmSaturdayStart, Class.tmSaturdayEnd,"+
                                            " Class.tmSundayStart, Class.tmSundayEnd" +
                                            " FROM Course, Class WHERE Course.ID = " + intSelectedCourseID + 
-                                           " AND Class.ID = " + intSelectedClassID); 
+                                           " AND Class.Section = " + jcbClass.getSelectedItem()); 
          
         
             jlCourseNumber.setText("Course: IST "+ rs.getString("Number"));
