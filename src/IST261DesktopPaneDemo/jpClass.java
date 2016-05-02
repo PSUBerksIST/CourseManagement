@@ -1109,6 +1109,7 @@ public class jpClass extends javax.swing.JPanel {
         }
     }//GEN-LAST:event_jbDeleteAssignmentActionPerformed
 
+    //this button edit class allows you to edit the information of the class you are currently viewing 
     private void jbEditClassActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jbEditClassActionPerformed
         JPanel AddClass = new jpAddClass(dbConnection,  jcbCourse.getSelectedIndex(), Integer.parseInt(jcbClass.getSelectedItem() + ""));
         AddClass.setName("Add Class");
