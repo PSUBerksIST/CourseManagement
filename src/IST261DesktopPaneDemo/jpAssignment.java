@@ -141,10 +141,20 @@ public class jpAssignment extends javax.swing.JPanel {
             int i = 0;
             while (result.next()) 
             {
-                
+                System.out.println(result.getString("Group"));
                 // SQLite won't do Booleans so lets convert it to one
                 boolean b = (Integer.parseInt(result.getString("Select")) != -1);
-                boolean g = (Integer.parseInt(result.getString("Group")) != 1);
+                
+                boolean g;
+                if(result.getString("Group") == null)
+                {
+                    g = true;
+                }
+                else
+                {
+                    g = (Integer.parseInt(result.getString("Group")) < 1);
+                }
+                
                 String group = (g) ? "no" : "yes";
                 // Add our row to the JTable
                 model.addRow(new Object[]{ b, result.getString("ID"), result.getString("Name"), result.getString("Description"), result.getString("Points"), group});
