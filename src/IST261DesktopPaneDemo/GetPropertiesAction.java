@@ -41,13 +41,14 @@ public class GetPropertiesAction extends AbstractAction {
         super("Get Properties");
         jfApp = jfIn;
         myProps = propsIn;
-        
+//TODO - Fix image imports
+/*
          putValue( Action.SMALL_ICON, new ImageIcon(
             getClass().getResource( "../images/DatabaseAdd16.png" ) ) );
          
           putValue( Action.LARGE_ICON_KEY, new ImageIcon(
             getClass().getResource( "../images/DatabaseAdd32.png" ) ) );
-          
+*/          
           putValue(Action.LONG_DESCRIPTION,"Load the user's properties from a file");
           
           putValue(Action.NAME, "Get Properties");

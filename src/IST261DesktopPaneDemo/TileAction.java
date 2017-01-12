@@ -41,13 +41,14 @@ public class TileAction extends AbstractAction {
     public TileAction(JDesktopPane desk) {
         super("Tile Frames");
         this.desk = desk;
-        
+//TODO: Fix image file locations
+/*
          putValue( Action.SMALL_ICON, new ImageIcon(
-            getClass().getResource( "../images/TileIcon16.png" ) ) );
+            getClass().getResource("images/TileIcon16.png") ) );
          
           putValue( Action.LARGE_ICON_KEY, new ImageIcon(
             getClass().getResource( "../images/TileIcon32.png" ) ) );
-          
+*/          
           putValue(Action.LONG_DESCRIPTION,"Tile the frames on the desktop");
           
           putValue(Action.NAME, "Tile");

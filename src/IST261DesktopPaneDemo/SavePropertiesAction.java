@@ -50,12 +50,15 @@ public class SavePropertiesAction extends AbstractAction {
         super("Save Properties");
         jfApp = jfIn;
         myProps = propsIn;    
+        
+//TODO Fix image imports - WHB
+/*
          putValue( Action.SMALL_ICON, new ImageIcon(
             getClass().getResource( "../images/DatabaseAdd16.png" ) ) );
          
           putValue( Action.LARGE_ICON_KEY, new ImageIcon(
             getClass().getResource( "../images/DatabaseAdd32.png" ) ) );
-          
+*/          
           putValue(Action.LONG_DESCRIPTION,"Save the user's preferences to a file");
           
           putValue(Action.NAME, "Save Preferences");

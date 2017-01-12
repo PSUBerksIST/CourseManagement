@@ -46,13 +46,14 @@ public class OpenDatabaseAction extends AbstractAction {
         super("Open Database");
         jfApp = jfIn;
         propUserProperties = propsIn;
-        
+//TODO:  Fix image import statements
+/*
          putValue( Action.SMALL_ICON, new ImageIcon(
             getClass().getResource( "../images/DatabaseAdd16.png" ) ) );
          
           putValue( Action.LARGE_ICON_KEY, new ImageIcon(
             getClass().getResource( "../images/DatabaseAdd32.png" ) ) );
-          
+*/          
           putValue(Action.LONG_DESCRIPTION,"Opens and connects to the database");
           
           putValue(Action.NAME, "Open DB");
