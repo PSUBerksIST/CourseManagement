@@ -28,18 +28,20 @@ package IST261DesktopPaneDemo;
 import java.awt.Dimension;
 import java.awt.event.ActionEvent;
 import java.beans.PropertyVetoException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.AbstractAction;
 import javax.swing.Action;
 import javax.swing.ImageIcon;
 import javax.swing.JDesktopPane;
 import javax.swing.JInternalFrame;
  
-public class TileAction extends AbstractAction {
+public class MinimizeAllWindowsAction extends AbstractAction {
      
     private JDesktopPane desk; // the desktop to work with
      
-    public TileAction(JDesktopPane desk) {
-        super("Tile Frames");
+    public MinimizeAllWindowsAction(JDesktopPane desk) {
+        super("Minimize Windows");
         this.desk = desk;
 //TODO: Fix image file locations
 /*
@@ -49,11 +51,11 @@ public class TileAction extends AbstractAction {
           putValue( Action.LARGE_ICON_KEY, new ImageIcon(
             getClass().getResource( "../images/TileIcon32.png" ) ) );
 */          
-          putValue(Action.LONG_DESCRIPTION,"Tile the frames on the desktop");
+          putValue(Action.LONG_DESCRIPTION,"Minimize all of the frames on the desktop");
           
-          putValue(Action.NAME, "Tile");
+          putValue(Action.NAME, "Minimize");
           
-          putValue(Action.SHORT_DESCRIPTION,"Tile Windows");
+          putValue(Action.SHORT_DESCRIPTION,"Minimize All Windows");
           
         /*
         Possible properties for putValue(property, value)
@@ -94,42 +96,17 @@ public class TileAction extends AbstractAction {
         int count = allframes.length;
         if (count == 0) return;
          
-        // Determine the necessary grid size
-        int sqrt = (int)Math.sqrt(count);
-        int rows = sqrt;
-        int cols = sqrt;
-        if (rows * cols < count) {
-            cols++;
-            if (rows * cols < count) {
-                rows++;
-            }
-        }
-         
-        // Define some initial values for size & location.
-        Dimension size = desk.getSize();
-         
-        int w = size.width / cols;
-        int h = size.height / rows;
-        int x = 0;
-        int y = 0;
+       
          
         // Iterate over the frames, deiconifying any iconified frames and then
         // relocating & resizing each.
-        for (int i = 0; i < rows; i++) {
-            for (int j = 0; j < cols && ((i * cols) + j < count); j++) {
-                JInternalFrame f = allframes[(i * cols) + j];
-                 
-                if (!f.isClosed() && f.isIcon()) {
-                    try {
-                        f.setIcon(false);
-                    } catch (PropertyVetoException ignored) {}
-                }
-                 
-                desk.getDesktopManager().resizeFrame(f, x, y, w, h);
-                x += w;
+        for (int i = 0; i < count; i++) 
+        {
+            try {
+                allframes[i].setIcon(true);
+            } catch (PropertyVetoException ex) {
+                Logger.getLogger(MinimizeAllWindowsAction.class.getName()).log(Level.SEVERE, null, ex);
             }
-            y += h; // start the next row
-            x = 0;
         }
     }
 }

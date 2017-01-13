@@ -206,6 +206,8 @@ public void addAdditionalPLAF()
         jmEdit = new javax.swing.JMenu();
         jmWindows = new javax.swing.JMenu();
         jmiTile = new javax.swing.JMenuItem(new TileAction(jdpMain));
+        jmiCascade = new javax.swing.JMenuItem(new CascadeAction(jdpMain));
+        jmiMinimize = new javax.swing.JMenuItem(new MinimizeAllWindowsAction(jdpMain));
         jmLookAndFeel = new javax.swing.JMenu();
         jmOptions = new javax.swing.JMenu();
         jmiLoadUserOptions = new javax.swing.JMenuItem(new GetPropertiesAction(this,myProps));
@@ -322,6 +324,12 @@ public void addAdditionalPLAF()
 
         jmiTile.setText("Tile");
         jmWindows.add(jmiTile);
+
+        jmiCascade.setText("Cascade");
+        jmWindows.add(jmiCascade);
+
+        jmiMinimize.setText("Minimize All");
+        jmWindows.add(jmiMinimize);
 
         jmbMain.add(jmWindows);
 
@@ -575,9 +583,11 @@ public void addAdditionalPLAF()
     private javax.swing.JMenu jmWindows;
     private javax.swing.JMenuBar jmbMain;
     private javax.swing.JMenuItem jmiAddFrame;
+    private javax.swing.JMenuItem jmiCascade;
     private javax.swing.JMenuItem jmiDatabaseInformation;
     private javax.swing.JMenuItem jmiExit;
     private javax.swing.JMenuItem jmiLoadUserOptions;
+    private javax.swing.JMenuItem jmiMinimize;
     private javax.swing.JMenuItem jmiOpenDB;
     private javax.swing.JMenuItem jmiSaveUserOptions;
     private javax.swing.JMenuItem jmiTestTablePanel;
