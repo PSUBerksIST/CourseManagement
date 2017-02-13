@@ -26,7 +26,6 @@ import javax.swing.UnsupportedLookAndFeelException;
 
 import org.apache.commons.cli.*;
 
-
 /**
  *
  * @author whb108
@@ -34,6 +33,9 @@ import org.apache.commons.cli.*;
  * 
  * 
  ******************* MODIFICATION LOG *****************************************
+ * 
+ * 2017 January 31 - General housekeeping (formatted code for readability and 
+ *                   consistency). - RQZ
  * 
  * 2016 April 07   - Added library and loaded plaf for Pago Soft plaf. - WHB
  * 
@@ -59,126 +61,119 @@ import org.apache.commons.cli.*;
  *      pgslookandfeel-1.1.2.jar http://www.pagosoft.com/projects/pgslookandfeel/
  *      JavaGPE_3DLF-2.5.jar  http://www.markus-hillenbrand.de/3dlf/
  */
+
 public class jfMain extends JFrame {
 
     int intWindowCounter = 0;
     ButtonGroup bgLAF = new ButtonGroup();
-    
+
     CommandLine myCL;
     String strUserPrefsFile;
-    
+
     private boolean bDebugging = true;
     public Connection dbConnection;
     public DBConnection dbc;
- 
+
     private Properties myProps;
+
     /**
      * Creates new form jfMain
      */
-    public jfMain(String[] strArgs) 
-    {
-       myProps = new Properties();
-       initComponents();
-       addAdditionalPLAF();
-     
-       dbc = new DBConnection(this);
-       setLocationByPlatform(true);
-       addWindowListener(new java.awt.event.WindowAdapter() 
-       {
-          public void windowClosing(java.awt.event.WindowEvent e) 
-          {
-             try 
-             {
-                  jmiSaveUserOptions.doClick();
-                if (dbConnection != null)
-                   dbConnection.close();
-             } // try to close the database connection
-             catch (SQLException ex) 
-             {
-                Logger.getLogger(jfMain.class.getName()).log(Level.SEVERE, null, ex);
-             } // catch
-                  System.exit(0);
+    public jfMain(String[] strArgs) {
+        myProps = new Properties();
+        initComponents();
+        addAdditionalPLAF();
+
+        dbc = new DBConnection(this);
+        setLocationByPlatform(true);
+        
+        addWindowListener(new java.awt.event.WindowAdapter() {
+            public void windowClosing(java.awt.event.WindowEvent e) {
+                try {
+                    jmiSaveUserOptions.doClick();
+                    if (dbConnection != null) {
+                        dbConnection.close();
+                    }
+                } // try to close the database connection
+                catch (SQLException ex) {
+                    Logger.getLogger(jfMain.class.getName()).log(Level.SEVERE, null, ex);
+                } // catch
+                System.exit(0);
             }
         });
+        
         try {
             myCL = CommandLineOptions.processCommandLine(strArgs);
             strUserPrefsFile = myCL.getOptionValue("u");
-           HelpFormatter formatter = new HelpFormatter();
-           formatter.printHelp( "Course Management", CommandLineOptions.makeOptions() );
-        } 
-        catch (ParseException ex) 
-        {
+            HelpFormatter formatter = new HelpFormatter();
+            formatter.printHelp("Course Management", CommandLineOptions.makeOptions());
+        } catch (ParseException ex) {
             Logger.getLogger(jfMain.class.getName()).log(Level.SEVERE, null, ex);
         }
+        
         jmiLoadUserOptions.doClick();
         jmiOpenDB.doClick();
-          MakeLookAndFeelMenu();
+        MakeLookAndFeelMenu();
     } // 
 
-public void finalize()  
-{
-        try 
-        {
+    public void finalize() {
+        try {
             jmiSaveUserOptions.doClick();
             dbConnection.close();
-        } 
-        catch (SQLException ex) 
-        {
+        } catch (SQLException ex) {
             Logger.getLogger(jfMain.class.getName()).log(Level.SEVERE, null, ex);
         }
-}
+    }
 
-
-public void addAdditionalPLAF()
-{
-     UIManager.installLookAndFeel("Pago Soft", "com.pagosoft.plaf.PgsLookAndFeel");
+    public void addAdditionalPLAF() {
+        UIManager.installLookAndFeel("Pago Soft", "com.pagosoft.plaf.PgsLookAndFeel");
         UIManager.installLookAndFeel("3D", "de.hillenbrand.swing.plaf.threeD.ThreeDLookAndFeel");
-}
-    
-    public void MakeLookAndFeelMenu()
-    {
-        
-       
-         LookAndFeelInfo[] lfAll = UIManager.getInstalledLookAndFeels();
-        
-         
-        for (LookAndFeelInfo lfAll1 : lfAll) 
-        {
-           System.out.println("Look and Feel - " + lfAll1.getName() 
-              + " Class - " + lfAll1.getClassName());
-          JRadioButtonMenuItem jmiTemp = new JRadioButtonMenuItem(); 
-          jmiTemp.setText(lfAll1.getName());
-          String strLAF = UIManager.getLookAndFeel().getClass().getName();
-     //       System.out.println("strLAF = " + strLAF); 
-     //       System.out.println("LAF Info name = " + lfAll1.getName());
-     //       System.out.println("LAF Info class name = " + lfAll1.getClassName());
-          if (strLAF.equalsIgnoreCase(lfAll1.getClassName()))
-          {
-             jmiTemp.setSelected(true);
-          } // is this the current L&F?
-          
-           jmiTemp.addActionListener((java.awt.event.ActionEvent evt) -> {
-              try {
-                 UIManager.setLookAndFeel(lfAll1.getClassName());
-                 myProps.setProperty(ApplicationConstants.LAF, lfAll1.getClassName());
-                 SwingUtilities.updateComponentTreeUI(this);
-                 jbTile.doClick();
-         //        this.pack();
-                
-                 JRadioButtonMenuItem jrbTemp = (JRadioButtonMenuItem)evt.getSource();
-                 jrbTemp.setSelected(true);
-                  jmiSaveUserOptions.doClick();
-              } 
-              
-              catch (ClassNotFoundException | InstantiationException | IllegalAccessException | UnsupportedLookAndFeelException ex) {
-                 Logger.getLogger(jfMain.class.getName()).log(Level.SEVERE, null, ex);
-              }
-           });
-          bgLAF.add(jmiTemp);
-          jmLookAndFeel.add(jmiTemp);
-       } // for
+        UIManager.installLookAndFeel("Black Eye", "de.javasoft.plaf.synthetica.SyntheticaBlackEyeLookAndFeel");
+    }
+
+    public void MakeLookAndFeelMenu() {
+
+        LookAndFeelInfo[] lfAll = UIManager.getInstalledLookAndFeels();
+
+        for (LookAndFeelInfo lfAll2 : lfAll) {
+            
+            System.out.println("Look and Feel - " + lfAll2.getName()
+                    + " Class - " + lfAll2.getClassName());
+            
+            JRadioButtonMenuItem jmiTemp = new JRadioButtonMenuItem();
+            jmiTemp.setText(lfAll2.getName());
+            String strLAF = UIManager.getLookAndFeel().getClass().getName();
+            
+            //       System.out.println("strLAF = " + strLAF); 
+            //       System.out.println("LAF Info name = " + lfAll1.getName());
+            //       System.out.println("LAF Info class name = " + lfAll1.getClassName());
+            
+            if (strLAF.equalsIgnoreCase(lfAll2.getClassName())) {
+                jmiTemp.setSelected(true);
+            } // is this the current L&F?
+
+            jmiTemp.addActionListener((java.awt.event.ActionEvent evt) -> {
+                try {
+                    UIManager.setLookAndFeel(lfAll2.getClassName());
+                    myProps.setProperty(ApplicationConstants.LAF, lfAll2.getClassName());
+                    SwingUtilities.updateComponentTreeUI(this);
+                    
+                    //jbTile.doClick(); //why???????
+                    //        this.pack();
+
+                    JRadioButtonMenuItem jrbTemp = (JRadioButtonMenuItem) evt.getSource();
+                    jrbTemp.setSelected(true);
+                    jmiSaveUserOptions.doClick();
+                } catch (ClassNotFoundException | InstantiationException | IllegalAccessException | UnsupportedLookAndFeelException ex) {
+                    Logger.getLogger(jfMain.class.getName()).log(Level.SEVERE, null, ex);
+                }
+            });
+            
+            bgLAF.add(jmiTemp);
+            jmLookAndFeel.add(jmiTemp);
+        } // for
     } // MakeLookAndFeelMenu
-    
+
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -410,137 +405,124 @@ public void addAdditionalPLAF()
     }// </editor-fold>//GEN-END:initComponents
 
     private void jbAddFrameActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jbAddFrameActionPerformed
-        // TODO add your handling code here:
-        CreateFrame();
-      
         
+        CreateFrame();
+
+
     }//GEN-LAST:event_jbAddFrameActionPerformed
 
     private void jmiAddFrameActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jmiAddFrameActionPerformed
-        // TODO add your handling code here:
+        
         CreateFrame();
     }//GEN-LAST:event_jmiAddFrameActionPerformed
 
     private void jmiTestTablePanelActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jmiTestTablePanelActionPerformed
-        try 
-        {
-           System.out.println("Made it to test2");
-           
-           while (dbConnection == null)
-           {
-               JOptionPane.showMessageDialog(this, 
-                  "You must connect to a database!", 
-                  "No Database Connection", JOptionPane.ERROR_MESSAGE);
-               jmiOpenDB.doClick();
-           } // check for database connection
-           
+        try {
+            System.out.println("Made it to test2");
 
+            while (dbConnection == null) {
+                JOptionPane.showMessageDialog(this,
+                        "You must connect to a database!",
+                        "No Database Connection", JOptionPane.ERROR_MESSAGE);
+                jmiOpenDB.doClick();
+            } // check for database connection
 
-           Statement stTest = dbConnection.createStatement();
-           String strQuery = "Select * from AttendanceCode";
-            
-           strQuery = (String) JOptionPane.showInputDialog(this, "Enter a query", strQuery);
-           ResultSet rsAttendance = stTest.executeQuery(strQuery);
-           
-           
-           int[] arrColsToHide = {};
-           jpTableDisplay jpDisplay = new jpTableDisplay(rsAttendance,0, arrColsToHide);    
-            
+            Statement stTest = dbConnection.createStatement();
+            String strQuery = "Select * from AttendanceCode";
+
+            strQuery = (String) JOptionPane.showInputDialog(this, "Enter a query", strQuery);
+            ResultSet rsAttendance = stTest.executeQuery(strQuery);
+
+            int[] arrColsToHide = {};
+            jpTableDisplay jpDisplay = new jpTableDisplay(rsAttendance, 0, arrColsToHide);
+
             jpDisplay.setPreferredSize(new Dimension(900, 900));
-           CreateFrame(jpDisplay, strQuery);
+            CreateFrame(jpDisplay, strQuery);
         } catch (SQLException ex) {
             Logger.getLogger(jfMain.class.getName()).log(Level.SEVERE, null, ex);
         }
-            
-        
+
+
     }//GEN-LAST:event_jmiTestTablePanelActionPerformed
 
     private void jbCourseActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jbCourseActionPerformed
         JPanel Course = new jpCourse(dbConnection);
         Course.setName("Course");
-        CreateFrame(Course,Course.getName());
-        // TODO add your handling code here:
+        CreateFrame(Course, Course.getName());
+        
     }//GEN-LAST:event_jbCourseActionPerformed
 
     private void jbClassActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jbClassActionPerformed
         JPanel Class = new jpClass(dbConnection);
         Class.setName("Class");
-        CreateFrame(Class,Class.getName());
-        // TODO add your handling code here:
+        CreateFrame(Class, Class.getName());
+        
     }//GEN-LAST:event_jbClassActionPerformed
 
     private void jbAssignmentsActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jbAssignmentsActionPerformed
         JPanel Assignment = new jpAssignment(dbConnection);
         Assignment.setName("Assignment");
-        CreateFrame(Assignment,Assignment.getName());
-        // TODO add your handling code here:
+        CreateFrame(Assignment, Assignment.getName());
     }//GEN-LAST:event_jbAssignmentsActionPerformed
 
     private void jbDocumentsActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jbDocumentsActionPerformed
         JPanel Resources = new jpResources(dbConnection);
         Resources.setName("Resources");
-        CreateFrame(Resources,Resources.getName());        // TODO add your handling code here:
+        CreateFrame(Resources, Resources.getName());
     }//GEN-LAST:event_jbDocumentsActionPerformed
 
     private void jmiSaveUserOptionsActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jmiSaveUserOptionsActionPerformed
-        // TODO add your handling code here:
+
     }//GEN-LAST:event_jmiSaveUserOptionsActionPerformed
 
     private void jmiOpenDBActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jmiOpenDBActionPerformed
-        // TODO add your handling code here:
+        
     }//GEN-LAST:event_jmiOpenDBActionPerformed
 
     private void jmiLoadUserOptionsActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jmiLoadUserOptionsActionPerformed
-        // TODO add your handling code here:
+        
     }//GEN-LAST:event_jmiLoadUserOptionsActionPerformed
 
     private void jmiDatabaseInformationActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jmiDatabaseInformationActionPerformed
-        // TODO add your handling code here:
-         JOptionPane.showMessageDialog(this, new jpSQLiteDBInfo(dbConnection, myProps),
-                   "Connection Information for " + myProps.getProperty(ApplicationConstants.LAST_DB),
-                   JOptionPane.INFORMATION_MESSAGE);
+        
+        JOptionPane.showMessageDialog(this, new jpSQLiteDBInfo(dbConnection, myProps),
+                "Connection Information for " + myProps.getProperty(ApplicationConstants.LAST_DB),
+                JOptionPane.INFORMATION_MESSAGE);
     }//GEN-LAST:event_jmiDatabaseInformationActionPerformed
 
     private void jmiExitActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jmiExitActionPerformed
-        // TODO add your handling code here:
+        
         System.exit(0);
     }//GEN-LAST:event_jmiExitActionPerformed
 
-    private void CreateFrame()
-    {
-        
+    private void CreateFrame() {
+
         JPanel jpTemp = new JPanel();
         jpTemp.setPreferredSize(new Dimension(200, 200));
-       
-        CreateFrame(jpTemp,"");
-      
-      
-        
+
+        CreateFrame(jpTemp, "");
+
     } // CreateFrame
-    
-    
-    private void CreateFrame(JPanel jpIn, String strIn)
-    {
-            intWindowCounter++;
-        
-        JInternalFrame jifTemp = new JInternalFrame("New Frame " 
-                + intWindowCounter + " - " + strIn,true,true,true,true);
-        
+
+    private void CreateFrame(JPanel jpIn, String strIn) {
+        intWindowCounter++;
+
+        JInternalFrame jifTemp = new JInternalFrame("New Frame "
+                + intWindowCounter + " - " + strIn, true, true, true, true);
+
         jifTemp.add(jpIn);
         jifTemp.pack();
-        
+
         jdpMain.add(jifTemp);
         jifTemp.setVisible(true);
-       
+
     }
-    
+
     /**
      * @param args the command line arguments
      */
     public static void main(String args[]) {
         //</editor-fold>
-        
-        
 
         try {
             for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
@@ -549,20 +531,17 @@ public void addAdditionalPLAF()
                     break;
                 }
             }
-        } catch (ClassNotFoundException ex) {
+        } catch (ClassNotFoundException | InstantiationException 
+                | IllegalAccessException | javax.swing.UnsupportedLookAndFeelException ex) {
             java.util.logging.Logger.getLogger(jfMain.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (InstantiationException ex) {
-            java.util.logging.Logger.getLogger(jfMain.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (IllegalAccessException ex) {
-            java.util.logging.Logger.getLogger(jfMain.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (javax.swing.UnsupportedLookAndFeelException ex) {
-            java.util.logging.Logger.getLogger(jfMain.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        }java.awt.EventQueue.invokeLater(new Runnable() {
-                public void run() {
-                                           
-                    new jfMain(args).setVisible(true);
-                 
-                }
+        }
+        
+        java.awt.EventQueue.invokeLater(new Runnable() {
+            public void run() {
+
+                new jfMain(args).setVisible(true);
+
+            }
         });
     }
 

@@ -98,9 +98,7 @@
           <SubComponents>
             <MenuItem class="javax.swing.JMenuItem" name="jmiLoadUserOptions">
               <Properties>
-                <Property name="text" type="java.lang.String" editor="org.netbeans.modules.form.RADConnectionPropertyEditor">
-                  <Connection code="&quot;Load Options&quot;" type="code"/>
-                </Property>
+                <Property name="text" type="java.lang.String" value="Load Options"/>
               </Properties>
               <Events>
                 <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="jmiLoadUserOptionsActionPerformed"/>
