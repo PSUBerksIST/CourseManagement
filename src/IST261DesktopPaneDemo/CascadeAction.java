@@ -36,22 +36,22 @@ public class CascadeAction extends AbstractAction {
      
     public void actionPerformed(ActionEvent ev) {
          
-        int x = 0;
+      int x = 0;
       int y = 0;
       int width = desktop.getWidth() / 2;
       int height = desktop.getHeight() / 2;
+      JInternalFrame[] frame = desktop.getAllFrames();
 
-
-      for (JInternalFrame frame : desktop.getAllFrames())
+      for (int i = frame.length - 1; i >= 0; i--)
       {
-         if (!frame.isIcon())
+         if (!frame[i].isIcon())
          {
             try
             {
                // try to make maximized frames resizable; this might be vetoed
-               frame.setMaximum(false);
-               frame.reshape(x, y, width, height);
-int  frameDistance = frame.getHeight() - frame.getContentPane().getHeight();
+               frame[i].setMaximum(false);
+               frame[i].reshape(x, y, width, height);
+               int  frameDistance = frame[i].getHeight() - frame[i].getContentPane().getHeight();
                x += frameDistance;
                y += frameDistance;
                // wrap around at the desktop edge
