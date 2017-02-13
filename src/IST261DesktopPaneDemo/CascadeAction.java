@@ -19,6 +19,11 @@ package IST261DesktopPaneDemo;
  * 2016 February 02 -  Initial program creation
 
  */
+
+
+
+
+
 import java.awt.event.ActionEvent;
 import java.beans.PropertyVetoException;
 import javax.swing.AbstractAction;
@@ -27,6 +32,12 @@ import javax.swing.JInternalFrame;
  
 public class CascadeAction extends AbstractAction {
      
+    // This is a test to see if changes MERGEEEEE - RQZ
+
+private void fakeMethod(){
+
+}
+    
     private JDesktopPane desktop; // the desktop to work with
      
     public CascadeAction(JDesktopPane desk) {
