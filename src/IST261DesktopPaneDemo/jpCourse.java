@@ -658,7 +658,7 @@ public class jpCourse extends JPanel{
         JPanel AddCourse = new jpAddCourse(dbConnection);
         AddCourse.setName("Add Course");
         CreateFrame(AddCourse);
-        // TODO add your handling code here:
+        
     }//GEN-LAST:event_jbAddCourseActionPerformed
 
     /**
@@ -667,7 +667,7 @@ public class jpCourse extends JPanel{
      * @param evt 
      */
     private void jcbCourseActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jcbCourseActionPerformed
-        // TODO add your handling code here:
+        
         
         if(jcbCourse.getSelectedItem() != null)
         {
@@ -755,7 +755,7 @@ public class jpCourse extends JPanel{
         jdAddResources.add(AddAssignments);
         jdAddResources.setSize(500, 400);
         jdAddResources.setVisible(true);
-        // TODO add your handling code here:
+        
     }//GEN-LAST:event_jbAddResourceActionPerformed
 
     private void jbDeleteDocumentActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jbDeleteDocumentActionPerformed
@@ -793,12 +793,12 @@ public class jpCourse extends JPanel{
             JOptionPane.showMessageDialog(PopUp,"Select Resources first!");
         }
 
-        // TODO add your handling code here:
+        
     }//GEN-LAST:event_jbDeleteDocumentActionPerformed
 
     private void jbRefreshActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jbRefreshActionPerformed
         setResources(selectedCourse);
-        // TODO add your handling code here:
+        
     }//GEN-LAST:event_jbRefreshActionPerformed
 
     // Variables declaration - do not modify//GEN-BEGIN:variables

@@ -259,22 +259,22 @@ public class jpAddCourse extends javax.swing.JPanel
 
     private void jtfNotesActionPerformed(java.awt.event.ActionEvent evt)//GEN-FIRST:event_jtfNotesActionPerformed
     {//GEN-HEADEREND:event_jtfNotesActionPerformed
-        // TODO add your handling code here:
+        
     }//GEN-LAST:event_jtfNotesActionPerformed
 
     private void jcbWritingEmphasisActionPerformed(java.awt.event.ActionEvent evt)//GEN-FIRST:event_jcbWritingEmphasisActionPerformed
     {//GEN-HEADEREND:event_jcbWritingEmphasisActionPerformed
-        // TODO add your handling code here:
+        
     }//GEN-LAST:event_jcbWritingEmphasisActionPerformed
 
     private void jcbCreditsActionPerformed(java.awt.event.ActionEvent evt)//GEN-FIRST:event_jcbCreditsActionPerformed
     {//GEN-HEADEREND:event_jcbCreditsActionPerformed
-        // TODO add your handling code here:
+        
     }//GEN-LAST:event_jcbCreditsActionPerformed
 
     private void jtfCourseTitleActionPerformed(java.awt.event.ActionEvent evt)//GEN-FIRST:event_jtfCourseTitleActionPerformed
     {//GEN-HEADEREND:event_jtfCourseTitleActionPerformed
-        // TODO add your handling code here:
+        
     }//GEN-LAST:event_jtfCourseTitleActionPerformed
 
 private void getInput()

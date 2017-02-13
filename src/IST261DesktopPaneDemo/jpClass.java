@@ -5,9 +5,6 @@
  */
 package IST261DesktopPaneDemo;
 
-import java.awt.BorderLayout;
-import java.awt.Component;
-import java.awt.Dimension;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.sql.Connection;
@@ -19,18 +16,14 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import javax.swing.JCheckBox;
 import javax.swing.JDialog;
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
-import javax.swing.JTable;
 import static javax.swing.WindowConstants.DISPOSE_ON_CLOSE;
-import static javax.swing.WindowConstants.DO_NOTHING_ON_CLOSE;
 import javax.swing.event.TableModelEvent;
 import javax.swing.event.TableModelListener;
 import javax.swing.table.DefaultTableModel;
-import javax.swing.table.TableCellRenderer;
 import javax.swing.table.TableColumn;
 import net.proteanit.sql.DbUtils;
 
@@ -85,6 +78,7 @@ public class jpClass extends javax.swing.JPanel {
  
         try {
              
+            //TODO: Add some sort of array to keep track of primary keys - RQZ
             ResultSet rs = st.executeQuery("select Number from Course order by ID asc");
 
             while (rs.next()) {
@@ -948,7 +942,7 @@ public class jpClass extends javax.swing.JPanel {
     private void jbAddClassActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jbAddClassActionPerformed
         JPanel AddClass = new jpAddClass(dbConnection);
         AddClass.setName("Add Class");
-        CreateFrame(AddClass);        // TODO add your handling code here:
+        CreateFrame(AddClass);
     }//GEN-LAST:event_jbAddClassActionPerformed
 
     private void jbNewAssignmentActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jbNewAssignmentActionPerformed
@@ -958,6 +952,8 @@ public class jpClass extends javax.swing.JPanel {
         jdAddAssignments.add(AddAssignments);
         jdAddAssignments.setSize(500, 400);
         jdAddAssignments.setVisible(true);
+        
+        System.out.println("Current Selected Class: " + intSelectedClassID);
         
         // on close reset the table to refresh 
         jdAddAssignments.setDefaultCloseOperation(DISPOSE_ON_CLOSE);
@@ -986,19 +982,19 @@ public class jpClass extends javax.swing.JPanel {
         else{
             jcbClass.setEnabled(false);
         }
-        // TODO add your handling code here:
+        
     }//GEN-LAST:event_jcbCourseItemStateChanged
 
     private void jcbCourseActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jcbCourseActionPerformed
-        // TODO add your handling code here:
+        
     }//GEN-LAST:event_jcbCourseActionPerformed
 
     private void jcbClassActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jcbClassActionPerformed
-        // TODO add your handling code here:
+        
     }//GEN-LAST:event_jcbClassActionPerformed
 
     private void jcbClassItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_jcbClassItemStateChanged
-        // TODO add your handling code here:
+        
         if(jcbClass.getSelectedIndex()>0){
             jbEditClass.setEnabled(true);
             intSelectedClassID = jcbClass.getSelectedIndex();
@@ -1019,7 +1015,7 @@ public class jpClass extends javax.swing.JPanel {
     }//GEN-LAST:event_jcbClassItemStateChanged
 
     private void jbRefreshAssignmentActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jbRefreshAssignmentActionPerformed
-        // TODO add your handling code here:
+        
         
         // Any panel you want to refresh under assignments tab when asked, set here
         setStudents();
@@ -1029,7 +1025,7 @@ public class jpClass extends javax.swing.JPanel {
     }//GEN-LAST:event_jbRefreshAssignmentActionPerformed
 
     private void jbSaveActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jbSaveActionPerformed
-        // TODO add your handling code here:
+        
         
         JDialog jdAddStudents = new JDialog();
         JPanel AddStudents = new jpAddStudent(intSelectedClassID, dbConnection);
@@ -1114,11 +1110,11 @@ public class jpClass extends javax.swing.JPanel {
         JPanel AddClass = new jpAddClass(dbConnection,  jcbCourse.getSelectedIndex(), Integer.parseInt(jcbClass.getSelectedItem() + ""));
         AddClass.setName("Add Class");
         CreateFrame(AddClass); 
-        // TODO add your handling code here:
+        
     }//GEN-LAST:event_jbEditClassActionPerformed
 
     private void jbDeleteActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jbDeleteActionPerformed
-        // TODO add your handling code here:
+        
         
         try {
             System.out.println("Remove Selected Students fired! Class ID: " + intSelectedClassID);

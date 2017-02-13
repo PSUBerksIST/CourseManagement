@@ -107,7 +107,6 @@ public class jpDocument extends javax.swing.JPanel {
 //        JPanel AddDocument = new jpAddDocument();
 //        AddDocument.setName("Add Document");
 //        CreateFrame(AddDocument);
-//        // TODO add your handling code here:
     }//GEN-LAST:event_jbAddDocumentActionPerformed
 
 

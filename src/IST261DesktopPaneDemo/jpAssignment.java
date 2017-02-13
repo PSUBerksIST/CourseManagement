@@ -281,7 +281,7 @@ public class jpAssignment extends javax.swing.JPanel {
         jdAddAssignment.add(AddAssignment);
         jdAddAssignment.setSize(565, 580);
         jdAddAssignment.setVisible(true);
-        // TODO add your handling code here:
+        
         // on close reset the table to refresh 
         jdAddAssignment.setDefaultCloseOperation(DISPOSE_ON_CLOSE);
         jdAddAssignment.addWindowListener(new WindowAdapter() {

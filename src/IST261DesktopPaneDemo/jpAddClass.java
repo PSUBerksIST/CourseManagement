@@ -11,12 +11,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
-import java.sql.Time;
-import java.text.DateFormat;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.Arrays;
-import java.util.Date;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JComboBox;
@@ -893,6 +888,8 @@ public class jpAddClass extends javax.swing.JPanel {
     
 // This sets all the State and Finish drop down times for the each day of the week
     private void setStartTimes(){
+        
+        //TODO: Look into improving this - RQZ
         Times = new String [] 
         {
             "8:00","8:05","8:10","8:15","8:20","8:25","8:30","8:35","8:40","8:45","8:50","8:55",
@@ -911,6 +908,7 @@ public class jpAddClass extends javax.swing.JPanel {
             "9:00","9:05","9:10","9:15","9:20","9:25","9:30","9:35","9:40","9:45","9:50","9:55",
             "10:00","10:05","10:10","10:15","10:20","10:25","10:30","10:35","10:40","10:45","10:50","10:55"
         };
+        
         jcbMondayStart.removeAllItems();
         jcbTuesdayStart.removeAllItems();
         jcbWednesdayStart.removeAllItems();
@@ -1029,7 +1027,7 @@ public class jpAddClass extends javax.swing.JPanel {
                      strWednesdayEnd,strThursdayStart,strThursdayEnd,strFridayStart,strFridayEnd,strSaturdayStart,
                      strSaturdayEnd,strSundayStart,strSundayEnd,strNotes);
         this.getTopLevelAncestor().setVisible(false);
-        // TODO add your handling code here:
+        
     }//GEN-LAST:event_jbAddClassFinishActionPerformed
 
 // this inserts all the data into the class table in the DB
@@ -1088,12 +1086,12 @@ public class jpAddClass extends javax.swing.JPanel {
             jcbMondayStart.setEnabled(false);
             jcbMondayEnd.setEnabled(false);
         }
-        // TODO add your handling code here:
+        
     }//GEN-LAST:event_jchbMondayStateChanged
 
 //This is enables and disables the Tuesday times
     private void jchbTuesdayStateChanged(javax.swing.event.ChangeEvent evt) {//GEN-FIRST:event_jchbTuesdayStateChanged
-        // TODO add your handling code here:
+        
         if(jchbTuesday.isSelected()){
             jcbTuesdayStart.setEnabled(true);
             jcbTuesdayEnd.setEnabled(true);
@@ -1106,7 +1104,7 @@ public class jpAddClass extends javax.swing.JPanel {
 
 //This is enables and disables the Sunday times
     private void jchbSundayStateChanged(javax.swing.event.ChangeEvent evt) {//GEN-FIRST:event_jchbSundayStateChanged
-        // TODO add your handling code here:
+        
         if(jchbSunday.isSelected()){
             jcbSundayStart.setEnabled(true);
             jcbSundayEnd.setEnabled(true);
@@ -1119,7 +1117,7 @@ public class jpAddClass extends javax.swing.JPanel {
 
 //This is enables and disables the Saturday times
     private void jchbSaturdayStateChanged(javax.swing.event.ChangeEvent evt) {//GEN-FIRST:event_jchbSaturdayStateChanged
-        // TODO add your handling code here:
+        
         if(jchbSaturday.isSelected()){
             jcbSaturdayStart.setEnabled(true);
             jcbSaturdayEnd.setEnabled(true);
@@ -1132,7 +1130,7 @@ public class jpAddClass extends javax.swing.JPanel {
 
 //This is enables and disables the Friday times
     private void jchbFridayStateChanged(javax.swing.event.ChangeEvent evt) {//GEN-FIRST:event_jchbFridayStateChanged
-        // TODO add your handling code here:
+        
         if(jchbFriday.isSelected()){
             jcbFridayStart.setEnabled(true);
             jcbFridayEnd.setEnabled(true);
@@ -1145,7 +1143,7 @@ public class jpAddClass extends javax.swing.JPanel {
 
 //This is enables and disables the Thursday times
     private void jchbThursdayStateChanged(javax.swing.event.ChangeEvent evt) {//GEN-FIRST:event_jchbThursdayStateChanged
-        // TODO add your handling code here:
+        
         if(jchbThursday.isSelected()){
             jcbThursdayStart.setEnabled(true);
             jcbThursdayEnd.setEnabled(true);
@@ -1158,7 +1156,7 @@ public class jpAddClass extends javax.swing.JPanel {
 
 //This is enables and disables the Wednesday times
     private void jchbWednesdayStateChanged(javax.swing.event.ChangeEvent evt) {//GEN-FIRST:event_jchbWednesdayStateChanged
-        // TODO add your handling code here:
+        
         if(jchbWednesday.isSelected()){
             jcbWednesdayStart.setEnabled(true);
             jcbWednesdayEnd.setEnabled(true);
@@ -1171,7 +1169,7 @@ public class jpAddClass extends javax.swing.JPanel {
 
 //calls method to set end time for day
     private void jcbMondayStartItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_jcbMondayStartItemStateChanged
-        // TODO add your handling code here:
+        
         if(jcbMondayStart.getSelectedIndex()>=0){
             setEndTime(jcbMondayEnd,jcbMondayStart.getSelectedIndex(),Arrays.copyOfRange(Times, jcbMondayStart.getSelectedIndex()+1, Times.length));
         }
@@ -1179,7 +1177,7 @@ public class jpAddClass extends javax.swing.JPanel {
 
 //calls method to set end time for day
     private void jcbTuesdayStartItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_jcbTuesdayStartItemStateChanged
-        // TODO add your handling code here:
+        
         if(jcbTuesdayStart.getSelectedIndex()>=0){
             setEndTime(jcbTuesdayEnd,jcbTuesdayStart.getSelectedIndex(),Arrays.copyOfRange(Times, jcbTuesdayStart.getSelectedIndex()+1, Times.length));
         }
@@ -1187,7 +1185,7 @@ public class jpAddClass extends javax.swing.JPanel {
 
 //calls method to set end time for day
     private void jcbWednesdayStartItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_jcbWednesdayStartItemStateChanged
-        // TODO add your handling code here:
+        
         if(jcbWednesdayStart.getSelectedIndex()>=0){
             setEndTime(jcbWednesdayEnd,jcbWednesdayStart.getSelectedIndex(),Arrays.copyOfRange(Times, jcbWednesdayStart.getSelectedIndex()+1, Times.length));
         }
@@ -1195,7 +1193,7 @@ public class jpAddClass extends javax.swing.JPanel {
 
 //calls method to set end time for day
     private void jcbThursdayStartItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_jcbThursdayStartItemStateChanged
-        // TODO add your handling code here:
+        
         if(jcbThursdayStart.getSelectedIndex()>=0){
             setEndTime(jcbThursdayEnd,jcbThursdayStart.getSelectedIndex(),Arrays.copyOfRange(Times, jcbThursdayStart.getSelectedIndex()+1, Times.length));
         }
@@ -1203,7 +1201,7 @@ public class jpAddClass extends javax.swing.JPanel {
 
 //calls method to set end time for day
     private void jcbFridayStartItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_jcbFridayStartItemStateChanged
-        // TODO add your handling code here:
+        
         if(jcbFridayStart.getSelectedIndex()>=0){
             setEndTime(jcbFridayEnd,jcbFridayStart.getSelectedIndex(),Arrays.copyOfRange(Times, jcbFridayStart.getSelectedIndex()+1, Times.length));
         }
@@ -1211,7 +1209,7 @@ public class jpAddClass extends javax.swing.JPanel {
 
 //calls method to set end time for day
     private void jcbSaturdayStartItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_jcbSaturdayStartItemStateChanged
-        // TODO add your handling code here:
+        
         if(jcbSaturdayStart.getSelectedIndex()>=0){
             setEndTime(jcbSaturdayEnd,jcbSaturdayStart.getSelectedIndex(),Arrays.copyOfRange(Times, jcbSaturdayStart.getSelectedIndex()+1, Times.length));
         }
@@ -1219,7 +1217,7 @@ public class jpAddClass extends javax.swing.JPanel {
 
 //calls method to set end time for day
     private void jcbSundayStartItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_jcbSundayStartItemStateChanged
-        // TODO add your handling code here:
+        
         if(jcbSundayStart.getSelectedIndex()>=0){
             setEndTime(jcbSundayEnd,jcbSundayStart.getSelectedIndex(),Arrays.copyOfRange(Times, jcbSundayStart.getSelectedIndex()+1, Times.length));
         }
@@ -1271,11 +1269,11 @@ public class jpAddClass extends javax.swing.JPanel {
         
         this.getTopLevelAncestor().setVisible(false);
         
-        // TODO add your handling code here:
+        
     }//GEN-LAST:event_jbUpdateClassActionPerformed
 
     private void jcbTuesdayEndActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jcbTuesdayEndActionPerformed
-        // TODO add your handling code here:
+        
     }//GEN-LAST:event_jcbTuesdayEndActionPerformed
 
     

@@ -54,7 +54,6 @@ public class jpTableDisplay extends javax.swing.JPanel {
         } // for
             } // if there are columns to hide
         
-        //TODO 
         //TODO set columns to appropriate width
       
         
@@ -143,7 +142,7 @@ public class jpTableDisplay extends javax.swing.JPanel {
     }// </editor-fold>//GEN-END:initComponents
 
     private void formComponentResized(java.awt.event.ComponentEvent evt) {//GEN-FIRST:event_formComponentResized
-        // TODO add your handling code here:
+
         
         System.out.println("panel resized");
     }//GEN-LAST:event_formComponentResized
@@ -162,7 +161,6 @@ public class jpTableDisplay extends javax.swing.JPanel {
     } // for
     model.addRow(row);
                                      
-    // TODO add your handling code here:
     }//GEN-LAST:event_jbAddRowActionPerformed
 
 /* adding and saving a row

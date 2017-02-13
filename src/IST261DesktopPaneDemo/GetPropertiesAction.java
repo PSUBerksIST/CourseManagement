@@ -89,6 +89,9 @@ public class GetPropertiesAction extends AbstractAction {
     public void actionPerformed(ActionEvent ev) 
     {
 
+        //TODO: Add a JFileChooser when selecting 'Load Options' from JMenuItem - RQZ
+       
+        
         try {
             // Gets the path of the running application
             // TODO Test running the application from the jar file

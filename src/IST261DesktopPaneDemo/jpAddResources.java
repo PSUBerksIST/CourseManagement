@@ -111,7 +111,6 @@ public class jpAddResources extends javax.swing.JPanel {
         setDescription(jtaDescription);
         InsertToTable(strDescription);
         this.getTopLevelAncestor().setVisible(false);
-        // TODO add your handling code here:
     }//GEN-LAST:event_jbAddResourceActionPerformed
 
 

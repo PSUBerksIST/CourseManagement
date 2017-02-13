@@ -303,19 +303,19 @@ jtaViews.setCaretPosition(0);
     }// </editor-fold>//GEN-END:initComponents
 
     private void jtfDBProductVersionActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jtfDBProductVersionActionPerformed
-        // TODO add your handling code here:
+        
     }//GEN-LAST:event_jtfDBProductVersionActionPerformed
 
     private void jtfDBMajorVersionActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jtfDBMajorVersionActionPerformed
-        // TODO add your handling code here:
+        
     }//GEN-LAST:event_jtfDBMajorVersionActionPerformed
 
     private void jtfDBMinorVersionActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jtfDBMinorVersionActionPerformed
-        // TODO add your handling code here:
+        
     }//GEN-LAST:event_jtfDBMinorVersionActionPerformed
 
     private void jtfDBProductNameActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jtfDBProductNameActionPerformed
-        // TODO add your handling code here:
+        
     }//GEN-LAST:event_jtfDBProductNameActionPerformed
 
 

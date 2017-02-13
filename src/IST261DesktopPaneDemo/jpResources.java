@@ -267,7 +267,7 @@ public class jpResources extends javax.swing.JPanel {
         JPanel AddResources = new jpAddResources(dbConnection);
         AddResources.setName("Add Resources");
         CreateFrame(AddResources);
-        // TODO add your handling code here:
+        
     }//GEN-LAST:event_jbAddResourcesActionPerformed
 
     private void jbDeleteDocumentActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jbDeleteDocumentActionPerformed
@@ -308,12 +308,12 @@ public class jpResources extends javax.swing.JPanel {
         }
                                             
 
-        // TODO add your handling code here:
+        
     }//GEN-LAST:event_jbDeleteDocumentActionPerformed
 
     private void jbRefreshActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jbRefreshActionPerformed
         setResources();
-        // TODO add your handling code here:
+        
     }//GEN-LAST:event_jbRefreshActionPerformed
 
 

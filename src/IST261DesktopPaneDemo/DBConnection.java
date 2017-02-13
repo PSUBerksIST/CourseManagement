@@ -52,7 +52,7 @@ public class DBConnection {
     public Connection connectToDB(String strDBName, Properties propsIn)
     {
     
-        Connection c = null;
+        Connection c;
              
     try {
       Class.forName(strDBClass);

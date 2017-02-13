@@ -253,11 +253,11 @@ public class jpAddAssignment extends javax.swing.JPanel {
     }//GEN-LAST:event_jbAddAssignmentFinishActionPerformed
 
     private void jchbGroupAssignmentActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jchbGroupAssignmentActionPerformed
-        // TODO add your handling code here:
+        
     }//GEN-LAST:event_jchbGroupAssignmentActionPerformed
 
     private void formComponentResized(java.awt.event.ComponentEvent evt) {//GEN-FIRST:event_formComponentResized
-        // TODO add your handling code here:
+        
     }//GEN-LAST:event_formComponentResized
 
 

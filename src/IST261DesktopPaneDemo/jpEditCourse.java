@@ -5,7 +5,6 @@
  */
 package IST261DesktopPaneDemo;
 
-import java.awt.Component;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -13,8 +12,6 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import javax.swing.JDialog;
-import javax.swing.JOptionPane;
 
 /**
  *
@@ -232,11 +229,11 @@ public class jpEditCourse extends javax.swing.JPanel
     }// </editor-fold>//GEN-END:initComponents
 
     private void jtfCourseTitleActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jtfCourseTitleActionPerformed
-        // TODO add your handling code here:
+        
     }//GEN-LAST:event_jtfCourseTitleActionPerformed
 
     private void jcbDepartmentActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jcbDepartmentActionPerformed
-        // TODO add your handling code here:
+        
     }//GEN-LAST:event_jcbDepartmentActionPerformed
     private void setCourseID(int inCourseID){
         intCourseID = inCourseID;
@@ -378,7 +375,7 @@ private void setJcbDepartment()
     }//catch SQL exceptions
 }
     private void jtfPrerequisitesActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jtfPrerequisitesActionPerformed
-        // TODO add your handling code here:
+        
     }//GEN-LAST:event_jtfPrerequisitesActionPerformed
 
     private void jbUpdateButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jbUpdateButtonActionPerformed
@@ -392,7 +389,7 @@ private void setJcbDepartment()
     }//GEN-LAST:event_jbUpdateButtonActionPerformed
 
     private void jcbCreditsActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jcbCreditsActionPerformed
-        // TODO add your handling code here:
+        
     }//GEN-LAST:event_jcbCreditsActionPerformed
 
 

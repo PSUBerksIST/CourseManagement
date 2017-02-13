@@ -100,6 +100,7 @@ public class SavePropertiesAction extends AbstractAction {
     {
        
         String strFileName;
+        
         if (jfApp.strUserPrefsFile != null)
         {
             strFileName = jfApp.strUserPrefsFile;
@@ -107,9 +108,14 @@ public class SavePropertiesAction extends AbstractAction {
         else
         {
             
+            //TODO: What is this supposed to do? - RQZ
+            // What is this supposed to do??-------------
            strFileName =  myProps.getProperty(ApplicationConstants.PREFS_XML_FILE, "");
+           //---------------------------------------------
+           
         }
         
+        //TODO: Save with .xml extension, Open JFileChooser when JMenuItem 'Save Options' is clicked - RQZ
         if (strFileName.length()== 0)
         {
            JFileChooser myJFC = new JFileChooser();

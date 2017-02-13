@@ -24,6 +24,6 @@ public class ApplicationConstants
     public static String LAF = "LookAndFeel";
     public static String LAST_DB = "LastConnectedDatabase";
     public static String PREFS_XML_FILE = "UserPrefs.xml";
-    public static String DEFAULT_DB_FILE = "CourseManagement3.db3";
+    public static String DEFAULT_DB_FILE = "CourseManagement3_NEW_4.25.db3";
     
 } // ApplicationConstants
