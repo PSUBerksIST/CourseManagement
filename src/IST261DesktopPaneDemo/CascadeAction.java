@@ -17,6 +17,7 @@ package IST261DesktopPaneDemo;
  ********************* MODIFICATION LOG ************************
  *
  * 2016 February 02 -  Initial program creation
+ * 2017 February 13 -  Fixed cascade
 
  */
 import java.awt.event.ActionEvent;
