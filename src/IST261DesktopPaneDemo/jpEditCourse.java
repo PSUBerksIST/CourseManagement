@@ -252,6 +252,8 @@ public class jpEditCourse extends javax.swing.JPanel
                 jtfCourseTitle.setText(rs.getString("Title"));
                 jtaDescription.setText(rs.getString("Description"));
                 jcbCredits.setSelectedIndex(rs.getInt("Credits")-1);
+                
+                //TODO: Fix the index out of bounds exception - RQZ
                 jcbWritingEmphasis.setSelectedIndex(rs.getInt("WritingEmphasis"));
                 jcbDepartment.setSelectedIndex(rs.getInt("FKDepartment")-1);
                 jtfObjectives.setText(rs.getString("Objectives"));
