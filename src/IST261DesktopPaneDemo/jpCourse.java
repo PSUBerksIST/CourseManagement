@@ -668,9 +668,10 @@ public class jpCourse extends JPanel{
      */
     private void jcbCourseActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jcbCourseActionPerformed
         
-        
+        jbEditCourse.setEnabled(false);
         if(jcbCourse.getSelectedItem() != null)
         {
+            jbEditCourse.setEnabled(true);
             selectedCourse = Integer.parseInt(courseIds.get(jcbCourse.getSelectedIndex()).toString());
             System.out.println("Active Course Selected: (int) " + selectedCourse);
             

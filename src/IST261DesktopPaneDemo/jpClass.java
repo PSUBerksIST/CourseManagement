@@ -970,6 +970,7 @@ public class jpClass extends javax.swing.JPanel {
     }//GEN-LAST:event_jbNewAssignmentActionPerformed
 
     private void jcbCourseItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_jcbCourseItemStateChanged
+       jbEditClass.setEnabled(false);
         if(jcbCourse.getSelectedIndex()>0){
             jcbClass.setEnabled(true);
             
@@ -994,7 +995,7 @@ public class jpClass extends javax.swing.JPanel {
     }//GEN-LAST:event_jcbClassActionPerformed
 
     private void jcbClassItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_jcbClassItemStateChanged
-        
+        jbEditClass.setEnabled(false);
         if(jcbClass.getSelectedIndex()>0){
             jbEditClass.setEnabled(true);
             intSelectedClassID = jcbClass.getSelectedIndex();
