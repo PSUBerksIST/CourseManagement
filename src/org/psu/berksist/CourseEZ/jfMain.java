@@ -6,15 +6,9 @@
 package org.psu.berksist.CourseEZ;
 
 import java.awt.Dimension;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.awt.event.WindowListener;
-import java.io.File;
-import java.io.IOException;
-import java.net.URISyntaxException;
-import java.net.URL;
 import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -199,6 +193,7 @@ public class jfMain extends JFrame {
             
             jmiTemp.addActionListener((java.awt.event.ActionEvent evt) -> {
                 try {
+                    
                     UIManager.setLookAndFeel(lfAll2.getClassName());
                     myProps.setProperty(AppConstants.LAF, lfAll2.getClassName());
                     SwingUtilities.updateComponentTreeUI(this);
@@ -546,7 +541,7 @@ public class jfMain extends JFrame {
     }//GEN-LAST:event_jmiExitActionPerformed
 
     private void jmOptionsActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jmOptionsActionPerformed
-        // TODO add your handling code here:
+        
     }//GEN-LAST:event_jmOptionsActionPerformed
 
     private void CreateFrame() {
@@ -577,21 +572,18 @@ public class jfMain extends JFrame {
      * @param args the command line arguments
      */
     public static void main(String args[]) {
-        //</editor-fold>
-
-        /*try {
-            for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
+            
+        try {
+            for (LookAndFeelInfo info : UIManager.getInstalledLookAndFeels()) {
                 if ("Nimbus".equals(info.getName())) {
                     javax.swing.UIManager.setLookAndFeel(info.getClassName());
                     break;
                 }
             }
-        } catch (ClassNotFoundException | InstantiationException 
-                | IllegalAccessException | javax.swing.UnsupportedLookAndFeelException ex) {
+        } catch (Exception ex) {
             java.util.logging.Logger.getLogger(jfMain.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        }*/
-        
-        
+        }
+            
         
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
