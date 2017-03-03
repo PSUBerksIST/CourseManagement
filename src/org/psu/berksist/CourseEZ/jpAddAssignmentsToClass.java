@@ -5,6 +5,7 @@
  */
 package org.psu.berksist.CourseEZ;
 
+import java.awt.Window;
 import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -242,6 +243,8 @@ public class jpAddAssignmentsToClass extends javax.swing.JPanel {
             
             // Let the user know we have taken care of it
             JOptionPane.showMessageDialog(this,"Assignments Updated!");  
+            
+            ((Window) getRootPane().getParent()).dispose();
             
         } catch (SQLException ex) {
             Logger.getLogger(jpAddAssignmentsToClass.class.getName()).log(Level.SEVERE, null, ex);

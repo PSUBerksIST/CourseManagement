@@ -18,7 +18,7 @@
       <Group type="103" groupAlignment="0" attributes="0">
           <Group type="102" alignment="1" attributes="0">
               <EmptySpace min="-2" max="-2" attributes="0"/>
-              <Component id="jbAddClass" max="32767" attributes="0"/>
+              <Component id="jbAddClass" max="-2" attributes="0"/>
               <EmptySpace max="-2" attributes="0"/>
               <Component id="jcbCourse" min="-2" pref="118" max="-2" attributes="0"/>
               <EmptySpace max="-2" attributes="0"/>
@@ -69,6 +69,9 @@
       <Properties>
         <Property name="text" type="java.lang.String" value="Add Class"/>
       </Properties>
+      <AccessibilityProperties>
+        <Property name="AccessibleContext.accessibleDescription" type="java.lang.String" value=""/>
+      </AccessibilityProperties>
       <Events>
         <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="jbAddClassActionPerformed"/>
       </Events>
@@ -196,13 +199,13 @@
                       <EmptySpace max="-2" attributes="0"/>
                       <Component id="jScrollPane5" max="32767" attributes="0"/>
                   </Group>
-                  <Group type="102" alignment="0" attributes="0">
+                  <Group type="102" alignment="1" attributes="0">
                       <Component id="jbSave" min="-2" pref="142" max="-2" attributes="0"/>
-                      <EmptySpace type="unrelated" max="-2" attributes="0"/>
+                      <EmptySpace type="unrelated" max="32767" attributes="0"/>
                       <Component id="jbDelete" min="-2" pref="144" max="-2" attributes="0"/>
                       <EmptySpace type="separate" max="-2" attributes="0"/>
-                      <Component id="jbRefresh" max="32767" attributes="0"/>
-                      <EmptySpace max="-2" attributes="0"/>
+                      <Component id="jbRefresh" min="-2" pref="137" max="-2" attributes="0"/>
+                      <EmptySpace min="-2" pref="11" max="-2" attributes="0"/>
                   </Group>
               </Group>
             </DimensionLayout>
@@ -215,7 +218,7 @@
                       <Group type="103" groupAlignment="3" attributes="0">
                           <Component id="jbSave" alignment="3" max="32767" attributes="0"/>
                           <Component id="jbDelete" alignment="3" max="32767" attributes="0"/>
-                          <Component id="jbRefresh" alignment="3" min="-2" max="-2" attributes="0"/>
+                          <Component id="jbRefresh" alignment="0" min="-2" max="-2" attributes="0"/>
                       </Group>
                       <EmptySpace min="-2" pref="328" max="-2" attributes="0"/>
                   </Group>
