@@ -38,7 +38,7 @@ public class AppConstants
     public static String PREFS_DIR = "userprefs/";
     public static String RELATIVE_PATH; // Path for resources included with jar file
     
-    public static String ROOT_FOLDER = System.getProperty("user.dir") + "/";
+    public static String ROOT_FOLDER = System.getProperty("user.dir") + "/resources/";
     
     
     // Icon Images --------(Alphabetical)------------------------

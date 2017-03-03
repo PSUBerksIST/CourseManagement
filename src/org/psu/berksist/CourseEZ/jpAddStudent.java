@@ -211,10 +211,17 @@ public class jpAddStudent extends javax.swing.JPanel {
             tc.setCellRenderer(jtStudents.getDefaultRenderer(Boolean.class)); 
             
             // Result Set 
+            /*ResultSet result = st.executeQuery("SELECT Student.FirstName, Student.LastName, Student.EmailName, Student.StudentID,\n" +
+"                CASE WHEN Student.StudentID = ClassStudentLink.FKStudent THEN 1 ELSE -1 END AS 'Select'\n" +
+"                FROM Student\n" +
+"                LEFT JOIN ClassStudentLink ON ClassStudentLink.FKClass = " + intClassID);*/
+            
             ResultSet result = st.executeQuery("SELECT Student.FirstName, Student.LastName, Student.EmailName, Student.StudentID,\n" +
 "                CASE WHEN Student.StudentID = ClassStudentLink.FKStudent THEN 1 ELSE -1 END AS 'Select'\n" +
 "                FROM Student\n" +
-"                LEFT JOIN ClassStudentLink ON ClassStudentLink.FKClass = " + intClassID);
+"                LEFT JOIN ClassStudentLink ON ClassStudentLink.FKStudent = Student.StudentID " + 
+                 "AND ClassStudentLink.FKClass = " + intClassID);
+            
 
             int i = 0;
             while (result.next()) 
