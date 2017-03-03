@@ -5,30 +5,20 @@
  */
 package org.psu.berksist.CourseEZ;
 
-import java.awt.BorderLayout;
-import java.awt.Component;
 import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
-import static java.util.Collections.list;
 import java.util.Iterator;
 import java.util.List;
-import java.util.ListIterator;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import javax.swing.JCheckBox;
-import javax.swing.JFrame;
 import javax.swing.JOptionPane;
-import javax.swing.JPanel;
-import javax.swing.JTable;
 import javax.swing.event.TableModelEvent;
 import javax.swing.event.TableModelListener;
 import javax.swing.table.DefaultTableModel;
-import javax.swing.table.TableCellRenderer;
 import javax.swing.table.TableColumn;
-import net.proteanit.sql.DbUtils;
 
 
 public class jpAddAssignmentsToClass extends javax.swing.JPanel {
@@ -92,51 +82,6 @@ public class jpAddAssignmentsToClass extends javax.swing.JPanel {
             model.addColumn("Description");
             model.addColumn("Points");
             
-            // Set our model and also create our listeners
-            jtAssignments.getModel().addTableModelListener(new TableModelListener() {
-            @Override
-            public void tableChanged(TableModelEvent e) {
-
-                // On a table change update our local store of selectedAssignmentIDs
-                    for(int i = 0; i < jtAssignments.getModel().getRowCount(); i++)
-                    {
-
-                        int assignmentId = Integer.parseInt(jtAssignments.getModel().getValueAt(i,1).toString());
-
-                        if ((Boolean) jtAssignments.getModel().getValueAt(i,0))
-                        {  
-
-                            System.out.println("Selected ID: " + assignmentId);
-
-                            // Add the ID if we do not have it already
-                            if(!selectedAssignmentIDs.contains(assignmentId))
-                            {
-                                selectedAssignmentIDs.add(assignmentId);
-                            }
-
-                        }
-                        else
-                        {
-
-                            System.out.println("Selected ID: " + assignmentId);
-
-                            for (Iterator<Integer> iterator = selectedAssignmentIDs.iterator(); iterator.hasNext(); ) {
-                                Integer id = iterator.next();
-                                if (id == assignmentId) 
-                                {
-                                    iterator.remove();
-                                }
-                            }
-
-                      }
-
-                    }     
-                    
-                    // Show the programmer what IDs are selected
-                    System.out.println(selectedAssignmentIDs);
-                }
-
-            });
             
             // JTable will make our checkboxes for us
             TableColumn tc = jtAssignments.getColumnModel().getColumn(0);
@@ -145,9 +90,10 @@ public class jpAddAssignmentsToClass extends javax.swing.JPanel {
             
             // Result Set 
             ResultSet result = st.executeQuery("SELECT Assignments.id AS ID, Assignments.ShortName AS Name, Assignments.Description, Assignments.MaximumPoints AS Points,\n" +
-                "CASE WHEN Assignments.ID = ClassAssignmentLink.FKAssignmentID THEN 1 ELSE -1 END AS 'Selected'\n" +
+                "CASE WHEN Assignments.ID = ClassAssignmentLink.FKAssignmentID THEN 1 ELSE -1 END AS 'Selected'\n" + 
                 "FROM Assignments \n" +
-                "LEFT JOIN ClassAssignmentLink ON ClassAssignmentLink.FKClassID = " + intSelectedClassID);
+                "LEFT JOIN ClassAssignmentLink ON ClassAssignmentLink.FKAssignmentID=Assignments.ID " + 
+                "AND ClassAssignmentLink.FKClassID = " + intSelectedClassID);
 
             int i = 0;
             while (result.next()) 
@@ -157,12 +103,50 @@ public class jpAddAssignmentsToClass extends javax.swing.JPanel {
                 boolean b = (Integer.parseInt(result.getString("Selected")) != -1);
                 // Add our row to the JTable
                 model.addRow(new Object[]{ b, result.getString("ID"), result.getString("Name"), result.getString("Description"), result.getString("Points")});
+                
+                // Add to selectedAssignments if selected
+                if (b){
+                    selectedAssignmentIDs.add(result.getInt("ID"));
+                }
+                
                 // Authorize the checkbox to be editable
                 model.isCellEditable(i, 0);
                 i++;   
                 
-            }
+            } // while
 
+
+
+            // Set our model and also create our listeners
+            jtAssignments.getModel().addTableModelListener(new TableModelListener() {
+            
+            @Override
+            public void tableChanged(TableModelEvent e) {
+
+                // On a table change update our local store of selectedAssignmentIDs
+                if (e.getColumn() == 0){
+                    
+                    int assignmentID = Integer.parseInt(jtAssignments.getModel().getValueAt(e.getLastRow(),1).toString());
+                    
+                    if ((boolean) jtAssignments.getModel().getValueAt(e.getLastRow(), 0)){
+                        
+                        if (!selectedAssignmentIDs.contains(assignmentID)){
+                            selectedAssignmentIDs.add(assignmentID);
+                        }
+                    } else {
+                        if (selectedAssignmentIDs.contains(assignmentID)){
+                            selectedAssignmentIDs.remove(selectedAssignmentIDs.indexOf(assignmentID));
+                        }
+                        
+                    }
+                }
+                
+                    // Show the programmer what IDs are selected
+                    System.out.println(selectedAssignmentIDs);
+                }
+
+            });
+            
         }
         catch (SQLException ex) 
         {
@@ -257,8 +241,7 @@ public class jpAddAssignmentsToClass extends javax.swing.JPanel {
             }
             
             // Let the user know we have taken care of it
-            JFrame PopUp = new JFrame();
-            JOptionPane.showMessageDialog(PopUp,"Assignments Updated!");  
+            JOptionPane.showMessageDialog(this,"Assignments Updated!");  
             
         } catch (SQLException ex) {
             Logger.getLogger(jpAddAssignmentsToClass.class.getName()).log(Level.SEVERE, null, ex);

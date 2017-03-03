@@ -5,8 +5,6 @@
  */
 package org.psu.berksist.CourseEZ;
 
-import java.net.URL;
-
 /**
  *
  * @author admin_whb108
@@ -29,14 +27,18 @@ public class AppConstants
     
     // File Names ------------------------------------
     public static String DEFAULT_DB_FILE = "dbCourseManagement.db3";
-    public static String PREFS_XML_FILE = "UserPrefs.xml";
+    private static final String DEFAULT_XML_FILE = "UserPrefs.xml";
+    
+    public static String PREFS_XML_FILE;
     
     
     // Directories ------------------------------------
     public static String DB_DIR = "database/";
     public static String IMAGE_DIR = "images/";
     public static String PREFS_DIR = "userprefs/";
-    public static String RELATIVE_PATH;
+    public static String RELATIVE_PATH; // Path for resources included with jar file
+    
+    public static String ROOT_FOLDER = System.getProperty("user.dir") + "/";
     
     
     // Icon Images --------(Alphabetical)------------------------
@@ -55,14 +57,19 @@ public class AppConstants
     public static void setRelativePath(String strPath)
     {
          RELATIVE_PATH = strPath;
+         
          setDirectories();
     }
     
     public static void setDirectories()
     {
-        DB_DIR = RELATIVE_PATH + DB_DIR;
+        // Packages Directories (jar)
         IMAGE_DIR = RELATIVE_PATH + IMAGE_DIR;
-        PREFS_DIR = RELATIVE_PATH + PREFS_DIR;
+        
+        
+        DB_DIR = ROOT_FOLDER + DB_DIR;
+        PREFS_DIR = ROOT_FOLDER + PREFS_DIR;
+        
         setFiles();
     }
     
@@ -79,6 +86,19 @@ public class AppConstants
         TILE_ICON_16 = IMAGE_DIR + TILE_ICON_16;
         TILE_ICON_32 = IMAGE_DIR + TILE_ICON_32;
         
+        PREFS_XML_FILE = PREFS_DIR + DEFAULT_XML_FILE;
+        
+        
+    }
+    
+    public static void resetXMLToDefault()
+    {
+        PREFS_XML_FILE = PREFS_DIR + DEFAULT_XML_FILE;
+    }
+    
+    public static void setXMLFile(String strPath)
+    {
+        PREFS_XML_FILE = strPath;
     }
     
 } // ApplicationConstants

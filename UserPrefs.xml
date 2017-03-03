@@ -1,7 +1,0 @@
-<?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<!DOCTYPE properties SYSTEM "http://java.sun.com/dtd/properties.dtd">
-<properties>
-<comment>Edit this file at your own risk.  It will be overwritten at program exit.</comment>
-<entry key="LastConnectedDatabase">G:\IST 261\Main\CourseManagement\resources\database\old-backup\CourseManagement3_NEW_4.25.db3</entry>
-<entry key="LookAndFeel">javax.swing.plaf.nimbus.NimbusLookAndFeel</entry>
-</properties>

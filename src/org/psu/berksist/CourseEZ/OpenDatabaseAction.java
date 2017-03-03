@@ -28,7 +28,6 @@ package org.psu.berksist.CourseEZ;
 
  */
 
-import java.util.prefs.*;
 import java.awt.event.ActionEvent;
 import java.net.MalformedURLException;
 import java.net.URL;
@@ -38,7 +37,6 @@ import java.util.logging.Logger;
 import javax.swing.AbstractAction;
 import javax.swing.Action;
 import javax.swing.ImageIcon;
-import javax.swing.JOptionPane;
  
 public class OpenDatabaseAction extends AbstractAction {
      
@@ -102,7 +100,7 @@ public class OpenDatabaseAction extends AbstractAction {
     
     public void actionPerformed(ActionEvent ev) 
     {
-        jfApp.dbConnection = jfApp.dbc.connectToDB(propUserProperties);
+        jfApp.jpMainPanel.dbConnection = jfApp.jpMainPanel.dbc.connectToDB(propUserProperties);
                   
     } // actionPerformed
 }

@@ -38,12 +38,12 @@ public class DBConnection {
     private static final String strDBClass = "org.sqlite.JDBC";
     private static final String strJDBCString = "jdbc:sqlite:";
     private boolean bDebugging = true;
-    private jfMain jfApp;
+    private jpMain jfApp;
   //  private static String strDBName = "C:\\Users\\admin_whb108\\Dropbox\\CourseManagement\\CourseManagement2.db3";
   //   private static String strDBName = "F:\\NetBeansProjects\\JDBCDemo1\\src\\JDBCDemo1\\Address.db3";
   //  private static String strDBName = "E:\\NetBeansProjects\\JDBCDemoV3\\JDBCDemo\\CleanedCourseManagement2.db3";
     
-    public DBConnection(jfMain jfmIn)
+    public DBConnection(jpMain jfmIn)
     {
         jfApp = jfmIn;
     }    

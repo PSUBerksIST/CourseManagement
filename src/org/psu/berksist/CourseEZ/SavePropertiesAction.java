@@ -26,9 +26,6 @@ package org.psu.berksist.CourseEZ;
  */
 import java.util.Properties;
 import java.awt.event.ActionEvent;
-import java.awt.image.BufferedImage;
-import java.beans.PropertyVetoException;
-import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -36,7 +33,6 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import javax.imageio.ImageIO;
 import javax.swing.*;
  
 public class SavePropertiesAction extends AbstractAction {
@@ -44,6 +40,8 @@ public class SavePropertiesAction extends AbstractAction {
     
     private jfMain jfApp; // the desktop to work with
     private Properties myProps;
+    
+    //private String strUserPrefsFile;
     
     
     public SavePropertiesAction(jfMain jfIn, Properties propsIn)
@@ -104,25 +102,9 @@ public class SavePropertiesAction extends AbstractAction {
  
     public void actionPerformed(ActionEvent ev) 
     {
-       
-        String strFileName;
-        
-        if (jfApp.strUserPrefsFile != null)
-        {
-            strFileName = jfApp.strUserPrefsFile;
-        }
-        else
-        {
-            
-            //TODO: What is this supposed to do? - RQZ
-            // What is this supposed to do??-------------
-           strFileName =  myProps.getProperty(AppConstants.PREFS_XML_FILE, "");
-           //---------------------------------------------
-           
-        }
         
         //TODO: Save with .xml extension, Open JFileChooser when JMenuItem 'Save Options' is clicked - RQZ
-        if (strFileName.length()== 0)
+        /*if (strFileName.length()== 0)
         {
            JFileChooser myJFC = new JFileChooser();
            myJFC.setDialogTitle("Save Preferences");
@@ -134,12 +116,16 @@ public class SavePropertiesAction extends AbstractAction {
                    Logger.getLogger(SavePropertiesAction.class.getName()).log(Level.SEVERE, null, ex);
                }
            } // file selected
-        } // if no file name was retrieved from preferences
+        } // if no file name was retrieved from preferences */
+        
         try {
             String strWarning = "Edit this file at your own risk.  " 
                     + "It will be overwritten at program exit.";
-            myProps.storeToXML(new FileOutputStream(strFileName),strWarning);
+            myProps.storeToXML(new FileOutputStream(AppConstants.PREFS_XML_FILE),strWarning);
         } catch (FileNotFoundException ex) {
+            
+            
+            
             Logger.getLogger(SavePropertiesAction.class.getName()).log(Level.SEVERE, null, ex);
         } catch (IOException ex) {
             Logger.getLogger(SavePropertiesAction.class.getName()).log(Level.SEVERE, null, ex);

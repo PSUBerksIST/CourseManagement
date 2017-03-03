@@ -6,10 +6,6 @@
 package org.psu.berksist.CourseEZ;
 
 import java.awt.Dimension;
-import java.awt.event.WindowAdapter;
-import java.awt.event.WindowEvent;
-import java.awt.event.WindowListener;
-import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
@@ -18,16 +14,14 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.ButtonGroup;
 import javax.swing.JFrame;
-import javax.swing.JInternalFrame;
 import javax.swing.JOptionPane;
-import javax.swing.JPanel;
 import javax.swing.JRadioButtonMenuItem;
+import javax.swing.LookAndFeel;
 import javax.swing.SwingUtilities;
 import javax.swing.UIManager;
 import javax.swing.UIManager.LookAndFeelInfo;
 import javax.swing.UnsupportedLookAndFeelException;
 
-import org.apache.commons.cli.*;
 
 /**
  *
@@ -67,107 +61,59 @@ import org.apache.commons.cli.*;
 
 public class jfMain extends JFrame {
 
-    int intWindowCounter = 0;
+    
     ButtonGroup bgLAF = new ButtonGroup();
 
-    CommandLine myCL;
-    String strUserPrefsFile;
-
-    private boolean bDebugging = true;
-    public Connection dbConnection;
-    public DBConnection dbc;
+    //private boolean bDebugging = true;
 
     private Properties myProps;
     
-    GetPropertiesAction gpa;// = new GetPropertiesAction(this, myProps);
+    public jpMain jpMainPanel;
+    private AppControl appControl;
+    
+    GetPropertiesAction gpa;
     SavePropertiesAction spa;
     
-    private String strRelPath = jfMain.class.getProtectionDomain().getCodeSource().getLocation().toString();
     
 
     /**
      * Creates new form jfMain
      */
-    public jfMain(String[] strArgs) {
+    public jfMain(Properties propsIn, GetPropertiesAction gpaIn, AppControl appControlIn) 
+    {
         
-        checkPath();
+        this(propsIn, gpaIn, appControlIn, new jpMain());
         
-        myProps = new Properties();
-        gpa = new GetPropertiesAction(this, myProps);
-        spa = new SavePropertiesAction(this, myProps);
-        
-        initComponents();
-        addAdditionalPLAF();
-        
-
-        dbc = new DBConnection(this);
-        setLocationByPlatform(true);
-        
-        addWindowListener(new WindowCloseListener());
-        
-        
-        try {
-            myCL = CommandLineOptions.processCommandLine(strArgs);
-            // Set requested UserPrefs file
-            strUserPrefsFile = myCL.getOptionValue("u");
-            
-            HelpFormatter formatter = new HelpFormatter();
-            formatter.printHelp("Course Management", CommandLineOptions.makeOptions());
-            
-        } catch (ParseException ex) {
-            Logger.getLogger(jfMain.class.getName()).log(Level.SEVERE, null, ex);
-        }
-        
-        jmiLoadUserOptions.doClick();
         jmiOpenDB.doClick();
-        MakeLookAndFeelMenu();
         
     } // jfMain
-
-    private class WindowCloseListener extends WindowAdapter implements WindowListener
-    {
-        @Override
-        public void windowClosing(WindowEvent we) 
-        {
-            try {
-                jmiSaveUserOptions.doClick();
-                if (dbConnection != null) {
-                    dbConnection.close();
-                }
-            } // try to close the database connection
-            catch (SQLException ex) {
-                Logger.getLogger(jfMain.class.getName()).log(Level.SEVERE, null, ex);
-            } // catch
-            System.exit(0);
-        }
-    }
     
-    public void finalize() {
-        try {
-            jmiSaveUserOptions.doClick();
-            dbConnection.close();
-        } catch (SQLException ex) {
-            Logger.getLogger(jfMain.class.getName()).log(Level.SEVERE, null, ex);
-        }
-    }
-    
-    private void checkPath()
+    public jfMain(Properties propsIn, GetPropertiesAction gpaIn, AppControl appControlIn, jpMain jpIn)
     {
-        // If it's a jar file, add the following pre and suffix to the path
-        if (strRelPath.endsWith(".jar")){
-            strRelPath = "jar:" + strRelPath + "!/";
-        }
+        myProps = propsIn;
+        appControl = appControlIn;
         
-        // Set the relative path in the AppConstants
-        AppConstants.setRelativePath(strRelPath);
-    }
+        gpa = gpaIn;
+        gpa.setFrame(this);
+        
+        spa = new SavePropertiesAction(this, myProps);
+        
+        jpMainPanel = jpIn;
+        
+        initComponents();
+
+        setContentPane(jpMainPanel);
+        
+        // Run app centered on screen
+        setLocationRelativeTo(null);
+        
+        MakeLookAndFeelMenu();
+        
+        
+        this.setVisible(true);
+    } // jfMain
     
 
-    public void addAdditionalPLAF() {
-        UIManager.installLookAndFeel("Pago Soft", "com.pagosoft.plaf.PgsLookAndFeel");
-        UIManager.installLookAndFeel("3D", "de.hillenbrand.swing.plaf.threeD.ThreeDLookAndFeel");
-        UIManager.installLookAndFeel("Black Eye", "de.javasoft.plaf.synthetica.SyntheticaBlackEyeLookAndFeel");
-    }
 
     public void MakeLookAndFeelMenu() {
 
@@ -182,9 +128,6 @@ public class jfMain extends JFrame {
             jmiTemp.setText(lfAll2.getName());
             String strLAF = UIManager.getLookAndFeel().getClass().getName();
             
-            //       System.out.println("strLAF = " + strLAF); 
-            //       System.out.println("LAF Info name = " + lfAll1.getName());
-            //       System.out.println("LAF Info class name = " + lfAll1.getClassName());
             
             if (strLAF.equalsIgnoreCase(lfAll2.getClassName())) {
                 jmiTemp.setSelected(true);
@@ -195,13 +138,21 @@ public class jfMain extends JFrame {
                 try {
                     
                     UIManager.setLookAndFeel(lfAll2.getClassName());
+                    
+                    LookAndFeel laf = UIManager.getLookAndFeel();
+                    
+                    
+                    
                     myProps.setProperty(AppConstants.LAF, lfAll2.getClassName());
                     SwingUtilities.updateComponentTreeUI(this);
                     
-
+                    // Recreate frame
+                    appControl.restartApp(jpMainPanel);
+                    
                     JRadioButtonMenuItem jrbTemp = (JRadioButtonMenuItem) evt.getSource();
                     jrbTemp.setSelected(true);
                     jmiSaveUserOptions.doClick();
+                    
                 } catch (ClassNotFoundException | InstantiationException | IllegalAccessException | UnsupportedLookAndFeelException ex) {
                     Logger.getLogger(jfMain.class.getName()).log(Level.SEVERE, null, ex);
                 }
@@ -222,14 +173,6 @@ public class jfMain extends JFrame {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        jdpMain = new javax.swing.JDesktopPane();
-        jtbMain = new javax.swing.JToolBar();
-        jbAddFrame = new javax.swing.JButton();
-        jbTile = new javax.swing.JButton(new TileAction(jdpMain));
-        jbCourse = new javax.swing.JButton();
-        jbClass = new javax.swing.JButton();
-        jbAssignments = new javax.swing.JButton();
-        jbDocuments = new javax.swing.JButton();
         jmbMain = new javax.swing.JMenuBar();
         jmFile = new javax.swing.JMenu();
         jmiAddFrame = new javax.swing.JMenuItem();
@@ -239,9 +182,9 @@ public class jfMain extends JFrame {
         jmiExit = new javax.swing.JMenuItem();
         jmEdit = new javax.swing.JMenu();
         jmWindows = new javax.swing.JMenu();
-        jmiTile = new javax.swing.JMenuItem(new TileAction(jdpMain));
-        jmiCascade = new javax.swing.JMenuItem(new CascadeAction(jdpMain));
-        jmiMinimize = new javax.swing.JMenuItem(new MinimizeAllWindowsAction(jdpMain));
+        jmiTile = new javax.swing.JMenuItem(new TileAction(jpMainPanel.jdpMain));
+        jmiCascade = new javax.swing.JMenuItem(new CascadeAction(jpMainPanel.jdpMain));
+        jmiMinimize = new javax.swing.JMenuItem(new MinimizeAllWindowsAction(jpMainPanel.jdpMain));
         jmLookAndFeel = new javax.swing.JMenu();
         jmOptions = new javax.swing.JMenu();
         jmiLoadUserOptions = new javax.swing.JMenuItem(gpa);
@@ -252,66 +195,8 @@ public class jfMain extends JFrame {
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setTitle("Course EZ");
 
-        javax.swing.GroupLayout jdpMainLayout = new javax.swing.GroupLayout(jdpMain);
-        jdpMain.setLayout(jdpMainLayout);
-        jdpMainLayout.setHorizontalGroup(
-            jdpMainLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 947, Short.MAX_VALUE)
-        );
-        jdpMainLayout.setVerticalGroup(
-            jdpMainLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 455, Short.MAX_VALUE)
-        );
-
-        jtbMain.setFloatable(false);
-        jtbMain.setRollover(true);
-        jtbMain.setToolTipText("");
-
-        jbAddFrame.setText("Add");
-        jbAddFrame.setToolTipText("Create and add new window");
-        jbAddFrame.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jbAddFrameActionPerformed(evt);
-            }
-        });
-        jtbMain.add(jbAddFrame);
-
-        jbTile.setText("");
-        jbTile.setToolTipText("");
-        jbTile.setFocusable(false);
-        jbTile.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
-        jbTile.setIconTextGap(-17);
-        jbTile.setMinimumSize(new java.awt.Dimension(36, 36));
-        jbTile.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
-        jtbMain.add(jbTile);
-
-        jbCourse.setText("Course");
-        jbCourse.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jbCourseActionPerformed(evt);
-            }
-        });
-
-        jbClass.setText("Class");
-        jbClass.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jbClassActionPerformed(evt);
-            }
-        });
-
-        jbAssignments.setText("Assignments");
-        jbAssignments.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jbAssignmentsActionPerformed(evt);
-            }
-        });
-
-        jbDocuments.setText("Resources");
-        jbDocuments.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jbDocumentsActionPerformed(evt);
-            }
-        });
+        jmbMain.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
+        jmbMain.setDebugGraphicsOptions(javax.swing.DebugGraphics.NONE_OPTION);
 
         jmFile.setMnemonic('F');
         jmFile.setText("File");
@@ -414,65 +299,33 @@ public class jfMain extends JFrame {
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(layout.createSequentialGroup()
-                .addContainerGap()
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(layout.createSequentialGroup()
-                        .addComponent(jdpMain)
-                        .addContainerGap())
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                        .addComponent(jbCourse)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addComponent(jbClass)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jbAssignments)
-                        .addGap(18, 18, 18)
-                        .addComponent(jbDocuments)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(jtbMain, javax.swing.GroupLayout.PREFERRED_SIZE, 577, javax.swing.GroupLayout.PREFERRED_SIZE))))
+            .addGap(0, 967, Short.MAX_VALUE)
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(layout.createSequentialGroup()
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                        .addComponent(jbCourse)
-                        .addComponent(jbClass)
-                        .addComponent(jbAssignments)
-                        .addComponent(jbDocuments))
-                    .addComponent(jtbMain, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jdpMain)
-                .addGap(20, 20, 20))
+            .addGap(0, 513, Short.MAX_VALUE)
         );
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
-    private void jbAddFrameActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jbAddFrameActionPerformed
-        
-        CreateFrame();
-
-
-    }//GEN-LAST:event_jbAddFrameActionPerformed
-
     private void jmiAddFrameActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jmiAddFrameActionPerformed
         
-        CreateFrame();
+        jpMainPanel.CreateFrame();
     }//GEN-LAST:event_jmiAddFrameActionPerformed
 
     private void jmiTestTablePanelActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jmiTestTablePanelActionPerformed
         try {
             System.out.println("Made it to test2");
 
-            while (dbConnection == null) {
+            while (jpMainPanel.dbConnection == null) {
                 JOptionPane.showMessageDialog(this,
                         "You must connect to a database!",
                         "No Database Connection", JOptionPane.ERROR_MESSAGE);
                 jmiOpenDB.doClick();
             } // check for database connection
 
-            Statement stTest = dbConnection.createStatement();
+            Statement stTest = jpMainPanel.dbConnection.createStatement();
             String strQuery = "Select * from AttendanceCode";
 
             strQuery = (String) JOptionPane.showInputDialog(this, "Enter a query", strQuery);
@@ -482,39 +335,13 @@ public class jfMain extends JFrame {
             jpTableDisplay jpDisplay = new jpTableDisplay(rsAttendance, 0, arrColsToHide);
 
             jpDisplay.setPreferredSize(new Dimension(900, 900));
-            CreateFrame(jpDisplay, strQuery);
+            jpMainPanel.CreateFrame(jpDisplay, strQuery);
         } catch (SQLException ex) {
             Logger.getLogger(jfMain.class.getName()).log(Level.SEVERE, null, ex);
         }
 
 
     }//GEN-LAST:event_jmiTestTablePanelActionPerformed
-
-    private void jbCourseActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jbCourseActionPerformed
-        JPanel Course = new jpCourse(dbConnection);
-        Course.setName("Course");
-        CreateFrame(Course, Course.getName());
-        
-    }//GEN-LAST:event_jbCourseActionPerformed
-
-    private void jbClassActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jbClassActionPerformed
-        JPanel Class = new jpClass(dbConnection);
-        Class.setName("Class");
-        CreateFrame(Class, Class.getName());
-        
-    }//GEN-LAST:event_jbClassActionPerformed
-
-    private void jbAssignmentsActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jbAssignmentsActionPerformed
-        JPanel Assignment = new jpAssignment(dbConnection);
-        Assignment.setName("Assignment");
-        CreateFrame(Assignment, Assignment.getName());
-    }//GEN-LAST:event_jbAssignmentsActionPerformed
-
-    private void jbDocumentsActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jbDocumentsActionPerformed
-        JPanel Resources = new jpResources(dbConnection);
-        Resources.setName("Resources");
-        CreateFrame(Resources, Resources.getName());
-    }//GEN-LAST:event_jbDocumentsActionPerformed
 
     private void jmiSaveUserOptionsActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jmiSaveUserOptionsActionPerformed
 
@@ -530,7 +357,7 @@ public class jfMain extends JFrame {
 
     private void jmiDatabaseInformationActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jmiDatabaseInformationActionPerformed
         
-        JOptionPane.showMessageDialog(this, new jpSQLiteDBInfo(dbConnection, myProps),
+        JOptionPane.showMessageDialog(this, new jpSQLiteDBInfo(jpMainPanel.dbConnection, myProps),
                 "Connection Information for " + myProps.getProperty(AppConstants.LAST_DB),
                 JOptionPane.INFORMATION_MESSAGE);
     }//GEN-LAST:event_jmiDatabaseInformationActionPerformed
@@ -544,30 +371,9 @@ public class jfMain extends JFrame {
         
     }//GEN-LAST:event_jmOptionsActionPerformed
 
-    private void CreateFrame() {
-
-        JPanel jpTemp = new JPanel();
-        jpTemp.setPreferredSize(new Dimension(200, 200));
-
-        CreateFrame(jpTemp, "");
-
-    } // CreateFrame
-
-    private void CreateFrame(JPanel jpIn, String strIn) {
-        intWindowCounter++;
-
-        JInternalFrame jifTemp = new JInternalFrame("New Frame "
-                + intWindowCounter + " - " + strIn, true, true, true, true);
-
-        jifTemp.add(jpIn);
-        jifTemp.pack();
-
-        jdpMain.add(jifTemp);
-        jifTemp.setVisible(true);
-
-    }
-
     
+
+    //jfMain test;
     /**
      * @param args the command line arguments
      */
@@ -585,24 +391,22 @@ public class jfMain extends JFrame {
         }
             
         
+        
+        
+        
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
 
-                new jfMain(args).setVisible(true);
+                
+                //new jfMain(args);//.setVisible(true);
 
             }
         });
     }
 
+
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JPopupMenu.Separator jSeparator1;
-    private javax.swing.JButton jbAddFrame;
-    private javax.swing.JButton jbAssignments;
-    private javax.swing.JButton jbClass;
-    private javax.swing.JButton jbCourse;
-    private javax.swing.JButton jbDocuments;
-    public javax.swing.JButton jbTile;
-    private javax.swing.JDesktopPane jdpMain;
     private javax.swing.JMenu jmEdit;
     private javax.swing.JMenu jmFile;
     private javax.swing.JMenu jmHelp;
@@ -620,6 +424,5 @@ public class jfMain extends JFrame {
     private javax.swing.JMenuItem jmiSaveUserOptions;
     private javax.swing.JMenuItem jmiTestTablePanel;
     private javax.swing.JMenuItem jmiTile;
-    private javax.swing.JToolBar jtbMain;
     // End of variables declaration//GEN-END:variables
 }

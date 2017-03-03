@@ -18,8 +18,8 @@ package org.psu.berksist.CourseEZ;
 
  */
 import java.awt.event.ActionEvent;
-import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
@@ -39,11 +39,25 @@ public class GetPropertiesAction extends AbstractAction {
     private jfMain jfApp; // the desktop to work with
     private Properties myProps; 
     
-    public GetPropertiesAction(jfMain jfIn, Properties propsIn) 
+    //private String strUserPrefsFile;
+    
+    public GetPropertiesAction(Properties propsIn) 
     {
         super("Get Properties");
-        jfApp = jfIn;
+        
+        //strUserPrefsFile = strUserFileIn;
         myProps = propsIn;
+        
+        configureAction();
+        
+    }
+    
+    public void setFrame(jfMain jfIn)
+    {
+        jfApp = jfIn;
+    }
+    
+    private void configureAction(){
         
         try {
             
@@ -62,35 +76,7 @@ public class GetPropertiesAction extends AbstractAction {
         putValue(Action.NAME, "Get Properties");
           
         putValue(Action.SHORT_DESCRIPTION,"Get Properties From File");
-          
-        /*
-        Possible properties for putValue(property, value)
-        see https://docs.oracle.com/javase/8/docs/api/javax/swing/AbstractAction.html#putValue(java.lang.String,%20java.lang.Object)
         
-        ACCELERATOR_KEY, ACTION_COMMAND_KEY, DEFAULT, DISPLAYED_MNEMONIC_INDEX_KEY, LARGE_ICON_KEY, LONG_DESCRIPTION, MNEMONIC_KEY, NAME, SELECTED_KEY, SHORT_DESCRIPTION, SMALL_ICON
-        
-        Examples from Deitel Advanced Java HTP
-        
-          // set Action name
-      putValue( Action.NAME, "Exit" );
-      
-      // set Action icon
-      putValue( Action.SMALL_ICON, new ImageIcon(
-         getClass().getResource( "images/EXIT.gif" ) ) );
-      
-      // set Action short description (tooltip text)
-      putValue( Action.SHORT_DESCRIPTION, 
-         "Exit Application" );
-      
-      // set Action mnemonic key
-      putValue( Action.MNEMONIC_KEY, 
-         new Integer( 'x' ) );
-      
-      // disable exitAction and associated GUI components
-      setEnabled( false );
-      
-        
-        */
     }
     
     public void actionPerformed(ActionEvent ev) 
@@ -98,76 +84,76 @@ public class GetPropertiesAction extends AbstractAction {
 
         //TODO: Add a JFileChooser when selecting 'Load Options' from JMenuItem - RQZ
        
-        
-        try {
-            // Gets the path of the running application
-            // TODO Test running the application from the jar file
-            
-            String path = new File(".").getCanonicalPath();
-            
-            
-            String strFileName;
-            
-            // If a preferences file was indicated from the command line
-            // parameters, use it.  If not set it to the default name
-            // in application path
-            
-            if(jfApp.strUserPrefsFile != null)
-            {
-                strFileName = jfApp.strUserPrefsFile;
-            }
-            else
-            {
-                System.out.println("THIS");
-                
-                strFileName = path + "\\" + AppConstants.PREFS_XML_FILE;
-                jfApp.strUserPrefsFile = strFileName;
-            }
-            
-            System.out.println("Loading..   " + strFileName + " ..");
-            
-            
-            myProps.loadFromXML(new FileInputStream(strFileName));
-            applyProperties(myProps);
-            //TODO Apply each property
-        } 
-        catch (IOException ex) 
-        {
-            Logger.getLogger(GetPropertiesAction.class.getName()).log(Level.SEVERE, null, ex);
-        }
-        
+        loadPrefs();
         
     } // actionPerformed
     
+    public void loadPrefs()
+    {
+        try {
+            
+            myProps.loadFromXML(new FileInputStream(AppConstants.PREFS_XML_FILE));
+            applyProperties(myProps);
+            
+        } catch (FileNotFoundException ex) {
+            
+            System.out.println("Bad Prefs file selected. Loading Default..");
+            
+            // Revert back to default XML file
+            AppConstants.resetXMLToDefault();
+            
+            try {
+                myProps.loadFromXML(new FileInputStream(AppConstants.PREFS_XML_FILE));
+                applyProperties(myProps);
+                
+                System.out.println("Successfully Loaded Default XML File");
+                
+            }  catch (IOException ex1) {
+                Logger.getLogger(GetPropertiesAction.class.getName()).log(Level.SEVERE, null, ex1);
+            }
+            Logger.getLogger(GetPropertiesAction.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (IOException ex) {
+            Logger.getLogger(GetPropertiesAction.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        
+    } // loadPrefs
+    
     private void applyProperties(Properties inProps)
     {
-       Enumeration e = inProps.propertyNames();
+        Enumeration e = inProps.propertyNames();
 
-       while (e.hasMoreElements()) 
-       {
-         String key = (String) e.nextElement();
+        while (e.hasMoreElements()) 
+        {
+            String key = (String) e.nextElement();
          
-         switch(key)
-         {
-             case "LookAndFeel":
-         {
-             try 
-             {
-                 UIManager.setLookAndFeel(inProps.getProperty(key));
-             } 
-             catch (ClassNotFoundException 
-                  | InstantiationException 
-                  | IllegalAccessException
-                  | UnsupportedLookAndFeelException ex) 
-             {
-                 Logger.getLogger(GetPropertiesAction.class.getName()).log(Level.SEVERE, null, ex);
-             } 
-         }
-                SwingUtilities.updateComponentTreeUI(jfApp);
-                //jfApp.jbTile.doClick();
-                break;        
-         } // switch
-         System.out.println(key + " -- " + inProps.getProperty(key));
-       } // while
+            switch(key)
+            {
+                case "LookAndFeel":
+            
+                    try 
+                    {
+                        UIManager.setLookAndFeel(inProps.getProperty(key));
+                    } 
+                    catch (ClassNotFoundException 
+                          | InstantiationException 
+                          | IllegalAccessException
+                          | UnsupportedLookAndFeelException ex) 
+                    {
+                        Logger.getLogger(GetPropertiesAction.class.getName()).log(Level.SEVERE, null, ex);
+                    } 
+                    
+                    if (jfApp != null){
+                        SwingUtilities.updateComponentTreeUI(jfApp);
+                    }
+                    
+                    break;        
+            } // switch
+         
+        
+        System.out.println(key + " -- " + inProps.getProperty(key));
+        
+        } // while
+        
     } // applyProperties
+    
 } // class GetPropertiesAction
