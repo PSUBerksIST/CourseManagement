@@ -7,6 +7,7 @@ package org.psu.berksist.CourseEZ;
 
 import java.awt.Window;
 import java.sql.Connection;
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
@@ -89,12 +90,26 @@ public class jpAddAssignmentsToClass extends javax.swing.JPanel {
             tc.setCellEditor(jtAssignments.getDefaultEditor(Boolean.class));  
             tc.setCellRenderer(jtAssignments.getDefaultRenderer(Boolean.class)); 
             
+            
+            
+            // Prepared Statement test (This will go in a different class)
+            PreparedStatement classAssigns = dbConnection.prepareStatement(
+                "SELECT Assignments.id AS ID, Assignments.ShortName AS Name, Assignments.Description, Assignments.MaximumPoints AS Points, " +
+                "CASE WHEN Assignments.ID = ClassAssignmentLink.FKAssignmentID THEN 1 ELSE -1 END AS 'Selected' " + 
+                "FROM Assignments " +
+                "LEFT JOIN ClassAssignmentLink ON ClassAssignmentLink.FKAssignmentID=Assignments.ID " + 
+                "AND ClassAssignmentLink.FKClassID = ?");
+            
+            classAssigns.setInt(1, intSelectedClassID);
+            
+            ResultSet result = classAssigns.executeQuery();
+            
             // Result Set 
-            ResultSet result = st.executeQuery("SELECT Assignments.id AS ID, Assignments.ShortName AS Name, Assignments.Description, Assignments.MaximumPoints AS Points,\n" +
+            /*ResultSet result = st.executeQuery("SELECT Assignments.id AS ID, Assignments.ShortName AS Name, Assignments.Description, Assignments.MaximumPoints AS Points,\n" +
                 "CASE WHEN Assignments.ID = ClassAssignmentLink.FKAssignmentID THEN 1 ELSE -1 END AS 'Selected'\n" + 
                 "FROM Assignments \n" +
                 "LEFT JOIN ClassAssignmentLink ON ClassAssignmentLink.FKAssignmentID=Assignments.ID " + 
-                "AND ClassAssignmentLink.FKClassID = " + intSelectedClassID);
+                "AND ClassAssignmentLink.FKClassID = " + intSelectedClassID);*/
 
             int i = 0;
             while (result.next()) 

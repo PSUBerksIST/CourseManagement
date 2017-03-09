@@ -133,7 +133,7 @@ public class jfMain extends JFrame {
                 jmiTemp.setSelected(true);
             } // is this the current L&F?
             
-            
+            // TODO: Look into seperating this into its own class - RQZ
             jmiTemp.addActionListener((java.awt.event.ActionEvent evt) -> {
                 try {
                     
@@ -371,38 +371,6 @@ public class jfMain extends JFrame {
         
     }//GEN-LAST:event_jmOptionsActionPerformed
 
-    
-
-    //jfMain test;
-    /**
-     * @param args the command line arguments
-     */
-    public static void main(String args[]) {
-            
-        try {
-            for (LookAndFeelInfo info : UIManager.getInstalledLookAndFeels()) {
-                if ("Nimbus".equals(info.getName())) {
-                    javax.swing.UIManager.setLookAndFeel(info.getClassName());
-                    break;
-                }
-            }
-        } catch (Exception ex) {
-            java.util.logging.Logger.getLogger(jfMain.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        }
-            
-        
-        
-        
-        
-        java.awt.EventQueue.invokeLater(new Runnable() {
-            public void run() {
-
-                
-                //new jfMain(args);//.setVisible(true);
-
-            }
-        });
-    }
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables

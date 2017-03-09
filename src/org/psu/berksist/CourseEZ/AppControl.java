@@ -22,30 +22,27 @@ import org.apache.commons.cli.ParseException;
 public class AppControl {
     
     private jfMain main;
-    
     private Properties myProps;
-    
     private GetPropertiesAction gpa;
-    
     private CommandLine myCL;
-    
+    private AppControl newRun;
     
     private String strRelPath = jfMain.class.getProtectionDomain().getCodeSource().getLocation().toString();
     
     public static void main(String[] args) {
         
-        AppControl newRun = new AppControl();
-        newRun.create(args);
+        //AppControl newRun = new AppControl();
+        //newRun.create(args);
+        new AppControl(args);
         
     }
     
-    public void create(String[] strArgs){
+    public AppControl(String[] strArgs){
         
+        newRun = this;
         checkPath();
         
         myProps = new Properties();
-        
-        
         
         
         addAdditionalPLAF();
@@ -71,8 +68,14 @@ public class AppControl {
         
         setWindowDecoration();
         
-        main = new jfMain(myProps, gpa, this);
-        
+        java.awt.EventQueue.invokeLater(new Runnable() {
+            public void run() {
+
+                
+                main = new jfMain(myProps, gpa, newRun);
+
+            }
+        });
         
     }
     
@@ -84,12 +87,11 @@ public class AppControl {
         
     }
     
-    public void restartApp(jpMain hey){
+    public void restartApp(jpMain jpWorkingPanel){
         
         setWindowDecoration();
         main.dispose();
-        main = new jfMain(myProps, gpa, this, hey);
-        //ain.dispose();
+        main = new jfMain(myProps, gpa, this, jpWorkingPanel);
         
     }
     
@@ -109,6 +111,5 @@ public class AppControl {
         // Set the relative path in the AppConstants
         AppConstants.setRelativePath(strRelPath);
     }
-    
     
 }

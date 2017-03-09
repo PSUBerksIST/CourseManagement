@@ -1,9 +1,6 @@
 
 package org.psu.berksist.CourseEZ;
 
-
-
-
 /**
  *
  * @author William H. Bowers (admin_whb108)
@@ -93,7 +90,6 @@ public class GetPropertiesAction extends AbstractAction {
         try {
             
             myProps.loadFromXML(new FileInputStream(AppConstants.PREFS_XML_FILE));
-            applyProperties(myProps);
             
         } catch (FileNotFoundException ex) {
             
@@ -104,7 +100,6 @@ public class GetPropertiesAction extends AbstractAction {
             
             try {
                 myProps.loadFromXML(new FileInputStream(AppConstants.PREFS_XML_FILE));
-                applyProperties(myProps);
                 
                 System.out.println("Successfully Loaded Default XML File");
                 
@@ -116,11 +111,14 @@ public class GetPropertiesAction extends AbstractAction {
             Logger.getLogger(GetPropertiesAction.class.getName()).log(Level.SEVERE, null, ex);
         }
         
+        applyProperties(myProps);
+        
     } // loadPrefs
     
     private void applyProperties(Properties inProps)
     {
         Enumeration e = inProps.propertyNames();
+        boolean hasLAF = false;
 
         while (e.hasMoreElements()) 
         {
@@ -133,6 +131,11 @@ public class GetPropertiesAction extends AbstractAction {
                     try 
                     {
                         UIManager.setLookAndFeel(inProps.getProperty(key));
+                        hasLAF = true;
+                        
+                        if (jfApp != null){
+                            SwingUtilities.updateComponentTreeUI(jfApp);
+                        }
                     } 
                     catch (ClassNotFoundException 
                           | InstantiationException 
@@ -142,9 +145,7 @@ public class GetPropertiesAction extends AbstractAction {
                         Logger.getLogger(GetPropertiesAction.class.getName()).log(Level.SEVERE, null, ex);
                     } 
                     
-                    if (jfApp != null){
-                        SwingUtilities.updateComponentTreeUI(jfApp);
-                    }
+                    
                     
                     break;        
             } // switch
@@ -154,6 +155,26 @@ public class GetPropertiesAction extends AbstractAction {
         
         } // while
         
+        // If no LAF was specified in xml file then use the default LAF
+        if (!hasLAF){
+            setDefaultLAF();
+        }
+        
     } // applyProperties
+    
+    private void setDefaultLAF()
+    {
+        // Sets default LAF to Nimbus
+        try {
+            for (UIManager.LookAndFeelInfo info : UIManager.getInstalledLookAndFeels()) {
+                if ("Nimbus".equals(info.getName())) {
+                    javax.swing.UIManager.setLookAndFeel(info.getClassName());
+                    break;
+                }
+            }
+        } catch (Exception ex) {
+            java.util.logging.Logger.getLogger(jfMain.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+        }
+    }
     
 } // class GetPropertiesAction
