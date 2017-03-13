@@ -28,7 +28,7 @@ public class CommandLineOptions
         Options optTemp = new Options();
       
         optTemp.addOption("h", "Display usage information");
-        optTemp.addOption("u", true, "User Properties File");
+        optTemp.addOption("u", true, "User Properties File (import)");
         return optTemp;
         
     } // makeOptions

@@ -24,13 +24,16 @@ public class jpMain extends javax.swing.JPanel {
     public Connection dbConnection;
     public DBConnection dbc;
     
+    private TileAction taTile;
     
     
     /**
      * Creates new form jpMain
      */
-    public jpMain() {
+    public jpMain() 
+    {
         initComponents();
+        taTile.setDesktop(jdpMain);
         
         dbc = new DBConnection(this);
         
@@ -86,7 +89,7 @@ public class jpMain extends javax.swing.JPanel {
         jbClass = new javax.swing.JButton();
         jtbMain = new javax.swing.JToolBar();
         jbAddFrame = new javax.swing.JButton();
-        jbTile = new javax.swing.JButton(new TileAction(jdpMain));
+        jbTile = new javax.swing.JButton(taTile = new TileAction());
         jdpMain = new javax.swing.JDesktopPane();
 
         jbDocuments.setText("Resources");

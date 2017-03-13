@@ -97,10 +97,12 @@ public class jpClass extends javax.swing.JPanel {
  
         try {
 
-            ResultSet rs = st.executeQuery("select Section from Class where FKCourse ="+intSelectedCourseID);
+            ResultSet rs = st.executeQuery("select ID, Section from Class where FKCourse = " + intSelectedCourseID);
+            //ResultSet rs = st.executeQuery("select Section from Class where FKCourse ="+intSelectedCourseID);
             while (rs.next()) {
-                jcbClass.addItem(//rs.getString("IST") + " " + 
-                        rs.getString("Section"));
+                jcbClass.addItem(new ClassInfo(rs.getInt("ID"), rs.getInt("Section")));
+                //jcbClass.addItem(//rs.getString("IST") + " " + 
+                //        rs.getString("Section"));
             }
 
         } catch (SQLException sqle) {
@@ -685,10 +687,11 @@ public class jpClass extends javax.swing.JPanel {
                 .addGap(12, 12, 12)
                 .addComponent(jScrollPane5, javax.swing.GroupLayout.PREFERRED_SIZE, 140, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addGroup(jpClassStudentsTabLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jbSave, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(jbDelete, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(jbRefresh))
+                .addGroup(jpClassStudentsTabLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jbRefresh)
+                    .addGroup(jpClassStudentsTabLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                        .addComponent(jbSave, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(jbDelete, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
                 .addGap(328, 328, 328))
         );
 
@@ -1000,7 +1003,9 @@ public class jpClass extends javax.swing.JPanel {
         jbEditClass.setEnabled(false);
         if(jcbClass.getSelectedIndex()>0){
             jbEditClass.setEnabled(true);
-            intSelectedClassID = jcbClass.getSelectedIndex();
+            //intSelectedClassID = jcbClass.getSelectedIndex();
+            
+            intSelectedClassID = ((ClassInfo) jcbClass.getSelectedItem()).getIntID();
             
             System.out.println("Active Class ID Selected: (int) " + intSelectedClassID);
             

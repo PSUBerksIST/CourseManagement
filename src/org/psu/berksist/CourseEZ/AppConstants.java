@@ -5,6 +5,8 @@
  */
 package org.psu.berksist.CourseEZ;
 
+import javax.swing.UIManager;
+
 /**
  *
  * @author admin_whb108
@@ -21,15 +23,21 @@ package org.psu.berksist.CourseEZ;
 */
 public class AppConstants 
 {
+    public static final String APP_ID = "CourseEZ";
+    public static final String APP_VERSION = "1";
+    
+    
     public static String LAF = "LookAndFeel";
     public static String LAST_DB = "LastConnectedDatabase";
+    
+    public static String DEFAULT_LAF = getLAFClass("Nimbus");
     
     
     // File Names ------------------------------------
     public static String DEFAULT_DB_FILE = "dbCourseManagement.db3";
-    private static final String DEFAULT_XML_FILE = "UserPrefs.xml";
+    public static String DEFAULT_XML_FILE = "UserPrefs.xml";
     
-    public static String PREFS_XML_FILE;
+    public static String IMPORTED_XML_FILE;
     
     
     // Directories ------------------------------------
@@ -42,14 +50,19 @@ public class AppConstants
     
     
     // Icon Images --------(Alphabetical)------------------------
-    public static String DB_OPEN_ICON_16 = "DatabaseAdd16.png";
-    public static String DB_OPEN_ICON_32 = "DatabaseAdd32.png";
-    public static String LOAD_ICON_16 = "DatabaseAdd16.png";
-    public static String LOAD_ICON_32 = "DatabaseAdd32.png";
-    public static String MINIMIZE_ICON_16 = "TileIcon16.png";
-    public static String MINIMIZE_ICON_32 = "TileIcon32.png";
-    public static String SAVE_ICON_16 = "DatabaseAdd16.png";
-    public static String SAVE_ICON_32 = "DatabaseAdd32.png";
+    public static String APP_ICON = "AppIcon-temp.png";
+    public static String CASCADE_ICON_16 = "CascadeIcon16.png";
+    public static String CASCADE_ICON_32 = "CascadeIcon32.png";
+    public static String DB_OPEN_ICON_16 = "DatabaseIcon16.png";
+    public static String DB_OPEN_ICON_32 = "DatabaseIcon32.png";
+    public static String EXIT_ICON_16 = "ExitIcon16.png";
+    public static String EXIT_ICON_32 = "ExitIcon32.png";
+    public static String LOAD_ICON_16 = "ImportIcon16.png";
+    public static String LOAD_ICON_32 = "ImportIcon32.png";
+    public static String MINIMIZE_ICON_16 = "MinimizeIcon16.png";
+    public static String MINIMIZE_ICON_32 = "MinimizeIcon32.png";
+    public static String SAVE_ICON_16 = "ExportIcon16.png";
+    public static String SAVE_ICON_32 = "ExportIcon32.png";
     public static String TILE_ICON_16 = "TileIcon16.png";
     public static String TILE_ICON_32 = "TileIcon32.png";
     
@@ -75,8 +88,13 @@ public class AppConstants
     
     public static void setFiles()
     {
+        APP_ICON = IMAGE_DIR + APP_ICON;
+        CASCADE_ICON_16 = IMAGE_DIR + CASCADE_ICON_16;
+        CASCADE_ICON_32 = IMAGE_DIR + CASCADE_ICON_32;
         DB_OPEN_ICON_16 = IMAGE_DIR + DB_OPEN_ICON_16;
         DB_OPEN_ICON_32 = IMAGE_DIR + DB_OPEN_ICON_32;
+        EXIT_ICON_16 = IMAGE_DIR + EXIT_ICON_16;
+        EXIT_ICON_32 = IMAGE_DIR + EXIT_ICON_32;
         LOAD_ICON_16 = IMAGE_DIR + LOAD_ICON_16;
         LOAD_ICON_32 = IMAGE_DIR + LOAD_ICON_32;
         MINIMIZE_ICON_16 = IMAGE_DIR + MINIMIZE_ICON_16;
@@ -86,19 +104,31 @@ public class AppConstants
         TILE_ICON_16 = IMAGE_DIR + TILE_ICON_16;
         TILE_ICON_32 = IMAGE_DIR + TILE_ICON_32;
         
-        PREFS_XML_FILE = PREFS_DIR + DEFAULT_XML_FILE;
-        
+        IMPORTED_XML_FILE = PREFS_DIR + DEFAULT_XML_FILE;
+        DEFAULT_XML_FILE = PREFS_DIR + DEFAULT_XML_FILE;
         
     }
     
-    public static void resetXMLToDefault()
+    /*public static void resetXMLToDefault()
     {
         PREFS_XML_FILE = PREFS_DIR + DEFAULT_XML_FILE;
-    }
+    }*/
     
     public static void setXMLFile(String strPath)
     {
-        PREFS_XML_FILE = strPath;
+        IMPORTED_XML_FILE = strPath;
+    }
+    
+    private static String getLAFClass(String strLAFIn)
+    {
+        // Gets the class name of the specified Look and Feel
+        for (UIManager.LookAndFeelInfo info : UIManager.getInstalledLookAndFeels()) {
+            if (strLAFIn.equals(info.getName())) {
+                return info.getClassName();
+            }
+        }
+
+        return "";
     }
     
 } // ApplicationConstants

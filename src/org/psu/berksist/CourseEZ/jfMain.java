@@ -6,6 +6,8 @@
 package org.psu.berksist.CourseEZ;
 
 import java.awt.Dimension;
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
@@ -13,6 +15,7 @@ import java.util.Properties;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.ButtonGroup;
+import javax.swing.ImageIcon;
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 import javax.swing.JRadioButtonMenuItem;
@@ -69,7 +72,7 @@ public class jfMain extends JFrame {
     private Properties myProps;
     
     public jpMain jpMainPanel;
-    private AppControl appControl;
+    public AppControl appControl;
     
     GetPropertiesAction gpa;
     SavePropertiesAction spa;
@@ -103,6 +106,14 @@ public class jfMain extends JFrame {
         initComponents();
 
         setContentPane(jpMainPanel);
+        
+        try {
+            ImageIcon img = new ImageIcon( new URL(AppConstants.APP_ICON));
+            setIconImage(img.getImage());
+        } catch (MalformedURLException ex) {
+            Logger.getLogger(jfMain.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        
         
         // Run app centered on screen
         setLocationRelativeTo(null);
@@ -162,7 +173,7 @@ public class jfMain extends JFrame {
             jmLookAndFeel.add(jmiTemp);
         } // for
     } // MakeLookAndFeelMenu
-
+    
     
     /**
      * This method is called from within the constructor to initialize the form.
@@ -179,7 +190,7 @@ public class jfMain extends JFrame {
         jmiOpenDB = new javax.swing.JMenuItem(new OpenDatabaseAction(this, myProps));
         jmiTestTablePanel = new javax.swing.JMenuItem();
         jSeparator1 = new javax.swing.JPopupMenu.Separator();
-        jmiExit = new javax.swing.JMenuItem();
+        jmiExit = new javax.swing.JMenuItem(new ExitAction());
         jmEdit = new javax.swing.JMenu();
         jmWindows = new javax.swing.JMenu();
         jmiTile = new javax.swing.JMenuItem(new TileAction(jpMainPanel.jdpMain));
@@ -263,7 +274,7 @@ public class jfMain extends JFrame {
             }
         });
 
-        jmiLoadUserOptions.setText("Load Options");
+        jmiLoadUserOptions.setText("Import Options");
         jmiLoadUserOptions.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jmiLoadUserOptionsActionPerformed(evt);
@@ -271,7 +282,7 @@ public class jfMain extends JFrame {
         });
         jmOptions.add(jmiLoadUserOptions);
 
-        jmiSaveUserOptions.setText("Save Options");
+        jmiSaveUserOptions.setText("Export Options");
         jmiSaveUserOptions.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jmiSaveUserOptionsActionPerformed(evt);
@@ -364,7 +375,6 @@ public class jfMain extends JFrame {
 
     private void jmiExitActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jmiExitActionPerformed
         
-        System.exit(0);
     }//GEN-LAST:event_jmiExitActionPerformed
 
     private void jmOptionsActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jmOptionsActionPerformed

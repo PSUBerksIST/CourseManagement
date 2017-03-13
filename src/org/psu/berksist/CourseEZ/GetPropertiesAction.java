@@ -11,38 +11,34 @@ package org.psu.berksist.CourseEZ;
  * 
  ********************* MODIFICATION LOG ************************
  *
+ * 2017 March 10 - Icons now work, added feature to import a file from JFileChooser,
+ *                 added a check to make sure a compatible XML file was loaded,
+ *                 general code improvements and cleaning. - RQZ
+ * 
  * 2016 February 02 -  Initial program creation
-
+ *
  */
+
 import java.awt.event.ActionEvent;
 import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
-import java.util.Enumeration;
 import java.util.Properties;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import javax.swing.AbstractAction;
-import javax.swing.Action;
-import javax.swing.ImageIcon;
-import javax.swing.SwingUtilities;
-import javax.swing.UIManager;
-import javax.swing.UnsupportedLookAndFeelException;
+import javax.swing.*;
+import javax.swing.filechooser.FileNameExtensionFilter;
  
 public class GetPropertiesAction extends AbstractAction {
      
     private jfMain jfApp; // the desktop to work with
     private Properties myProps; 
     
-    //private String strUserPrefsFile;
-    
     public GetPropertiesAction(Properties propsIn) 
     {
         super("Get Properties");
         
-        //strUserPrefsFile = strUserFileIn;
         myProps = propsIn;
         
         configureAction();
@@ -61,120 +57,101 @@ public class GetPropertiesAction extends AbstractAction {
             putValue(Action.SMALL_ICON, new ImageIcon
                     (new URL(AppConstants.LOAD_ICON_16)));
             
-            putValue( Action.LARGE_ICON_KEY, new ImageIcon
+            putValue(Action.LARGE_ICON_KEY, new ImageIcon
                     (new URL(AppConstants.LOAD_ICON_32)));
             
         } catch (MalformedURLException ex) {
             Logger.getLogger(SavePropertiesAction.class.getName()).log(Level.SEVERE, null, ex);
         }
         
-        putValue(Action.LONG_DESCRIPTION,"Load the user's properties from a file");
+        putValue(Action.LONG_DESCRIPTION,"Import the user's properties from an xml file");
           
-        putValue(Action.NAME, "Get Properties");
+        putValue(Action.NAME, "Import Properties");
           
-        putValue(Action.SHORT_DESCRIPTION,"Get Properties From File");
+        putValue(Action.SHORT_DESCRIPTION,"Import Properties From File");
         
     }
     
     public void actionPerformed(ActionEvent ev) 
     {
 
-        //TODO: Add a JFileChooser when selecting 'Load Options' from JMenuItem - RQZ
-       
-        loadPrefs();
+        // TODO: Add a JFileChooser when selecting 'Load Options' from JMenuItem - RQZ
+        
+        JFileChooser jfcImport = new JFileChooser();
+        jfcImport.setDialogTitle("Import User Preferences");
+        FileNameExtensionFilter xmlFilter = new FileNameExtensionFilter("XML Files", "xml");
+        jfcImport.setFileFilter(xmlFilter);
+        jfcImport.setAcceptAllFileFilterUsed(false);
+        jfcImport.setApproveButtonText("Import Preferences");
+        
+        boolean blnFileSelected = (jfcImport.showOpenDialog(jfApp) == JFileChooser.APPROVE_OPTION);
+        
+        if (blnFileSelected){
+            String strSelectedFile = jfcImport.getSelectedFile().getPath();
+            loadPrefs(strSelectedFile);
+        }
         
     } // actionPerformed
     
-    public void loadPrefs()
+    public void loadPrefs(String strFileIn)
     {
+        myProps.clear(); // Clear old properties
+        
         try {
             
-            myProps.loadFromXML(new FileInputStream(AppConstants.PREFS_XML_FILE));
+            myProps.loadFromXML(new FileInputStream(strFileIn));
             
-        } catch (FileNotFoundException ex) {
-            
-            System.out.println("Bad Prefs file selected. Loading Default..");
-            
-            // Revert back to default XML file
-            AppConstants.resetXMLToDefault();
-            
-            try {
-                myProps.loadFromXML(new FileInputStream(AppConstants.PREFS_XML_FILE));
-                
-                System.out.println("Successfully Loaded Default XML File");
-                
-            }  catch (IOException ex1) {
-                Logger.getLogger(GetPropertiesAction.class.getName()).log(Level.SEVERE, null, ex1);
-            }
-            Logger.getLogger(GetPropertiesAction.class.getName()).log(Level.SEVERE, null, ex);
         } catch (IOException ex) {
+            
+            System.out.println("Something went wrong with the file you selected...");
+            
             Logger.getLogger(GetPropertiesAction.class.getName()).log(Level.SEVERE, null, ex);
-        }
+            
+        } 
         
-        applyProperties(myProps);
+        
+        // TODO: Check to make sure the opened XML file is for this App - RQZ
+        // AppID = CourseEZ, AppVersion = 1
+        if (myProps.getProperty("AppID", "").equals(AppConstants.APP_ID) && 
+                myProps.getProperty("AppVersion", "").equals(AppConstants.APP_VERSION))
+        {
+            applyProperties(myProps); // Apply the properties
+            
+        } else {
+            JOptionPane.showMessageDialog(jfApp, "The preference file chosen is not compatible with this application.", "Incompatible File", JOptionPane.ERROR_MESSAGE);
+            
+            // Load default xml file
+            loadPrefs(AppConstants.DEFAULT_XML_FILE);
+            System.out.println("Default preferences file loaded..");
+            
+        }
         
     } // loadPrefs
     
     private void applyProperties(Properties inProps)
     {
-        Enumeration e = inProps.propertyNames();
-        boolean hasLAF = false;
-
-        while (e.hasMoreElements()) 
-        {
-            String key = (String) e.nextElement();
-         
-            switch(key)
-            {
-                case "LookAndFeel":
+        
+        // Apply the LAF setting
+        // If there is no entry in the xml file, use the default LAF
+        String strLAF = 
+                inProps.getProperty(AppConstants.LAF, AppConstants.DEFAULT_LAF);
+        
+        try {
+            // Check to make sure we are loading a different LAF
+            if (!UIManager.getLookAndFeel().getClass().getCanonicalName().equals(strLAF)){
+                UIManager.setLookAndFeel(strLAF); // Set the new LAF
+                
+                // If app is running, we will have to reload the frame
+                if (jfApp != null){
+                    SwingUtilities.updateComponentTreeUI(jfApp);
+                    jfApp.appControl.restartApp(jfApp.jpMainPanel);
+                }
+            }
             
-                    try 
-                    {
-                        UIManager.setLookAndFeel(inProps.getProperty(key));
-                        hasLAF = true;
-                        
-                        if (jfApp != null){
-                            SwingUtilities.updateComponentTreeUI(jfApp);
-                        }
-                    } 
-                    catch (ClassNotFoundException 
-                          | InstantiationException 
-                          | IllegalAccessException
-                          | UnsupportedLookAndFeelException ex) 
-                    {
-                        Logger.getLogger(GetPropertiesAction.class.getName()).log(Level.SEVERE, null, ex);
-                    } 
-                    
-                    
-                    
-                    break;        
-            } // switch
-         
-        
-        System.out.println(key + " -- " + inProps.getProperty(key));
-        
-        } // while
-        
-        // If no LAF was specified in xml file then use the default LAF
-        if (!hasLAF){
-            setDefaultLAF();
+        } catch (ClassNotFoundException | InstantiationException | IllegalAccessException | UnsupportedLookAndFeelException ex) {
+            Logger.getLogger(GetPropertiesAction.class.getName()).log(Level.SEVERE, null, ex);
         }
         
     } // applyProperties
-    
-    private void setDefaultLAF()
-    {
-        // Sets default LAF to Nimbus
-        try {
-            for (UIManager.LookAndFeelInfo info : UIManager.getInstalledLookAndFeels()) {
-                if ("Nimbus".equals(info.getName())) {
-                    javax.swing.UIManager.setLookAndFeel(info.getClassName());
-                    break;
-                }
-            }
-        } catch (Exception ex) {
-            java.util.logging.Logger.getLogger(jfMain.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        }
-    }
     
 } // class GetPropertiesAction

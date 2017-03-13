@@ -4,13 +4,6 @@
  * and open the template in the editor.
  */
 package org.psu.berksist.CourseEZ;
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
-
-
 
 /**
  *
@@ -121,11 +114,15 @@ public class SavePropertiesAction extends AbstractAction {
         try {
             String strWarning = "Edit this file at your own risk.  " 
                     + "It will be overwritten at program exit.";
-            myProps.storeToXML(new FileOutputStream(AppConstants.PREFS_XML_FILE),strWarning);
+            
+            // Set App and version in properties
+            myProps.setProperty("AppID", AppConstants.APP_ID);
+            myProps.setProperty("AppVersion", AppConstants.APP_VERSION);
+            
+            // Save to XML
+            myProps.storeToXML(new FileOutputStream(AppConstants.DEFAULT_XML_FILE), strWarning);
+            
         } catch (FileNotFoundException ex) {
-            
-            
-            
             Logger.getLogger(SavePropertiesAction.class.getName()).log(Level.SEVERE, null, ex);
         } catch (IOException ex) {
             Logger.getLogger(SavePropertiesAction.class.getName()).log(Level.SEVERE, null, ex);

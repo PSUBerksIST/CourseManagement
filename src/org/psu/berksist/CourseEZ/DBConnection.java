@@ -88,7 +88,7 @@ public class DBConnection {
         } // if there is an existing connection
    
         
-
+        
         String strInFile = propsIn.getProperty(AppConstants.LAST_DB,"");
         File fTemp = null;
         

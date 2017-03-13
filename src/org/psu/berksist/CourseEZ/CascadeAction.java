@@ -23,7 +23,13 @@ package org.psu.berksist.CourseEZ;
 
 import java.awt.event.ActionEvent;
 import java.beans.PropertyVetoException;
+import java.net.MalformedURLException;
+import java.net.URL;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.AbstractAction;
+import javax.swing.Action;
+import javax.swing.ImageIcon;
 import javax.swing.JDesktopPane;
 import javax.swing.JInternalFrame;
  
@@ -34,8 +40,32 @@ public class CascadeAction extends AbstractAction {
     public CascadeAction(JDesktopPane desk) {
         super("Cascade Frames");
         desktop = desk;
+        
+        configureAction();
     }
      
+    private void configureAction(){
+        
+        try {
+            
+            putValue(Action.SMALL_ICON, new ImageIcon
+                    (new URL(AppConstants.CASCADE_ICON_16)));
+            
+            putValue(Action.LARGE_ICON_KEY, new ImageIcon
+                    (new URL(AppConstants.CASCADE_ICON_32)));
+            
+        } catch (MalformedURLException ex) {
+            Logger.getLogger(SavePropertiesAction.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        
+        putValue(Action.LONG_DESCRIPTION,"Cascades all of the currently open windows.");
+          
+        putValue(Action.NAME, "Cascade Windows");
+          
+        putValue(Action.SHORT_DESCRIPTION,"Cascade all current open windows.");
+        
+    }
+    
     public void actionPerformed(ActionEvent ev) {
          
       int x = 0;

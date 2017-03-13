@@ -31,8 +31,6 @@ public class AppControl {
     
     public static void main(String[] args) {
         
-        //AppControl newRun = new AppControl();
-        //newRun.create(args);
         new AppControl(args);
         
     }
@@ -43,7 +41,7 @@ public class AppControl {
         checkPath();
         
         myProps = new Properties();
-        
+        gpa = new GetPropertiesAction(myProps);
         
         addAdditionalPLAF();
         
@@ -53,7 +51,11 @@ public class AppControl {
             // Set requested UserPrefs file
             String tempFile = myCL.getOptionValue("u");
             // Check to see if it is null
-            if (tempFile != null){ AppConstants.setXMLFile(tempFile); }
+            if (tempFile != null){ 
+                gpa.loadPrefs(tempFile);
+            } else {
+                gpa.loadPrefs(AppConstants.DEFAULT_XML_FILE); 
+            }
             
             HelpFormatter formatter = new HelpFormatter();
             formatter.printHelp("Course Management", CommandLineOptions.makeOptions());
@@ -62,9 +64,9 @@ public class AppControl {
             Logger.getLogger(jfMain.class.getName()).log(Level.SEVERE, null, ex);
         }
         
-        gpa = new GetPropertiesAction(myProps);
         
-        gpa.loadPrefs();
+        
+        
         
         setWindowDecoration();
         

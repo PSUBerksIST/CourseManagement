@@ -46,12 +46,28 @@ public class TileAction extends AbstractAction {
         super("Tile Frames");
         this.desk = desk;
 
+        configureAction();
+        
+    }
+    
+    public TileAction() {
+        super("Tile Frames");
+        
+        configureAction();
+    }
+    
+    public void setDesktop(JDesktopPane desk) {
+        this.desk = desk;
+    }
+    
+    private void configureAction() {
+        
         try {
             
             putValue(Action.SMALL_ICON, new ImageIcon
                     (new URL(AppConstants.TILE_ICON_16)));
             
-            putValue( Action.LARGE_ICON_KEY, new ImageIcon
+            putValue(Action.LARGE_ICON_KEY, new ImageIcon
                     (new URL(AppConstants.TILE_ICON_32)));
             
         } catch (MalformedURLException ex) {
@@ -63,37 +79,8 @@ public class TileAction extends AbstractAction {
         putValue(Action.NAME, "Tile");
           
         putValue(Action.SHORT_DESCRIPTION,"Tile Windows");
-          
-        /*
-        Possible properties for putValue(property, value)
-        see https://docs.oracle.com/javase/8/docs/api/javax/swing/AbstractAction.html#putValue(java.lang.String,%20java.lang.Object)
-        
-        ACCELERATOR_KEY, ACTION_COMMAND_KEY, DEFAULT, DISPLAYED_MNEMONIC_INDEX_KEY, LARGE_ICON_KEY, LONG_DESCRIPTION, MNEMONIC_KEY, NAME, SELECTED_KEY, SHORT_DESCRIPTION, SMALL_ICON
-        
-        Examples from Deitel Advanced Java HTP
-        
-          // set Action name
-      putValue( Action.NAME, "Exit" );
-      
-      // set Action icon
-      putValue( Action.SMALL_ICON, new ImageIcon(
-         getClass().getResource( "images/EXIT.gif" ) ) );
-      
-      // set Action short description (tooltip text)
-      putValue( Action.SHORT_DESCRIPTION, 
-         "Exit Application" );
-      
-      // set Action mnemonic key
-      putValue( Action.MNEMONIC_KEY, 
-         new Integer( 'x' ) );
-      
-      // disable exitAction and associated GUI components
-      setEnabled( false );
-      
-        
-        */
     }
-     
+    
     // Tile the open frames
     public void actionPerformed(ActionEvent ev) {
        
