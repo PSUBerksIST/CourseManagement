@@ -49,7 +49,7 @@ public class jpAddAssignmentsToClass extends javax.swing.JPanel {
         // Sort Table by Selected, and Name
         SortRows tableSort = new SortRows(jtAssignments);
         tableSort.setColDirection(jtAssignments.getColumnModel()
-                .getColumnIndex("Selected"), SortRows.DEC);
+                .getColumnIndex("Selected"), SortRows.DESC);
         tableSort.setColDirection(jtAssignments.getColumnModel()
                 .getColumnIndex("Name"), SortRows.ASC);
         

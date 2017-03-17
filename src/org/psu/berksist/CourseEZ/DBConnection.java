@@ -32,7 +32,6 @@ TODO Add JFileChooser
 */
 
 
-// TODO: Create a global DB connection with access to centralized queries - RQZ
 
 public class DBConnection {
     

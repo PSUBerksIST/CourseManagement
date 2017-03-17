@@ -18,7 +18,7 @@ import javax.swing.table.TableRowSorter;
 public class SortRows {
     
     public static final SortOrder ASC = SortOrder.ASCENDING;
-    public static final SortOrder DEC = SortOrder.DESCENDING;
+    public static final SortOrder DESC = SortOrder.DESCENDING;
     
     private List<RowSorter.SortKey> sortKeys = new ArrayList<>();
     private TableRowSorter<TableModel> sorter;
