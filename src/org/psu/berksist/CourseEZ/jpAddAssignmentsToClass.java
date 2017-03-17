@@ -28,7 +28,7 @@ public class jpAddAssignmentsToClass extends javax.swing.JPanel {
     private Connection dbConnection;
     private Statement st;
     
-    List<Integer> selectedAssignmentIDs = new ArrayList<Integer>();
+    List<Integer> selectedAssignmentIDs = new ArrayList<>();
     private int intSelectedClassID;
     
     /**
@@ -43,7 +43,16 @@ public class jpAddAssignmentsToClass extends javax.swing.JPanel {
         initComponents();
         setdbConnection(inConnection);
         intSelectedClassID = classID;
+        
         setAssignments();
+        
+        // Sort Table by Selected, and Name
+        SortRows tableSort = new SortRows(jtAssignments);
+        tableSort.setColDirection(jtAssignments.getColumnModel()
+                .getColumnIndex("Selected"), SortRows.DEC);
+        tableSort.setColDirection(jtAssignments.getColumnModel()
+                .getColumnIndex("Name"), SortRows.ASC);
+        
     }
     
     // This sets the local datbase connection
@@ -70,12 +79,8 @@ public class jpAddAssignmentsToClass extends javax.swing.JPanel {
             DefaultTableModel model = (DefaultTableModel) jtAssignments.getModel();
 
             // Reset the JTable in case we are coming back a second time
-            int rowCount = model.getRowCount();
-            for (int i = rowCount - 1; i >= 0; i--) {
-                model.removeRow(i);
-            }
-            model.setColumnCount(0);
             model.setRowCount(0);
+            model.setColumnCount(0);
             
             // Create our columns
             model.addColumn("Selected");
@@ -86,16 +91,16 @@ public class jpAddAssignmentsToClass extends javax.swing.JPanel {
             
             
             // JTable will make our checkboxes for us
-            TableColumn tc = jtAssignments.getColumnModel().getColumn(0);
-            tc.setCellEditor(jtAssignments.getDefaultEditor(Boolean.class));  
-            tc.setCellRenderer(jtAssignments.getDefaultRenderer(Boolean.class)); 
+            //TableColumn tc = jtAssignments.getColumnModel().getColumn(0);
+            //tc.setCellEditor(jtAssignments.getDefaultEditor(Boolean.class));  
+            //tc.setCellRenderer(jtAssignments.getDefaultRenderer(Boolean.class)); 
             
             
             
-            // Prepared Statement test (This will go in a different class)
+            // Prepared Statement
             PreparedStatement classAssigns = dbConnection.prepareStatement(
                 "SELECT Assignments.id AS ID, Assignments.ShortName AS Name, Assignments.Description, Assignments.MaximumPoints AS Points, " +
-                "CASE WHEN Assignments.ID = ClassAssignmentLink.FKAssignmentID THEN 1 ELSE -1 END AS 'Selected' " + 
+                "CASE WHEN Assignments.ID = ClassAssignmentLink.FKAssignmentID THEN 1 ELSE 0 END AS 'Selected' " + 
                 "FROM Assignments " +
                 "LEFT JOIN ClassAssignmentLink ON ClassAssignmentLink.FKAssignmentID=Assignments.ID " + 
                 "AND ClassAssignmentLink.FKClassID = ?");
@@ -104,30 +109,17 @@ public class jpAddAssignmentsToClass extends javax.swing.JPanel {
             
             ResultSet result = classAssigns.executeQuery();
             
-            // Result Set 
-            /*ResultSet result = st.executeQuery("SELECT Assignments.id AS ID, Assignments.ShortName AS Name, Assignments.Description, Assignments.MaximumPoints AS Points,\n" +
-                "CASE WHEN Assignments.ID = ClassAssignmentLink.FKAssignmentID THEN 1 ELSE -1 END AS 'Selected'\n" + 
-                "FROM Assignments \n" +
-                "LEFT JOIN ClassAssignmentLink ON ClassAssignmentLink.FKAssignmentID=Assignments.ID " + 
-                "AND ClassAssignmentLink.FKClassID = " + intSelectedClassID);*/
-
-            int i = 0;
             while (result.next()) 
             {
                 
-                // SQLite won't do Booleans so lets convert it to one
-                boolean b = (Integer.parseInt(result.getString("Selected")) != -1);
+                boolean b = result.getBoolean("Selected");
                 // Add our row to the JTable
-                model.addRow(new Object[]{ b, result.getString("ID"), result.getString("Name"), result.getString("Description"), result.getString("Points")});
+                model.addRow(new Object[]{ b, result.getInt("ID"), result.getString("Name"), result.getString("Description"), result.getInt("Points")});
                 
                 // Add to selectedAssignments if selected
                 if (b){
                     selectedAssignmentIDs.add(result.getInt("ID"));
                 }
-                
-                // Authorize the checkbox to be editable
-                model.isCellEditable(i, 0);
-                i++;   
                 
             } // while
 
@@ -196,7 +188,7 @@ public class jpAddAssignmentsToClass extends javax.swing.JPanel {
             }
         ) {
             Class[] types = new Class [] {
-                java.lang.Boolean.class, java.lang.Object.class, java.lang.Object.class, java.lang.Object.class, java.lang.Object.class
+                java.lang.Boolean.class, java.lang.Integer.class, java.lang.Object.class, java.lang.Object.class, java.lang.Integer.class
             };
             boolean[] canEdit = new boolean [] {
                 true, false, false, false, false

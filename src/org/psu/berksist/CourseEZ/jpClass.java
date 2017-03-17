@@ -79,11 +79,13 @@ public class jpClass extends javax.swing.JPanel {
         try {
              
             //TODO: Add some sort of array to keep track of primary keys - RQZ
-            ResultSet rs = st.executeQuery("select Number from Course order by ID asc");
+            ResultSet rs = st.executeQuery("Select ID, Number, WritingEmphasis from Course order by Number asc");
+            //ResultSet rs = st.executeQuery("select Number from Course order by ID asc");
 
             while (rs.next()) {
-                jcbCourse.addItem(//rs.getString("IST") + " " + 
-                        rs.getString("Number"));
+                jcbCourse.addItem(new CourseInfo(rs.getInt("ID"), rs.getInt("Number"), rs.getBoolean("WritingEmphasis")));
+                //jcbCourse.addItem(//rs.getString("IST") + " " + 
+                //        rs.getString("Number"));
             }
             
         } catch (SQLException sqle) {
@@ -97,12 +99,12 @@ public class jpClass extends javax.swing.JPanel {
  
         try {
 
-            ResultSet rs = st.executeQuery("select ID, Section from Class where FKCourse = " + intSelectedCourseID);
-            //ResultSet rs = st.executeQuery("select Section from Class where FKCourse ="+intSelectedCourseID);
-            while (rs.next()) {
+            ResultSet rs = st.executeQuery("select ID, Section from Class where FKCourse = "
+                    + intSelectedCourseID + " order by Section");
+            
+            while (rs.next()) 
+            {
                 jcbClass.addItem(new ClassInfo(rs.getInt("ID"), rs.getInt("Section")));
-                //jcbClass.addItem(//rs.getString("IST") + " " + 
-                //        rs.getString("Section"));
             }
 
         } catch (SQLException sqle) {
@@ -619,10 +621,7 @@ public class jpClass extends javax.swing.JPanel {
 
         jtStudents.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
-                {null, null, null, null},
-                {null, null, null, null},
-                {null, null, null, null},
-                {null, null, null, null}
+
             },
             new String [] {
                 "Select", "First Name", "Last Name", "Student ID"
@@ -769,11 +768,7 @@ public class jpClass extends javax.swing.JPanel {
 
         jtIndividualAssignments.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
-                {null, null, null, null, null},
-                {null, null, null, null, null},
-                {null, null, null, null, null},
-                {null, null, null, null, null},
-                {null, null, null, null, null}
+
             },
             new String [] {
                 "Select", "ID", "Name", "Description", "Points"
@@ -802,11 +797,7 @@ public class jpClass extends javax.swing.JPanel {
 
         jtGroupAssignments.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
-                { new Boolean(false), null, null, null, null},
-                {null, null, null, null, null},
-                {null, null, null, null, null},
-                {null, null, null, null, null},
-                {null, null, null, null, null}
+
             },
             new String [] {
                 "Select", "ID", "Name", "Description", "Points"
@@ -979,7 +970,8 @@ public class jpClass extends javax.swing.JPanel {
         if(jcbCourse.getSelectedIndex()>0){
             jcbClass.setEnabled(true);
             
-            intSelectedCourseID = jcbCourse.getSelectedIndex();
+            //intSelectedCourseID = jcbCourse.getSelectedIndex();
+            intSelectedCourseID = ((CourseInfo) jcbCourse.getSelectedItem()).getIntID();
             
             System.out.println("Active Course ID Selected: (int) " + intSelectedCourseID);
             

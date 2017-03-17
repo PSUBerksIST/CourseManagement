@@ -5,32 +5,22 @@
  */
 package org.psu.berksist.CourseEZ;
 
-import java.awt.BorderLayout;
-import java.awt.Component;
+import java.awt.Window;
 import java.sql.Connection;
 import java.sql.ResultSet;
-import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
-import java.util.Vector;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import javax.swing.DefaultCellEditor;
-import javax.swing.DefaultComboBoxModel;
-import javax.swing.JCheckBox;
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
-import javax.swing.JPanel;
-import javax.swing.JTable;
 import javax.swing.event.TableModelEvent;
 import javax.swing.event.TableModelListener;
 import javax.swing.table.DefaultTableModel;
-import javax.swing.table.TableCellRenderer;
 import javax.swing.table.TableColumn;
-import net.proteanit.sql.DbUtils;
 
 public class jpAddAssignmentsToCourse extends javax.swing.JPanel {
 
@@ -146,7 +136,8 @@ public class jpAddAssignmentsToCourse extends javax.swing.JPanel {
             ResultSet result = st.executeQuery("SELECT Assignments.id AS ID, Assignments.ShortName AS Name, Assignments.Description, Assignments.GroupAssignment AS 'Group', Assignments.MaximumPoints AS Points,\n" +
                 "CASE WHEN Assignments.ID = CourseAssignmentLink.FKAssignmentID THEN 1 ELSE -1 END AS 'Select'\n" +
                 "FROM Assignments \n" +
-                "LEFT JOIN CourseAssignmentLink ON CourseAssignmentLink.FKCourseID = " + intSelectedCourseID);
+                "LEFT JOIN CourseAssignmentLink ON CourseAssignmentLink.FKAssignmentID=Assignments.ID " +
+                "AND CourseAssignmentLink.FKCourseID = " + intSelectedCourseID);
 
             int i = 0;
             while (result.next()) 
@@ -272,6 +263,8 @@ public class jpAddAssignmentsToCourse extends javax.swing.JPanel {
             // Let the user know we have taken care of it
             JFrame PopUp = new JFrame();
             JOptionPane.showMessageDialog(PopUp,"Assignments Updated!");  
+            
+            ((Window) getRootPane().getParent()).dispose();
             
         } catch (SQLException ex) {
             Logger.getLogger(jpAddAssignmentsToClass.class.getName()).log(Level.SEVERE, null, ex);

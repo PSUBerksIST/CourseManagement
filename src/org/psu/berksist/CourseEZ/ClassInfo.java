@@ -19,6 +19,7 @@ public class ClassInfo {
         intSection = intSectionIn;
     }
     
+    @Override
     public String toString(){
         return String.valueOf(getIntSection());
     }

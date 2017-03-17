@@ -5,6 +5,7 @@
  */
 package org.psu.berksist.CourseEZ;
 
+import java.awt.Window;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
@@ -124,10 +125,6 @@ public class jpAddAssignment extends javax.swing.JPanel {
     }// insertToTable
     
     
-    
-    
-    
-    
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -236,8 +233,7 @@ public class jpAddAssignment extends javax.swing.JPanel {
     }// </editor-fold>//GEN-END:initComponents
 
     private void jbAddAssignmentFinishActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jbAddAssignmentFinishActionPerformed
-        this.getTopLevelAncestor().setVisible(false);
-            //setting the Course number
+        //this.getTopLevelAncestor().setVisible(false);
 
         setAssignment(jtfAssignmentName);
         setDescription(jtaDescription);
@@ -250,6 +246,8 @@ public class jpAddAssignment extends javax.swing.JPanel {
         
         
         InsertToTable(strAssignment, strDescription, strSpecification, intPoints, strNotes, strGradeNotes, blAttendance, blGroup);
+        
+        ((Window) getRootPane().getParent()).dispose();
     }//GEN-LAST:event_jbAddAssignmentFinishActionPerformed
 
     private void jchbGroupAssignmentActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jchbGroupAssignmentActionPerformed

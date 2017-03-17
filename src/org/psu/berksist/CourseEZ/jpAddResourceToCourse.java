@@ -5,32 +5,21 @@
  */
 package org.psu.berksist.CourseEZ;
 
-import java.awt.BorderLayout;
-import java.awt.Component;
 import java.sql.Connection;
 import java.sql.ResultSet;
-import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
-import java.util.Vector;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import javax.swing.DefaultCellEditor;
-import javax.swing.DefaultComboBoxModel;
-import javax.swing.JCheckBox;
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
-import javax.swing.JPanel;
-import javax.swing.JTable;
 import javax.swing.event.TableModelEvent;
 import javax.swing.event.TableModelListener;
 import javax.swing.table.DefaultTableModel;
-import javax.swing.table.TableCellRenderer;
 import javax.swing.table.TableColumn;
-import net.proteanit.sql.DbUtils;
 /**
  *
  * @author Nathan
@@ -98,7 +87,7 @@ public class jpAddResourceToCourse extends javax.swing.JPanel {
                         for(int i = 0; i < jtResources.getModel().getRowCount(); i++)
                         {
                            // System.out.println("jtResources.getModel().getRowCount() = " + jtResources.getModel().getRowCount());
-
+                            
                             int ResourcesId = Integer.parseInt(jtResources.getModel().getValueAt(i,1).toString());
                             //System.out.println(selectedResources);
                             if ((Boolean) jtResources.getModel().getValueAt(i,0))

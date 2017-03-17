@@ -350,6 +350,7 @@ public class jpCourse extends JPanel{
                 jlNumber.setText("IST "+ rs.getString("Number"));
                 jlTitle.setText(rs.getString("Title"));
                 jtDescription.setText(rs.getString("Description"));
+                jtDescription.setCaretPosition(0);
             }//while
           
         }//try
@@ -440,12 +441,7 @@ public class jpCourse extends JPanel{
 
         jtAssignments.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
-                {null, null, null, null, null, null},
-                {null, null, null, null, null, null},
-                {null, null, null, null, null, null},
-                {null, null, null, null, null, null},
-                {null, null, null, null, null, null},
-                {null, null, null, null, null, null}
+
             },
             new String [] {
                 "Select", "ID", "Name", "Description", "Points", "Group"
@@ -561,12 +557,7 @@ public class jpCourse extends JPanel{
 
         jtResources.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
-                {null, null, null},
-                {null, null, null},
-                {null, null, null},
-                {null, null, null},
-                {null, null, null},
-                {null, null, null}
+
             },
             new String [] {
                 "Select", "ID", "Description"

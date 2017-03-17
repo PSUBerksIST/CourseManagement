@@ -7,37 +7,32 @@ package org.psu.berksist.CourseEZ;
 
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
-import java.sql.Connection;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.sql.Statement;
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.List;
+import java.sql.*;
+import java.util.*;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import javax.swing.JPanel;
-import javax.swing.JDialog;
-import javax.swing.JFrame;
-import javax.swing.JOptionPane;
+import javax.swing.*;
 import static javax.swing.WindowConstants.DISPOSE_ON_CLOSE;
 import javax.swing.event.TableModelEvent;
 import javax.swing.event.TableModelListener;
 import javax.swing.table.DefaultTableModel;
-import javax.swing.table.TableColumn;
+
 /**
  *
  * @author Nathan
  */
 public class jpAssignment extends javax.swing.JPanel {
 
-    List<Integer> selectedAssignmentIDs = new ArrayList<Integer>();
+    List<Integer> selectedAssignmentIDs = new ArrayList<>();
     
     /**
      * Creates new form jpAssignment
      */
     private Connection dbConnection;
     private Statement st;
+    
+    private TableChangeListener tcListener = new TableChangeListener();
+    private SortRows tableSort;
     
     public jpAssignment()
     {
@@ -47,8 +42,15 @@ public class jpAssignment extends javax.swing.JPanel {
     
     public jpAssignment(Connection inConnection){
         initComponents();
-        setdbConnection(inConnection);;
+        setdbConnection(inConnection);
+        
+        tableSort = new SortRows(jtAssignments);
+        tableSort.setColDirection(jtAssignments.getColumnModel()
+                .getColumnIndex("Name"), SortRows.ASC);
+        
         setAssignments();
+        
+        jtAssignments.getModel().addTableModelListener(tcListener);
         
     }
     
@@ -64,17 +66,16 @@ public class jpAssignment extends javax.swing.JPanel {
     
     public void setAssignments()
     {
+        
+        tableSort.setCurrentSort((List<RowSorter.SortKey>) jtAssignments.getRowSorter().getSortKeys());
+        
         try {
-
+            
             DefaultTableModel model = (DefaultTableModel) jtAssignments.getModel();
 
             // Reset the JTable in case we are coming back a second time
-            int rowCount = model.getRowCount();
-            for (int i = rowCount - 1; i >= 0; i--) {
-                model.removeRow(i);
-            }
-            model.setColumnCount(0);
             model.setRowCount(0);
+            model.setColumnCount(0);
             
             // Create our columns
             model.addColumn("Select");
@@ -84,86 +85,51 @@ public class jpAssignment extends javax.swing.JPanel {
             model.addColumn("Points");
             model.addColumn("Group");
             
-            // Set our model and also create our listeners
-            jtAssignments.getModel().addTableModelListener(new TableModelListener() {
-            @Override
-            public void tableChanged(TableModelEvent e) {
-
-                // On a table change update our local store of selectedAssignmentIDs
-                    for(int i = 0; i < jtAssignments.getModel().getRowCount(); i++)
-                    {
-
-                        int assignmentId = Integer.parseInt(jtAssignments.getModel().getValueAt(i,1).toString());
-
-                        if ((Boolean) jtAssignments.getModel().getValueAt(i,0))
-                        {  
-
-                            System.out.println("Selected ID: " + assignmentId);
-
-                            // Add the ID if we do not have it already
-                            if(!selectedAssignmentIDs.contains(assignmentId))
-                            {
-                                selectedAssignmentIDs.add(assignmentId);
-                            }
-
-                        }
-                        else
-                        {
-
-                            System.out.println("Selected ID: " + assignmentId);
-
-                            for (Iterator<Integer> iterator = selectedAssignmentIDs.iterator(); iterator.hasNext(); ) {
-                                Integer id = iterator.next();
-                                if (id == assignmentId) 
-                                {
-                                    iterator.remove();
-                                }
-                            }
-
-                      }
-
-                    }     
-                    
-                    // Show the programmer what IDs are selected
-                    System.out.println(selectedAssignmentIDs);
-                }
-
-            });
+            // Set column widths so everything can fit properly
+            jtAssignments.getColumnModel().getColumn(0).setPreferredWidth(60);
+            jtAssignments.getColumnModel().getColumn(1).setPreferredWidth(35);
+            jtAssignments.getColumnModel().getColumn(2).setPreferredWidth(140);
+            jtAssignments.getColumnModel().getColumn(3).setPreferredWidth(180);
+            jtAssignments.getColumnModel().getColumn(4).setPreferredWidth(60);
+            jtAssignments.getColumnModel().getColumn(5).setPreferredWidth(60);
+            
             
             // JTable will make our checkboxes for us
-            TableColumn tc = jtAssignments.getColumnModel().getColumn(0);
-            tc.setCellEditor(jtAssignments.getDefaultEditor(Boolean.class));  
-            tc.setCellRenderer(jtAssignments.getDefaultRenderer(Boolean.class)); 
+            //TableColumn tc = jtAssignments.getColumnModel().getColumn(0);
+            //tc.setCellEditor(jtAssignments.getDefaultEditor(Boolean.class));  
+            //tc.setCellRenderer(jtAssignments.getDefaultRenderer(Boolean.class));
             
-            // Result Set 
-            ResultSet result = st.executeQuery("SELECT -1 AS 'Select', ID, ShortName AS Name, Description, MaximumPoints AS Points, GroupAssignment AS 'Group' FROM Assignments;");
-
-            int i = 0;
+            // Prepared Statement
+            PreparedStatement allAssigns = dbConnection.prepareStatement(
+                    "SELECT ID, ShortName AS Name, Description, MaximumPoints AS Points, GroupAssignment AS 'Group' "
+                            + "FROM Assignments;");
+            
+            ResultSet result = allAssigns.executeQuery();
+            
             while (result.next()) 
             {
-                System.out.println(result.getString("Group"));
-                // SQLite won't do Booleans so lets convert it to one
-                boolean b = (Integer.parseInt(result.getString("Select")) != -1);
-                
                 boolean g;
-                if(result.getString("Group") == null)
+                if(result.getString("Group") == null) // shouldn't be null, but just in case
                 {
-                    g = true;
+                    g = false;
                 }
                 else
                 {
-                    g = (Integer.parseInt(result.getString("Group")) < 1);
+                    g = result.getBoolean("Group");
                 }
                 
-                String group = (g) ? "no" : "yes";
+                String strGroup = g ? "Yes" : "No";
+                
+                boolean b = selectedAssignmentIDs.contains(result.getInt("ID"));
+                
                 // Add our row to the JTable
-                model.addRow(new Object[]{ b, result.getString("ID"), result.getString("Name"), result.getString("Description"), result.getString("Points"), group});
-                // Authorize the checkbox to be editable
-                model.isCellEditable(i, 0);
-                i++;   
+                model.addRow(new Object[]{ b, result.getInt("ID"), result.getString("Name"), 
+                    result.getString("Description"), result.getInt("Points"), strGroup});
                 
             }
-
+            
+            tableSort.applyCurrentSort();
+            
         }
         catch (SQLException ex) 
         {
@@ -171,6 +137,35 @@ public class jpAssignment extends javax.swing.JPanel {
         }
     }
 
+    private class TableChangeListener implements TableModelListener{
+
+        @Override
+        public void tableChanged(TableModelEvent e) {
+            // On a table change update our local store of selectedAssignmentIDs
+            if (e.getColumn() == 0){
+
+                int assignmentID = Integer.parseInt(jtAssignments.getModel().getValueAt(e.getLastRow(),1).toString());
+
+                if ((boolean) jtAssignments.getModel().getValueAt(e.getLastRow(), 0)){
+
+                    if (!selectedAssignmentIDs.contains(assignmentID)){
+                        selectedAssignmentIDs.add(assignmentID);
+                    }
+                } else {
+                    if (selectedAssignmentIDs.contains(assignmentID)){
+                        selectedAssignmentIDs.remove(selectedAssignmentIDs.indexOf(assignmentID));
+                    }
+
+                }
+
+                // Show the programmer what IDs are selected
+                System.out.println(selectedAssignmentIDs);
+
+            }
+        }
+    
+    }
+    
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -187,7 +182,10 @@ public class jpAssignment extends javax.swing.JPanel {
         jbRefresh = new javax.swing.JButton();
         jlAssignments = new javax.swing.JLabel();
 
+        setPreferredSize(new java.awt.Dimension(540, 350));
+
         jbAddAssignment.setText("Create Assignment");
+        jbAddAssignment.setPreferredSize(new java.awt.Dimension(140, 32));
         jbAddAssignment.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jbAddAssignmentActionPerformed(evt);
@@ -196,19 +194,14 @@ public class jpAssignment extends javax.swing.JPanel {
 
         jtAssignments.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
-                {null, null, null, null, null, null},
-                {null, null, null, null, null, null},
-                {null, null, null, null, null, null},
-                {null, null, null, null, null, null},
-                {null, null, null, null, null, null},
-                {null, null, null, null, null, null}
+
             },
             new String [] {
                 "Select", "ID", "Name", "Description", "Points", "Group"
             }
         ) {
             Class[] types = new Class [] {
-                java.lang.Boolean.class, java.lang.Object.class, java.lang.Object.class, java.lang.Object.class, java.lang.Object.class, java.lang.Object.class
+                java.lang.Boolean.class, java.lang.Integer.class, java.lang.Object.class, java.lang.Object.class, java.lang.Integer.class, java.lang.Object.class
             };
             boolean[] canEdit = new boolean [] {
                 true, false, false, false, false, false
@@ -222,6 +215,7 @@ public class jpAssignment extends javax.swing.JPanel {
                 return canEdit [columnIndex];
             }
         });
+        jtAssignments.setAutoResizeMode(javax.swing.JTable.AUTO_RESIZE_ALL_COLUMNS);
         jScrollPane1.setViewportView(jtAssignments);
 
         jbDelete.setText("Delete");
@@ -232,6 +226,7 @@ public class jpAssignment extends javax.swing.JPanel {
         });
 
         jbRefresh.setText("Refresh");
+        jbRefresh.setPreferredSize(new java.awt.Dimension(140, 32));
         jbRefresh.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jbRefreshActionPerformed(evt);
@@ -249,15 +244,15 @@ public class jpAssignment extends javax.swing.JPanel {
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 375, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 375, Short.MAX_VALUE)
                             .addComponent(jlAssignments))
-                        .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                        .addContainerGap())
                     .addGroup(layout.createSequentialGroup()
-                        .addComponent(jbAddAssignment)
+                        .addComponent(jbAddAssignment, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(jbDelete, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jbRefresh, javax.swing.GroupLayout.PREFERRED_SIZE, 102, javax.swing.GroupLayout.PREFERRED_SIZE))))
+                        .addComponent(jbRefresh, javax.swing.GroupLayout.PREFERRED_SIZE, 140, javax.swing.GroupLayout.PREFERRED_SIZE))))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -268,9 +263,9 @@ public class jpAssignment extends javax.swing.JPanel {
                 .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 150, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(35, 35, 35)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jbAddAssignment)
+                    .addComponent(jbAddAssignment, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jbDelete)
-                    .addComponent(jbRefresh))
+                    .addComponent(jbRefresh, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addContainerGap(78, Short.MAX_VALUE))
         );
     }// </editor-fold>//GEN-END:initComponents
@@ -314,6 +309,11 @@ public class jpAssignment extends javax.swing.JPanel {
                             Integer id = iterator.next();
                             iterator.remove();
                             st.execute("DELETE FROM Assignments WHERE ID = " + id);
+                            
+                            // Need to also delete from link tables - RQZ
+                            st.execute("DELETE FROM ClassAssignmentLink WHERE FKAssignmentID = " + id);
+                            st.execute("DELETE FROM CourseAssignmentLink WHERE FKAssignmentID = " + id);
+                            
                         }
                     }
 
@@ -346,18 +346,5 @@ public class jpAssignment extends javax.swing.JPanel {
     private javax.swing.JLabel jlAssignments;
     private javax.swing.JTable jtAssignments;
     // End of variables declaration//GEN-END:variables
-//    private void CreateFrame(JPanel inPanel) {
-//                //  intWindowCounter++;
-//        JFrame jifTemp = new jfTempFrames(inPanel.getName());// +"" + intWindowCounter,true,true,true,true);
-//        
-//        //JPanel jpTemp = new jpClass();
-//        inPanel.setPreferredSize(new Dimension(400, 400));
-//        jifTemp.add(inPanel);
-//        System.out.println(this.getClass());
-//        jifTemp.pack();
-//        //jdpMain.add(jifTemp);
-//        jifTemp.setVisible(true);
-//        
-//        //throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-//    }//CreateFrame
+
 }
