@@ -1,0 +1,45 @@
+
+	—Students / Professors— 
+	
+	PROFESSOR:
+
+	1) Add schools
+	2) Add campuses
+	3) Add course 
+		-name
+		-credits
+		-description
+		-book
+	4) Add class to course
+		-meeting times
+		-day of week
+		-select schools & campuses offered
+	5) Export weekly, monthly schedule (excel and calendar)
+	6) Add students
+		- First / Last name
+		- Student ID
+		- School/Campus
+	7) Manage(edit) course/class/students
+	8) Create Groups (Teams)
+		- Team name
+		- Assign credit to that group as a whole
+		- “restructure” option allows you to modify teams
+			- will not lose credit assigned part way
+	9) Create assignments
+		- select course 
+			- if required, also select class for specific assignment
+		- enter point amount
+		- due date
+	
+
+	STUDENTS:
+
+	1) When asked to login provide Student ID
+	2) Once verified you will have access to schedule and posted grades
+	3) Option to see team members assigned
+
+	Thoughts: I do not feel additional authentication is required for Student View. It will become a hassle having to allow students to “sign up.” As an additional option to the professor, students could verify the course, class time, and also their student ID. Once “logged in” with student view maybe give them the option to add a password for future logins.
+	
+	
+	
+	Feel free to push ideas to this file!
