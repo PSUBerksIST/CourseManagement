@@ -237,7 +237,7 @@ public class jpResources extends javax.swing.JPanel {
                         .addComponent(jlDocuments))
                     .addGroup(layout.createSequentialGroup()
                         .addContainerGap()
-                        .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 375, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 375, Short.MAX_VALUE))
                     .addGroup(layout.createSequentialGroup()
                         .addGap(26, 26, 26)
                         .addComponent(jbAddResources)
@@ -245,7 +245,7 @@ public class jpResources extends javax.swing.JPanel {
                         .addComponent(jbDeleteDocument)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(jbRefresh)))
-                .addContainerGap(24, Short.MAX_VALUE))
+                .addGap(24, 24, 24))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -253,13 +253,13 @@ public class jpResources extends javax.swing.JPanel {
                 .addContainerGap()
                 .addComponent(jlDocuments)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 150, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 150, Short.MAX_VALUE)
                 .addGap(18, 18, 18)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jbAddResources)
                     .addComponent(jbDeleteDocument)
                     .addComponent(jbRefresh))
-                .addContainerGap(102, Short.MAX_VALUE))
+                .addGap(102, 102, 102))
         );
     }// </editor-fold>//GEN-END:initComponents
 
