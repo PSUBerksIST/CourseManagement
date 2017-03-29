@@ -133,21 +133,13 @@ public class jpResources extends javax.swing.JPanel {
             tc.setCellRenderer(jtResources.getDefaultRenderer(Boolean.class)); 
             
             // Result Set 
-            ResultSet result = st.executeQuery("SELECT -1 AS 'Select', ID, Description FROM Resources order by ID asc;");
+            ResultSet result = st.executeQuery("SELECT intID, vchrDescription FROM Resource order by intID asc;");
 
-            int i = 0;
             while (result.next()) 
             {
                 
-                // SQLite won't do Booleans so lets convert it to one
-                boolean b = (Integer.parseInt(result.getString("Select")) != -1);
-               // boolean g = (Integer.parseInt(result.getString("Group")) != 1);
-               // String group = (g) ? "no" : "yes";
                 // Add our row to the JTable
-                model.addRow(new Object[]{ b, result.getString("ID"), result.getString("Description")});
-                // Authorize the checkbox to be editable
-                model.isCellEditable(i, 0);
-                i++;   
+                model.addRow(new Object[]{ false, result.getString("intID"), result.getString("vchrDescription")});
                 
             }
 
@@ -289,7 +281,7 @@ public class jpResources extends javax.swing.JPanel {
                         for (Iterator<Integer> iterator = selectedResources.iterator(); iterator.hasNext(); ) {
                             Integer id = iterator.next();
                             iterator.remove();
-                            st.execute("DELETE FROM Resources WHERE ID = " + id);
+                            st.execute("DELETE FROM Resource WHERE intID = " + id);
                         }
                     }
 

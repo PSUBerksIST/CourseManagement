@@ -17,7 +17,6 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
-import javax.swing.JTable;
 import javax.swing.RowFilter;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
@@ -97,7 +96,7 @@ public class jpAddStudent extends javax.swing.JPanel {
         //If current expression doesn't parse, don't update.
         try {
             // "(?i)" indicates case-insensitivity
-            rf = RowFilter.regexFilter("(?i)" +txtFilter.getText(), 1, 2, 3, 4);
+            rf = RowFilter.regexFilter("(?i)" + txtFilter.getText(), 1, 2, 3, 4);
         } catch (java.util.regex.PatternSyntaxException e) {
             return;
         }
@@ -216,25 +215,20 @@ public class jpAddStudent extends javax.swing.JPanel {
 "                FROM Student\n" +
 "                LEFT JOIN ClassStudentLink ON ClassStudentLink.FKClass = " + intClassID);*/
             
-            ResultSet result = st.executeQuery("SELECT Student.FirstName, Student.LastName, Student.EmailName, Student.StudentID,\n" +
-"                CASE WHEN Student.StudentID = ClassStudentLink.FKStudent THEN 1 ELSE -1 END AS 'Select'\n" +
-"                FROM Student\n" +
-"                LEFT JOIN ClassStudentLink ON ClassStudentLink.FKStudent = Student.StudentID " + 
-                 "AND ClassStudentLink.FKClass = " + intClassID);
+            ResultSet result = st.executeQuery("SELECT Student.vchrFirstName, Student.vchrLastName, Student.vchrEmailName, Student.intID, " +
+                    "CASE WHEN Student.intID = Class_Student.FKStudent_intID THEN 1 ELSE 0 END AS 'Select' " +
+                    "FROM Student " +
+                    "LEFT JOIN Class_Student ON Class_Student.FKStudent_intID = Student.intID " + 
+                    "AND Class_Student.FKClass_intID = " + intClassID);
             
 
-            int i = 0;
             while (result.next()) 
             {
                 
-                // SQLite won't do Booleans so lets convert it to one
-                boolean b = (Integer.parseInt(result.getString("Select")) != -1);
+                boolean b = result.getBoolean("Select");
                 
                 // Add our row to the JTable
-                model.addRow(new Object[]{ b, result.getString("FirstName"), result.getString("LastName"), result.getString("EmailName"), result.getString("StudentID")});
-                // Authorize the checkbox to be editable
-                model.isCellEditable(i, 0);
-                i++;   
+                model.addRow(new Object[]{ b, result.getString("vchrFirstName"), result.getString("vchrLastName"), result.getString("vchrEmailName"), result.getString("intID")});
                 
             }
 
@@ -341,12 +335,12 @@ public class jpAddStudent extends javax.swing.JPanel {
         try {
             System.out.println("Add Selected Students fired! Course ID: " + intClassID);
             
-            st.execute("DELETE FROM ClassStudentLink WHERE FKClass = " + intClassID);
+            st.execute("DELETE FROM Class_Student WHERE FKClass_intID = " + intClassID);
             
             // Now lets add all assignments from our list to the link table
             for (Iterator<Integer> iterator = selectedIDs.iterator(); iterator.hasNext(); ) {
                 Integer id = iterator.next();
-                st.execute("INSERT INTO ClassStudentLink (FKClass,FKStudent) VALUES (" + intClassID + "," + id + ")");
+                st.execute("INSERT INTO Class_Student (FKClass_intID, FKStudent_intID) VALUES (" + intClassID + ", " + id + ")");
             }
             
             // Let the user know we have taken care of it

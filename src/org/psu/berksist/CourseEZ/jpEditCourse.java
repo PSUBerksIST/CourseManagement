@@ -23,31 +23,21 @@ public class jpEditCourse extends javax.swing.JPanel
     private Connection dbLocalConnection;
     private PreparedStatement pst;
     private Statement st;
-    private int intCourseID;
     
     //list of variables for passing to database
-    private String strDepartment = "default value";
-    private int intDepartment;
-        
-    String strCourseNumber = "default value";
-    int intCourseNumber = 123456789;
-        
-    int intWritingEmphasis = 123456789;
-        
-    String strCredits = "default value";
-    int intCredits = 123456789;
-
-    String strCourseTitle = "default value";
-    String strDescription = "default value";
-    String strObjectives = "default value";
-    String strPrerequisites = "default value";        
-    String strNotes = "default value";
+    private String strDepartment = "", strCourseNumber = "", strCredits = "", 
+            strCourseTitle = "", strDescription = "", strObjectives = "", 
+            strPrerequisites = "", strNotes = "";
     
+    private int intDepartment, intCredits, intCourseID, intCourseNumber, 
+            intWritingEmphasis;
+        
     
     public jpEditCourse() 
     {
         initComponents();
     }
+    
     public jpEditCourse(Connection inConnection, int CourseID)
     {
         setdbConnection(inConnection);
@@ -243,22 +233,26 @@ public class jpEditCourse extends javax.swing.JPanel
         try {
             
             Statement st = dbLocalConnection.createStatement();
-            ResultSet rs = st.executeQuery("SELECT ID, FKDepartment, Number, WritingEmphasis, Credits, Title, Description, Objectives, Prerequisite, Notes FROM Course Where ID =" + intCourseID);
+            ResultSet rs = st.executeQuery("SELECT intID, FKDepartment_intID, "
+                    + "intNumber, intWritingEmphasis, intCredits, vchrTitle, "
+                    + "vchrDescription, vchrObjectives, vchrPrerequisite, "
+                    + "vchrNote FROM Course Where intID = " + intCourseID);
+            
             while (rs.next()) {
-                System.out.println(rs.getInt("ID"));
+                System.out.println(rs.getInt("intID"));
                 System.out.println("");
-                System.out.println(rs.getInt("Credits"));
-                jtfCourseNumber.setText(rs.getInt("Number")+"");
-                jtfCourseTitle.setText(rs.getString("Title"));
-                jtaDescription.setText(rs.getString("Description"));
-                jcbCredits.setSelectedIndex(rs.getInt("Credits")-1);
+                System.out.println(rs.getInt("intCredits"));
+                jtfCourseNumber.setText(rs.getString("intNumber"));
+                jtfCourseTitle.setText(rs.getString("vchrTitle"));
+                jtaDescription.setText(rs.getString("vchrDescription"));
+                jcbCredits.setSelectedIndex(rs.getInt("intCredits")-1);
                 
-                //TODO: Fix the index out of bounds exception - RQZ
-                jcbWritingEmphasis.setSelectedIndex(rs.getInt("WritingEmphasis"));
-                jcbDepartment.setSelectedIndex(rs.getInt("FKDepartment")-1);
-                jtfObjectives.setText(rs.getString("Objectives"));
-                jtfPrerequisites.setText(rs.getString("Prerequisite"));
-                jtfNotes.setText(rs.getString("Notes"));
+                
+                jcbWritingEmphasis.setSelectedIndex(rs.getInt("intWritingEmphasis"));
+                jcbDepartment.setSelectedIndex(rs.getInt("FKDepartment_intID")-1);
+                jtfObjectives.setText(rs.getString("vchrObjectives"));
+                jtfPrerequisites.setText(rs.getString("vchrPrerequisite"));
+                jtfNotes.setText(rs.getString("vchrNote"));
             }
         } catch (SQLException ex) {
             Logger.getLogger(jpEditCourse.class.getName()).log(Level.SEVERE, null, ex);
@@ -297,7 +291,10 @@ private void databaseUpdate()
     
     try
     {
-        String query = " UPDATE Course Set FKDepartment = ?, Number = ?, WritingEmphasis = ?, Credits = ?, Title = ?, Description = ?, Objectives = ?, Prerequisite = ?, Notes = ? where id = "+ intCourseID+";";
+        String query = "UPDATE Course Set FKDepartment_intID = ?, intNumber = ?, "
+                + "intWritingEmphasis = ?, intCredits = ?, vchrTitle = ?, "
+                + "vchrDescription = ?, vchrObjectives = ?, vchrPrerequisite = ?, "
+                + "vchrNote = ? where intID = " + intCourseID;
         pst = dbLocalConnection.prepareStatement(query);
         //stmAddClassStatement.executeUpdate("INSERT INTO Course VALUES ('" + strCourseTitle + "', " + );
         pst.setInt(1, intDepartment +1);
@@ -335,16 +332,13 @@ private void setdbConnection(Connection inConnection)
 
 private int getFKDepartment(String inSelectedDepartment)
 {//return ID from Department table of SQL database for department highlighted in jcbDepartment 
-    String strSelectedDepartment = "Default Value";
-    int intSelectedDepartment = 123456789;
+    String strSelectedDepartment = inSelectedDepartment;
+    int intSelectedDepartment = 0;
     
-    
-    
-    strSelectedDepartment = inSelectedDepartment;
     
     try
     {
-        ResultSet rsResult = st.executeQuery("select ID from Department where DepartmentName = '" + strSelectedDepartment + "'");
+        ResultSet rsResult = st.executeQuery("select intID from Department where vchrName = '" + strSelectedDepartment + "'");
         intSelectedDepartment = rsResult.getInt(1);
     }//try
     catch (SQLException sqle)
@@ -362,11 +356,11 @@ private void setJcbDepartment()
     jcbDepartment.removeAllItems();
     try
     {
-        ResultSet rsResults = st.executeQuery("select DepartmentName from Department order by ID asc");
+        ResultSet rsResults = st.executeQuery("select vchrName from Department order by intID asc");
 
         while (rsResults.next())
         {
-            jcbDepartment.addItem(rsResults.getString("DepartmentName"));
+            jcbDepartment.addItem(rsResults.getString("vchrName"));
         }//while
 
     }//try

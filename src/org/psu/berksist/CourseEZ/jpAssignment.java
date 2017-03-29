@@ -101,8 +101,8 @@ public class jpAssignment extends javax.swing.JPanel {
             
             // Prepared Statement
             PreparedStatement allAssigns = dbConnection.prepareStatement(
-                    "SELECT ID, ShortName AS Name, Description, MaximumPoints AS Points, GroupAssignment AS 'Group' "
-                            + "FROM Assignments;");
+                    "SELECT intID, vchrShortName AS Name, vchrDescription, realMaximumPoints AS Points, boolGroupAssignment AS 'Group' "
+                            + "FROM Assignment;");
             
             ResultSet result = allAssigns.executeQuery();
             
@@ -120,11 +120,11 @@ public class jpAssignment extends javax.swing.JPanel {
                 
                 String strGroup = g ? "Yes" : "No";
                 
-                boolean b = selectedAssignmentIDs.contains(result.getInt("ID"));
+                boolean b = selectedAssignmentIDs.contains(result.getInt("intID"));
                 
                 // Add our row to the JTable
-                model.addRow(new Object[]{ b, result.getInt("ID"), result.getString("Name"), 
-                    result.getString("Description"), result.getInt("Points"), strGroup});
+                model.addRow(new Object[]{ b, result.getInt("intID"), result.getString("Name"), 
+                    result.getString("vchrDescription"), result.getInt("Points"), strGroup});
                 
             }
             
@@ -308,11 +308,11 @@ public class jpAssignment extends javax.swing.JPanel {
                         for (Iterator<Integer> iterator = selectedAssignmentIDs.iterator(); iterator.hasNext(); ) {
                             Integer id = iterator.next();
                             iterator.remove();
-                            st.execute("DELETE FROM Assignments WHERE ID = " + id);
+                            st.execute("DELETE FROM Assignment WHERE intID = " + id);
                             
                             // Need to also delete from link tables - RQZ
-                            st.execute("DELETE FROM ClassAssignmentLink WHERE FKAssignmentID = " + id);
-                            st.execute("DELETE FROM CourseAssignmentLink WHERE FKAssignmentID = " + id);
+                            st.execute("DELETE FROM Class_Assignment WHERE FKAssignment_intID = " + id);
+                            st.execute("DELETE FROM Course_Assignment WHERE FKAssignment_intID = " + id);
                             
                         }
                     }

@@ -5,6 +5,7 @@
  */
 package org.psu.berksist.CourseEZ;
 
+import java.awt.Window;
 import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -131,64 +132,48 @@ public class jpAddResourceToCourse extends javax.swing.JPanel {
                 tc.setCellRenderer(jtResources.getDefaultRenderer(Boolean.class)); 
 
                 // Result Set 
-                ResultSet result1  = st.executeQuery("Select FKResourcesID FROM CourseResourcesLink WHERE FKCourseID = "+intSelectedCourseID+" order by FKResourcesID asc;");
+                ResultSet result1 = st.executeQuery("Select FKResource_intID FROM Course_Resource WHERE FKCourse_intID = " + intSelectedCourseID + " order by FKResource_intID asc;");
                 String ResourceIDForWhere = "";
                 int Counter =0;
                     while(result1.next()){
                         System.out.println("got here");
-                        Counter = Counter+1;
-                        int ResourceID = result1.getInt("FKResourcesID");
-                        if(Counter <2){
-                            ResourceIDForWhere = "ID != "+ResourceID;
+                        Counter = Counter + 1;
+                        int ResourceID = result1.getInt("FKResource_intID");
+                        if(Counter < 2){
+                            ResourceIDForWhere = "intID != " + ResourceID;
                         }
                         else{
-                            ResourceIDForWhere = ResourceIDForWhere + " AND ID != "+ResourceID;
+                            ResourceIDForWhere = ResourceIDForWhere + " AND intID != " + ResourceID;
                         }
                         Statement st1 = dbConnection.createStatement();
                         System.out.println("ResourceID = " + ResourceID);
-                        ResultSet result = st1.executeQuery("SELECT ID, Description,\n" +
-                            "CASE WHEN Resources.ID = "+ResourceID+" THEN 1 ELSE -1 END AS 'Select'\n" +
-                            "FROM Resources Where ID = "+ResourceID+" order by ID asc;");
+                        ResultSet result = st1.executeQuery("SELECT intID, vchrDescription, " +
+                            "CASE WHEN Resource.intID = " + ResourceID + " THEN 1 ELSE 0 END AS 'Select' " +
+                            "FROM Resource Where intID = " + ResourceID + " order by intID asc;");
                         System.out.println("got here 2");
 
-                        int i = 0;
                         while (result.next()) 
                         {
-                            // SQLite won't do Booleans so lets convert it to one
-                            boolean b = (Integer.parseInt(result.getString("Select")) != -1);
-                            model.addRow(new Object[]{ b, result.getString("ID"), result.getString("Description")});
-                            // Authorize the checkbox to be editable
-                            model.isCellEditable(i, 0);
-                            i++;   
+                            
+                            boolean b = result.getBoolean("Select");
+                            model.addRow(new Object[]{ b, result.getString("intID"), result.getString("vchrDescription")});
 
                         }
                     } 
                     if(Counter > 0){
-                        ResultSet result = st.executeQuery("SELECT -1 AS 'Select', ID, Description FROM Resources Where "+ResourceIDForWhere+" order by ID asc;");
+                        ResultSet result = st.executeQuery("SELECT intID, vchrDescription FROM Resource Where " + ResourceIDForWhere + " order by intID asc;");
 
-                        int i = 0;
                         while (result.next()) 
                         {
-                            // SQLite won't do Booleans so lets convert it to one
-                            boolean b = (Integer.parseInt(result.getString("Select")) != -1);
-                            model.addRow(new Object[]{ b, result.getString("ID"), result.getString("Description")});
-                            // Authorize the checkbox to be editable
-                            model.isCellEditable(i, 0);
-                            i++;   
+                            model.addRow(new Object[]{ false, result.getString("intID"), result.getString("vchrDescription")}); 
                         }
                     }
                     else{
-                        ResultSet result2 = st.executeQuery("SELECT -1 AS 'Select', ID, Description FROM Resources order by ID asc;");
+                        ResultSet result2 = st.executeQuery("SELECT intID, vchrDescription FROM Resource order by intID asc;");
 
-                        int num = 0;
                         while (result2.next()) 
                         {
-                            // SQLite won't do Booleans so lets convert it to one
-                            boolean b = (Integer.parseInt(result2.getString("Select")) != -1);
-                            model.addRow(new Object[]{ b, result2.getString("ID"), result2.getString("Description")});
-                            // Authorize the checkbox to be editable
-                            model.isCellEditable(num, 0);
-                            num++;   
+                            model.addRow(new Object[]{ false, result2.getString("intID"), result2.getString("vchrDescription")}); 
                         }
                     }
             }
@@ -277,19 +262,21 @@ public class jpAddResourceToCourse extends javax.swing.JPanel {
         try {
             System.out.println("Add Selected Resources fired! Course ID: " + intSelectedCourseID);
 
-            st.execute("DELETE FROM CourseResourcesLink WHERE FKCourseID = " + intSelectedCourseID);
+            st.execute("DELETE FROM Course_Resource WHERE FKCourse_intID = " + intSelectedCourseID);
 
             // Now lets add all assignments from our list to the link table
             for (Iterator<Integer> iterator = selectedResources.iterator(); iterator.hasNext(); ) {
                 Integer id = iterator.next();
-                st.execute("INSERT INTO CourseResourcesLink (FKCourseID,FKResourcesID) VALUES (" + intSelectedCourseID + "," + id + ")");
+                st.execute("INSERT INTO Course_Resource (FKCourse_intID, FKResource_intID) VALUES (" + intSelectedCourseID + ", " + id + ")");
             }
 
             // Let the user know we have taken care of it
             JFrame PopUp = new JFrame();
             JOptionPane.showMessageDialog(PopUp,"Resources Updated!");
-            this.getTopLevelAncestor().setVisible(false);
-
+            
+            //this.getTopLevelAncestor().setVisible(false);
+            ((Window) getRootPane().getParent()).dispose();
+            
         } catch (SQLException ex) {
             Logger.getLogger(jpAddResourceToCourse.class.getName()).log(Level.SEVERE, null, ex);
         }

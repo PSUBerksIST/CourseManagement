@@ -133,37 +133,28 @@ public class jpAddAssignmentsToCourse extends javax.swing.JPanel {
             tc.setCellRenderer(jtAssignments.getDefaultRenderer(Boolean.class)); 
             
             // Result Set 
-            ResultSet result = st.executeQuery("SELECT Assignments.id AS ID, Assignments.ShortName AS Name, Assignments.Description, Assignments.GroupAssignment AS 'Group', Assignments.MaximumPoints AS Points,\n" +
+            /*ResultSet result = st.executeQuery("SELECT Assignments.id AS ID, Assignments.ShortName AS Name, Assignments.Description, Assignments.GroupAssignment AS 'Group', Assignments.MaximumPoints AS Points,\n" +
                 "CASE WHEN Assignments.ID = CourseAssignmentLink.FKAssignmentID THEN 1 ELSE -1 END AS 'Select'\n" +
                 "FROM Assignments \n" +
                 "LEFT JOIN CourseAssignmentLink ON CourseAssignmentLink.FKAssignmentID=Assignments.ID " +
-                "AND CourseAssignmentLink.FKCourseID = " + intSelectedCourseID);
+                "AND CourseAssignmentLink.FKCourseID = " + intSelectedCourseID);*/
+            
+            ResultSet result = st.executeQuery("SELECT Assignment.intid AS ID, Assignment.vchrShortName AS Name, Assignment.vchrDescription, Assignment.boolGroupAssignment AS 'Group', Assignment.realMaximumPoints AS Points,\n" +
+                "CASE WHEN Assignment.intID = Course_Assignment.FKAssignment_intID THEN 1 ELSE 0 END AS 'Select'\n" +
+                "FROM Assignment \n" +
+                "LEFT JOIN Course_Assignment ON Course_Assignment.FKAssignment_intID=Assignment.intID " +
+                "AND Course_Assignment.FKCourse_intID = " + intSelectedCourseID);
 
-            int i = 0;
             while (result.next()) 
             {
                 
-                // SQLite won't do Booleans so lets convert it to one
-                boolean b = (Integer.parseInt(result.getString("Select")) != -1);
-                System.out.println(result.getString("Group"));
+                boolean b = result.getBoolean("Select");
+                boolean g = result.getBoolean("Group");
                 
-                boolean g = false;
-                if(result.getString("Group") == null || Integer.parseInt(result.getString("Group")) < 1)
-                {
-                   g = false;
-                }
-                else
-                {
-                    g = true;
-                }
-                
-                //boolean g = (Integer.parseInt(result.getString("Group")) != 1);
                 String group = (g) ? "no" : "yes";
+                
                 // Add our row to the JTable
-                model.addRow(new Object[]{ b, result.getString("ID"), result.getString("Name"), result.getString("Description"), result.getString("Points"), group});
-                // Authorize the checkbox to be editable
-                model.isCellEditable(i, 0);
-                i++;   
+                model.addRow(new Object[]{ b, result.getString("ID"), result.getString("Name"), result.getString("vchrDescription"), result.getString("Points"), group});
                 
             }
 
@@ -252,12 +243,12 @@ public class jpAddAssignmentsToCourse extends javax.swing.JPanel {
         try {
             System.out.println("Add Selected Assignments fired! Course ID: " + intSelectedCourseID);
             
-            st.execute("DELETE FROM CourseAssignmentLink WHERE FKCourseID = " + intSelectedCourseID);
+            st.execute("DELETE FROM Course_Assignment WHERE FKCourse_intID = " + intSelectedCourseID);
             
             // Now lets add all assignments from our list to the link table
             for (Iterator<Integer> iterator = selectedAssignmentIDs.iterator(); iterator.hasNext(); ) {
                 Integer id = iterator.next();
-                st.execute("INSERT INTO CourseAssignmentLink (FKCourseID,FKAssignmentID) VALUES (" + intSelectedCourseID + "," + id + ")");
+                st.execute("INSERT INTO Course_Assignment (FKCourse_intID,FKAssignment_intID) VALUES (" + intSelectedCourseID + "," + id + ")");
             }
             
             // Let the user know we have taken care of it

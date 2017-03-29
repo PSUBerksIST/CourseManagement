@@ -104,9 +104,14 @@ public class jpAddAssignment extends javax.swing.JPanel {
     // This inserts all the data into the Assignments table in the DB
     private void InsertToTable(String inAssignment, String inDescription, String inSpecification, int inPoints, String inNotes, String inGradeNotes, boolean inAttendance, boolean inGroup){
         try {
-            String query = "INSERT INTO Assignments (ShortName, Description, Specification, MaximumPoints, Notes, GradingNotes, \n" +
+            /*String query = "INSERT INTO Assignments (ShortName, Description, Specification, MaximumPoints, Notes, GradingNotes, \n" +
                             " AttendanceRequired, GroupAssignment)\n" +
-                            " VALUES (?, ?, ?, ?, ?, ?, ?, ?)";//8
+                            " VALUES (?, ?, ?, ?, ?, ?, ?, ?)";//8*/
+            
+            String query = "INSERT INTO Assignment (vchrShortName, vchrDescription, vchrSpecification, realMaximumPoints, vchrNote, vchrGradingNotes, \n" +
+                            " boolAttendanceRequired, boolGroupAssignment)\n" +
+                            " VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
+            
              pst = dbConnection.prepareStatement(query);
              pst.setString(1, inAssignment);
              pst.setString(2, inDescription);

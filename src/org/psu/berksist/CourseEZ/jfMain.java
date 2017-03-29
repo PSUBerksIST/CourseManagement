@@ -144,7 +144,7 @@ public class jfMain extends JFrame {
                 jmiTemp.setSelected(true);
             } // is this the current L&F?
             
-            // TODO: Look into seperating this into its own class - RQZ
+            
             jmiTemp.addActionListener((java.awt.event.ActionEvent evt) -> {
                 try {
                     

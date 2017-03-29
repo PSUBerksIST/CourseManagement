@@ -78,8 +78,7 @@ public class jpClass extends javax.swing.JPanel {
  
         try {
              
-            //TODO: Add some sort of array to keep track of primary keys - RQZ
-            ResultSet rs = st.executeQuery("Select ID, Number, WritingEmphasis from Course order by Number asc");
+            ResultSet rs = st.executeQuery("Select intID as ID, intNumber as Number, intWritingEmphasis as WritingEmphasis from Course order by Number asc");
             //ResultSet rs = st.executeQuery("select Number from Course order by ID asc");
 
             while (rs.next()) {
@@ -99,12 +98,12 @@ public class jpClass extends javax.swing.JPanel {
  
         try {
 
-            ResultSet rs = st.executeQuery("select ID, Section from Class where FKCourse = "
-                    + intSelectedCourseID + " order by Section");
+            ResultSet rs = st.executeQuery("select intID, intSection from Class where FKCourse_intID = "
+                    + intSelectedCourseID + " order by intSection");
             
             while (rs.next()) 
             {
-                jcbClass.addItem(new ClassInfo(rs.getInt("ID"), rs.getInt("Section")));
+                jcbClass.addItem(new ClassInfo(rs.getInt("intID"), rs.getInt("intSection")));
             }
 
         } catch (SQLException sqle) {
@@ -191,20 +190,13 @@ public class jpClass extends javax.swing.JPanel {
             tc.setCellRenderer(jtStudents.getDefaultRenderer(Boolean.class)); 
             
             // Result Set 
-            ResultSet result = st.executeQuery("SELECT -1 AS 'Select', vClassAllStudents.FirstName, vClassAllStudents.LastName, vClassAllStudents.StudentID FROM vClassAllStudents WHERE ClassID = " + intSelectedClassID);
+            ResultSet result = st.executeQuery("SELECT vchrFirstName, vchrLastName, intID AS StudentID FROM vClass_All_Students WHERE intClassID = " + intSelectedClassID);
 
-            int i = 0;
             while (result.next()) 
             {
                 
-                // SQLite won't do Booleans so lets convert it to one
-                boolean b = (Integer.parseInt(result.getString("Select")) != -1);
                 // Add our row to the JTable
-                model.addRow(new Object[]{ b, result.getString("FirstName"), result.getString("LastName"), result.getString("StudentID")});
-                // Authorize the checkbox to be editable
-                model.isCellEditable(i, 0);
-                i++;   
-                
+                model.addRow(new Object[]{ false, result.getString("vchrFirstName"), result.getString("vchrLastName"), result.getString("StudentID")});
             }
 
         }
@@ -294,19 +286,13 @@ public class jpClass extends javax.swing.JPanel {
             tc.setCellRenderer(jtGroupAssignments.getDefaultRenderer(Boolean.class)); 
             
             // Result Set 
-            ResultSet result = st.executeQuery("SELECT -1 AS 'Select', Assignments.id AS ID, Assignments.ShortName AS Name, Assignments.Description, Assignments.MaximumPoints AS Points FROM Assignments, ClassAssignmentLink WHERE Assignments.id = ClassAssignmentLink.FKAssignmentID AND Assignments.GroupAssignment = 1 AND ClassAssignmentLink.FKClassID = " + intSelectedClassID);
+            ResultSet result = st.executeQuery("SELECT Assignment.intID AS ID, Assignment.vchrShortName AS Name, Assignment.vchrDescription AS Description, Assignment.realMaximumPoints AS Points FROM Assignment, Class_Assignment WHERE Assignment.intid = Class_Assignment.FKAssignment_intID AND Assignment.boolGroupAssignment = 1 AND Class_Assignment.FKClass_intID = " + intSelectedClassID);
 
-            int i = 0;
             while (result.next()) 
             {
                 
-                // SQLite won't do Booleans so lets convert it to one
-                boolean b = (Integer.parseInt(result.getString("Select")) != -1);
                 // Add our row to the JTable
-                model.addRow(new Object[]{ b, result.getString("ID"), result.getString("Name"), result.getString("Description"), result.getString("Points")});
-                // Authorize the checkbox to be editable
-                model.isCellEditable(i, 0);
-                i++;   
+                model.addRow(new Object[]{ false, result.getString("ID"), result.getString("Name"), result.getString("Description"), result.getString("Points")}); 
                 
             }
 
@@ -398,19 +384,13 @@ public class jpClass extends javax.swing.JPanel {
             tc.setCellRenderer(jtIndividualAssignments.getDefaultRenderer(Boolean.class)); 
             
             // Result Set 
-            ResultSet result = st.executeQuery("SELECT -1 AS 'Select', Assignments.id AS ID, Assignments.ShortName AS Name, Assignments.Description, Assignments.MaximumPoints AS Points FROM Assignments, ClassAssignmentLink WHERE Assignments.id = ClassAssignmentLink.FKAssignmentID AND Assignments.GroupAssignment != 1 AND ClassAssignmentLink.FKClassID = " + intSelectedClassID);
+            ResultSet result = st.executeQuery("SELECT Assignment.intid AS ID, Assignment.vchrShortName AS Name, Assignment.vchrDescription AS Description, Assignment.realMaximumPoints AS Points FROM Assignment, Class_Assignment WHERE Assignment.intid = Class_Assignment.FKAssignment_intID AND Assignment.boolGroupAssignment != 1 AND Class_Assignment.FKClass_intID = " + intSelectedClassID);
 
-            int i = 0;
             while (result.next()) 
             {
                 
-                // SQLite won't do Booleans so lets convert it to one
-                boolean b = (Integer.parseInt(result.getString("Select")) != -1);
                 // Add our row to the JTable
-                model.addRow(new Object[]{ b, result.getString("ID"), result.getString("Name"), result.getString("Description"), result.getString("Points")});
-                // Authorize the checkbox to be editable
-                model.isCellEditable(i, 0);
-                i++;   
+                model.addRow(new Object[]{ false, result.getString("ID"), result.getString("Name"), result.getString("Description"), result.getString("Points")});
                 
             }
             
@@ -430,58 +410,59 @@ public class jpClass extends javax.swing.JPanel {
    {
         try
         {
-            ResultSet rs = st.executeQuery("SELECT Course.Number, Course.Title, Class.MeetingLocation," +
-                                           " Class.tmMondayStart, Class.tmMondayEnd," +
-                                           " Class.tmTuesdayStart, Class.tmTuesdayEnd," +
-                                           " Class.tmWednesdayStart, Class.tmWednesdayEnd," +
-                                           " Class.tmThursdayStart, Class.tmThursdayEnd," +
-                                           " Class.tmFridayStart, Class.tmFridayEnd," +
-                                           " Class.tmSaturdayStart, Class.tmSaturdayEnd,"+
-                                           " Class.tmSundayStart, Class.tmSundayEnd" +
-                                           " FROM Course, Class WHERE Course.ID = " + intSelectedCourseID + 
-                                           " AND Class.Section = " + jcbClass.getSelectedItem()); 
+            ResultSet rs = st.executeQuery("SELECT Course.intNumber, Course.vchrTitle, Class.vchrMeetingLocation," +
+                                           " Class.tMondayStart, Class.tMondayEnd," +
+                                           " Class.tTuesdayStart, Class.tTuesdayEnd," +
+                                           " Class.tWednesdayStart, Class.tWednesdayEnd," +
+                                           " Class.tThursdayStart, Class.tThursdayEnd," +
+                                           " Class.tFridayStart, Class.tFridayEnd," +
+                                           " Class.tSaturdayStart, Class.tSaturdayEnd,"+
+                                           " Class.tSundayStart, Class.tSundayEnd" +
+                                           " FROM Course, Class WHERE Course.intID = " + intSelectedCourseID + 
+                                           " AND Class.intSection = " + jcbClass.getSelectedItem()); 
          
-        
-            jlCourseNumber.setText("Course: IST "+ rs.getString("Number"));
-            jlCourseTitle.setText(rs.getString("Title"));
-            jlMeetingLocation.setText("Meeting Location: " + rs.getString("MeetingLocation"));
+            
+            // TODO: Load Department Name and use that instead of hardcoding "IST" - RQZ
+            jlCourseNumber.setText("Course: IST " + rs.getString("intNumber"));
+            jlCourseTitle.setText(rs.getString("vchrTitle"));
+            jlMeetingLocation.setText("Meeting Location: " + rs.getString("vchrMeetingLocation"));
             jlTime.setText("Meeting Times: ");
             jtStartEndTime.setText("");
             while (rs.next())
             {
-                if(rs.getString("tmMondayStart")!= null)
+                if(rs.getString("tMondayStart")!= null)
                 {
-                    jtStartEndTime.append("Monday: " + rs.getString("tmMondayStart")+" - "+ rs.getString("tmMondayEnd")+"\n");
+                    jtStartEndTime.append("Monday: " + rs.getString("tMondayStart")+" - "+ rs.getString("tMondayEnd")+"\n");
                 } //Get Monday Start and End Times
 
-                if(rs.getString("tmTuesdayStart")!= null)
+                if(rs.getString("tTuesdayStart")!= null)
                 {
-                    jtStartEndTime.append("Tuesday: " + rs.getString("tmTuesdayStart")+" - "+ rs.getString("tmTuesdayEnd")+"\n");
+                    jtStartEndTime.append("Tuesday: " + rs.getString("tTuesdayStart")+" - "+ rs.getString("tTuesdayEnd")+"\n");
                 } //Get Tuesday Start and End Times
                 
-                if(rs.getString("tmWednesdayStart")!= null)
+                if(rs.getString("tWednesdayStart")!= null)
                 {
-                    jtStartEndTime.append("Wednesday : " + rs.getString("tmWednesdayStart")+" - "+rs.getString("tmWednesdayEnd")+"\n");
+                    jtStartEndTime.append("Wednesday : " + rs.getString("tWednesdayStart")+" - "+rs.getString("tWednesdayEnd")+"\n");
                 } //Get Wednesday Start and End Times
                 
-                if(rs.getString("tmThursdayStart")!= null)
+                if(rs.getString("tThursdayStart")!= null)
                 {
-                    jtStartEndTime.append("Thursday: " + rs.getString("tmThursdayStart")+" - "+ rs.getString("tmThursdayEnd")+"\n");
+                    jtStartEndTime.append("Thursday: " + rs.getString("tThursdayStart")+" - "+ rs.getString("tThursdayEnd")+"\n");
                 }  //Get Thursday Start and End Times
 
-                if(rs.getString("tmFridayStart")!= null)
+                if(rs.getString("tFridayStart")!= null)
                 {
-                    jtStartEndTime.append("Friday: " + rs.getString("tmFridayStart")+" - "+ rs.getString("tmFridayEnd")+"\n");
+                    jtStartEndTime.append("Friday: " + rs.getString("tFridayStart")+" - "+ rs.getString("tFridayEnd")+"\n");
                 }  //Get Friday Start and End Times
                 
-                if(rs.getString("tmSaturdayStart")!= null)
+                if(rs.getString("tSaturdayStart")!= null)
                 {
-                    jtStartEndTime.append("Saturday: " + rs.getString("tmSaturdayStart")+" - "+ rs.getString("tmSaturdayEnd")+"\n");
+                    jtStartEndTime.append("Saturday: " + rs.getString("tSaturdayStart")+" - "+ rs.getString("tSaturdayEnd")+"\n");
                 }  //Get Saturday Start and End Times
                 
-                   if(rs.getString("tmSundayStart")!= null)
+                   if(rs.getString("tSundayStart")!= null)
                 {
-                    jtStartEndTime.append("Sunday: " + rs.getString("tmSundayStart")+" - "+ rs.getString("tmSundayEnd")+"\n");
+                    jtStartEndTime.append("Sunday: " + rs.getString("tSundayStart")+" - "+ rs.getString("tSundayEnd")+"\n");
                 }  //Get Sunday Start and End Times
          
           } // while(rs.next)
@@ -1080,7 +1061,7 @@ public class jpClass extends javax.swing.JPanel {
                 for (Iterator<Integer> iterator = assignmentTab_SelectedAssignmentIDs.iterator(); iterator.hasNext(); ) {
                     Integer id = iterator.next();
                     iterator.remove();
-                    st.execute("DELETE FROM ClassAssignmentLink WHERE FKClassID = " + intSelectedClassID + " AND FKAssignmentID = " + id);
+                    st.execute("DELETE FROM Class_Assignment WHERE FKClass_intID = " + intSelectedClassID + " AND FKAssignment_intID = " + id);
                 }
             }
             
@@ -1089,7 +1070,7 @@ public class jpClass extends javax.swing.JPanel {
                 for (Iterator<Integer> iterator = assignmentTab_SelectedGroupAssignmentIDs.iterator(); iterator.hasNext(); ) {
                     Integer id = iterator.next();
                     iterator.remove();
-                    st.execute("DELETE FROM ClassAssignmentLink WHERE FKClassID = " + intSelectedClassID + " AND FKAssignmentID = " + id);
+                    st.execute("DELETE FROM Class_Assignment WHERE FKClass_intID = " + intSelectedClassID + " AND FKAssignment_intID = " + id);
                 }
             }
             
@@ -1107,7 +1088,7 @@ public class jpClass extends javax.swing.JPanel {
 
     //this button edit class allows you to edit the information of the class you are currently viewing 
     private void jbEditClassActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jbEditClassActionPerformed
-        JPanel AddClass = new jpAddClass(dbConnection,  jcbCourse.getSelectedIndex(), Integer.parseInt(jcbClass.getSelectedItem() + ""));
+        JPanel AddClass = new jpAddClass(dbConnection,  intSelectedCourseID, intSelectedClassID);
         AddClass.setName("Add Class");
         CreateFrame(AddClass); 
         
@@ -1130,7 +1111,7 @@ public class jpClass extends javax.swing.JPanel {
                     for (Iterator<Integer> iterator = studentTab_SelectedStudentIDs.iterator(); iterator.hasNext(); ) {
                         Integer id = iterator.next();
                         iterator.remove();
-                        st.execute("DELETE FROM ClassStudentLink WHERE FKClass = " + intSelectedClassID + " AND FKStudent = " + id);
+                        st.execute("DELETE FROM Class_Student WHERE FKClass_intID = " + intSelectedClassID + " AND FKStudent_intID = " + id);
                     }
                     
                     setStudents();

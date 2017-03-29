@@ -20,7 +20,6 @@ import javax.swing.JOptionPane;
 import javax.swing.event.TableModelEvent;
 import javax.swing.event.TableModelListener;
 import javax.swing.table.DefaultTableModel;
-import javax.swing.table.TableColumn;
 
 
 public class jpAddAssignmentsToClass extends javax.swing.JPanel {
@@ -98,12 +97,19 @@ public class jpAddAssignmentsToClass extends javax.swing.JPanel {
             
             
             // Prepared Statement
-            PreparedStatement classAssigns = dbConnection.prepareStatement(
+            /*PreparedStatement classAssigns = dbConnection.prepareStatement(
                 "SELECT Assignments.id AS ID, Assignments.ShortName AS Name, Assignments.Description, Assignments.MaximumPoints AS Points, " +
                 "CASE WHEN Assignments.ID = ClassAssignmentLink.FKAssignmentID THEN 1 ELSE 0 END AS 'Selected' " + 
                 "FROM Assignments " +
                 "LEFT JOIN ClassAssignmentLink ON ClassAssignmentLink.FKAssignmentID=Assignments.ID " + 
-                "AND ClassAssignmentLink.FKClassID = ?");
+                "AND ClassAssignmentLink.FKClassID = ?");*/
+            
+            PreparedStatement classAssigns = dbConnection.prepareStatement(
+                "SELECT Assignment.intID AS ID, Assignment.vchrShortName AS Name, Assignment.vchrDescription AS Description, Assignment.realMaximumPoints AS Points, " +
+                "CASE WHEN Assignment.intID = Class_Assignment.FKAssignment_intID THEN 1 ELSE 0 END AS 'Selected' " + 
+                "FROM Assignment " +
+                "LEFT JOIN Class_Assignment ON Class_Assignment.FKAssignment_intID=Assignment.intID " + 
+                "AND Class_Assignment.FKClass_intID = ?");
             
             classAssigns.setInt(1, intSelectedClassID);
             
@@ -240,12 +246,12 @@ public class jpAddAssignmentsToClass extends javax.swing.JPanel {
             
             // We are going to take selectedAssignmentIDs and add assign them to intSelectedClassID
             // But first we need to drop all previously assigned assignments
-            st.execute("DELETE FROM ClassAssignmentLink WHERE FKClassID = " + intSelectedClassID);
+            st.execute("DELETE FROM Class_Assignment WHERE FKClass_intID = " + intSelectedClassID);
             
             // Now lets add all assignments from our list to the link table
             for (Iterator<Integer> iterator = selectedAssignmentIDs.iterator(); iterator.hasNext(); ) {
                 Integer id = iterator.next();
-                st.execute("INSERT INTO ClassAssignmentLink (FKClassID,FKAssignmentID) VALUES (" + intSelectedClassID + "," + id + ")");
+                st.execute("INSERT INTO Class_Assignment (FKClass_intID,FKAssignment_intID) VALUES (" + intSelectedClassID + "," + id + ")");
             }
             
             // Let the user know we have taken care of it

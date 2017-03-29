@@ -5,16 +5,13 @@
  */
 package org.psu.berksist.CourseEZ;
 
-import java.awt.Dimension;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.util.*;
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.JFrame;
-import javax.swing.JInternalFrame;
 import javax.swing.JPanel;
 import java.sql.Connection;
-import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
@@ -102,7 +99,7 @@ public class jpCourse extends JPanel{
         courses.clear();
         // Grab the courses from the database and display them
         try {
-            ResultSet result = st.executeQuery("SELECT course.id, department.departmentname, course.number FROM course, department WHERE course.fkdepartment = department.id ORDER BY course.id asc");
+            ResultSet result = st.executeQuery("SELECT course.intID, department.vchrName, course.intNumber FROM course, department WHERE course.fkdepartment_intID = department.intID ORDER BY course.intID asc");
 
             int i = 0;
             while (result.next()) {
@@ -198,28 +195,22 @@ public class jpCourse extends JPanel{
             tc.setCellRenderer(jtAssignments.getDefaultRenderer(Boolean.class)); 
             
             // Result Set 
-            ResultSet result = st.executeQuery("SELECT -1 AS 'Select', "
-                    + "Assignments.id AS ID, Assignments.ShortName AS Name, "
-                    + "Assignments.Description, Assignments.MaximumPoints AS Points, "
-                    + "Assignments.GroupAssignment AS 'Group' "
-                    + "FROM Assignments, "
-                    + "CourseAssignmentLink "
-                    + "WHERE Assignments.id = CourseAssignmentLink.FKAssignmentID "
-                    + "AND CourseAssignmentLink.FKCourseID = " + selectedCourse);
+            ResultSet result = st.executeQuery("SELECT "
+                    + "Assignment.intID AS ID, Assignment.vchrShortName AS Name, "
+                    + "Assignment.vchrDescription AS Description, Assignment.realMaximumPoints AS Points, "
+                    + "Assignment.boolGroupAssignment AS 'Group' "
+                    + "FROM Assignment, "
+                    + "Course_Assignment "
+                    + "WHERE Assignment.intID = Course_Assignment.FKAssignment_intID "
+                    + "AND Course_Assignment.FKCourse_intID = " + selectedCourse);
 
-            int i = 0;
             while (result.next()) 
             {
                 
-                // SQLite won't do Booleans so lets convert it to one
-                boolean b = (Integer.parseInt(result.getString("Select")) != -1);
-                boolean g = (Integer.parseInt(result.getString("Group")) != 1);
+                boolean g = result.getBoolean("Group");
                 String group = (g) ? "no" : "yes";
                 // Add our row to the JTable
-                model.addRow(new Object[]{ b, result.getString("ID"), result.getString("Name"), result.getString("Description"), result.getString("Points"), group});
-                // Authorize the checkbox to be editable
-                model.isCellEditable(i, 0);
-                i++;   
+                model.addRow(new Object[]{ false, result.getString("ID"), result.getString("Name"), result.getString("Description"), result.getString("Points"), group}); 
                 
             }
 
@@ -303,26 +294,19 @@ public class jpCourse extends JPanel{
             TableColumn tc = jtResources.getColumnModel().getColumn(0);
             tc.setCellEditor(jtResources.getDefaultEditor(Boolean.class));  
             tc.setCellRenderer(jtResources.getDefaultRenderer(Boolean.class)); 
-            ResultSet result1 = st.executeQuery("Select FKResourcesID FROM CourseResourcesLink Where FKCourseID = "+inCourse+" order by FKResourcesID asc;");
+            ResultSet result1 = st.executeQuery("Select FKResource_intID FROM Course_Resource Where FKCourse_intID = " + inCourse + " order by FKResource_intID asc;");
             while (result1.next()){
-                int ResourcesID  = result1.getInt("FKResourcesID");
+                int ResourcesID = result1.getInt("FKResource_intID");
                 // Result Set 
                 Statement st1 = dbConnection.createStatement();
-                ResultSet result = st1.executeQuery("SELECT -1 AS 'Select', ID,  Description  FROM Resources Where ID = "+ResourcesID+" order by ID asc;");
+                ResultSet result = st1.executeQuery("SELECT intID, vchrDescription FROM Resource Where intID = " + ResourcesID + " order by intID asc;");
 
-                int i = 0;
+                
                 while (result.next()) 
                 {
 
-                    // SQLite won't do Booleans so lets convert it to one
-                    boolean b = (Integer.parseInt(result.getString("Select")) != -1);
-                   // boolean g = (Integer.parseInt(result.getString("Group")) != 1);
-                   // String group = (g) ? "no" : "yes";
                     // Add our row to the JTable
-                    model.addRow(new Object[]{ b, result.getString("ID"), result.getString("Description")});
-                    // Authorize the checkbox to be editable
-                    model.isCellEditable(i, 0);
-                    i++;   
+                    model.addRow(new Object[]{ false, result.getString("intID"), result.getString("vchrDescription")}); 
                 }
             }
 
@@ -343,13 +327,14 @@ public class jpCourse extends JPanel{
     {
        try
         {
-            ResultSet rs = st.executeQuery("SELECT Number, Title, Description FROM Course WHERE ID = " + selectedCourse);
+            ResultSet rs = st.executeQuery("SELECT intNumber, vchrTitle, vchrDescription FROM Course WHERE intID = " + selectedCourse);
           
             while (rs.next())
             {
-                jlNumber.setText("IST "+ rs.getString("Number"));
-                jlTitle.setText(rs.getString("Title"));
-                jtDescription.setText(rs.getString("Description"));
+                // TODO: Remove hardcoding of "IST" with proper Department - RQZ
+                jlNumber.setText("IST " + rs.getString("intNumber"));
+                jlTitle.setText(rs.getString("vchrTitle"));
+                jtDescription.setText(rs.getString("vchrDescription"));
                 jtDescription.setCaretPosition(0);
             }//while
           
@@ -724,7 +709,7 @@ public class jpCourse extends JPanel{
                     for (Iterator<Integer> iterator = selectedAssignmentIDs.iterator(); iterator.hasNext(); ) {
                         Integer id = iterator.next();
                         iterator.remove();
-                        st.execute("DELETE FROM CourseAssignmentLink WHERE FKCourseID = " + selectedCourse + " AND FKAssignmentID = " + id);
+                        st.execute("DELETE FROM Course_Assignment WHERE FKCourse_intID = " + selectedCourse + " AND FKAssignment_intID = " + id);
                     }
                 }
                 
@@ -768,7 +753,7 @@ public class jpCourse extends JPanel{
                         for (Iterator<Integer> iterator = selectedResources.iterator(); iterator.hasNext(); ) {
                             Integer id = iterator.next();
                             iterator.remove();
-                            st.execute("DELETE FROM CourseResourcesLink WHERE FKResourcesID = " + id + " AND FKCourseID = "+selectedCourse);
+                            st.execute("DELETE FROM Course_Resource WHERE FKResource_intID = " + id + " AND FKCourse_intID = " + selectedCourse);
                         }
                     }
 

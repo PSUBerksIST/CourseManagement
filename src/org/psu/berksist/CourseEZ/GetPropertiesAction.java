@@ -74,8 +74,6 @@ public class GetPropertiesAction extends AbstractAction {
     
     public void actionPerformed(ActionEvent ev) 
     {
-
-        // TODO: Add a JFileChooser when selecting 'Load Options' from JMenuItem - RQZ
         
         JFileChooser jfcImport = new JFileChooser();
         jfcImport.setDialogTitle("Import User Preferences");
@@ -110,7 +108,7 @@ public class GetPropertiesAction extends AbstractAction {
         } 
         
         
-        // TODO: Check to make sure the opened XML file is for this App - RQZ
+        // Check to make sure the opened XML file is for this App
         // AppID = CourseEZ, AppVersion = 1
         if (myProps.getProperty("AppID", "").equals(AppConstants.APP_ID) && 
                 myProps.getProperty("AppVersion", "").equals(AppConstants.APP_VERSION))

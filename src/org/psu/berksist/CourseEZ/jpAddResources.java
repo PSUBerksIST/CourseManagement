@@ -42,7 +42,7 @@ public class jpAddResources extends javax.swing.JPanel {
     
     private void InsertToTable(String inDescription){
         try {
-            String query = "INSERT INTO Resources ( Description )"
+            String query = "INSERT INTO Resource ( vchrDescription )"
                     + " VALUES (?)";//8
              pst = dbConnection.prepareStatement(query);
              pst.setString(1, inDescription);

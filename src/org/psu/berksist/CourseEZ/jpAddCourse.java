@@ -3,13 +3,9 @@
     and saves it to the database to create a new course.
  */
 package org.psu.berksist.CourseEZ;
-import java.awt.Component;
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.sql.Statement;
-import javax.swing.JOptionPane;
+
+import java.awt.Window;
+import java.sql.*;
 
 /**
  *
@@ -22,33 +18,24 @@ public class jpAddCourse extends javax.swing.JPanel
     private Statement st;
     
     //list of variables for passing to database
-    private String strDepartment = "default value";//string to receive input from GUI boxes
-    private int intDepartment = 123456789; //int to convert strDepartment for passing to database
-        
+    private String strDepartment = "", strCredits = "", strCourseTitle = "", 
+            strDescription = "", strObjectives = "", strPrerequisites = "", 
+            strNotes = "";
+    
+    private int intDepartment = 0, intCourseNumber = 0, intWritingEmphasis = 0,
+            intCredits = 0;
 
-    int intCourseNumber = 123456789;//int to convert strDepartment for passing to database
-        
-    int intWritingEmphasis = 123456789;
-        
-    String strCredits = "default value";//string to receive input from GUI boxes
-    int intCredits = 123456789;//int to convert strDepartment for passing to database
-
-    String strCourseTitle = "default value";
-    String strDescription = "default value";
-    String strObjectives = "default value";
-    String strPrerequisites = "default value";        
-    String strNotes = "default value";
     
     public jpAddCourse() 
     {
         initComponents();
     }
     
-    jpAddCourse(Connection inConnection)
+    public jpAddCourse(Connection inConnection)
     {
-        setDBConnection(inConnection);//receives database connection from jpCourse, sets it up locally
+        setDBConnection(inConnection); // receives database connection from jpCourse, sets it up locally
         initComponents();
-        setJCBDepartment();//SQL Select to pull list of departments and configure the department drop down
+        setJCBDepartment(); // SQL Select to pull list of departments and configure the department drop down
     }
 
     @SuppressWarnings("unchecked")
@@ -234,8 +221,8 @@ public class jpAddCourse extends javax.swing.JPanel
     }// </editor-fold>//GEN-END:initComponents
 
     private void jbAddCourseButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jbAddCourseButtonActionPerformed
-        String strSelectedDepartment = "default value"; //string for inserting to FKDepartment field of Course
-        int intSelectedDepartment = 123456789; //int derived from strSelectedDepartment for inserting to FKDepartment field of Course
+        String strSelectedDepartment = ""; //string for inserting to FKDepartment field of Course
+        int intSelectedDepartment = 0; //int derived from strSelectedDepartment for inserting to FKDepartment field of Course
 
         getInput();
         strSelectedDepartment = String.valueOf(jcbDepartment.getSelectedItem());
@@ -243,7 +230,8 @@ public class jpAddCourse extends javax.swing.JPanel
         
         databaseInsert(intSelectedDepartment);
         
-        this.getTopLevelAncestor().setVisible(false);
+        //this.getTopLevelAncestor().setVisible(false);
+        ((Window) getRootPane().getParent()).dispose();
     }//GEN-LAST:event_jbAddCourseButtonActionPerformed
 
     private void jtfNotesActionPerformed(java.awt.event.ActionEvent evt)//GEN-FIRST:event_jtfNotesActionPerformed
@@ -296,7 +284,10 @@ private void databaseInsert(int inFKDepartmentInt)
 {
     try
     {
-        String query = " INSERT INTO Course (FKDepartment, Number, WritingEmphasis, Credits, Title, Description, Objectives, Prerequisite, Notes)" + " VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?);";
+        String query = "INSERT INTO Course (FKDepartment_intID, intNumber, "
+                + "intWritingEmphasis, intCredits, vchrTitle, vchrDescription, "
+                + "vchrObjectives, vchrPrerequisite, vchrNote) "
+                + "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?);";
         pst = dbLocalConnection.prepareStatement(query);
         pst.setInt(1, inFKDepartmentInt);
         pst.setInt(2, intCourseNumber);
@@ -332,14 +323,14 @@ private void setDBConnection(Connection inConnection)
 
 private int getFKDepartment(String inSelectedDepartment)
 {//return ID from Department table of SQL database for department highlighted in jcbDepartment 
-    String strSelectedDepartment = "Default Value";
-    int intSelectedDepartment = 123456789;
+    String strSelectedDepartment = "";
+    int intSelectedDepartment = 0;
     
     strSelectedDepartment = inSelectedDepartment;
     
     try//try for SQL statement finding department ID of selected department in drop down menu
     {
-        ResultSet rsResult = st.executeQuery("select ID from Department where DepartmentName = '" + strSelectedDepartment + "'");
+        ResultSet rsResult = st.executeQuery("select intID from Department where vchrName = '" + strSelectedDepartment + "'");
         intSelectedDepartment = rsResult.getInt(1);
     }//try
     catch (SQLException sqle)
@@ -356,11 +347,11 @@ private void setJCBDepartment() //SQL Select to pull list of departments and con
     jcbDepartment.removeAllItems();
     try
     {
-        ResultSet rsResults = st.executeQuery("select DepartmentName from Department order by DepartmentName asc");
+        ResultSet rsResults = st.executeQuery("select vchrName from Department order by vchrName asc");
 
         while (rsResults.next())
         {
-            jcbDepartment.addItem(rsResults.getString("DepartmentName"));
+            jcbDepartment.addItem(rsResults.getString("vchrName"));
         }//while
     }//try
     catch (SQLException sqle) 
