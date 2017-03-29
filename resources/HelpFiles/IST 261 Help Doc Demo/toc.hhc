@@ -1,0 +1,57 @@
+<!DOCTYPE HTML PUBLIC "-//IETF//DTD HTML//EN">
+<html>
+
+<head>
+	<meta name="generator" content="HelpNDoc Personal Edition 4.9.2.132">
+</head>
+
+<body>
+
+	<object type="text/site properties">
+		<param name="Font" value="Arial,8,0">
+		<param name="Window Styles" value="0x800025">
+	</object>
+    
+	<ul>
+
+	<li> <object type="text/sitemap">
+				<param name="Name" value="Introduction">
+				<param name="Local" value="Introduction.htm">
+				</object>
+
+	<ul><li> <object type="text/sitemap">
+				<param name="Name" value="Welcome">
+				<param name="Local" value="Welcome.htm">
+				</object>
+
+	</li><li> <object type="text/sitemap">
+				<param name="Name" value="What's new">
+				<param name="Local" value="Whatsnew.htm">
+				</object>
+
+	</li><li> <object type="text/sitemap">
+				<param name="Name" value="New topic">
+				<param name="Local" value="Newtopic.htm">
+				</object>
+
+	</li></ul></li><li> <object type="text/sitemap">
+				<param name="Name" value="Getting Started">
+				<param name="Local" value="GettingStarted.htm">
+				</object>
+
+	<ul><li> <object type="text/sitemap">
+				<param name="Name" value="System requirements">
+				<param name="Local" value="Systemrequirements.htm">
+				</object>
+
+	</li><li> <object type="text/sitemap">
+				<param name="Name" value="Getting help">
+				<param name="Local" value="Gettinghelp.htm">
+				</object>
+
+	</li></ul></li></ul>
+    
+</body>
+
+</html>
+

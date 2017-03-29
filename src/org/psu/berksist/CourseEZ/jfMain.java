@@ -34,6 +34,8 @@ import javax.swing.UnsupportedLookAndFeelException;
  * 
  ******************* MODIFICATION LOG *****************************************
  * 
+ * 2017 March 29 - Added JMenuItem for jfAbout under Help. - JSS
+ * 
  * 2017 January 31 - General housekeeping (formatted code for readability and 
  *                   consistency). - RQZ
  * 
@@ -53,13 +55,13 @@ import javax.swing.UnsupportedLookAndFeelException;
  * 
  * ****************** ADDITIONAL LIBRARIES NEEDED ******************************
  * 
- *      NAME            SOURCE                      USE
+ *      NAME                        SOURCE                      USE
  * 
- *      rs2xml.jar      https://drive.google.com/file/d/0BzIr4IDDKJEcdDE1YTlzbmtkMzg/view   create table model from ResultSet
- *      commons-cli-1.3.1.jar   https://commons.apache.org/proper/commons-cli/download_cli.cgi  Command line argument parser
+ *      rs2xml.jar                  https://drive.google.com/file/d/0BzIr4IDDKJEcdDE1YTlzbmtkMzg/view   Create table model from ResultSet
+ *      commons-cli-1.3.1.jar       https://commons.apache.org/proper/commons-cli/download_cli.cgi      Command line argument parser
  *      sqlite-jdbc-3.8.11.2.jar    https://bitbucket.org/xerial/sqlite-jdbc/downloads
- *      pgslookandfeel-1.1.2.jar http://www.pagosoft.com/projects/pgslookandfeel/
- *      JavaGPE_3DLF-2.5.jar  http://www.markus-hillenbrand.de/3dlf/
+ *      pgslookandfeel-1.1.2.jar    http://www.pagosoft.com/projects/pgslookandfeel/
+ *      JavaGPE_3DLF-2.5.jar        http://www.markus-hillenbrand.de/3dlf/
  */
 
 public class jfMain extends JFrame {
@@ -202,6 +204,7 @@ public class jfMain extends JFrame {
         jmiSaveUserOptions = new javax.swing.JMenuItem(spa);
         jmHelp = new javax.swing.JMenu();
         jmiDatabaseInformation = new javax.swing.JMenuItem();
+        jmiAbout = new javax.swing.JMenuItem();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setTitle("Course EZ");
@@ -302,6 +305,14 @@ public class jfMain extends JFrame {
         });
         jmHelp.add(jmiDatabaseInformation);
 
+        jmiAbout.setText("About");
+        jmiAbout.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jmiAboutActionPerformed(evt);
+            }
+        });
+        jmHelp.add(jmiAbout);
+
         jmbMain.add(jmHelp);
 
         setJMenuBar(jmbMain);
@@ -381,6 +392,17 @@ public class jfMain extends JFrame {
         
     }//GEN-LAST:event_jmOptionsActionPerformed
 
+    /**
+     * Opens the About window.
+     * @param evt 
+     */
+    private void jmiAboutActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jmiAboutActionPerformed
+        JFrame jfAbout = new jfAbout();
+        jfAbout.setTitle("About");
+        jfAbout.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+        jfAbout.setVisible(true);
+    }//GEN-LAST:event_jmiAboutActionPerformed
+
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
@@ -392,6 +414,7 @@ public class jfMain extends JFrame {
     private javax.swing.JMenu jmOptions;
     private javax.swing.JMenu jmWindows;
     private javax.swing.JMenuBar jmbMain;
+    private javax.swing.JMenuItem jmiAbout;
     private javax.swing.JMenuItem jmiAddFrame;
     private javax.swing.JMenuItem jmiCascade;
     private javax.swing.JMenuItem jmiDatabaseInformation;

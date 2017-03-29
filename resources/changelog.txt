@@ -1,0 +1,10 @@
+---Course Management v0.2.8a (2017/03/28)---
+List of contributors: jss5783, hkh546, asd546, gre468, faa465, hrt465
+
+Changes:
++Added something
++Added something else
+    Things might be unstable
+oChanged something to do something else
+-Removed something
+    This is a fake changelog
