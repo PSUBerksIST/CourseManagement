@@ -1,0 +1,5 @@
+---docx4j---
+Apache License v2.0
+Website: apache.org
+
+license text
