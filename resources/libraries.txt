@@ -1,0 +1,3 @@
+
+docx4j,docx4java.org,Apache License v2.0
+foolib,foolib.notaurl,Foo License v1.1

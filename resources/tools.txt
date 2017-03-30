@@ -1,0 +1,1 @@
+HelpNDoc,helpndoc.com,HTML help authoring tool

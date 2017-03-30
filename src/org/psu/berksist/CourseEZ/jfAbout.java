@@ -14,7 +14,12 @@ import java.io.*;
  * 
  * 
  *  ******************* MODIFICATION LOG *****************************************
- * 2017 March 29 - Created jfAbout.java. Added basic rough functionality. - JSS
+ * 2017 March 30 -  Cleaned up rbtnContributorsActionPerformed code.
+ *                  Removed rbtnChangelog, associated code, and TXT file.
+ *                  Added rbtnTools and associated code.
+ *                  Added lblDescription.
+ *                  Changed rbtnLicenses to rbtnLibraries and associated code and TXT file. -JSS
+ * 2017 March 29 -  Created jfAbout.java. Added basic rough functionality. - JSS
  */
 public class jfAbout extends javax.swing.JFrame {
 
@@ -25,11 +30,11 @@ public class jfAbout extends javax.swing.JFrame {
         initComponents();
         
         //register radio buttons to button group
-        bgrpAbout.add(rbtnChangelog);
+        bgrpAbout.add(rbtnTools);
         bgrpAbout.add(rbtnContributors);
-        bgrpAbout.add(rbtnLicenses);
+        bgrpAbout.add(rbtnLibraries);
         
-        rbtnChangelog.doClick();
+        rbtnContributors.doClick();
     }
 
     /**
@@ -46,11 +51,12 @@ public class jfAbout extends javax.swing.JFrame {
         jpAboutTitle = new javax.swing.JPanel();
         lblVersion = new javax.swing.JLabel();
         lblTitle = new javax.swing.JLabel();
+        lblDescription = new javax.swing.JLabel();
         jspText = new javax.swing.JScrollPane();
         jtpText = new javax.swing.JTextPane();
         jpRadioButtons = new javax.swing.JPanel();
-        rbtnChangelog = new javax.swing.JRadioButton();
-        rbtnLicenses = new javax.swing.JRadioButton();
+        rbtnTools = new javax.swing.JRadioButton();
+        rbtnLibraries = new javax.swing.JRadioButton();
         rbtnContributors = new javax.swing.JRadioButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
@@ -59,6 +65,8 @@ public class jfAbout extends javax.swing.JFrame {
 
         lblTitle.setFont(new java.awt.Font("DejaVu Sans", 0, 24)); // NOI18N
         lblTitle.setText("Course Management");
+
+        lblDescription.setText("An open-source program for managing courses by teachers.");
 
         javax.swing.GroupLayout jpAboutTitleLayout = new javax.swing.GroupLayout(jpAboutTitle);
         jpAboutTitle.setLayout(jpAboutTitleLayout);
@@ -71,8 +79,11 @@ public class jfAbout extends javax.swing.JFrame {
                         .addComponent(lblTitle))
                     .addGroup(jpAboutTitleLayout.createSequentialGroup()
                         .addGap(292, 292, 292)
-                        .addComponent(lblVersion)))
-                .addContainerGap(235, Short.MAX_VALUE))
+                        .addComponent(lblVersion))
+                    .addGroup(jpAboutTitleLayout.createSequentialGroup()
+                        .addGap(192, 192, 192)
+                        .addComponent(lblDescription)))
+                .addContainerGap(228, Short.MAX_VALUE))
         );
         jpAboutTitleLayout.setVerticalGroup(
             jpAboutTitleLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -81,7 +92,9 @@ public class jfAbout extends javax.swing.JFrame {
                 .addComponent(lblTitle)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(lblVersion)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addGap(18, 18, 18)
+                .addComponent(lblDescription)
+                .addContainerGap(25, Short.MAX_VALUE))
         );
 
         jspText.setHorizontalScrollBarPolicy(javax.swing.ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
@@ -103,24 +116,24 @@ public class jfAbout extends javax.swing.JFrame {
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jpTextLayout.createSequentialGroup()
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addComponent(jpAboutTitle, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(jspText, javax.swing.GroupLayout.PREFERRED_SIZE, 314, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap())
         );
 
         getContentPane().add(jpText, java.awt.BorderLayout.PAGE_START);
 
-        rbtnChangelog.setText("Changelog");
-        rbtnChangelog.addActionListener(new java.awt.event.ActionListener() {
+        rbtnTools.setText("Tools");
+        rbtnTools.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                rbtnChangelogActionPerformed(evt);
+                rbtnToolsActionPerformed(evt);
             }
         });
 
-        rbtnLicenses.setText("Licenses");
-        rbtnLicenses.addActionListener(new java.awt.event.ActionListener() {
+        rbtnLibraries.setText("Libraries");
+        rbtnLibraries.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                rbtnLicensesActionPerformed(evt);
+                rbtnLibrariesActionPerformed(evt);
             }
         });
 
@@ -136,21 +149,21 @@ public class jfAbout extends javax.swing.JFrame {
         jpRadioButtonsLayout.setHorizontalGroup(
             jpRadioButtonsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jpRadioButtonsLayout.createSequentialGroup()
-                .addGap(111, 111, 111)
-                .addComponent(rbtnChangelog)
-                .addGap(97, 97, 97)
+                .addGap(123, 123, 123)
                 .addComponent(rbtnContributors)
-                .addGap(105, 105, 105)
-                .addComponent(rbtnLicenses)
-                .addContainerGap(145, Short.MAX_VALUE))
+                .addGap(107, 107, 107)
+                .addComponent(rbtnLibraries)
+                .addGap(101, 101, 101)
+                .addComponent(rbtnTools)
+                .addContainerGap(197, Short.MAX_VALUE))
         );
         jpRadioButtonsLayout.setVerticalGroup(
             jpRadioButtonsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jpRadioButtonsLayout.createSequentialGroup()
                 .addContainerGap(16, Short.MAX_VALUE)
                 .addGroup(jpRadioButtonsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(rbtnChangelog)
-                    .addComponent(rbtnLicenses)
+                    .addComponent(rbtnTools)
+                    .addComponent(rbtnLibraries)
                     .addComponent(rbtnContributors))
                 .addContainerGap())
         );
@@ -161,23 +174,23 @@ public class jfAbout extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     /**
-     * Loads changelog.txt into jtpText.
+     * Loads tools.txt into jtpText.
      * @param evt 
      */
-    private void rbtnChangelogActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_rbtnChangelogActionPerformed
+    private void rbtnToolsActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_rbtnToolsActionPerformed
         //TODO: Fix rough code up, add comments, add more/more detailed exceptions
         try
         {
-            File fContributors = new File(AppConstants.ROOT_FOLDER + "changelog.txt");
-            
-            if (fContributors.exists() == true)
+            File fTools = new File(AppConstants.ROOT_FOLDER + "tools.txt");
+            if (fTools.exists() == true)
             {
-                BufferedReader reader = new BufferedReader(new FileReader(fContributors));
-                String strFile = new String();
+                BufferedReader reader = new BufferedReader(new FileReader(fTools));
                 String strInput = new String();
+                String strFile = new String("===List of tools used===\n");
                 while ((strInput = reader.readLine()) != null)
                 {
-                    strFile += strInput + "\n";
+                    String[] astrInput = strInput.split(",");
+                    strFile += astrInput[0] + " (" + astrInput[1] + "): " + astrInput[2] + "\n\n";
                 }
                 jtpText.setText(strFile);
                 reader.close();
@@ -188,39 +201,48 @@ public class jfAbout extends javax.swing.JFrame {
             e.printStackTrace();
         }
         jspText.getVerticalScrollBar().setValue(1);
-    }//GEN-LAST:event_rbtnChangelogActionPerformed
+    }//GEN-LAST:event_rbtnToolsActionPerformed
 
     /**
      * Loads contributors.txt into jtpText.
-     * Contributors are listed as "[FirstName] [LastName] ([GitHubAccount])",
-     * but displayed in descending alphabetical order for their last names.
+     * Contributors are listed as "[first name] [last name] ([contact information])".
      * The project head's name is listed first and indicated as such.
      * TODO: Possibly with additional contact details?
      * @param evt 
      */
     private void rbtnContributorsActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_rbtnContributorsActionPerformed
         //TODO: Fix rough code up, add comments, add more/more detailed exceptions
-        try
-        {
+        try //check if contributors.txt exists
+        {   //TODO: Is there a way to check for the filepath without needing a /case-sensitive/ file extension attached?
             File fContributors = new File(AppConstants.ROOT_FOLDER + "contributors.txt");
             
-            if (fContributors.exists() == true)
+            if (fContributors.exists() == true) //if the file exists, try opening it
             {
-                BufferedReader reader = new BufferedReader(new FileReader(fContributors));
-                String strFile = new String();
-                String strInput = new String("---List of all contributors (and GitHub accounts)---\n");
-                String strFirstName = new String();
-                String strLastName = new String();
-                String strGitHubAccount = new String();
-                while ((strInput = reader.readLine()) != null)
+                try
                 {
-                    strFirstName = strInput.substring(0, strInput.indexOf(',') );
-                    strLastName = strInput.substring(strInput.indexOf(',') + 1, strInput.lastIndexOf(',') );
-                    strGitHubAccount = strInput.substring(strInput.lastIndexOf(',') + 1, strInput.length() - 1);
-                    strFile += strFirstName + " " + strLastName + " (" + strGitHubAccount + ")\n";
+                    BufferedReader reader = new BufferedReader(new FileReader(fContributors));
+                    String strInput = new String();
+                    String strFile = new String("===List of all contributors (and contact information)===\n");
+//                String strFirstName = new String();
+//                String strLastName = new String();
+//                String strGitHubAccount = new String();
+                    while ((strInput = reader.readLine()) != null)
+                    {
+                        String[] astrInput = strInput.split(",");
+                        strFile += astrInput[0] + " " + astrInput[1] + " (" + astrInput[2] + ")\n";
+//                    strFile += astrInput[0] + " " + astrInput[1] + " (" + strGitHubAccount + ")\n";
+//                    strFirstName = strInput.substring(0, strInput.indexOf(',') );
+//                    strLastName = strInput.substring(strInput.indexOf(',') + 1, strInput.lastIndexOf(',') );
+//                    strGitHubAccount = strInput.substring(strInput.lastIndexOf(',') + 1, strInput.length() - 1);
+//                    strFile += strFirstName + " " + strLastName + " (" + strGitHubAccount + ")\n";
+                    }
+                    jtpText.setText(strFile);
+                    reader.close();
                 }
-                jtpText.setText(strFile);
-                reader.close();
+                catch (Exception e)
+                {
+                    e.printStackTrace();
+                }
             }
         }
         catch (Exception e)
@@ -231,69 +253,40 @@ public class jfAbout extends javax.swing.JFrame {
     }//GEN-LAST:event_rbtnContributorsActionPerformed
 
     /**
-     * Loads licenses.txt into jtpText in alphabetical order, aside from Course Management's license at the top.
+     * Loads libraries.txt into jtpText in alphabetical order, aside from Course Management's license at the top.
+     * libraries.txt is the list of of libraries and what licenses they operate under, basically; any required license texts (e.g.,
+     * Apache License v2.0's short license, which in turn points to the full license online) are included
+     * separately in the resources folder itself.
      * @param evt 
      */
-    private void rbtnLicensesActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_rbtnLicensesActionPerformed
+    private void rbtnLibrariesActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_rbtnLibrariesActionPerformed
         //TODO: Fix rough code up, add comments, add more/more detailed exceptions
+        //BUG TODO: Fix this. For some reason, it won't read libraries.txt. Switching to tools.txt works,
+        //but creating libraries.txt from scratch doesn't work.
+        //Copying tools.txt's contents works, so it's the contents of libraries.txt for some reason.
         try
         {
-            File fContributors = new File(AppConstants.ROOT_FOLDER + "licenses.txt");
-            
-            if (fContributors.exists() == true)
-            {
-                BufferedReader reader = new BufferedReader(new FileReader(fContributors));
-                String strFile = new String();
+            //File fLibraries = new File(AppConstants.ROOT_FOLDER + "libraries.txt");
+            //if (fLibraries.exists() == true)
+            //{
+                BufferedReader reader = new BufferedReader(new FileReader(AppConstants.ROOT_FOLDER + "libraries.txt"));
                 String strInput = new String();
+                String strFile = new String("===List of libraries used===\n");
                 while ((strInput = reader.readLine()) != null)
                 {
-                    strFile += strInput + "\n";
+                    String[] astrInput = strInput.split(",");
+                    strFile += astrInput[0] + " (" + astrInput[1] + "): " + astrInput[2] + "\n\n";
                 }
                 jtpText.setText(strFile);
                 reader.close();
-            }
+            //}
         }
         catch (Exception e)
         {
             e.printStackTrace();
         }
         jspText.getVerticalScrollBar().setValue(1);
-    }//GEN-LAST:event_rbtnLicensesActionPerformed
-
-//    /**
-//     * @param args the command line arguments
-//     */
-//    public static void main(String args[]) {
-//        /* Set the Nimbus look and feel */
-//        //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
-//        /* If Nimbus (introduced in Java SE 6) is not available, stay with the default look and feel.
-//         * For details see http://download.oracle.com/javase/tutorial/uiswing/lookandfeel/plaf.html 
-//         */
-//        try {
-//            for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
-//                if ("Nimbus".equals(info.getName())) {
-//                    javax.swing.UIManager.setLookAndFeel(info.getClassName());
-//                    break;
-//                }
-//            }
-//        } catch (ClassNotFoundException ex) {
-//            java.util.logging.Logger.getLogger(jfAbout.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-//        } catch (InstantiationException ex) {
-//            java.util.logging.Logger.getLogger(jfAbout.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-//        } catch (IllegalAccessException ex) {
-//            java.util.logging.Logger.getLogger(jfAbout.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-//        } catch (javax.swing.UnsupportedLookAndFeelException ex) {
-//            java.util.logging.Logger.getLogger(jfAbout.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-//        }
-//        //</editor-fold>
-//
-//        /* Create and display the form */
-//        java.awt.EventQueue.invokeLater(new Runnable() {
-//            public void run() {
-//                new jfAbout().setVisible(true);
-//            }
-//        });
-//    }
+    }//GEN-LAST:event_rbtnLibrariesActionPerformed
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.ButtonGroup bgrpAbout;
@@ -302,10 +295,11 @@ public class jfAbout extends javax.swing.JFrame {
     private javax.swing.JPanel jpText;
     private javax.swing.JScrollPane jspText;
     private javax.swing.JTextPane jtpText;
+    private javax.swing.JLabel lblDescription;
     private javax.swing.JLabel lblTitle;
     private javax.swing.JLabel lblVersion;
-    private javax.swing.JRadioButton rbtnChangelog;
     private javax.swing.JRadioButton rbtnContributors;
-    private javax.swing.JRadioButton rbtnLicenses;
+    private javax.swing.JRadioButton rbtnLibraries;
+    private javax.swing.JRadioButton rbtnTools;
     // End of variables declaration//GEN-END:variables
 }
