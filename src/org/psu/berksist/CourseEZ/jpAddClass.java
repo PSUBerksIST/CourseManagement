@@ -754,12 +754,12 @@ public class jpAddClass extends javax.swing.JPanel {
     {
         try {
             // TODO: Need to link Angel Table - RQZ
-            rs = st.executeQuery("select FKCampus_intID, vchrMeetingLocation, intSection, intScheduleNumber, "
-                    + "fkANGEL_intID, ANGEL.vchrTitle, tMondayStart, tMondayEnd, tTuesdayStart, "
+            rs = st.executeQuery("Select FKCampus_intID, vchrMeetingLocation, intSection, intScheduleNumber, "
+                    + "intAngelID, vchrAngelTitle, tMondayStart, tMondayEnd, tTuesdayStart, "
                     + "tTuesdayEnd, tWednesdayStart, tWednesdayEnd, tThursdayStart, "
                     + "tFridayStart, tFridayEnd, tSaturdayStart, tSaturdayEnd, "
                     + "tSundayStart, tSundayEnd, CLASS.vchrNote, tThursdayEnd "
-                    + "from Class left join ANGEL on fkANGEL_intID = ANGEL.intID "
+                    + "From Class "
                     + "Where CLASS.intID = " + inClassID);
            
             while(rs.next())
@@ -774,9 +774,9 @@ public class jpAddClass extends javax.swing.JPanel {
                 jtfSection.setText(rs.getString("intSection"));
                 intScheduleNumber = rs.getInt("intScheduleNumber");
                 jtfScheduleNumber.setText(Integer.toString(intScheduleNumber));
-                strAngelID = rs.getString("fkANGEL_intID");
+                strAngelID = rs.getString("intAngelID");
                 jtfAngelID.setText(strAngelID);
-                strAngelTitle = rs.getString("vchrTitle");
+                strAngelTitle = rs.getString("vchrAngelTitle");
                 jtfAngelTitle.setText(strAngelTitle);
                 
                 strMondayStart = rs.getString("tMondayStart");
@@ -1059,8 +1059,8 @@ public class jpAddClass extends javax.swing.JPanel {
                            + "tSaturdayStart, tSaturdayEnd, tSundayStart, tSundayEnd, vchrNote, tThursdayEnd) "
                            + "VALUES (?, ?, ?, ?, ?,?,?,?,?,?,?, ?, ?, ?, ?,?,?,?,?,?,?,?)";//22*/
             
-            String query = "INSERT INTO vCLASS_AND_ANGEL (FKCourse_intID, FKCampus_intID, vchrMeetingLocation, intSection, intScheduleNumber, "
-                    + "fkANGEL_intID, vchrTitle, tMondayStart, tMondayEnd, tTuesdayStart, tTuesdayEnd, "
+            String query = "INSERT INTO CLASS (FKCourse_intID, FKCampus_intID, vchrMeetingLocation, intSection, intScheduleNumber, "
+                    + "intAngelID, vchrAngelTitle, tMondayStart, tMondayEnd, tTuesdayStart, tTuesdayEnd, "
                     + "tWednesdayStart,tWednesdayEnd, tThursdayStart, tFridayStart, tFridayEnd, "
                     + "tSaturdayStart, tSaturdayEnd, tSundayStart, tSundayEnd, vchrNote, tThursdayEnd) "
                     + "VALUES (?, ?, ?, ?, ?,?,?,?,?,?,?, ?, ?, ?, ?,?,?,?,?,?,?,?)";//22
@@ -1307,8 +1307,8 @@ public class jpAddClass extends javax.swing.JPanel {
                                String inFridayEnd, String inSaturdayStart, String inSaturdayEnd, String inSundayStart,
                                String inSundayEnd, String inNotes){
         try {
-            String query = " UPDATE vCLASS_AND_ANGEL set FKCourse_intID = ?, FKCampus_intID = ?, vchrMeetingLocation = ?, intSection = ?, intScheduleNumber = ?, "
-                    + "fkANGEL_intID = ?, vchrTitle = ?, tMondayStart = ?, tMondayEnd = ?, tTuesdayStart = ?, tTuesdayEnd = ?, "
+            String query = " UPDATE CLASS set FKCourse_intID = ?, FKCampus_intID = ?, vchrMeetingLocation = ?, intSection = ?, intScheduleNumber = ?, "
+                    + "intAngelID = ?, vchrAngelTitle = ?, tMondayStart = ?, tMondayEnd = ?, tTuesdayStart = ?, tTuesdayEnd = ?, "
                     + "tWednesdayStart = ?,tWednesdayEnd = ?, tThursdayStart = ?, tFridayStart = ?, tFridayEnd = ?, "
                     + "tSaturdayStart = ?, tSaturdayEnd = ?, tSundayStart = ?, tSundayEnd = ?, vchrNote = ?, tThursdayEnd = ? WHERE intID = " + intClassID;
                     //+ "FKCourse = " + intCourseUpdate + " AND Section = " + intSectionUpdate + ";";

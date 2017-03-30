@@ -70,4 +70,14 @@
     nbproject/build-impl.xml file. 
 
     -->
+	
+	<target name="-post-jar">
+		<copy todir="${dist.dir}/resources/userprefs" >
+			<fileset dir="resources/userprefs" includes="**"/>
+		</copy>
+		<copy todir="${dist.dir}/resources/database" >
+			<fileset dir="resources/database" includes="**"/>
+		</copy>
+	</target>
+	
 </project>

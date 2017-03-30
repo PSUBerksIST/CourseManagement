@@ -190,7 +190,7 @@ public class jpClass extends javax.swing.JPanel {
             tc.setCellRenderer(jtStudents.getDefaultRenderer(Boolean.class)); 
             
             // Result Set 
-            ResultSet result = st.executeQuery("SELECT vchrFirstName, vchrLastName, intID AS StudentID FROM vClass_All_Students WHERE intClassID = " + intSelectedClassID);
+            ResultSet result = st.executeQuery("SELECT vchrFirstName, vchrLastName, StudentID FROM vCLASS_STUDENT_LIST WHERE ClassID = " + intSelectedClassID);
 
             while (result.next()) 
             {
@@ -384,7 +384,13 @@ public class jpClass extends javax.swing.JPanel {
             tc.setCellRenderer(jtIndividualAssignments.getDefaultRenderer(Boolean.class)); 
             
             // Result Set 
-            ResultSet result = st.executeQuery("SELECT Assignment.intid AS ID, Assignment.vchrShortName AS Name, Assignment.vchrDescription AS Description, Assignment.realMaximumPoints AS Points FROM Assignment, Class_Assignment WHERE Assignment.intid = Class_Assignment.FKAssignment_intID AND Assignment.boolGroupAssignment != 1 AND Class_Assignment.FKClass_intID = " + intSelectedClassID);
+            ResultSet result = st.executeQuery("SELECT Assignment.intid AS ID, "
+                    + "Assignment.vchrShortName AS Name, Assignment.vchrDescription AS Description, "
+                    + "Assignment.realMaximumPoints AS Points "
+                    + "FROM Assignment, Class_Assignment "
+                    + "WHERE Assignment.intid = Class_Assignment.FKAssignment_intID "
+                    + "AND (Assignment.boolGroupAssignment != 1 OR ASSIGNMENT.boolGroupAssignment IS NULL) "
+                    + "AND Class_Assignment.FKClass_intID = " + intSelectedClassID);
 
             while (result.next()) 
             {
