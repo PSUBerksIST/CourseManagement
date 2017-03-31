@@ -34,7 +34,7 @@ public class AppConstants
     
     
     // File Names ------------------------------------
-    public static String DEFAULT_DB_FILE = "dbCourseManagement-V8.db3";
+    public static String DEFAULT_DB_FILE = "dbCourseManagement-V8a.db3";
     public static String DEFAULT_XML_FILE = "UserPrefs.xml";
     
     public static String IMPORTED_XML_FILE;
