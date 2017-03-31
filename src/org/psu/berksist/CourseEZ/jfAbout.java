@@ -6,6 +6,7 @@
 package org.psu.berksist.CourseEZ;
 
 import java.io.*;
+import javax.swing.JOptionPane;
 
 /**
  *
@@ -14,11 +15,20 @@ import java.io.*;
  * 
  * 
  *  ******************* MODIFICATION LOG *****************************************
+ * 2017 March 31 -  Cleaned up code (added try... catch; comments; etc.).
+ *                  Labels now update with program name and program version from AppConstants constants.
+ *                  -BUG: Fixed bug with licenses.txt (there was an empty line).
+ *                  +BUG: Loading a long file results in the textbox being scrolled to the bottom.
+ *                  Can have 0+ methods of contact for contributors.
+ *                  Most library licenses added to licenses.txt.
+ *                  Some students' emails added to contributors.txt
+ *                      (somewhat obfuscated to try to prevent spambots scraping the file). -JSS
  * 2017 March 30 -  Cleaned up rbtnContributorsActionPerformed code.
  *                  Removed rbtnChangelog, associated code, and TXT file.
  *                  Added rbtnTools and associated code.
  *                  Added lblDescription.
- *                  Changed rbtnLicenses to rbtnLibraries and associated code and TXT file. -JSS
+ *                  Changed rbtnLicenses to rbtnLibraries and associated code and TXT file.
+ *                  +BUG: Doesn't read licenses.txt.    -JSS
  * 2017 March 29 -  Created jfAbout.java. Added basic rough functionality. - JSS
  */
 public class jfAbout extends javax.swing.JFrame {
@@ -28,6 +38,10 @@ public class jfAbout extends javax.swing.JFrame {
      */
     public jfAbout() {
         initComponents();
+        
+        //Updates labels with program name and version number
+        lblProgramName.setText(AppConstants.APP_ID);
+        lblVersionNumber.setText("Version: " + AppConstants.APP_VERSION);
         
         //register radio buttons to button group
         bgrpAbout.add(rbtnTools);
@@ -49,8 +63,8 @@ public class jfAbout extends javax.swing.JFrame {
         bgrpAbout = new javax.swing.ButtonGroup();
         jpText = new javax.swing.JPanel();
         jpAboutTitle = new javax.swing.JPanel();
-        lblVersion = new javax.swing.JLabel();
-        lblTitle = new javax.swing.JLabel();
+        lblVersionNumber = new javax.swing.JLabel();
+        lblProgramName = new javax.swing.JLabel();
         lblDescription = new javax.swing.JLabel();
         jspText = new javax.swing.JScrollPane();
         jtpText = new javax.swing.JTextPane();
@@ -59,14 +73,14 @@ public class jfAbout extends javax.swing.JFrame {
         rbtnLibraries = new javax.swing.JRadioButton();
         rbtnContributors = new javax.swing.JRadioButton();
 
-        setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
 
-        lblVersion.setText("VERSION_NUMBER");
+        lblVersionNumber.setText("VERSION_NUMBER");
 
-        lblTitle.setFont(new java.awt.Font("DejaVu Sans", 0, 24)); // NOI18N
-        lblTitle.setText("Course Management");
+        lblProgramName.setFont(new java.awt.Font("DejaVu Sans", 0, 24)); // NOI18N
+        lblProgramName.setText("PROGRAM_NAME");
 
-        lblDescription.setText("An open-source program for managing courses by teachers.");
+        lblDescription.setText("An open-source program for managing courses for teachers.");
 
         javax.swing.GroupLayout jpAboutTitleLayout = new javax.swing.GroupLayout(jpAboutTitle);
         jpAboutTitle.setLayout(jpAboutTitleLayout);
@@ -75,23 +89,24 @@ public class jfAbout extends javax.swing.JFrame {
             .addGroup(jpAboutTitleLayout.createSequentialGroup()
                 .addGroup(jpAboutTitleLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jpAboutTitleLayout.createSequentialGroup()
-                        .addGap(225, 225, 225)
-                        .addComponent(lblTitle))
-                    .addGroup(jpAboutTitleLayout.createSequentialGroup()
                         .addGap(292, 292, 292)
-                        .addComponent(lblVersion))
+                        .addComponent(lblVersionNumber))
                     .addGroup(jpAboutTitleLayout.createSequentialGroup()
                         .addGap(192, 192, 192)
                         .addComponent(lblDescription)))
-                .addContainerGap(228, Short.MAX_VALUE))
+                .addContainerGap(131, Short.MAX_VALUE))
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jpAboutTitleLayout.createSequentialGroup()
+                .addGap(0, 0, Short.MAX_VALUE)
+                .addComponent(lblProgramName)
+                .addGap(248, 248, 248))
         );
         jpAboutTitleLayout.setVerticalGroup(
             jpAboutTitleLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jpAboutTitleLayout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(lblTitle)
+                .addComponent(lblProgramName)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(lblVersion)
+                .addComponent(lblVersionNumber)
                 .addGap(18, 18, 18)
                 .addComponent(lblDescription)
                 .addContainerGap(25, Short.MAX_VALUE))
@@ -155,7 +170,7 @@ public class jfAbout extends javax.swing.JFrame {
                 .addComponent(rbtnLibraries)
                 .addGap(101, 101, 101)
                 .addComponent(rbtnTools)
-                .addContainerGap(197, Short.MAX_VALUE))
+                .addContainerGap(162, Short.MAX_VALUE))
         );
         jpRadioButtonsLayout.setVerticalGroup(
             jpRadioButtonsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -178,114 +193,180 @@ public class jfAbout extends javax.swing.JFrame {
      * @param evt 
      */
     private void rbtnToolsActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_rbtnToolsActionPerformed
-        //TODO: Fix rough code up, add comments, add more/more detailed exceptions
         try
         {
-            File fTools = new File(AppConstants.ROOT_FOLDER + "tools.txt");
-            if (fTools.exists() == true)
+            File fTools = new File(AppConstants.ROOT_FOLDER + "tools.txt");     //this doesn't mean the file actually exists - it just points to where it should be
+            if (fTools.exists() == true)    //if tools.txt does exist
             {
-                BufferedReader reader = new BufferedReader(new FileReader(fTools));
-                String strInput = new String();
-                String strFile = new String("===List of tools used===\n");
-                while ((strInput = reader.readLine()) != null)
+                try     //can file can be opened?
                 {
-                    String[] astrInput = strInput.split(",");
-                    strFile += astrInput[0] + " (" + astrInput[1] + "): " + astrInput[2] + "\n\n";
+                    BufferedReader reader = new BufferedReader(new FileReader(fTools));
+                    String strInput = new String();
+                    String strFile = new String("===List of tools used===\n");
+                    try     //can file's contents be read and processed?
+                    {
+                        while ((strInput = reader.readLine()) != null)
+                        {
+                            String[] astrInput = strInput.split(";");
+                            strFile += astrInput[0] + " (" + astrInput[1] + "): " + astrInput[2] + "\n";
+                        }
+                        jtpText.setText(strFile);
+                        jspText.getVerticalScrollBar().setValue(1);
+                        reader.close();
+                    }
+                    catch (IOException e)   //if there's a problem reading a line in the file
+                    {
+                        JOptionPane.showMessageDialog(null, "Error reading tools.txt.\n" + e.toString(),"Error", JOptionPane.ERROR_MESSAGE);
+                    }
                 }
-                jtpText.setText(strFile);
-                reader.close();
+                catch (IOException e)   //should open if file can't be opened
+                {
+                    JOptionPane.showMessageDialog(null, "tools.txt cannot be opened.\n" + e.toString(),"Error", JOptionPane.ERROR_MESSAGE);
+                }
             }
-        }
-        catch (Exception e)
-        {
-            e.printStackTrace();
-        }
+            else    //if tools.txt does NOT exist
+            {
+                JOptionPane.showMessageDialog(null, "tools.txt cannot be found.","Error", JOptionPane.ERROR_MESSAGE);
+            }
         jspText.getVerticalScrollBar().setValue(1);
+        }
+        catch (Exception e) //generic exception
+        {
+            JOptionPane.showMessageDialog(null, e.toString(),"Error", JOptionPane.ERROR_MESSAGE); //should print stack trace to message box
+        }
     }//GEN-LAST:event_rbtnToolsActionPerformed
 
     /**
      * Loads contributors.txt into jtpText.
      * Contributors are listed as "[first name] [last name] ([contact information])".
      * The project head's name is listed first and indicated as such.
-     * TODO: Possibly with additional contact details?
+     * File format is: "[FirstName];[LastName]", followed by one or more methods of contact (separated by semi-colons).
+     * Example (without double-quotes): "John;Doe;jdd123SPAMBOTFAKEOUTREMOVEME@notarealwebsite.com;notarealwebsite.no/jdd123".
+     * Any emails are suggested to add "SPAMBOTFAKEOUTREMOVEME" before the @ symbol to try to prevent scraping by spambots,
+     * but this is not required.
      * @param evt 
      */
     private void rbtnContributorsActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_rbtnContributorsActionPerformed
         //TODO: Fix rough code up, add comments, add more/more detailed exceptions
-        try //check if contributors.txt exists
-        {   //TODO: Is there a way to check for the filepath without needing a /case-sensitive/ file extension attached?
-            File fContributors = new File(AppConstants.ROOT_FOLDER + "contributors.txt");
-            
-            if (fContributors.exists() == true) //if the file exists, try opening it
+        //TODO: Is there a way to check for the filepath without needing a /case-sensitive/ file extension attached?
+        try
+        {
+            File fContributors = new File(AppConstants.ROOT_FOLDER + "contributors.txt");     //this doesn't mean the file actually exists - it just points to where it should be
+            if (fContributors.exists() == true)    //if tools.txt does exist
             {
-                try
+                try     //can file can be opened?
                 {
                     BufferedReader reader = new BufferedReader(new FileReader(fContributors));
                     String strInput = new String();
                     String strFile = new String("===List of all contributors (and contact information)===\n");
+                    String strContactMethods = new String();
+                    try     //can file's contents be read and processed?
+                    {
 //                String strFirstName = new String();
 //                String strLastName = new String();
 //                String strGitHubAccount = new String();
-                    while ((strInput = reader.readLine()) != null)
-                    {
-                        String[] astrInput = strInput.split(",");
-                        strFile += astrInput[0] + " " + astrInput[1] + " (" + astrInput[2] + ")\n";
-//                    strFile += astrInput[0] + " " + astrInput[1] + " (" + strGitHubAccount + ")\n";
-//                    strFirstName = strInput.substring(0, strInput.indexOf(',') );
-//                    strLastName = strInput.substring(strInput.indexOf(',') + 1, strInput.lastIndexOf(',') );
-//                    strGitHubAccount = strInput.substring(strInput.lastIndexOf(',') + 1, strInput.length() - 1);
-//                    strFile += strFirstName + " " + strLastName + " (" + strGitHubAccount + ")\n";
+                        while ((strInput = reader.readLine()) != null)
+                        {
+                            String[] astrInput = strInput.split(";");
+                            if (astrInput.length > 2)   //if there's more than a first name and last name
+                            {
+                                strContactMethods = "";
+                                for (int i = 2; i < astrInput.length; i++)
+                                {
+                                    strContactMethods += astrInput[i];
+                                    if (i < astrInput.length - 1)   //if not the last method of contact, add a comma for spacing
+                                    {
+                                        strContactMethods += ", ";
+                                    }
+                                }
+                                strFile += astrInput[0] + " " + astrInput[1] + " (" + strContactMethods + ")\n";
+                            }
+                            else
+                            {
+                                strFile += astrInput[0] + " " + astrInput[1] + "\n";
+                            }
+    //                    strFile += strFirstName + " " + strLastName + " (" + strGitHubAccount + ")\n";
+    //                    strFirstName = strInput.substring(0, strInput.indexOf(',') );
+    //                    strLastName = strInput.substring(strInput.indexOf(',') + 1, strInput.lastIndexOf(',') );
+    //                    strGitHubAccount = strInput.substring(strInput.lastIndexOf(',') + 1, strInput.length() - 1);
+    //                    strFile += strFirstName + " " + strLastName + " (" + strGitHubAccount + ")\n";
+                        }
+                        //Removes anti-spambot-scraping from the string.
+                        strFile = strFile.replaceAll("SPAMBOTFAKEOUTREMOVEME", "");
+                        jtpText.setText(strFile);
+                        jspText.getVerticalScrollBar().setValue(1);
+                        reader.close();
                     }
-                    jtpText.setText(strFile);
-                    reader.close();
+                    catch (IOException e)   //if there's a problem reading a line in the file
+                    {
+                        JOptionPane.showMessageDialog(null, "Error reading contributors.txt.\n" + e.toString(),"Error", JOptionPane.ERROR_MESSAGE);
+                    }
                 }
-                catch (Exception e)
+                catch (IOException e)   //should open if file can't be opened
                 {
-                    e.printStackTrace();
+                    JOptionPane.showMessageDialog(null, "contributors.txt cannot be opened.\n" + e.toString(),"Error", JOptionPane.ERROR_MESSAGE);
                 }
             }
+            else    //if contributors.txt does NOT exist
+            {
+                JOptionPane.showMessageDialog(null, "contributors.txt cannot be found.","Error", JOptionPane.ERROR_MESSAGE);
+            }
         }
-        catch (Exception e)
+        catch (Exception e) //generic exception
         {
-            e.printStackTrace();
+            JOptionPane.showMessageDialog(null, e.toString(),"Error", JOptionPane.ERROR_MESSAGE); //should print stack trace to message box
         }
-        jspText.getVerticalScrollBar().setValue(1);
     }//GEN-LAST:event_rbtnContributorsActionPerformed
 
     /**
-     * Loads libraries.txt into jtpText in alphabetical order, aside from Course Management's license at the top.
+     * Loads libraries.txt into jtpText.
+     * Course Management's license at the top.
      * libraries.txt is the list of of libraries and what licenses they operate under, basically; any required license texts (e.g.,
      * Apache License v2.0's short license, which in turn points to the full license online) are included
      * separately in the resources folder itself.
      * @param evt 
      */
     private void rbtnLibrariesActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_rbtnLibrariesActionPerformed
-        //TODO: Fix rough code up, add comments, add more/more detailed exceptions
-        //BUG TODO: Fix this. For some reason, it won't read libraries.txt. Switching to tools.txt works,
-        //but creating libraries.txt from scratch doesn't work.
-        //Copying tools.txt's contents works, so it's the contents of libraries.txt for some reason.
         try
         {
-            //File fLibraries = new File(AppConstants.ROOT_FOLDER + "libraries.txt");
-            //if (fLibraries.exists() == true)
-            //{
-                BufferedReader reader = new BufferedReader(new FileReader(AppConstants.ROOT_FOLDER + "libraries.txt"));
-                String strInput = new String();
-                String strFile = new String("===List of libraries used===\n");
-                while ((strInput = reader.readLine()) != null)
+            File fLibraries = new File(AppConstants.ROOT_FOLDER + "libraries.txt");     //this doesn't mean the file actually exists - it just points to where it should be
+            if (fLibraries.exists() == true)    //if tools.txt does exist
+            {
+                try     //can file can be opened?
                 {
-                    String[] astrInput = strInput.split(",");
-                    strFile += astrInput[0] + " (" + astrInput[1] + "): " + astrInput[2] + "\n\n";
+                    BufferedReader reader = new BufferedReader(new FileReader(fLibraries));
+                    String strInput = new String();
+                    String strFile = new String("===List of libraries used===\n");
+                    try     //can file's contents be read and processed?
+                    {
+                        while ((strInput = reader.readLine()) != null)
+                        {
+                            String[] astrInput = strInput.split(";");                            
+                            strFile += astrInput[0] + " (" + astrInput[1] + ")\n-" + astrInput[2] + " (" + astrInput[3] + ")\n-" + astrInput[4] + "\n\n";
+                        }
+                        jtpText.setText(strFile);
+                        jspText.getVerticalScrollBar().setValue(1);
+                        reader.close();
+                    }
+                    catch (IOException e)   //if there's a problem reading a line in the file
+                    {
+                        JOptionPane.showMessageDialog(null, "Error reading libraries.txt.\n" + e.toString(),"Error", JOptionPane.ERROR_MESSAGE);
+                    }
                 }
-                jtpText.setText(strFile);
-                reader.close();
-            //}
+                catch (IOException e)   //should open if file can't be opened
+                {
+                    JOptionPane.showMessageDialog(null, "libraries.txt cannot be opened.\n" + e.toString(),"Error", JOptionPane.ERROR_MESSAGE);
+                }
+            }
+            else    //if libraries.txt does NOT exist
+            {
+                JOptionPane.showMessageDialog(null, "libraries.txt cannot be found.","Error", JOptionPane.ERROR_MESSAGE);
+            }
         }
-        catch (Exception e)
+        catch (Exception e) //generic exception
         {
-            e.printStackTrace();
+            JOptionPane.showMessageDialog(null, e.toString(),"Error", JOptionPane.ERROR_MESSAGE); //should print stack trace to message box
         }
-        jspText.getVerticalScrollBar().setValue(1);
     }//GEN-LAST:event_rbtnLibrariesActionPerformed
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
@@ -296,8 +377,8 @@ public class jfAbout extends javax.swing.JFrame {
     private javax.swing.JScrollPane jspText;
     private javax.swing.JTextPane jtpText;
     private javax.swing.JLabel lblDescription;
-    private javax.swing.JLabel lblTitle;
-    private javax.swing.JLabel lblVersion;
+    private javax.swing.JLabel lblProgramName;
+    private javax.swing.JLabel lblVersionNumber;
     private javax.swing.JRadioButton rbtnContributors;
     private javax.swing.JRadioButton rbtnLibraries;
     private javax.swing.JRadioButton rbtnTools;

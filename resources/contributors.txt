@@ -1,2 +1,16 @@
-Paul,Omelko,pmo5053
-Jaime,Seaman,jss5783
+Paul;Omelko;github.com/pmo5053
+Jaime;Seaman;github.com/jss5783
+Gage;Henry;gagehenry0781SPAMBOTFAKEOUTREMOVEME@gmail.com;gch5074SPAMBOTFAKEOUTREMOVEME@psu.edu
+Casey;Bampton;cgb5174SPAMBOTFAKEOUTREMOVEME@psu.edu
+Tejal;Bedade;trb5390SPAMBOTFAKEOUTREMOVEME@psu.edu
+Nathan;Faust;nrf5061SPAMBOTFAKEOUTREMOVEME@psu.edu
+Ryan;Gilbert;rmg25SPAMBOTFAKEOUTREMOVEME@psu.edu
+Derek;Goodman;dmg5572SPAMBOTFAKEOUTREMOVEME@psu.edu
+Aras;Masalaitis;avm5750SPAMBOTFAKEOUTREMOVEME@psu.edu
+Venu;Mulane;vlm5190SPAMBOTFAKEOUTREMOVEME@psu.edu
+Divyank;Nagesh;dvn5156SPAMBOTFAKEOUTREMOVEME@psu.edu
+David;Regimbal;dar5417SPAMBOTFAKEOUTREMOVEME@psu.edu
+Aksheet;Swamy;ags5296SPAMBOTFAKEOUTREMOVEME@psu.edu
+Nicholas;Youndt;nzy5033SPAMBOTFAKEOUTREMOVEME@psu.edu
+Testy;McTester
+Holly;the Holy;ahd465SPAMBOTFAKEOUTREMOVEME@dad.adj;nota.url/really;tester;ads464.ads

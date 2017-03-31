@@ -1,1 +1,2 @@
-HelpNDoc,helpndoc.com,HTML help authoring tool
+HelpNDoc;helpndoc.com;HTML help authoring tool
+footool;footool.com;foo description

@@ -399,7 +399,6 @@ public class jfMain extends JFrame {
     private void jmiAboutActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jmiAboutActionPerformed
         JFrame jfAbout = new jfAbout();
         jfAbout.setTitle("About");
-        jfAbout.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         jfAbout.setVisible(true);
     }//GEN-LAST:event_jmiAboutActionPerformed
 

@@ -1,3 +1,8 @@
-
-docx4j,docx4java.org,Apache License v2.0
-foolib,foolib.notaurl,Foo License v1.1
+docx4j;docx4java.org;Apache License v2.0;apache.org;Java library for creating and manipulating Microsoft Open XML (Word DOCX, PowerPoint PPTX, and Excel XLSX) files.
+JavaGPE_3DLF-2.5;www.markus-hillenbrand.de/3dlf;UNKNOWN LICENSE;N/A;3D Look & Feel
+Commons CLI;commons.apache.org/proper/commons-cli;Apache License v2.0, Version 2.0;apache.org/licenses/LICENSE-2.0;The Apache Commons CLI library provides an API for parsing command line options passed to programs.
+PgsLookAndFeel;pagosoft.com/projects/pgslookandfeel;Apache License v2.0;apache.org/licenses/LICENSE-2.0;A modern, cross-platform LookAndFeel for Java/Swing.
+rs2xml.jar;drive.google.com/file/d/0BzIr4IDDKJEcdDE1YTlzbmtkMzg/view;UNKNOWN LICENSE;N/A;Creates table models from ResultSet.
+SQLite-JDBC;github.com/xerial/sqlite-jdbc;Apache License v2.0;apache.org/licenses/LICENSE-2.0;SQLite JDBC, developed by Taro L. Saito, is a library for accessing and creating SQLite database files in Java.
+Synthetica;http://jyloo.com/synthetica;etc.;etc.; A Look and Feel for Swing, based on Synth (part of the Java Platform v1.5).
+foolib;foolib.notaurl;Foo License v1.1;foolicense.notaurl;Description of purpose.
