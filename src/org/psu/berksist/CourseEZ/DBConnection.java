@@ -58,7 +58,7 @@ public class DBConnection {
         propsIn.setProperty(AppConstants.LAST_DB, strDBName);
         return c;
         
-    } catch ( Exception e ) {
+    } catch ( ClassNotFoundException | SQLException e ) {
         
         System.err.println( e.getClass().getName() + ": " + e.getMessage() );
         return null;
@@ -88,12 +88,18 @@ public class DBConnection {
    
         
         
-        String strInFile = propsIn.getProperty(AppConstants.LAST_DB,"");
+        String strInFile = propsIn.getProperty(AppConstants.LAST_DB, AppConstants.DEFAULT_DB_FILE);
         File fTemp = null;
         
         if(strInFile.length() > 0)
         {
             fTemp = new File(strInFile);
+            
+            if (!fTemp.exists()) {
+                strInFile = AppConstants.DEFAULT_DB_FILE;
+                fTemp = new File(strInFile);
+            }
+
         } // if file name is longer than zero chars
         // if there was no value for the last database opened in the properties
         // or the named file does not exist
@@ -115,7 +121,8 @@ public class DBConnection {
            }
 
             // Set the file name to the application path and default file name   
-           String strFileName = strPath + File.separatorChar + AppConstants.DEFAULT_DB_FILE;
+           //String strFileName = strPath + File.separatorChar + AppConstants.DEFAULT_DB_FILE;
+           String strFileName = AppConstants.DEFAULT_DB_FILE;
            File file = new File(strFileName);
                    JFileChooser myFC = new JFileChooser();
            myFC.setCurrentDirectory(file);

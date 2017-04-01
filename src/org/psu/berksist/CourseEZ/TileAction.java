@@ -71,7 +71,7 @@ public class TileAction extends AbstractAction {
                     (new URL(AppConstants.TILE_ICON_32)));
             
         } catch (MalformedURLException ex) {
-            Logger.getLogger(SavePropertiesAction.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(TileAction.class.getName()).log(Level.SEVERE, null, ex);
         }
         
         putValue(Action.LONG_DESCRIPTION,"Tile the frames on the desktop");

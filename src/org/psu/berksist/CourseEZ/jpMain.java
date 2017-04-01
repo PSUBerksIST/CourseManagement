@@ -39,15 +39,6 @@ public class jpMain extends javax.swing.JPanel {
         
         
     }
-
-    public void finalize() {
-        try {
-            //jmiSaveUserOptions.doClick();
-            dbConnection.close();
-        } catch (SQLException ex) {
-            Logger.getLogger(jfMain.class.getName()).log(Level.SEVERE, null, ex);
-        }
-    }
     
     public void CreateFrame() {
 

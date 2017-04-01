@@ -21,6 +21,7 @@ package org.psu.berksist.CourseEZ;
 
 import java.awt.event.ActionEvent;
 import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
@@ -61,14 +62,14 @@ public class GetPropertiesAction extends AbstractAction {
                     (new URL(AppConstants.LOAD_ICON_32)));
             
         } catch (MalformedURLException ex) {
-            Logger.getLogger(SavePropertiesAction.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(GetPropertiesAction.class.getName()).log(Level.SEVERE, null, ex);
         }
         
-        putValue(Action.LONG_DESCRIPTION,"Import the user's properties from an xml file");
+        putValue(Action.LONG_DESCRIPTION,"Import the user's settings from an xml file");
           
-        putValue(Action.NAME, "Import Properties");
+        putValue(Action.NAME, "Import Settings");
           
-        putValue(Action.SHORT_DESCRIPTION,"Import Properties From File");
+        putValue(Action.SHORT_DESCRIPTION,"Import Settings From File");
         
     }
     
@@ -76,11 +77,11 @@ public class GetPropertiesAction extends AbstractAction {
     {
         
         JFileChooser jfcImport = new JFileChooser();
-        jfcImport.setDialogTitle("Import User Preferences");
+        jfcImport.setDialogTitle("Import Settings");
         FileNameExtensionFilter xmlFilter = new FileNameExtensionFilter("XML Files", "xml");
         jfcImport.setFileFilter(xmlFilter);
         jfcImport.setAcceptAllFileFilterUsed(false);
-        jfcImport.setApproveButtonText("Import Preferences");
+        jfcImport.setApproveButtonText("Import Settings");
         
         boolean blnFileSelected = (jfcImport.showOpenDialog(jfApp) == JFileChooser.APPROVE_OPTION);
         
@@ -98,6 +99,16 @@ public class GetPropertiesAction extends AbstractAction {
         try {
             
             myProps.loadFromXML(new FileInputStream(strFileIn));
+            
+        } catch (FileNotFoundException ex) {
+            
+            if (strFileIn.equals(AppConstants.DEFAULT_XML_FILE)) {
+                // Make new xml file
+                //jfApp.spa.savePrefs();
+                //System.out.println("DID THIS");
+                applyProperties(myProps);
+                return;
+            }
             
         } catch (IOException ex) {
             

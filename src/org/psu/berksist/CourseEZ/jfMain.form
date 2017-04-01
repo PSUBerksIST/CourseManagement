@@ -53,7 +53,7 @@
                 <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="jmiExitActionPerformed"/>
               </Events>
               <AuxValues>
-                <AuxValue name="JavaCodeGenerator_CreateCodeCustom" type="java.lang.String" value="new javax.swing.JMenuItem(new ExitAction())"/>
+                <AuxValue name="JavaCodeGenerator_CreateCodeCustom" type="java.lang.String" value="new javax.swing.JMenuItem(new ExitAction(this))"/>
               </AuxValues>
             </MenuItem>
           </SubComponents>
@@ -110,7 +110,7 @@
           <SubComponents>
             <MenuItem class="javax.swing.JMenuItem" name="jmiLoadUserOptions">
               <Properties>
-                <Property name="text" type="java.lang.String" value="Import Options"/>
+                <Property name="text" type="java.lang.String" value="Import Settings"/>
               </Properties>
               <Events>
                 <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="jmiLoadUserOptionsActionPerformed"/>
@@ -121,7 +121,7 @@
             </MenuItem>
             <MenuItem class="javax.swing.JMenuItem" name="jmiSaveUserOptions">
               <Properties>
-                <Property name="text" type="java.lang.String" value="Export Options"/>
+                <Property name="text" type="java.lang.String" value="Export Settings"/>
               </Properties>
               <Events>
                 <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="jmiSaveUserOptionsActionPerformed"/>

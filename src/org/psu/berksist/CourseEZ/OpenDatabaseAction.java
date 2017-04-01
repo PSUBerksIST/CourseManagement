@@ -58,7 +58,7 @@ public class OpenDatabaseAction extends AbstractAction {
                     (new URL(AppConstants.DB_OPEN_ICON_32)));
             
         } catch (MalformedURLException ex) {
-            Logger.getLogger(SavePropertiesAction.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(OpenDatabaseAction.class.getName()).log(Level.SEVERE, null, ex);
         }
         
         putValue(Action.LONG_DESCRIPTION,"Opens and connects to the database");

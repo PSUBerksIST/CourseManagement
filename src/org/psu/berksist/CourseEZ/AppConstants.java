@@ -107,6 +107,8 @@ public class AppConstants
         IMPORTED_XML_FILE = PREFS_DIR + DEFAULT_XML_FILE;
         DEFAULT_XML_FILE = PREFS_DIR + DEFAULT_XML_FILE;
         
+        DEFAULT_DB_FILE = DB_DIR + DEFAULT_DB_FILE;
+        
     }
     
     /*public static void resetXMLToDefault()

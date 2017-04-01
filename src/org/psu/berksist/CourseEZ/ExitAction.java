@@ -6,6 +6,7 @@
 package org.psu.berksist.CourseEZ;
 
 import java.awt.event.ActionEvent;
+import java.awt.event.WindowEvent;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.logging.Level;
@@ -13,6 +14,7 @@ import java.util.logging.Logger;
 import javax.swing.AbstractAction;
 import javax.swing.Action;
 import javax.swing.ImageIcon;
+import javax.swing.JFrame;
 
 /**
  *
@@ -20,8 +22,12 @@ import javax.swing.ImageIcon;
  */
 public class ExitAction extends AbstractAction {
 
-    public ExitAction() {
+    private jfMain jfMainFrame;
+    
+    public ExitAction(jfMain jfMainIn) {
 
+        jfMainFrame = jfMainIn;
+        
         try {
 
         putValue(Action.SMALL_ICON, new ImageIcon
@@ -31,7 +37,7 @@ public class ExitAction extends AbstractAction {
                 (new URL(AppConstants.EXIT_ICON_32)));
 
     } catch (MalformedURLException ex) {
-        Logger.getLogger(SavePropertiesAction.class.getName()).log(Level.SEVERE, null, ex);
+        Logger.getLogger(ExitAction.class.getName()).log(Level.SEVERE, null, ex);
     }
 
     putValue(Action.LONG_DESCRIPTION,"Exit application.");
@@ -44,6 +50,7 @@ public class ExitAction extends AbstractAction {
 
     @Override
     public void actionPerformed(ActionEvent ae) {
+        jfMainFrame.closeAll();
         System.exit(0);
     }
 

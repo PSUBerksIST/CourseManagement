@@ -6,6 +6,8 @@
 package org.psu.berksist.CourseEZ;
 
 import java.awt.Dimension;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.sql.ResultSet;
@@ -123,10 +125,30 @@ public class jfMain extends JFrame {
         MakeLookAndFeelMenu();
         
         
+        addWindowListener(new WindowAdapter() {
+            public void windowClosing(WindowEvent e){
+                
+                closeAll();
+            }
+        });
+        
+        
         this.setVisible(true);
     } // jfMain
     
-
+    public void closeAll() {
+        
+        spa.savePrefs();
+                
+        try {
+            if (jpMainPanel.dbConnection != null) {
+                jpMainPanel.dbConnection.close();
+            }
+        } catch (SQLException ex) {
+            Logger.getLogger(jfMain.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        
+    }
 
     public void MakeLookAndFeelMenu() {
 
@@ -134,8 +156,8 @@ public class jfMain extends JFrame {
 
         for (LookAndFeelInfo lfAll2 : lfAll) {
             
-            System.out.println("Look and Feel - " + lfAll2.getName()
-                    + " Class - " + lfAll2.getClassName());
+            //System.out.println("Look and Feel - " + lfAll2.getName()
+            //        + " Class - " + lfAll2.getClassName());
             
             JRadioButtonMenuItem jmiTemp = new JRadioButtonMenuItem();
             jmiTemp.setText(lfAll2.getName());
@@ -164,7 +186,9 @@ public class jfMain extends JFrame {
                     
                     JRadioButtonMenuItem jrbTemp = (JRadioButtonMenuItem) evt.getSource();
                     jrbTemp.setSelected(true);
-                    jmiSaveUserOptions.doClick();
+                    
+                    //jmiSaveUserOptions.doClick();
+                    spa.savePrefs();
                     
                 } catch (ClassNotFoundException | InstantiationException | IllegalAccessException | UnsupportedLookAndFeelException ex) {
                     Logger.getLogger(jfMain.class.getName()).log(Level.SEVERE, null, ex);
@@ -192,7 +216,7 @@ public class jfMain extends JFrame {
         jmiOpenDB = new javax.swing.JMenuItem(new OpenDatabaseAction(this, myProps));
         jmiTestTablePanel = new javax.swing.JMenuItem();
         jSeparator1 = new javax.swing.JPopupMenu.Separator();
-        jmiExit = new javax.swing.JMenuItem(new ExitAction());
+        jmiExit = new javax.swing.JMenuItem(new ExitAction(this));
         jmEdit = new javax.swing.JMenu();
         jmWindows = new javax.swing.JMenu();
         jmiTile = new javax.swing.JMenuItem(new TileAction(jpMainPanel.jdpMain));
@@ -277,7 +301,7 @@ public class jfMain extends JFrame {
             }
         });
 
-        jmiLoadUserOptions.setText("Import Options");
+        jmiLoadUserOptions.setText("Import Settings");
         jmiLoadUserOptions.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jmiLoadUserOptionsActionPerformed(evt);
@@ -285,7 +309,7 @@ public class jfMain extends JFrame {
         });
         jmOptions.add(jmiLoadUserOptions);
 
-        jmiSaveUserOptions.setText("Export Options");
+        jmiSaveUserOptions.setText("Export Settings");
         jmiSaveUserOptions.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jmiSaveUserOptionsActionPerformed(evt);

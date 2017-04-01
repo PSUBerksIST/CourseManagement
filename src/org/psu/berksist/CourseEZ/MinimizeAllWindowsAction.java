@@ -55,7 +55,7 @@ public class MinimizeAllWindowsAction extends AbstractAction {
                     (new URL(AppConstants.MINIMIZE_ICON_32)));
             
         } catch (MalformedURLException ex) {
-            Logger.getLogger(SavePropertiesAction.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(MinimizeAllWindowsAction.class.getName()).log(Level.SEVERE, null, ex);
         }
         
         putValue(Action.LONG_DESCRIPTION,"Minimize all of the frames on the desktop");

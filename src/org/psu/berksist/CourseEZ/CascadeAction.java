@@ -55,7 +55,7 @@ public class CascadeAction extends AbstractAction {
                     (new URL(AppConstants.CASCADE_ICON_32)));
             
         } catch (MalformedURLException ex) {
-            Logger.getLogger(SavePropertiesAction.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(CascadeAction.class.getName()).log(Level.SEVERE, null, ex);
         }
         
         putValue(Action.LONG_DESCRIPTION,"Cascades all of the currently open windows.");
