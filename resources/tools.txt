@@ -1,2 +1,4 @@
-HelpNDoc;helpndoc.com;HTML help authoring tool
-footool;footool.com;foo description
+HelpNDoc;helpndoc.com;LICENSE;LICENSE;HTML help authoring tool.
+NetBeans;x;x;x;x
+SQLite;x;x;x;x
+SQLite Manager;x;x;x;x

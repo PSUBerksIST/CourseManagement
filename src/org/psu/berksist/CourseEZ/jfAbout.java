@@ -5,8 +5,11 @@
  */
 package org.psu.berksist.CourseEZ;
 
+import java.awt.Desktop;
 import java.io.*;
+import java.net.URISyntaxException;
 import javax.swing.JOptionPane;
+import javax.swing.event.HyperlinkEvent;
 
 /**
  *
@@ -15,6 +18,17 @@ import javax.swing.JOptionPane;
  * 
  * 
  *  ******************* MODIFICATION LOG *****************************************
+ * 2017 April  3 -  Added more comments.
+ *                  rbtnLibraries is now also for "Other (in-program) Resources" like icons.
+ *                  Made jtpText use HTML.
+ *                  Added the ability to display and use URL and mail links
+ *                      (clicking on them opens in the default web browser and email program,
+ *                      respectively).
+ *                  contributors.txt now lists LastName before FirstName for easy sortability.
+ *                  Additional students' and teacher's names and contact information added to contributors.txt.
+ *                  Anti-spam text is now stripped on an individual basis,
+ *                      rather than at the very end,
+ *                      so emails can be displayed in all lowercase. -JSS
  * 2017 March 31 -  Cleaned up code (added try... catch; comments; etc.).
  *                  Labels now update with program name and program version from AppConstants constants.
  *                  -BUG: Fixed bug with licenses.txt (there was an empty line).
@@ -38,6 +52,9 @@ public class jfAbout extends javax.swing.JFrame {
      */
     public jfAbout() {
         initComponents();
+        
+        //jtpText can now use HTML code
+        jtpText.setEditorKit(jtpText.createEditorKitForContentType("text/html"));
         
         //Updates labels with program name and version number
         lblProgramName.setText(AppConstants.APP_ID);
@@ -94,7 +111,7 @@ public class jfAbout extends javax.swing.JFrame {
                     .addGroup(jpAboutTitleLayout.createSequentialGroup()
                         .addGap(192, 192, 192)
                         .addComponent(lblDescription)))
-                .addContainerGap(131, Short.MAX_VALUE))
+                .addContainerGap(128, Short.MAX_VALUE))
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jpAboutTitleLayout.createSequentialGroup()
                 .addGap(0, 0, Short.MAX_VALUE)
                 .addComponent(lblProgramName)
@@ -113,6 +130,18 @@ public class jfAbout extends javax.swing.JFrame {
         );
 
         jspText.setHorizontalScrollBarPolicy(javax.swing.ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
+
+        jtpText.setEditable(false);
+        jtpText.addHyperlinkListener(new javax.swing.event.HyperlinkListener() {
+            public void hyperlinkUpdate(javax.swing.event.HyperlinkEvent evt) {
+                jtpTextHyperlinkUpdate(evt);
+            }
+        });
+        jtpText.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                jtpTextMouseClicked(evt);
+            }
+        });
         jspText.setViewportView(jtpText);
 
         javax.swing.GroupLayout jpTextLayout = new javax.swing.GroupLayout(jpText);
@@ -145,7 +174,7 @@ public class jfAbout extends javax.swing.JFrame {
             }
         });
 
-        rbtnLibraries.setText("Libraries");
+        rbtnLibraries.setText("Libraries/Other Resources");
         rbtnLibraries.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 rbtnLibrariesActionPerformed(evt);
@@ -170,7 +199,7 @@ public class jfAbout extends javax.swing.JFrame {
                 .addComponent(rbtnLibraries)
                 .addGap(101, 101, 101)
                 .addComponent(rbtnTools)
-                .addContainerGap(162, Short.MAX_VALUE))
+                .addContainerGap(53, Short.MAX_VALUE))
         );
         jpRadioButtonsLayout.setVerticalGroup(
             jpRadioButtonsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -190,6 +219,15 @@ public class jfAbout extends javax.swing.JFrame {
 
     /**
      * Loads tools.txt into jtpText.
+     * Tools are external programs used to create this program.
+     * Format in tools.txt is one tool per line, as below:
+     * "[tool name];[tool URL];[library license];[license URL];[description of purpose]"
+     * For example,
+     * foolib;foolib.notaurl;Foo License v1.1;foolicense.notaurl;Description of purpose.
+     * outputs
+     * foolib (footlib.notaurl)
+     * -Foo License v1.1 (foolicense.notaurl)
+     * -Description of purpose.
      * @param evt 
      */
     private void rbtnToolsActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_rbtnToolsActionPerformed
@@ -202,16 +240,47 @@ public class jfAbout extends javax.swing.JFrame {
                 {
                     BufferedReader reader = new BufferedReader(new FileReader(fTools));
                     String strInput = new String();
-                    String strFile = new String("===List of tools used===\n");
+                    String strFile = new String("<center><b>===List of tools===</b></center><br>");
                     try     //can file's contents be read and processed?
                     {
                         while ((strInput = reader.readLine()) != null)
                         {
                             String[] astrInput = strInput.split(";");
-                            strFile += astrInput[0] + " (" + astrInput[1] + "): " + astrInput[2] + "\n";
+                            if (astrInput[1].contains(".") == true) //if the string contains at least one period ('.'), assume that it's a URL and add the tags
+                            {
+                                //if URL doesn't have http:// or https:// to signify it's a URL, add https://
+                                if (astrInput[1].contains("http://") == false && astrInput[1].contains("https://") == false)
+                                {
+                                    astrInput[1] = "https://" + astrInput[1];
+                                }
+                                //if URL is http://, make it https://
+                                //there might be problems with old websites, but https should be the default these days
+                                else if (astrInput[1].contains("http://") == true)
+                                {
+                                    astrInput[1] = astrInput[1].replace("http://", "https://");
+                                }
+                                astrInput[1] = "<a href=\"" + astrInput[1] + "\">" + astrInput[1] + "</a>";   //turns it into a link that opens in the user's default web browser
+                            }
+                            if (astrInput[3].contains(".") == true) //if the string contains at least one period ('.'), assume that it's a URL and add the tags
+                            {
+                                                                //if URL doesn't have http:// or https:// to signify it's a URL, add https://
+                                if (astrInput[3].contains("http://") == false && astrInput[3].contains("https://") == false)
+                                {
+                                    astrInput[3] = "https://" + astrInput[1];
+                                }
+                                //if URL is http://, make it https://
+                                //there might be problems with old websites, but https should be the default these days
+                                else if (astrInput[3].contains("http://") == true)
+                                {
+                                    astrInput[3] = astrInput[3].replace("http://", "https://");
+                                }
+                                
+                                astrInput[3] = "<a href=\"" + astrInput[3] + "\">" + astrInput[3] + "</a>";   //turns it into a link that opens in the user's default web browser
+                            }
+                            strFile += astrInput[0] + " (" + astrInput[1] + ")<br>-" + astrInput[2] + " (" + astrInput[3] + ")<br>-" + astrInput[4] + "<br><br>";
                         }
                         jtpText.setText(strFile);
-                        jspText.getVerticalScrollBar().setValue(1);
+                        jspText.getVerticalScrollBar().setValue(0);
                         reader.close();
                     }
                     catch (IOException e)   //if there's a problem reading a line in the file
@@ -240,14 +309,16 @@ public class jfAbout extends javax.swing.JFrame {
      * Loads contributors.txt into jtpText.
      * Contributors are listed as "[first name] [last name] ([contact information])".
      * The project head's name is listed first and indicated as such.
-     * File format is: "[FirstName];[LastName]", followed by one or more methods of contact (separated by semi-colons).
-     * Example (without double-quotes): "John;Doe;jdd123SPAMBOTFAKEOUTREMOVEME@notarealwebsite.com;notarealwebsite.no/jdd123".
+     * File format is one person per line, formatted as below:
+     * "[LastName];[FirstName]", followed by one or more methods of contact (separated by semi-colons).
+     * LastName is before FirstName to allow easy automatic sorting in the TXT,
+     * while preserving any manual placement (e.g., course instructors).
+     * Example (without double-quotes): "Doe;John;jdd123SPAMBOTFAKEOUTREMOVEME@notarealwebsite.com;notarealwebsite.no/jdd123".
      * Any emails are suggested to add "SPAMBOTFAKEOUTREMOVEME" before the @ symbol to try to prevent scraping by spambots,
      * but this is not required.
      * @param evt 
      */
     private void rbtnContributorsActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_rbtnContributorsActionPerformed
-        //TODO: Fix rough code up, add comments, add more/more detailed exceptions
         //TODO: Is there a way to check for the filepath without needing a /case-sensitive/ file extension attached?
         try
         {
@@ -258,7 +329,7 @@ public class jfAbout extends javax.swing.JFrame {
                 {
                     BufferedReader reader = new BufferedReader(new FileReader(fContributors));
                     String strInput = new String();
-                    String strFile = new String("===List of all contributors (and contact information)===\n");
+                    String strFile = new String("<center><b>===List of all contributors (and contact information)===</b></center><br>");
                     String strContactMethods = new String();
                     try     //can file's contents be read and processed?
                     {
@@ -273,28 +344,48 @@ public class jfAbout extends javax.swing.JFrame {
                                 strContactMethods = "";
                                 for (int i = 2; i < astrInput.length; i++)
                                 {
+                                    if (astrInput[i].contains(".") == true && astrInput[i].contains("@") == false)  //if string contains period ('.') and not @, assume it's a URL
+                                    {
+                                        //if URL doesn't have http:// or https:// to signify it's a URL, add https://
+                                        if (astrInput[i].contains("http://") == false && astrInput[i].contains("https://") == false)
+                                        {
+                                            astrInput[i] = "https://" + astrInput[i];
+                                        }
+                                        //if URL is http://, make it https://
+                                        //there might be problems with old websites, but https should be the default these days
+                                        else if (astrInput[i].contains("http://") == true)
+                                        {
+                                            astrInput[i] = astrInput[i].replace("http://", "https://");
+                                        }
+                                        
+                                        astrInput[i] = "<a href=\"" + astrInput[i] + "\">" + astrInput[i] + "</a>";   //turns it into a link that opens in the user's default web browser
+                                    }
+                                    else if (astrInput[i].contains("@") == true) //if string contains @, assume it's an email address
+                                    {
+                                        //Removes anti-spambot-scraping from the string.
+                                        astrInput[i] = astrInput[i].toLowerCase().replaceAll("spambotfakeoutremoveme", "");   //makes emails all lowercase and removes the anti-spam text
+                                        astrInput[i] = "<a href=mailto:\"" + astrInput[i] + "\">" + astrInput[i] + "</a>";   //turns it into a link that opens in the user's default email client
+                                    }
                                     strContactMethods += astrInput[i];
                                     if (i < astrInput.length - 1)   //if not the last method of contact, add a comma for spacing
                                     {
                                         strContactMethods += ", ";
                                     }
                                 }
-                                strFile += astrInput[0] + " " + astrInput[1] + " (" + strContactMethods + ")\n";
+                                strFile += astrInput[1] + " " + astrInput[0] + " (" + strContactMethods + ")<br>";
                             }
                             else
                             {
-                                strFile += astrInput[0] + " " + astrInput[1] + "\n";
+                                strFile += astrInput[1] + " " + astrInput[0] + "<br>";
                             }
-    //                    strFile += strFirstName + " " + strLastName + " (" + strGitHubAccount + ")\n";
+    //                    strFile += strFirstName + " " + strLastName + " (" + strGitHubAccount + ")<br>";
     //                    strFirstName = strInput.substring(0, strInput.indexOf(',') );
     //                    strLastName = strInput.substring(strInput.indexOf(',') + 1, strInput.lastIndexOf(',') );
     //                    strGitHubAccount = strInput.substring(strInput.lastIndexOf(',') + 1, strInput.length() - 1);
-    //                    strFile += strFirstName + " " + strLastName + " (" + strGitHubAccount + ")\n";
+    //                    strFile += strFirstName + " " + strLastName + " (" + strGitHubAccount + ")<br>";
                         }
-                        //Removes anti-spambot-scraping from the string.
-                        strFile = strFile.replaceAll("SPAMBOTFAKEOUTREMOVEME", "");
                         jtpText.setText(strFile);
-                        jspText.getVerticalScrollBar().setValue(1);
+                        jspText.getVerticalScrollBar().setValue(0);
                         reader.close();
                     }
                     catch (IOException e)   //if there's a problem reading a line in the file
@@ -321,31 +412,71 @@ public class jfAbout extends javax.swing.JFrame {
     /**
      * Loads libraries.txt into jtpText.
      * Course Management's license at the top.
-     * libraries.txt is the list of of libraries and what licenses they operate under, basically; any required license texts (e.g.,
-     * Apache License v2.0's short license, which in turn points to the full license online) are included
-     * separately in the resources folder itself.
+     * libraries.txt is the list of libraries/non-library resources used inside of the program
+     * (e.g., icons, not help files, as the latter are /generated by/ a tool) and what licenses they operate under,
+     * basically. The licenses themselves are regular TXT files in the program's folder.
+     * Format in libraries.txt is one library/resource per line, as below:
+     * "[library name];[library URL];[library license];[license URL];[description of purpose]"
+     * For example,
+     * foolib;foolib.notaurl;Foo License v1.1;foolicense.notaurl;Description of purpose.
+     * outputs
+     * foolib (footlib.notaurl)
+     * -Foo License v1.1 (foolicense.notaurl)
+     * -Description of purpose.
      * @param evt 
      */
     private void rbtnLibrariesActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_rbtnLibrariesActionPerformed
         try
         {
             File fLibraries = new File(AppConstants.ROOT_FOLDER + "libraries.txt");     //this doesn't mean the file actually exists - it just points to where it should be
-            if (fLibraries.exists() == true)    //if tools.txt does exist
+            if (fLibraries.exists() == true)    //if libraries.txt does exist
             {
                 try     //can file can be opened?
                 {
                     BufferedReader reader = new BufferedReader(new FileReader(fLibraries));
                     String strInput = new String();
-                    String strFile = new String("===List of libraries used===\n");
+                    String strFile = new String("<center><b>===List of libraries/other resources used===</b></center><br>");
                     try     //can file's contents be read and processed?
                     {
                         while ((strInput = reader.readLine()) != null)
                         {
-                            String[] astrInput = strInput.split(";");                            
-                            strFile += astrInput[0] + " (" + astrInput[1] + ")\n-" + astrInput[2] + " (" + astrInput[3] + ")\n-" + astrInput[4] + "\n\n";
+                            String[] astrInput = strInput.split(";");          
+                            if (astrInput[1].contains(".") == true) //if the string contains at least one period ('.'), assume that it's a URL and add the tags
+                            {
+                                //if URL doesn't have http:// or https:// to signify it's a URL, add https://
+                                if (astrInput[1].contains("http://") == false && astrInput[1].contains("https://") == false)
+                                {
+                                    astrInput[1] = "https://" + astrInput[1];
+                                }
+                                //if URL is http://, make it https://
+                                //there might be problems with old websites, but https should be the default these days
+                                else if (astrInput[1].contains("http://") == true)
+                                {
+                                    astrInput[1] = astrInput[1].replace("http://", "https://");
+                                }
+                                astrInput[1] = "<a href=\"" + astrInput[1] + "\">" + astrInput[1] + "</a>";   //turns it into a link that opens in the user's default web browser
+                            }
+                            
+                            if (astrInput[3].contains(".") == true) //if the string contains at least one period ('.'), assume that it's a URL and add the tags
+                            {
+                                //if URL doesn't have http:// or https:// to signify it's a URL, add https://
+                                if (astrInput[3].contains("http://") == false && astrInput[3].contains("https://") == false)
+                                {
+                                    astrInput[3] = "https://" + astrInput[3];
+                                }
+                                //if URL is http://, make it https://
+                                //there might be problems with old websites, but https should be the default these days
+                                else if (astrInput[3].contains("http://") == true)
+                                {
+                                    astrInput[3] = astrInput[3].replace("http://", "https://");
+                                }
+                                
+                                astrInput[3] = "<a href=\"" + astrInput[3] + "\">" + astrInput[3] + "</a>";   //turns it into a link that opens in the user's default web browser
+                            }
+                            strFile += astrInput[0] + " (" + astrInput[1] + ")<br>-" + astrInput[2] + " (" + astrInput[3] + ")<br>-" + astrInput[4] + "<br><br>";
                         }
                         jtpText.setText(strFile);
-                        jspText.getVerticalScrollBar().setValue(1);
+                        jspText.getVerticalScrollBar().setValue(0);
                         reader.close();
                     }
                     catch (IOException e)   //if there's a problem reading a line in the file
@@ -369,6 +500,32 @@ public class jfAbout extends javax.swing.JFrame {
         }
     }//GEN-LAST:event_rbtnLibrariesActionPerformed
 
+    /**
+     * Opens the URI (e.g., URL link, mailto: link) when the URI is clicked on.
+     * @param evt 
+     */
+    private void jtpTextHyperlinkUpdate(javax.swing.event.HyperlinkEvent evt) {//GEN-FIRST:event_jtpTextHyperlinkUpdate
+            if (Desktop.isDesktopSupported() == true)
+            {
+                try
+                {
+                    if (evt.getEventType() == HyperlinkEvent.EventType.ACTIVATED)   //if link is activated (e.g., clicked)
+                    {
+                        Desktop.getDesktop().browse(evt.getURL().toURI());
+                    }
+                }
+                catch (IOException | URISyntaxException ex)
+                {
+                    //ex.printStackTrace(System.err);
+                    JOptionPane.showMessageDialog(null, ex.toString(), "Error", JOptionPane.ERROR_MESSAGE); //should print stack trace to message box
+                }
+            }
+    }//GEN-LAST:event_jtpTextHyperlinkUpdate
+
+    private void jtpTextMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jtpTextMouseClicked
+        //TODO; unneeded and need to remove this stub somehow
+    }//GEN-LAST:event_jtpTextMouseClicked
+
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.ButtonGroup bgrpAbout;
     private javax.swing.JPanel jpAboutTitle;
@@ -384,3 +541,6 @@ public class jfAbout extends javax.swing.JFrame {
     private javax.swing.JRadioButton rbtnTools;
     // End of variables declaration//GEN-END:variables
 }
+
+
+
