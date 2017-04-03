@@ -18,6 +18,8 @@ import javax.swing.event.HyperlinkEvent;
  * 
  * 
  *  ******************* MODIFICATION LOG *****************************************
+ * 2017 April  3 -  Added email-handling code to rbtnLibraries.
+ *                      (Should extract into a function later if used again.) -JSS
  * 2017 April  3 -  Added more comments.
  *                  rbtnLibraries is now also for "Other (in-program) Resources" like icons.
  *                  Made jtpText use HTML.
@@ -457,22 +459,46 @@ public class jfAbout extends javax.swing.JFrame {
                                 astrInput[1] = "<a href=\"" + astrInput[1] + "\">" + astrInput[1] + "</a>";   //turns it into a link that opens in the user's default web browser
                             }
                             
-                            if (astrInput[3].contains(".") == true) //if the string contains at least one period ('.'), assume that it's a URL and add the tags
-                            {
-                                //if URL doesn't have http:// or https:// to signify it's a URL, add https://
-                                if (astrInput[3].contains("http://") == false && astrInput[3].contains("https://") == false)
-                                {
-                                    astrInput[3] = "https://" + astrInput[3];
-                                }
-                                //if URL is http://, make it https://
-                                //there might be problems with old websites, but https should be the default these days
-                                else if (astrInput[3].contains("http://") == true)
-                                {
-                                    astrInput[3] = astrInput[3].replace("http://", "https://");
-                                }
-                                
-                                astrInput[3] = "<a href=\"" + astrInput[3] + "\">" + astrInput[3] + "</a>";   //turns it into a link that opens in the user's default web browser
-                            }
+//                            if (astrInput[3].contains(".") == true) //if the string contains at least one period ('.'), assume that it's a URL and add the tags
+//                            {
+//                                //if URL doesn't have http:// or https:// to signify it's a URL, add https://
+//                                if (astrInput[3].contains("http://") == false && astrInput[3].contains("https://") == false)
+//                                {
+//                                    astrInput[3] = "https://" + astrInput[3];
+//                                }
+//                                //if URL is http://, make it https://
+//                                //there might be problems with old websites, but https should be the default these days
+//                                else if (astrInput[3].contains("http://") == true)
+//                                {
+//                                    astrInput[3] = astrInput[3].replace("http://", "https://");
+//                                }
+//                                
+//                                astrInput[3] = "<a href=\"" + astrInput[3] + "\">" + astrInput[3] + "</a>";   //turns it into a link that opens in the user's default web browser
+//                            }
+                            
+                            if (astrInput[3].contains(".") == true && astrInput[3].contains("@") == false)  //if string contains period ('.') and not @, assume it's a URL
+                                    {
+                                        //if URL doesn't have http:// or https:// to signify it's a URL, add https://
+                                        if (astrInput[3].contains("http://") == false && astrInput[3].contains("https://") == false)
+                                        {
+                                            astrInput[3] = "https://" + astrInput[3];
+                                        }
+                                        //if URL is http://, make it https://
+                                        //there might be problems with old websites, but https should be the default these days
+                                        else if (astrInput[3].contains("http://") == true)
+                                        {
+                                            astrInput[3] = astrInput[3].replace("http://", "https://");
+                                        }
+                                        
+                                        astrInput[3] = "<a href=\"" + astrInput[3] + "\">" + astrInput[3] + "</a>";   //turns it into a link that opens in the user's default web browser
+                                    }
+                                    else if (astrInput[3].contains("@") == true) //if string contains @, assume it's an email address
+                                    {
+                                        //Removes anti-spambot-scraping from the string.
+                                        astrInput[3] = astrInput[3].toLowerCase().replaceAll("spambotfakeoutremoveme", "");   //makes emails all lowercase and removes the anti-spam text
+                                        astrInput[3] = "<a href=mailto:\"" + astrInput[3] + "\">" + astrInput[3] + "</a>";   //turns it into a link that opens in the user's default email client
+                                    }
+                            
                             strFile += astrInput[0] + " (" + astrInput[1] + ")<br>-" + astrInput[2] + " (" + astrInput[3] + ")<br>-" + astrInput[4] + "<br><br>";
                         }
                         jtpText.setText(strFile);
