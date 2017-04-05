@@ -31,7 +31,7 @@ public class AppControl {
     
     public static void main(String[] args) {
         
-        SplashScreen splash = new SplashScreen(4000);
+        SplashScreen splash = new SplashScreen(4000); //change duration of splash screen here
         splash.showSplash();
         
         new AppControl(args);
