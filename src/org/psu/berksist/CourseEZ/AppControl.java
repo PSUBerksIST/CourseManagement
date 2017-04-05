@@ -31,6 +31,9 @@ public class AppControl {
     
     public static void main(String[] args) {
         
+        SplashScreen splash = new SplashScreen(4000);
+        splash.showSplash();
+        
         new AppControl(args);
         
     }
