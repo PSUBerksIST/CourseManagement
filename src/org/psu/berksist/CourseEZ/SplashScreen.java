@@ -5,7 +5,7 @@
  */
 package org.psu.berksist.CourseEZ;
 
-import com.thehowtotutorial.splashscreen.JSplash;
+//import com.thehowtotutorial.splashscreen.JSplash;
 import java.awt.Color;
 import java.awt.*;
 import javax.swing.*;
@@ -36,7 +36,8 @@ public class SplashScreen extends JWindow {
     setBounds(x,y,w,h);
 
     // TODO: Can't get image to load up //
-    JLabel label = new JLabel(new ImageIcon(AppConstants.IMAGE_DIR + "AppIcon-temp.png")); 
+    JLabel label = new JLabel(new ImageIcon(AppConstants.ROOT_FOLDER + AppConstants.IMAGE_DIR + "AppIcon-temp.png"));
+      System.out.println(AppConstants.ROOT_FOLDER + AppConstants.IMAGE_DIR + "AppIcon-temp.png");
     
     JLabel text = new JLabel
       ("Copyright 2017, CourseEZ", JLabel.CENTER);
