@@ -25,7 +25,7 @@ public class SplashScreen extends JWindow {
 
   public void showSplash() {
     JPanel content = (JPanel)getContentPane();
-    content.setBackground(Color.white);
+    content.setBackground(Color.black);
 
     int w = 500; //width of the splash screen
     int h = 250; //height of the splash screen
@@ -41,6 +41,7 @@ public class SplashScreen extends JWindow {
     
     JLabel text = new JLabel
       ("Copyright 2017, CourseEZ", JLabel.CENTER);
+    text.setForeground(Color.white);
     content.add(label, BorderLayout.CENTER);
     content.add(text, BorderLayout.SOUTH);
     Color myColor = Color.BLACK;
