@@ -1,8 +1,23 @@
+Commons-CLI-1.3.1.jar;commons.apache.org/proper/commons-cli;Apache License v2.0;apache.org/licenses/LICENSE-2.0;The Apache Commons CLI library provides an API for parsing command line options passed to programs.
+Commons-CLI-1.3.1-javadoc.jar;commons.apache.org/proper/commons-cli;Apache License v2.0;apache.org/licenses/LICENSE-2.0;The Apache Commons CLI library provides an API for parsing command line options passed to programs.
 docx4j;docx4java.org;Apache License v2.0;apache.org;Java library for creating and manipulating Microsoft Open XML (Word DOCX, PowerPoint PPTX, and Excel XLSX) files.
-JavaGPE_3DLF-2.5;www.markus-hillenbrand.de/3dlf;UNKNOWN LICENSE;N/A;3D Look & Feel
-Commons CLI;commons.apache.org/proper/commons-cli;Apache License v2.0;apache.org/licenses/LICENSE-2.0;The Apache Commons CLI library provides an API for parsing command line options passed to programs.
-PgsLookAndFeel;pagosoft.com/projects/pgslookandfeel;Apache License v2.0;apache.org/licenses/LICENSE-2.0;A modern, cross-platform LookAndFeel for Java/Swing.
-rs2xml.jar;drive.google.com/file/d/0BzIr4IDDKJEcdDE1YTlzbmtkMzg/view;UNKNOWN LICENSE;N/A;Creates table models from ResultSet.
-SQLite-JDBC;github.com/xerial/sqlite-jdbc;Apache License v2.0;apache.org/licenses/LICENSE-2.0;SQLite JDBC, developed by Taro L. Saito, is a library for accessing and creating SQLite database files in Java.
-Synthetica;http://jyloo.com/synthetica;etc.;etc.; A Look and Feel for Swing, based on Synth (part of the Java Platform v1.5).
+help-4_2-ehelp-integration.jar;UNKNOWN RESOURCE URL;UNKNOWN LICENSE;UNKNOWN LICENSE URL;UNKNOWN.
+help-demo.jar;oracle.com/technetwork/developer-tools/help/index.html;OTN Developer License;oracle.com/technetwork/licenses/standard-license-152015.html;Oracle Help for Java (OHJ).
+help-indexer.jar;oracle.com/technetwork/developer-tools/help/index.html;OTN Developer License;oracle.com/technetwork/licenses/standard-license-152015.html;Oracle Help for Java (OHJ).
+help-share.jar;oracle.com/technetwork/developer-tools/help/index.html;OTN Developer License;oracle.com/technetwork/licenses/standard-license-152015.html;Oracle Help for Java (OHJ).
+help-wizard.jar;oracle.com/technetwork/developer-tools/help/index.html;OTN Developer License;oracle.com/technetwork/licenses/standard-license-152015.html;Oracle Help for Java (OHJ).
 *icons*;UNKNOWN RESOURCE URL;UNKNOWN LICENSE;UNKNOWN LICENSE URL;Icons used in the drop-down menus and such.
+JavaGPE_3DLF-2.5.jar;www.markus-hillenbrand.de/3dlf;UNKNOWN FREE LICENSE;N/A;3D Look & Feel
+jewt.jar;UNKNOWN RESOURCE URL;UNKNOWN LICENSE;UNKNOWN LICENSE URL;UNKNOWN.
+JSplashScreen;sourceforge.net/projects/jsplashscreen;GNU Lesser General Public License v2.1;gnu.org/licenses/old-licenses/lgpl-2.1.html;Java library for showing a splash screen on application startup.
+loremipsum-1.0.jar;loremipsum.sourceforge.net;MIT License;opensource.org/licenses/MIT;Lorem ipsum text generation for testing purposes.
+ohj.jar;oracle.com/technetwork/developer-tools/help/index.html;OTN Developer License;oracle.com/technetwork/licenses/standard-license-152015.html;Oracle Help for Java (OHJ).
+oracle_ice.jar;UNKNOWN RESOURCE URL;UNKNOWN LICENSE;UNKNOWN LICENSE URL;UNKNOWN.
+PgsLookAndFeel-1.1.2.jar;pagosoft.com/projects/pgslookandfeel;Apache License v2.0;apache.org/licenses/LICENSE-2.0;A modern, cross-platform LookAndFeel for Java/Swing.
+rs2xml.jar;drive.google.com/file/d/0BzIr4IDDKJEcdDE1YTlzbmtkMzg/view;UNKNOWN LICENSE;N/A;Creates table models from ResultSet.
+share.jar;UNKNOWN RESOURCE URL;UNKNOWN LICENSE;UNKNOWN LICENSE URL;UNKNOWN.
+SQLite-JDBC-3.8.11.2.jar;github.com/xerial/sqlite-jdbc;Apache License v2.0;apache.org/licenses/LICENSE-2.0;SQLite JDBC, developed by Taro L. Saito, is a library for accessing and creating SQLite database files in Java.
+syntheticaBlackEye.jar;http://jyloo.com/synthetica;The included Synthetica pluggable look and feel is an evaluation version. End users who wish to continue using the product should contact <a href=mailto:salesSPAMBOTFAKEOUTREMOVEME@jyloo.com>salesSPAMBOTFAKEOUTREMOVEME@jyloo.com</a> for pricing.;jyloo.com; A Look and Feel for Swing, based on Synth (part of the Java Platform v1.5).
+synthetica.jar;http://jyloo.com/synthetica;The included Synthetica pluggable look and feel is an evaluation version. End users who wish to continue using the product should contact <a href=mailto:salesSPAMBOTFAKEOUTREMOVEME@jyloo.com>salesSPAMBOTFAKEOUTREMOVEME@jyloo.com</a> for pricing.;jyloo.com; A Look and Feel for Swing, based on Synth (part of the Java Platform v1.5).
+wizard-ewt.jar;UNKNOWN RESOURCE URL;UNKNOWN LICENSE;UNKNOWN LICENSE URL;UNKNOWN.
+

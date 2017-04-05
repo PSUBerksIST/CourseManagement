@@ -18,6 +18,13 @@ import javax.swing.event.HyperlinkEvent;
  * 
  * 
  *  ******************* MODIFICATION LOG *****************************************
+ * 2017 April  4 -  Removed HTTPS conversion code. If the user wants HTTPS,
+ *                      they should run HTTPS Everywhere instead in Firefox or something.
+ *                      Can't tell whether or not a website is equipped for HTTPS from here.
+ *                  Modified code to not add "http://" when "https://" is in the TXT files.
+ *                      If it's in the TXT, then it was probably added as an HTTPS-enabled website.
+ *                  Added most of the JARS' information to libraries.txt.
+ *                  Added information to tools.txt. -JSS
  * 2017 April  3 -  Added email-handling code to rbtnLibraries.
  *                      (Should extract into a function later if used again.) -JSS
  * 2017 April  3 -  Added more comments.
@@ -250,31 +257,23 @@ public class jfAbout extends javax.swing.JFrame {
                             String[] astrInput = strInput.split(";");
                             if (astrInput[1].contains(".") == true) //if the string contains at least one period ('.'), assume that it's a URL and add the tags
                             {
-                                //if URL doesn't have http:// or https:// to signify it's a URL, add https://
+                                //if URL doesn't have http:// to signify it's a URL, add http://
+                                //assume that if it already has https:// in it for some reason,
+                                //then the website is HTTPS-enabled and shouldn't be modified
                                 if (astrInput[1].contains("http://") == false && astrInput[1].contains("https://") == false)
                                 {
-                                    astrInput[1] = "https://" + astrInput[1];
-                                }
-                                //if URL is http://, make it https://
-                                //there might be problems with old websites, but https should be the default these days
-                                else if (astrInput[1].contains("http://") == true)
-                                {
-                                    astrInput[1] = astrInput[1].replace("http://", "https://");
+                                    astrInput[1] = "http://" + astrInput[1];
                                 }
                                 astrInput[1] = "<a href=\"" + astrInput[1] + "\">" + astrInput[1] + "</a>";   //turns it into a link that opens in the user's default web browser
                             }
                             if (astrInput[3].contains(".") == true) //if the string contains at least one period ('.'), assume that it's a URL and add the tags
                             {
-                                                                //if URL doesn't have http:// or https:// to signify it's a URL, add https://
+                                //if URL doesn't have http:// to signify it's a URL, add http://
+                                //assume that if it already has https:// in it for some reason,
+                                //then the website is HTTPS-enabled and shouldn't be modified
                                 if (astrInput[3].contains("http://") == false && astrInput[3].contains("https://") == false)
                                 {
-                                    astrInput[3] = "https://" + astrInput[1];
-                                }
-                                //if URL is http://, make it https://
-                                //there might be problems with old websites, but https should be the default these days
-                                else if (astrInput[3].contains("http://") == true)
-                                {
-                                    astrInput[3] = astrInput[3].replace("http://", "https://");
+                                    astrInput[3] = "http://" + astrInput[3];
                                 }
                                 
                                 astrInput[3] = "<a href=\"" + astrInput[3] + "\">" + astrInput[3] + "</a>";   //turns it into a link that opens in the user's default web browser
@@ -348,16 +347,12 @@ public class jfAbout extends javax.swing.JFrame {
                                 {
                                     if (astrInput[i].contains(".") == true && astrInput[i].contains("@") == false)  //if string contains period ('.') and not @, assume it's a URL
                                     {
-                                        //if URL doesn't have http:// or https:// to signify it's a URL, add https://
+                                        //if URL doesn't have http:// to signify it's a URL, add http://
+                                        //assume that if it already has https:// in it for some reason,
+                                        //then the website is HTTPS-enabled and shouldn't be modified
                                         if (astrInput[i].contains("http://") == false && astrInput[i].contains("https://") == false)
                                         {
-                                            astrInput[i] = "https://" + astrInput[i];
-                                        }
-                                        //if URL is http://, make it https://
-                                        //there might be problems with old websites, but https should be the default these days
-                                        else if (astrInput[i].contains("http://") == true)
-                                        {
-                                            astrInput[i] = astrInput[i].replace("http://", "https://");
+                                            astrInput[i] = "http://" + astrInput[i];
                                         }
                                         
                                         astrInput[i] = "<a href=\"" + astrInput[i] + "\">" + astrInput[i] + "</a>";   //turns it into a link that opens in the user's default web browser
@@ -445,59 +440,46 @@ public class jfAbout extends javax.swing.JFrame {
                             String[] astrInput = strInput.split(";");          
                             if (astrInput[1].contains(".") == true) //if the string contains at least one period ('.'), assume that it's a URL and add the tags
                             {
-                                //if URL doesn't have http:// or https:// to signify it's a URL, add https://
+                                //if URL doesn't have http:// to signify it's a URL, add http://
+                                //assume that if it already has https:// in it for some reason,
+                                //then the website is HTTPS-enabled and shouldn't be modified
                                 if (astrInput[1].contains("http://") == false && astrInput[1].contains("https://") == false)
                                 {
-                                    astrInput[1] = "https://" + astrInput[1];
-                                }
-                                //if URL is http://, make it https://
-                                //there might be problems with old websites, but https should be the default these days
-                                else if (astrInput[1].contains("http://") == true)
-                                {
-                                    astrInput[1] = astrInput[1].replace("http://", "https://");
+                                    astrInput[1] = "http://" + astrInput[1];
                                 }
                                 astrInput[1] = "<a href=\"" + astrInput[1] + "\">" + astrInput[1] + "</a>";   //turns it into a link that opens in the user's default web browser
                             }
                             
 //                            if (astrInput[3].contains(".") == true) //if the string contains at least one period ('.'), assume that it's a URL and add the tags
 //                            {
-//                                //if URL doesn't have http:// or https:// to signify it's a URL, add https://
-//                                if (astrInput[3].contains("http://") == false && astrInput[3].contains("https://") == false)
+//                                //if URL doesn't have http:// to signify it's a URL, add http://
+//                                if (astrInput[3].contains("http://") == false)
 //                                {
-//                                    astrInput[3] = "https://" + astrInput[3];
-//                                }
-//                                //if URL is http://, make it https://
-//                                //there might be problems with old websites, but https should be the default these days
-//                                else if (astrInput[3].contains("http://") == true)
-//                                {
-//                                    astrInput[3] = astrInput[3].replace("http://", "https://");
+//                                    astrInput[3] = "http://" + astrInput[3];
 //                                }
 //                                
 //                                astrInput[3] = "<a href=\"" + astrInput[3] + "\">" + astrInput[3] + "</a>";   //turns it into a link that opens in the user's default web browser
 //                            }
                             
                             if (astrInput[3].contains(".") == true && astrInput[3].contains("@") == false)  //if string contains period ('.') and not @, assume it's a URL
-                                    {
-                                        //if URL doesn't have http:// or https:// to signify it's a URL, add https://
-                                        if (astrInput[3].contains("http://") == false && astrInput[3].contains("https://") == false)
-                                        {
-                                            astrInput[3] = "https://" + astrInput[3];
-                                        }
-                                        //if URL is http://, make it https://
-                                        //there might be problems with old websites, but https should be the default these days
-                                        else if (astrInput[3].contains("http://") == true)
-                                        {
-                                            astrInput[3] = astrInput[3].replace("http://", "https://");
-                                        }
-                                        
-                                        astrInput[3] = "<a href=\"" + astrInput[3] + "\">" + astrInput[3] + "</a>";   //turns it into a link that opens in the user's default web browser
-                                    }
-                                    else if (astrInput[3].contains("@") == true) //if string contains @, assume it's an email address
-                                    {
-                                        //Removes anti-spambot-scraping from the string.
-                                        astrInput[3] = astrInput[3].toLowerCase().replaceAll("spambotfakeoutremoveme", "");   //makes emails all lowercase and removes the anti-spam text
-                                        astrInput[3] = "<a href=mailto:\"" + astrInput[3] + "\">" + astrInput[3] + "</a>";   //turns it into a link that opens in the user's default email client
-                                    }
+                            {
+                                //if URL doesn't have http:// to signify it's a URL, add http://
+                                //assume that if it already has https:// in it for some reason,
+                                //then the website is HTTPS-enabled and shouldn't be modified
+                                if (astrInput[3].contains("http://") == false && astrInput[3].contains("https://") == false)
+                                {
+                                    astrInput[3] = "http://" + astrInput[3];
+                                }
+
+                                astrInput[3] = "<a href=\"" + astrInput[3] + "\">" + astrInput[3] + "</a>";   //turns it into a link that opens in the user's default web browser
+                            }
+                            if (astrInput[2].contains("@") == true) //if string contains @, assume it's an email address
+                            {
+                                //Removes anti-spambot-scraping from the string.
+                                //Crudely hacked together from the other versions of this processing.
+                                //The license section isn't intended to have emails here - it's all supposed to be FOSS or similar.
+                                astrInput[2] = astrInput[2].replaceAll("SPAMBOTFAKEOUTREMOVEME", "");   //makes emails all lowercase and removes the anti-spam text
+                            }
                             
                             strFile += astrInput[0] + " (" + astrInput[1] + ")<br>-" + astrInput[2] + " (" + astrInput[3] + ")<br>-" + astrInput[4] + "<br><br>";
                         }

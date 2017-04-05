@@ -1,4 +1,3 @@
-HelpNDoc;helpndoc.com;LICENSE;LICENSE;HTML help authoring tool.
-NetBeans;x;x;x;x
-SQLite;x;x;x;x
-SQLite Manager;x;x;x;x
+HelpNDoc;helpndoc.com;Terms & Conditions for Free Version (for generated help files);helpndoc.com/terms-and-conditions;HTML help authoring tool used to generate help files.
+NetBeans;netbeans.org;Common Development and Distribution License (CDDL) and GNU Public License v.2 w/Classpath Exception;netbeans.org/about/legal/license.html;Java IDE.
+SQLite Studio;sqlitestudio.pl/index.rvt;GNU General Public License v3 (GPLv3);gnu.org/copyleft/gpl.html;SQLite database manager.
