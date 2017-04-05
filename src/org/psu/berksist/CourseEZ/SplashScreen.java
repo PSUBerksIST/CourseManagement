@@ -35,16 +35,22 @@ public class SplashScreen extends JWindow {
     int y = (screen.height-h)/2;
     setBounds(x,y,w,h);
 
-    // TODO: Can't get image to load up //
-    JLabel label = new JLabel(new ImageIcon(AppConstants.ROOT_FOLDER + AppConstants.IMAGE_DIR + "AppIcon-temp.png"));
-      System.out.println(AppConstants.ROOT_FOLDER + AppConstants.IMAGE_DIR + "AppIcon-temp.png");
+    /* code to re-size image found here http://www.nullpointer.at/2011/08/21/java-code-snippets-howto-resize-an-imageicon/ */
+   
+    ImageIcon imageIcon = new ImageIcon(AppConstants.ROOT_FOLDER + AppConstants.IMAGE_DIR + "AppIcon-temp.png"); // load the image to a imageIcon
+    Image image = imageIcon.getImage(); // transform it 
+    Image newimg = image.getScaledInstance(120, 120,  java.awt.Image.SCALE_SMOOTH); // scale it the smooth way  
+    imageIcon = new ImageIcon(newimg);  // transform it back
+    
+    JLabel label = new JLabel(new ImageIcon(newimg));
+    System.out.println(AppConstants.ROOT_FOLDER + AppConstants.IMAGE_DIR + "RESIZED-NEWAppIcon-temp.png");
     
     JLabel text = new JLabel
       ("Copyright 2017, CourseEZ", JLabel.CENTER);
     text.setForeground(Color.white);
     content.add(label, BorderLayout.CENTER);
     content.add(text, BorderLayout.SOUTH);
-    Color myColor = Color.BLACK;
+    Color myColor = Color.ORANGE;
     content.setBorder(BorderFactory.createLineBorder(myColor, 10));
     
     setVisible(true); //true to display window
