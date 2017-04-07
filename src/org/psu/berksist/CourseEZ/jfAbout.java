@@ -8,6 +8,7 @@ package org.psu.berksist.CourseEZ;
 import java.awt.Desktop;
 import java.io.*;
 import java.net.URISyntaxException;
+import java.util.Locale;
 import javax.swing.JOptionPane;
 import javax.swing.event.HyperlinkEvent;
 
@@ -18,6 +19,12 @@ import javax.swing.event.HyperlinkEvent;
  * 
  * 
  *  ******************* MODIFICATION LOG *****************************************
+ * 2017 April  7 -  Turned URL and email formatting code into functions.
+ *                  +BUG: leading and trailing spaces in email addresses in contributors.
+ *                  TODO: Change how rbtnLibraries reads and displays libraries.txt.
+ *                      (Note: First line currently holds not-yet-implemented new format.
+ *                      Delete that line if testing convertToEmail() before rbtnLibraries
+ *                          is updated.) -JSS
  * 2017 April  4 -  Removed HTTPS conversion code. If the user wants HTTPS,
  *                      they should run HTTPS Everywhere instead in Firefox or something.
  *                      Can't tell whether or not a website is equipped for HTTPS from here.
@@ -255,29 +262,8 @@ public class jfAbout extends javax.swing.JFrame {
                         while ((strInput = reader.readLine()) != null)
                         {
                             String[] astrInput = strInput.split(";");
-                            if (astrInput[1].contains(".") == true) //if the string contains at least one period ('.'), assume that it's a URL and add the tags
-                            {
-                                //if URL doesn't have http:// to signify it's a URL, add http://
-                                //assume that if it already has https:// in it for some reason,
-                                //then the website is HTTPS-enabled and shouldn't be modified
-                                if (astrInput[1].contains("http://") == false && astrInput[1].contains("https://") == false)
-                                {
-                                    astrInput[1] = "http://" + astrInput[1];
-                                }
-                                astrInput[1] = "<a href=\"" + astrInput[1] + "\">" + astrInput[1] + "</a>";   //turns it into a link that opens in the user's default web browser
-                            }
-                            if (astrInput[3].contains(".") == true) //if the string contains at least one period ('.'), assume that it's a URL and add the tags
-                            {
-                                //if URL doesn't have http:// to signify it's a URL, add http://
-                                //assume that if it already has https:// in it for some reason,
-                                //then the website is HTTPS-enabled and shouldn't be modified
-                                if (astrInput[3].contains("http://") == false && astrInput[3].contains("https://") == false)
-                                {
-                                    astrInput[3] = "http://" + astrInput[3];
-                                }
-                                
-                                astrInput[3] = "<a href=\"" + astrInput[3] + "\">" + astrInput[3] + "</a>";   //turns it into a link that opens in the user's default web browser
-                            }
+                            astrInput[1] = convertToURL(astrInput[1]);  //convert any URLs
+                            astrInput[3] = convertToURL(astrInput[3]);  //convert any URLs
                             strFile += astrInput[0] + " (" + astrInput[1] + ")<br>-" + astrInput[2] + " (" + astrInput[3] + ")<br>-" + astrInput[4] + "<br><br>";
                         }
                         jtpText.setText(strFile);
@@ -334,9 +320,6 @@ public class jfAbout extends javax.swing.JFrame {
                     String strContactMethods = new String();
                     try     //can file's contents be read and processed?
                     {
-//                String strFirstName = new String();
-//                String strLastName = new String();
-//                String strGitHubAccount = new String();
                         while ((strInput = reader.readLine()) != null)
                         {
                             String[] astrInput = strInput.split(";");
@@ -345,24 +328,8 @@ public class jfAbout extends javax.swing.JFrame {
                                 strContactMethods = "";
                                 for (int i = 2; i < astrInput.length; i++)
                                 {
-                                    if (astrInput[i].contains(".") == true && astrInput[i].contains("@") == false)  //if string contains period ('.') and not @, assume it's a URL
-                                    {
-                                        //if URL doesn't have http:// to signify it's a URL, add http://
-                                        //assume that if it already has https:// in it for some reason,
-                                        //then the website is HTTPS-enabled and shouldn't be modified
-                                        if (astrInput[i].contains("http://") == false && astrInput[i].contains("https://") == false)
-                                        {
-                                            astrInput[i] = "http://" + astrInput[i];
-                                        }
-                                        
-                                        astrInput[i] = "<a href=\"" + astrInput[i] + "\">" + astrInput[i] + "</a>";   //turns it into a link that opens in the user's default web browser
-                                    }
-                                    else if (astrInput[i].contains("@") == true) //if string contains @, assume it's an email address
-                                    {
-                                        //Removes anti-spambot-scraping from the string.
-                                        astrInput[i] = astrInput[i].toLowerCase().replaceAll("spambotfakeoutremoveme", "");   //makes emails all lowercase and removes the anti-spam text
-                                        astrInput[i] = "<a href=mailto:\"" + astrInput[i] + "\">" + astrInput[i] + "</a>";   //turns it into a link that opens in the user's default email client
-                                    }
+                                    astrInput[i] = convertToURL(astrInput[i]);          //convert any URLs
+                                    astrInput[i] = convertToEmail(astrInput[i]);        //convert any emails
                                     strContactMethods += astrInput[i];
                                     if (i < astrInput.length - 1)   //if not the last method of contact, add a comma for spacing
                                     {
@@ -413,13 +380,17 @@ public class jfAbout extends javax.swing.JFrame {
      * (e.g., icons, not help files, as the latter are /generated by/ a tool) and what licenses they operate under,
      * basically. The licenses themselves are regular TXT files in the program's folder.
      * Format in libraries.txt is one library/resource per line, as below:
-     * "[library name];[library URL];[library license];[license URL];[description of purpose]"
+     * "[library name];[library URL];[library license];[license URL];[description of purpose]";[filename1](;[filename2];[etc.])
      * For example,
-     * foolib;foolib.notaurl;Foo License v1.1;foolicense.notaurl;Description of purpose.
+     * foolib;foolib.notaurl;Foo License v1.1;foolicense.notaurl;Description of purpose.;foolib1.jar;foolib2.jar;foolib3.jar
      * outputs
      * foolib (footlib.notaurl)
      * -Foo License v1.1 (foolicense.notaurl)
      * -Description of purpose.
+     * -Comprised of:
+     *  +foolib1.jar
+     *  +foolib2.jar
+     *  +foolib3.jar
      * @param evt 
      */
     private void rbtnLibrariesActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_rbtnLibrariesActionPerformed
@@ -438,48 +409,10 @@ public class jfAbout extends javax.swing.JFrame {
                         while ((strInput = reader.readLine()) != null)
                         {
                             String[] astrInput = strInput.split(";");          
-                            if (astrInput[1].contains(".") == true) //if the string contains at least one period ('.'), assume that it's a URL and add the tags
-                            {
-                                //if URL doesn't have http:// to signify it's a URL, add http://
-                                //assume that if it already has https:// in it for some reason,
-                                //then the website is HTTPS-enabled and shouldn't be modified
-                                if (astrInput[1].contains("http://") == false && astrInput[1].contains("https://") == false)
-                                {
-                                    astrInput[1] = "http://" + astrInput[1];
-                                }
-                                astrInput[1] = "<a href=\"" + astrInput[1] + "\">" + astrInput[1] + "</a>";   //turns it into a link that opens in the user's default web browser
-                            }
+                            astrInput[1] = convertToURL(astrInput[1]);
                             
-//                            if (astrInput[3].contains(".") == true) //if the string contains at least one period ('.'), assume that it's a URL and add the tags
-//                            {
-//                                //if URL doesn't have http:// to signify it's a URL, add http://
-//                                if (astrInput[3].contains("http://") == false)
-//                                {
-//                                    astrInput[3] = "http://" + astrInput[3];
-//                                }
-//                                
-//                                astrInput[3] = "<a href=\"" + astrInput[3] + "\">" + astrInput[3] + "</a>";   //turns it into a link that opens in the user's default web browser
-//                            }
-                            
-                            if (astrInput[3].contains(".") == true && astrInput[3].contains("@") == false)  //if string contains period ('.') and not @, assume it's a URL
-                            {
-                                //if URL doesn't have http:// to signify it's a URL, add http://
-                                //assume that if it already has https:// in it for some reason,
-                                //then the website is HTTPS-enabled and shouldn't be modified
-                                if (astrInput[3].contains("http://") == false && astrInput[3].contains("https://") == false)
-                                {
-                                    astrInput[3] = "http://" + astrInput[3];
-                                }
-
-                                astrInput[3] = "<a href=\"" + astrInput[3] + "\">" + astrInput[3] + "</a>";   //turns it into a link that opens in the user's default web browser
-                            }
-                            if (astrInput[2].contains("@") == true) //if string contains @, assume it's an email address
-                            {
-                                //Removes anti-spambot-scraping from the string.
-                                //Crudely hacked together from the other versions of this processing.
-                                //The license section isn't intended to have emails here - it's all supposed to be FOSS or similar.
-                                astrInput[2] = astrInput[2].replaceAll("SPAMBOTFAKEOUTREMOVEME", "");   //makes emails all lowercase and removes the anti-spam text
-                            }
+                            astrInput[3] = convertToURL(astrInput[3]);
+                            astrInput[2] = convertToEmail(astrInput[2]);    //The license section isn't intended to have emails here - it's all supposed to be FOSS or similar.
                             
                             strFile += astrInput[0] + " (" + astrInput[1] + ")<br>-" + astrInput[2] + " (" + astrInput[3] + ")<br>-" + astrInput[4] + "<br><br>";
                         }
@@ -534,6 +467,86 @@ public class jfAbout extends javax.swing.JFrame {
         //TODO; unneeded and need to remove this stub somehow
     }//GEN-LAST:event_jtpTextMouseClicked
 
+    
+    /**
+     * Adds "http://" to a string lacking "http://" or "https://".
+     * @param strInput String that has a period (.), not an at symbol (@), and lacks "http://"/"https://" signifying that it's a URL.
+     * @return If link, formatted string with "http://" added to the beginning of it.
+     */
+    private String convertToURL(String strInput)
+    {
+        //if string contains period ('.') and not @, assume it's a URL
+         if (strInput.contains(".") == true && strInput.contains("@") == false)
+            {
+                //if URL doesn't have http:// to signify it's a URL, add http://
+                //assume that if it already has https:// in it for some reason,
+                //then the website is HTTPS-enabled and shouldn't be modified
+                if (strInput.contains("http://") == false && strInput.contains("https://") == false)
+                {
+                    strInput = "http://" + strInput;
+                }
+                //turns it into a link that opens in the user's default web browser
+                return "<a href=\"" + strInput + "\">" + strInput + "</a>";
+            }
+         return strInput;   //else return the unmodified string
+    }
+    
+    /**
+     * Converts probable email addresses into working linked emails.
+     * @param strInput String that contains an at symbol (@)
+     * @return If email address, formatted string with working link and anti-spam text removed.
+     */
+    private String convertToEmail(String strInput)
+    {
+        if (strInput.contains("@") == true) //if probable email
+        {
+            int intEmailStart;
+            int intEmailEnd;
+            int i = strInput.indexOf("@");
+            
+            //while character is not ' ', '(', or '[', and i > 0
+            while (strInput.substring(i, i + 1).equals(" ") == false && strInput.substring(i, i + 1).equals("(") == false && strInput.substring(i, i + 1).equals("[") == false && i > 0)
+            {
+                i--;
+            }
+            intEmailStart = i;  //set beginning of email address (either hit probable non-email character or end of string)
+            System.out.println("[DEBUG] intEmailStart=" + intEmailStart);
+            
+            i = strInput.indexOf("@");
+            
+//            while (!(strInput.indexOf(i) == ' ' || strInput.indexOf(i) == ')' || strInput.indexOf(i) == ']' || strInput.indexOf(i) == ',') && i < strInput.length() - 1)
+            while (strInput.substring(i, i + 1).equals(" ") == false && strInput.substring(i, i + 1).equals(")") == false && strInput.substring(i, i + 1).equals("]") == false && i < strInput.length() - 1)
+            //while (strInput.substring(i).contains(" ") == false && strInput.substring(i).contains(")") == false && strInput.substring(i).contains("]") == false && i < strInput.length() - 1)
+            {
+                i++;
+            }
+            intEmailEnd = i;    //set end of email address
+            System.out.println("[DEBUG] intEmailEnd=" + intEmailEnd);
+            
+            /*  TODO: Check against a whitelist for probable email characters instead of a blacklist for non-email characters.
+                For beginning of email, whitelist would be something like:
+                    Alphanumerics (A-Z, 0-9)
+                    Underscore (_)
+                    Dash (-)
+                    Period (.)
+                For ending of email (email domain), whitelist would be something like:
+                    Find the first period, and then the first non-alphabet, non-dash, non-underscore? character.
+                Example of a nonstandard email address would be:
+                    firstname.lastname_1234-5@example-name_here.com
+            */
+
+            
+            System.out.println("[DEBUG] Pre-email substring=" + strInput.substring(0, intEmailStart));
+            System.out.println("[DEBUG] Email=" + strInput.substring(intEmailStart,intEmailEnd + 1));
+            System.out.println("[DEBUG] Post-email substring=" + strInput.substring(intEmailEnd, strInput.length() - 1));
+            //Removes anti-spambot text from the string and turns it into a link that opens in the user's default email client
+            strInput = strInput.substring(0, intEmailStart) + "<a href=mailto:\"" + strInput.substring(intEmailStart,intEmailEnd + 1).replaceAll("SPAMBOTFAKEOUTREMOVEME", "") + "\">" + strInput.substring(intEmailStart,intEmailEnd + 1).replaceAll("SPAMBOTFAKEOUTREMOVEME", "") + "</a>" + strInput.substring(intEmailEnd, strInput.length() - 1);
+            System.out.println("[DEBUG] Formatted string=" + strInput);
+            return strInput;    //returns modified string
+        }
+        return strInput;    //if not email, return unmodified string
+    }
+    
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.ButtonGroup bgrpAbout;
     private javax.swing.JPanel jpAboutTitle;
