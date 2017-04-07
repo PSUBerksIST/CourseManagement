@@ -8,7 +8,10 @@ package org.psu.berksist.CourseEZ;
 //import com.thehowtotutorial.splashscreen.JSplash;
 import java.awt.Color;
 import java.awt.*;
+import static java.lang.Thread.sleep;
 import javax.swing.*;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  *
@@ -17,6 +20,10 @@ import javax.swing.*;
     
 
 public class SplashScreen extends JWindow {
+    
+    private static JProgressBar pbar;
+    Thread t = null;
+
     
   private int duration;
   public SplashScreen(int d) {
@@ -52,14 +59,52 @@ public class SplashScreen extends JWindow {
     content.add(text, BorderLayout.SOUTH);
     Color myColor = Color.ORANGE;
     content.setBorder(BorderFactory.createLineBorder(myColor, 10));
-    
+    //showProgressBar(); //to display progress bar
+    //content.add(pbar, BorderLayout.NORTH); //progress bar layout
     setVisible(true); //true to display window
-
+    
     try { Thread.sleep(duration); } catch (Exception e) {}
 
     setVisible(false);
   }
 
+  
+  /* Code for Progress bar
+  
+  public void showProgressBar()
+    {
+    
+    pbar = new JProgressBar();
+        pbar.setMinimum(0);
+        pbar.setMaximum(100);
+        pbar.setStringPainted(true);
+        pbar.setForeground(Color.LIGHT_GRAY);
+        add(pbar);
+        //pbar.setPreferredSize(new Dimension(310, 30));
+        //pbar.setBounds(50, 50, 10, 10);
+        
+ 
+        Thread T1;
+        T1 = new Thread() {
+            
+            @Override
+            public void run() {
+                int i = 0;
+                while (i <= 100) {
+                    pbar.setValue(i);
+                    try {
+                        sleep(90);
+                    } catch (InterruptedException ex) {
+                        Logger.getLogger(SplashScreen.class.getName()).log(Level.SEVERE, null, ex);
+                    }
+                    i++;
+                }
+            }
+        };
+        T1.start();
+    }
+  */
+  
   public void showSplashAndExit() {
     showSplash();
     System.exit(0);
@@ -72,37 +117,3 @@ public class SplashScreen extends JWindow {
     
   }
 }
-    
-    /* Code used with JSplashScreen libray - errors found while running
-    
-    public static void main(String[] args) {
-    
-    try{
-    
-    JSplash splash = new JSplash(SplashScreen.class.getResource(AppConstants.IMAGE_DIR + "splash.png"), true, true, false , "V1", null, Color.RED ,Color.BLACK);
-
- 
-    
-    splash.splashOn();
-    
-    splash.setProgress(20, "Init");
-    Thread.sleep(1000);
-    splash.setProgress(40, "Loading");
-    Thread.sleep(1000);
-    splash.setProgress(60, "Applying Configs");
-    Thread.sleep(1000);
-    splash.setProgress(80, "Starting app..");
-    Thread.sleep(1000);
-    
-    splash.splashOff();
-    
-    
-} 
-catch (Exception e) {
-    e.printStackTrace();
-}
-    
-}
-
-*/
-    
