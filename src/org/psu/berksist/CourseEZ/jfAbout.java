@@ -8,7 +8,6 @@ package org.psu.berksist.CourseEZ;
 import java.awt.Desktop;
 import java.io.*;
 import java.net.URISyntaxException;
-import java.util.Locale;
 import javax.swing.JOptionPane;
 import javax.swing.event.HyperlinkEvent;
 
@@ -19,9 +18,14 @@ import javax.swing.event.HyperlinkEvent;
  * 
  * 
  *  ******************* MODIFICATION LOG *****************************************
+ * 2017 April  9 -  Changed references to libraries.txt/Libraries to resources.txt/Resources.
+ *                  Changed anti-spam text to be a little more professional.
+ *                  Changed resources.txt format and associated code.
+ *                      Can now use one collective resource name that all associated files are collected under.
+ *                  Hard-coded fix for Synthetica email in resources.txt and rbtnResourcesActionPerformed for now. -JSS
  * 2017 April  7 -  Turned URL and email formatting code into functions.
- *                  +BUG: leading and trailing spaces in email addresses in contributors.
- *                  TODO: Change how rbtnLibraries reads and displays libraries.txt.
+ *                  +BUG: leading and trailing spaces in email addresses in contributors from ConvertToEmail.
+ *                  TODO: Change how rbtnLibraries reads and displays resources.txt.
  *                      (Note: First line currently holds not-yet-implemented new format.
  *                      Delete that line if testing convertToEmail() before rbtnLibraries
  *                          is updated.) -JSS
@@ -30,7 +34,7 @@ import javax.swing.event.HyperlinkEvent;
  *                      Can't tell whether or not a website is equipped for HTTPS from here.
  *                  Modified code to not add "http://" when "https://" is in the TXT files.
  *                      If it's in the TXT, then it was probably added as an HTTPS-enabled website.
- *                  Added most of the JARS' information to libraries.txt.
+ *                  Added most of the JARS' information to resources.txt.
  *                  Added information to tools.txt. -JSS
  * 2017 April  3 -  Added email-handling code to rbtnLibraries.
  *                      (Should extract into a function later if used again.) -JSS
@@ -79,7 +83,7 @@ public class jfAbout extends javax.swing.JFrame {
         //register radio buttons to button group
         bgrpAbout.add(rbtnTools);
         bgrpAbout.add(rbtnContributors);
-        bgrpAbout.add(rbtnLibraries);
+        bgrpAbout.add(rbtnResources);
         
         rbtnContributors.doClick();
     }
@@ -103,7 +107,7 @@ public class jfAbout extends javax.swing.JFrame {
         jtpText = new javax.swing.JTextPane();
         jpRadioButtons = new javax.swing.JPanel();
         rbtnTools = new javax.swing.JRadioButton();
-        rbtnLibraries = new javax.swing.JRadioButton();
+        rbtnResources = new javax.swing.JRadioButton();
         rbtnContributors = new javax.swing.JRadioButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
@@ -122,16 +126,16 @@ public class jfAbout extends javax.swing.JFrame {
             .addGroup(jpAboutTitleLayout.createSequentialGroup()
                 .addGroup(jpAboutTitleLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jpAboutTitleLayout.createSequentialGroup()
-                        .addGap(292, 292, 292)
-                        .addComponent(lblVersionNumber))
-                    .addGroup(jpAboutTitleLayout.createSequentialGroup()
                         .addGap(192, 192, 192)
-                        .addComponent(lblDescription)))
-                .addContainerGap(128, Short.MAX_VALUE))
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jpAboutTitleLayout.createSequentialGroup()
-                .addGap(0, 0, Short.MAX_VALUE)
-                .addComponent(lblProgramName)
-                .addGap(248, 248, 248))
+                        .addComponent(lblDescription))
+                    .addGroup(jpAboutTitleLayout.createSequentialGroup()
+                        .addGap(292, 292, 292)
+                        .addGroup(jpAboutTitleLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(lblProgramName)
+                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jpAboutTitleLayout.createSequentialGroup()
+                                .addComponent(lblVersionNumber)
+                                .addGap(65, 65, 65)))))
+                .addContainerGap(131, Short.MAX_VALUE))
         );
         jpAboutTitleLayout.setVerticalGroup(
             jpAboutTitleLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -190,10 +194,10 @@ public class jfAbout extends javax.swing.JFrame {
             }
         });
 
-        rbtnLibraries.setText("Libraries/Other Resources");
-        rbtnLibraries.addActionListener(new java.awt.event.ActionListener() {
+        rbtnResources.setText("Resources");
+        rbtnResources.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                rbtnLibrariesActionPerformed(evt);
+                rbtnResourcesActionPerformed(evt);
             }
         });
 
@@ -212,10 +216,10 @@ public class jfAbout extends javax.swing.JFrame {
                 .addGap(123, 123, 123)
                 .addComponent(rbtnContributors)
                 .addGap(107, 107, 107)
-                .addComponent(rbtnLibraries)
+                .addComponent(rbtnResources)
                 .addGap(101, 101, 101)
                 .addComponent(rbtnTools)
-                .addContainerGap(53, Short.MAX_VALUE))
+                .addContainerGap(149, Short.MAX_VALUE))
         );
         jpRadioButtonsLayout.setVerticalGroup(
             jpRadioButtonsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -223,7 +227,7 @@ public class jfAbout extends javax.swing.JFrame {
                 .addContainerGap(16, Short.MAX_VALUE)
                 .addGroup(jpRadioButtonsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(rbtnTools)
-                    .addComponent(rbtnLibraries)
+                    .addComponent(rbtnResources)
                     .addComponent(rbtnContributors))
                 .addContainerGap())
         );
@@ -300,8 +304,8 @@ public class jfAbout extends javax.swing.JFrame {
      * "[LastName];[FirstName]", followed by one or more methods of contact (separated by semi-colons).
      * LastName is before FirstName to allow easy automatic sorting in the TXT,
      * while preserving any manual placement (e.g., course instructors).
-     * Example (without double-quotes): "Doe;John;jdd123SPAMBOTFAKEOUTREMOVEME@notarealwebsite.com;notarealwebsite.no/jdd123".
-     * Any emails are suggested to add "SPAMBOTFAKEOUTREMOVEME" before the @ symbol to try to prevent scraping by spambots,
+     * Example (without double-quotes): "Doe;John;jdd123ANTISPAMTEXT@notarealwebsite.com;notarealwebsite.no/jdd123".
+     * Any emails are suggested to add "ANTISPAMTEXT" before the @ symbol to try to prevent scraping by spambots,
      * but this is not required.
      * @param evt 
      */
@@ -374,13 +378,14 @@ public class jfAbout extends javax.swing.JFrame {
     }//GEN-LAST:event_rbtnContributorsActionPerformed
 
     /**
-     * Loads libraries.txt into jtpText.
+     * Loads resources.txt into jtpText.
      * Course Management's license at the top.
-     * libraries.txt is the list of libraries/non-library resources used inside of the program
-     * (e.g., icons, not help files, as the latter are /generated by/ a tool) and what licenses they operate under,
-     * basically. The licenses themselves are regular TXT files in the program's folder.
-     * Format in libraries.txt is one library/resource per line, as below:
-     * "[library name];[library URL];[library license];[license URL];[description of purpose]";[filename1](;[filename2];[etc.])
+     * resources.txt is the list of resources used in the program
+     * (e.g., icons, not help files, as the latter are /generated by/ a tool)
+     * and what licenses they operate under, basically.
+     * The licenses themselves are regular semi-colon (;)-delimited TXT files in the program's folder.
+     * Format in resources.txt is one library/resource per line, as below:
+     * "[resource name];[resource URL];[resource license];[resource URL];[description of purpose]";[filename1](;[filename2];[etc.])
      * For example,
      * foolib;foolib.notaurl;Foo License v1.1;foolicense.notaurl;Description of purpose.;foolib1.jar;foolib2.jar;foolib3.jar
      * outputs
@@ -393,17 +398,18 @@ public class jfAbout extends javax.swing.JFrame {
      *  +foolib3.jar
      * @param evt 
      */
-    private void rbtnLibrariesActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_rbtnLibrariesActionPerformed
+    private void rbtnResourcesActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_rbtnResourcesActionPerformed
         try
         {
-            File fLibraries = new File(AppConstants.ROOT_FOLDER + "libraries.txt");     //this doesn't mean the file actually exists - it just points to where it should be
-            if (fLibraries.exists() == true)    //if libraries.txt does exist
+            File fResources = new File(AppConstants.ROOT_FOLDER + "resources.txt");     //this doesn't mean the file actually exists - it just points to where it should be
+            if (fResources.exists() == true)    //if resources.txt does exist
             {
                 try     //can file can be opened?
                 {
-                    BufferedReader reader = new BufferedReader(new FileReader(fLibraries));
+                    BufferedReader reader = new BufferedReader(new FileReader(fResources));
                     String strInput = new String();
-                    String strFile = new String("<center><b>===List of libraries/other resources used===</b></center><br>");
+                    String strFile = new String("<center><b>===List of resources===</b></center><br>");
+                    String strResourceFilenames = new String();
                     try     //can file's contents be read and processed?
                     {
                         while ((strInput = reader.readLine()) != null)
@@ -412,9 +418,29 @@ public class jfAbout extends javax.swing.JFrame {
                             astrInput[1] = convertToURL(astrInput[1]);
                             
                             astrInput[3] = convertToURL(astrInput[3]);
-                            astrInput[2] = convertToEmail(astrInput[2]);    //The license section isn't intended to have emails here - it's all supposed to be FOSS or similar.
+                            //The resource section isn't intended to have emails here - it's all supposed to be FOSS or similar.
+                            //So the email link is hard-coded in resources.txt, and any anti-spam text stripped from the license type field.
+                            astrInput[2] = astrInput[2].replaceAll("ANTISPAMTEXT", "");
+                            //System.out.println("[DEBUG] License type=" + astrInput[2]);
                             
-                            strFile += astrInput[0] + " (" + astrInput[1] + ")<br>-" + astrInput[2] + " (" + astrInput[3] + ")<br>-" + astrInput[4] + "<br><br>";
+                            if (astrInput.length > 5)   //if there's more than the basic first 5 fields (resource name, resource URL, license name, license URL, description)
+                            {
+                                strResourceFilenames = "";
+                                for (int i = 5; i < astrInput.length; i++)
+                                {
+                                    strResourceFilenames += "-" + astrInput[i];
+                                    if (i < astrInput.length - 1)   //if not the last filename, add a newline for spacing
+                                    {
+                                        strResourceFilenames += "<br>";
+                                    }
+                                }
+                                strFile += astrInput[0] + " (" + astrInput[1] + ")<br>-" + astrInput[2] + " (" + astrInput[3] + ")<br>-" + astrInput[4] + "<br>" + strResourceFilenames + "<br><br>";
+                            }
+                            else
+                            {
+                                strFile += astrInput[0] + " (" + astrInput[1] + ")<br>-" + astrInput[2] + " (" + astrInput[3] + ")<br>-" + astrInput[4] + "<br><br>";
+                            }
+                            
                         }
                         jtpText.setText(strFile);
                         jspText.getVerticalScrollBar().setValue(0);
@@ -422,24 +448,24 @@ public class jfAbout extends javax.swing.JFrame {
                     }
                     catch (IOException e)   //if there's a problem reading a line in the file
                     {
-                        JOptionPane.showMessageDialog(null, "Error reading libraries.txt.\n" + e.toString(),"Error", JOptionPane.ERROR_MESSAGE);
+                        JOptionPane.showMessageDialog(null, "Error reading resources.txt.\n" + e.toString(),"Error", JOptionPane.ERROR_MESSAGE);
                     }
                 }
                 catch (IOException e)   //should open if file can't be opened
                 {
-                    JOptionPane.showMessageDialog(null, "libraries.txt cannot be opened.\n" + e.toString(),"Error", JOptionPane.ERROR_MESSAGE);
+                    JOptionPane.showMessageDialog(null, "resources.txt cannot be opened.\n" + e.toString(),"Error", JOptionPane.ERROR_MESSAGE);
                 }
             }
-            else    //if libraries.txt does NOT exist
+            else    //if resources.txt does NOT exist
             {
-                JOptionPane.showMessageDialog(null, "libraries.txt cannot be found.","Error", JOptionPane.ERROR_MESSAGE);
+                JOptionPane.showMessageDialog(null, "resources.txt cannot be found.","Error", JOptionPane.ERROR_MESSAGE);
             }
         }
         catch (Exception e) //generic exception
         {
             JOptionPane.showMessageDialog(null, e.toString(),"Error", JOptionPane.ERROR_MESSAGE); //should print stack trace to message box
         }
-    }//GEN-LAST:event_rbtnLibrariesActionPerformed
+    }//GEN-LAST:event_rbtnResourcesActionPerformed
 
     /**
      * Opens the URI (e.g., URL link, mailto: link) when the URI is clicked on.
@@ -470,6 +496,7 @@ public class jfAbout extends javax.swing.JFrame {
     
     /**
      * Adds "http://" to a string lacking "http://" or "https://".
+     * Assumes that URLs are isolated (only URL), as the function doesn't attempt to parse out the link from mixed (part of a sentence) input.
      * @param strInput String that has a period (.), not an at symbol (@), and lacks "http://"/"https://" signifying that it's a URL.
      * @return If link, formatted string with "http://" added to the beginning of it.
      */
@@ -486,14 +513,21 @@ public class jfAbout extends javax.swing.JFrame {
                     strInput = "http://" + strInput;
                 }
                 //turns it into a link that opens in the user's default web browser
-                return "<a href=\"" + strInput + "\">" + strInput + "</a>";
+                strInput = "<a href=\"" + strInput + "\">" + strInput + "</a>";
+                //System.out.println("[DEBUG] Formatted URL=" + strInput);
+                return strInput;
             }
          return strInput;   //else return the unmodified string
     }
     
     /**
      * Converts probable email addresses into working linked emails.
-     * @param strInput String that contains an at symbol (@)
+     * Accepts emails in isolated (only email) and mixed (part of a sentence) formats, attempting to parse the email out of the latter.
+     * BUG: Doesn't properly process mixed strings.
+     *  For example, the Synthetica license (which has an email address in it) has the spaces before and after the email address associated with the email address instead of the non-email parts.
+     *  The link then doesn't display.
+     *  Also, there's a missing period at the end of the sentence.
+     * @param strInput String that contains an at symbol (@).
      * @return If email address, formatted string with working link and anti-spam text removed.
      */
     private String convertToEmail(String strInput)
@@ -509,10 +543,18 @@ public class jfAbout extends javax.swing.JFrame {
             {
                 i--;
             }
-            intEmailStart = i;  //set beginning of email address (either hit probable non-email character or end of string)
-            System.out.println("[DEBUG] intEmailStart=" + intEmailStart);
+            if (i < 0)
+            {
+                intEmailStart = 0;
+            }
+            else
+            {
+                intEmailStart = i;  //set beginning of email address (either hit probable non-email character or end of string)
+            }
+            //System.out.println("[DEBUG] intEmailStart=" + intEmailStart);
             
             i = strInput.indexOf("@");
+            //System.out.println("[DEBUG] Index of @=" + i);
             
 //            while (!(strInput.indexOf(i) == ' ' || strInput.indexOf(i) == ')' || strInput.indexOf(i) == ']' || strInput.indexOf(i) == ',') && i < strInput.length() - 1)
             while (strInput.substring(i, i + 1).equals(" ") == false && strInput.substring(i, i + 1).equals(")") == false && strInput.substring(i, i + 1).equals("]") == false && i < strInput.length() - 1)
@@ -520,8 +562,15 @@ public class jfAbout extends javax.swing.JFrame {
             {
                 i++;
             }
-            intEmailEnd = i;    //set end of email address
-            System.out.println("[DEBUG] intEmailEnd=" + intEmailEnd);
+            if (i == strInput.length())
+            {
+                intEmailEnd = strInput.length() - 1;
+            }
+            else
+            {
+                intEmailEnd = i;    //set end of email address
+            }
+//            System.out.println("[DEBUG] intEmailEnd=" + intEmailEnd);
             
             /*  TODO: Check against a whitelist for probable email characters instead of a blacklist for non-email characters.
                 For beginning of email, whitelist would be something like:
@@ -536,12 +585,18 @@ public class jfAbout extends javax.swing.JFrame {
             */
 
             
-            System.out.println("[DEBUG] Pre-email substring=" + strInput.substring(0, intEmailStart));
-            System.out.println("[DEBUG] Email=" + strInput.substring(intEmailStart,intEmailEnd + 1));
-            System.out.println("[DEBUG] Post-email substring=" + strInput.substring(intEmailEnd, strInput.length() - 1));
+//            System.out.println("[DEBUG] Pre-email substring=" + strInput.substring(0, intEmailStart));
+//            System.out.println("[DEBUG] Email=" + strInput.substring(intEmailStart,intEmailEnd + 1));
+//            System.out.println("[DEBUG] Post-email substring=" + strInput.substring(intEmailEnd, strInput.length() - 1));
             //Removes anti-spambot text from the string and turns it into a link that opens in the user's default email client
-            strInput = strInput.substring(0, intEmailStart) + "<a href=mailto:\"" + strInput.substring(intEmailStart,intEmailEnd + 1).replaceAll("SPAMBOTFAKEOUTREMOVEME", "") + "\">" + strInput.substring(intEmailStart,intEmailEnd + 1).replaceAll("SPAMBOTFAKEOUTREMOVEME", "") + "</a>" + strInput.substring(intEmailEnd, strInput.length() - 1);
-            System.out.println("[DEBUG] Formatted string=" + strInput);
+            strInput = strInput.substring(0, intEmailStart) + "<a href=mailto:\"" + strInput.substring(intEmailStart,intEmailEnd + 1).replaceAll("ANTISPAMTEXT", "") + "\">" + strInput.substring(intEmailStart,intEmailEnd + 1).replaceAll("ANTISPAMTEXT", "") + "</a>" + strInput.substring(intEmailEnd, strInput.length() - 1);
+            
+//            System.out.println("[DEBUG] Pre-email substring=" + strInput.substring(0, intEmailStart));
+//            System.out.println("[DEBUG] Email=" + strInput.substring(intEmailStart,intEmailEnd + 1));
+//            System.out.println("[DEBUG] Post-email substring=" + strInput.substring(intEmailEnd, strInput.length() - 1));
+//            strInput = strInput.substring(0, intEmailStart) + "<a href=mailto:\"" + strInput.substring(intEmailStart,intEmailEnd + 1).replaceAll("ANTISPAMTEXT", "") + "\">" + strInput.substring(intEmailStart,intEmailEnd + 1).replaceAll("ANTISPAMTEXT", "") + "</a>" + strInput.substring(intEmailEnd, strInput.length() - 1);
+            
+//            System.out.println("[DEBUG] Formatted string=" + strInput);
             return strInput;    //returns modified string
         }
         return strInput;    //if not email, return unmodified string
@@ -558,7 +613,7 @@ public class jfAbout extends javax.swing.JFrame {
     private javax.swing.JLabel lblProgramName;
     private javax.swing.JLabel lblVersionNumber;
     private javax.swing.JRadioButton rbtnContributors;
-    private javax.swing.JRadioButton rbtnLibraries;
+    private javax.swing.JRadioButton rbtnResources;
     private javax.swing.JRadioButton rbtnTools;
     // End of variables declaration//GEN-END:variables
 }

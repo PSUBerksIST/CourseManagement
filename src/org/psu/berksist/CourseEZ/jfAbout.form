@@ -68,20 +68,21 @@
                   <Group type="102" attributes="0">
                       <Group type="103" groupAlignment="0" attributes="0">
                           <Group type="102" alignment="0" attributes="0">
-                              <EmptySpace min="-2" pref="292" max="-2" attributes="0"/>
-                              <Component id="lblVersionNumber" min="-2" max="-2" attributes="0"/>
-                          </Group>
-                          <Group type="102" alignment="0" attributes="0">
                               <EmptySpace min="-2" pref="192" max="-2" attributes="0"/>
                               <Component id="lblDescription" min="-2" max="-2" attributes="0"/>
                           </Group>
+                          <Group type="102" alignment="0" attributes="0">
+                              <EmptySpace min="-2" pref="292" max="-2" attributes="0"/>
+                              <Group type="103" groupAlignment="0" attributes="0">
+                                  <Component id="lblProgramName" min="-2" max="-2" attributes="0"/>
+                                  <Group type="102" alignment="1" attributes="0">
+                                      <Component id="lblVersionNumber" min="-2" max="-2" attributes="0"/>
+                                      <EmptySpace min="-2" pref="65" max="-2" attributes="0"/>
+                                  </Group>
+                              </Group>
+                          </Group>
                       </Group>
-                      <EmptySpace pref="128" max="32767" attributes="0"/>
-                  </Group>
-                  <Group type="102" alignment="1" attributes="0">
-                      <EmptySpace min="0" pref="0" max="32767" attributes="0"/>
-                      <Component id="lblProgramName" min="-2" max="-2" attributes="0"/>
-                      <EmptySpace min="-2" pref="248" max="-2" attributes="0"/>
+                      <EmptySpace pref="131" max="32767" attributes="0"/>
                   </Group>
               </Group>
             </DimensionLayout>
@@ -157,10 +158,10 @@
                   <EmptySpace min="-2" pref="123" max="-2" attributes="0"/>
                   <Component id="rbtnContributors" min="-2" max="-2" attributes="0"/>
                   <EmptySpace min="-2" pref="107" max="-2" attributes="0"/>
-                  <Component id="rbtnLibraries" min="-2" max="-2" attributes="0"/>
+                  <Component id="rbtnResources" min="-2" max="-2" attributes="0"/>
                   <EmptySpace min="-2" pref="101" max="-2" attributes="0"/>
                   <Component id="rbtnTools" min="-2" max="-2" attributes="0"/>
-                  <EmptySpace pref="53" max="32767" attributes="0"/>
+                  <EmptySpace pref="149" max="32767" attributes="0"/>
               </Group>
           </Group>
         </DimensionLayout>
@@ -170,7 +171,7 @@
                   <EmptySpace pref="16" max="32767" attributes="0"/>
                   <Group type="103" groupAlignment="3" attributes="0">
                       <Component id="rbtnTools" alignment="3" min="-2" max="-2" attributes="0"/>
-                      <Component id="rbtnLibraries" alignment="3" min="-2" max="-2" attributes="0"/>
+                      <Component id="rbtnResources" alignment="3" min="-2" max="-2" attributes="0"/>
                       <Component id="rbtnContributors" alignment="3" min="-2" max="-2" attributes="0"/>
                   </Group>
                   <EmptySpace max="-2" attributes="0"/>
@@ -187,12 +188,12 @@
             <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="rbtnToolsActionPerformed"/>
           </Events>
         </Component>
-        <Component class="javax.swing.JRadioButton" name="rbtnLibraries">
+        <Component class="javax.swing.JRadioButton" name="rbtnResources">
           <Properties>
-            <Property name="text" type="java.lang.String" value="Libraries/Other Resources"/>
+            <Property name="text" type="java.lang.String" value="Resources"/>
           </Properties>
           <Events>
-            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="rbtnLibrariesActionPerformed"/>
+            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="rbtnResourcesActionPerformed"/>
           </Events>
         </Component>
         <Component class="javax.swing.JRadioButton" name="rbtnContributors">
