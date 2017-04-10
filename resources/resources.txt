@@ -1,0 +1,12 @@
+Commons CLI;commons.apache.org/proper/commons-cli;Apache License v2.0;apache.org/licenses/LICENSE-2.0;The Apache Commons CLI library provides an API for parsing command line options passed to programs.;Commons-CLI-1.3.1.jar;Commons-CLI-1.3.1-javadoc.jar
+docx4j;docx4java.org;Apache License v2.0;apache.org;Java library for creating and manipulating Microsoft Open XML (Word DOCX, PowerPoint PPTX, and Excel XLSX) files.
+(Flaticon) Interaction;flaticon.com/packs/interaction;Flaticon Basic License;file000.flaticon.com/downloads/license/license.pdf;Icons.
+(Flaticon) E-Learning;flaticon.com/packs/e-learning-3;Flaticon Basic License;file000.flaticon.com/downloads/license/license.pdf;Icons.
+Iconizer;iconizer.net;UNKNOWN;iconizer.net/en/search/No-license-filtering/0-128/1/menu;Icons.
+JavaGPE_3DLF-2.5.jar;www.markus-hillenbrand.de/3dlf;UNKNOWN FREE LICENSE;N/A;3D Look & Feel
+loremipsum-1.0.jar;loremipsum.sourceforge.net;MIT License;opensource.org/licenses/MIT;Lorem ipsum text generation for testing purposes.
+Oracle Help for Java (OHJ);oracle.com/technetwork/developer-tools/help/index.html;"OHJ [may be redistributed] as the help system for [the] application at no cost.";oracle.com/technetwork/developer-tools/help/index.html;For displaying HTML-based help systems for Java applications.;help-4_2-ehelp-integration.jar;help-demo.jar;help-indexer.jar;help-share.jar;help-wizard.jar;jewt.jar;ohj.jar;oracle_ice.jar;share.jar;wizard-ewt.jar
+PgsLookAndFeel-1.1.2.jar;pagosoft.com/projects/pgslookandfeel;Apache License v2.0;apache.org/licenses/LICENSE-2.0;A modern, cross-platform LookAndFeel for Java/Swing.
+rs2xml.jar;drive.google.com/file/d/0BzIr4IDDKJEcdDE1YTlzbmtkMzg/view;UNKNOWN LICENSE;N/A;Creates table models from ResultSet.
+SQLite-JDBC-3.8.11.2.jar;github.com/xerial/sqlite-jdbc;Apache License v2.0;apache.org/licenses/LICENSE-2.0;SQLite JDBC, developed by Taro L. Saito, is a library for accessing and creating SQLite database files in Java.
+Synthetica;jyloo.com/synthetica;The included Synthetica pluggable look and feel is an evaluation version. End users who wish to continue using the product should contact <a href="mailto:salesANTISPAMTEXT@jyloo.com">salesANTISPAMTEXT@jyloo.com</a> for pricing information.;jyloo.com/synthetica/license;A Look and Feel for Swing, based on Synth (part of the Java Platform v1.5).;synthetica.jar;syntheticaBlackEye.jar
