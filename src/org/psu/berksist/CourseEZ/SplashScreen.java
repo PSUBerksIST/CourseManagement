@@ -22,11 +22,14 @@ public class SplashScreen extends JWindow {
     
     private static JProgressBar pbar;
     Thread t = null;
-
+    //Container myCP;
     
   private int duration;
   public SplashScreen(int d) {
     duration = d;
+    //myCP = this.getContentPane();
+    //myCP.setLayout(new GridLayout(2,1));
+    //Java Grid layout
   }
 
   public void showSplash() {
@@ -51,15 +54,16 @@ public class SplashScreen extends JWindow {
     JLabel label = new JLabel(new ImageIcon(newimg));
     System.out.println(AppConstants.ROOT_FOLDER + AppConstants.IMAGE_DIR + "RESIZED-NEWAppIcon-temp.png");
     
+    showProgressBar(); //to display progress bar
+    content.add(pbar, BorderLayout.CENTER); //progress bar layout
+    
     JLabel text = new JLabel
       ("Copyright 2017, CourseEZ", JLabel.CENTER);
     text.setForeground(Color.white);  
-    content.add(label, BorderLayout.CENTER);
+    content.add(label, BorderLayout.NORTH);
     content.add(text, BorderLayout.SOUTH);
     Color myColor = Color.ORANGE;
     content.setBorder(BorderFactory.createLineBorder(myColor, 10));
-    //showProgressBar(); //to display progress bar
-    //content.add(pbar, BorderLayout.NORTH); //progress bar layout
     setVisible(true); //true to display window
     
     try { Thread.sleep(duration); } catch (Exception e) {}
@@ -68,8 +72,7 @@ public class SplashScreen extends JWindow {
   }
   
   
-  /* Code for Progress bar
-  
+  //code for progress bar
   public void showProgressBar()
     {
     
@@ -102,7 +105,6 @@ public class SplashScreen extends JWindow {
         };
         T1.start();
     }
-  */
   
   public void showSplashAndExit() {
     showSplash();
