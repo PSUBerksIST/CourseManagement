@@ -7,7 +7,13 @@ package org.psu.berksist.CourseEZ;
 
 import java.awt.Color;
 import java.awt.*;
+import java.io.BufferedReader;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
+import java.io.IOException;
 import static java.lang.Thread.sleep;
+import java.util.ArrayList;
+import java.util.Random;
 import javax.swing.*;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -52,7 +58,6 @@ public class SplashScreen extends JWindow {
     imageIcon = new ImageIcon(newimg);  // transform it back
     
     JLabel label = new JLabel(new ImageIcon(newimg));
-    System.out.println(AppConstants.ROOT_FOLDER + AppConstants.IMAGE_DIR + "RESIZED-NEWAppIcon-temp.png");
     
     showProgressBar(); //to display progress bar
     content.add(pbar, BorderLayout.CENTER); //progress bar layout
@@ -110,7 +115,7 @@ public class SplashScreen extends JWindow {
     showSplash();
     System.exit(0);
   }
-
+ 
   public static void main(String[] args) {
       
     SplashScreen splash = new SplashScreen(10000); //change time to display splash screen here
