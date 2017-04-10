@@ -5,7 +5,6 @@
  */
 package org.psu.berksist.CourseEZ;
 
-//import com.thehowtotutorial.splashscreen.JSplash;
 import java.awt.Color;
 import java.awt.*;
 import static java.lang.Thread.sleep;
@@ -54,7 +53,7 @@ public class SplashScreen extends JWindow {
     
     JLabel text = new JLabel
       ("Copyright 2017, CourseEZ", JLabel.CENTER);
-    text.setForeground(Color.white);
+    text.setForeground(Color.white);  
     content.add(label, BorderLayout.CENTER);
     content.add(text, BorderLayout.SOUTH);
     Color myColor = Color.ORANGE;
@@ -67,7 +66,7 @@ public class SplashScreen extends JWindow {
 
     setVisible(false);
   }
-
+  
   
   /* Code for Progress bar
   
