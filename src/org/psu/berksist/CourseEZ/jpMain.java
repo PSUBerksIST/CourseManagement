@@ -52,8 +52,7 @@ public class jpMain extends javax.swing.JPanel {
     public void CreateFrame(JPanel jpIn, String strIn) {
         intWindowCounter++;
 
-        JInternalFrame jifTemp = new JInternalFrame("New Frame "
-                + intWindowCounter + " - " + strIn, true, true, true, true);
+        JInternalFrame jifTemp = new JInternalFrame(strIn, true, true, true, true);
 
         jifTemp.add(jpIn);
         jifTemp.pack();
