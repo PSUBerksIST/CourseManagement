@@ -21,87 +21,89 @@ import java.util.logging.Logger;
 /**
  *
  * @author rgs19
+ * 
+ *  ******************* MODIFICATION LOG *****************************************
+ *  2017 April 12   -   Updated variable names to be more descriptive and be more compliant with naming conventions.
+ *                      Added more comments.
+ *                      Changed copyright text to reference Penn State Berks IST instead of the application name,
+ *                          which should go elsewhere.
+ *                      Cleaned up code (removed unused main(), merged unnecessary functions,
+ *                          separated initialization/declaration/registration, made function names clearer, etc.).
+ *                      Made the loading bar look slimmer. -JSS
  */
     
 
-public class SplashScreen extends JWindow {
-    
-    private static JProgressBar pbar;
+public class SplashScreen extends JWindow
+{
+    private static JProgressBar jpbLoadingBar;
+    private static final int DEFAULT_DISPLAY_TIME = 1000;
     Thread t = null;
     //Container myCP;
+    private int intDisplayDuration;
     
-  private int duration;
-  public SplashScreen(int d) {
-    duration = d;
-    //myCP = this.getContentPane();
-    //myCP.setLayout(new GridLayout(2,1));
-    //Java Grid layout
-  }
-
-  public void showSplash() {
-    JPanel content = (JPanel)getContentPane();
-    content.setBackground(Color.black);
-
-    int w = 500; //width of the splash screen
-    int h = 250; //height of the splash screen
     
-    Dimension screen = Toolkit.getDefaultToolkit().getScreenSize();
-    int x = (screen.width-w)/2;
-    int y = (screen.height-h)/2;
-    setBounds(x,y,w,h);
-
-    /* code to re-size image found here http://www.nullpointer.at/2011/08/21/java-code-snippets-howto-resize-an-imageicon/ */
-   
-    ImageIcon imageIcon = new ImageIcon(AppConstants.ROOT_FOLDER + AppConstants.IMAGE_DIR + "AppIcon-temp.png"); // load the image to a imageIcon
-    Image image = imageIcon.getImage(); // transform it 
-    Image newimg = image.getScaledInstance(120, 120,  java.awt.Image.SCALE_SMOOTH); // scale it the smooth way  
-    imageIcon = new ImageIcon(newimg);  // transform it back
     
-    JLabel label = new JLabel(new ImageIcon(newimg));
-    
-    showProgressBar(); //to display progress bar
-    content.add(pbar, BorderLayout.CENTER); //progress bar layout
-    
-    JLabel text = new JLabel
-      ("Copyright 2017, CourseEZ", JLabel.CENTER);
-    text.setForeground(Color.white);  
-    content.add(label, BorderLayout.NORTH);
-    content.add(text, BorderLayout.SOUTH);
-    Color myColor = Color.ORANGE;
-    content.setBorder(BorderFactory.createLineBorder(myColor, 10));
-    setVisible(true); //true to display window
-    
-    try { Thread.sleep(duration); } catch (Exception e) {}
-
-    setVisible(false);
-  }
-  
-  
-  //code for progress bar
-  public void showProgressBar()
+    /**
+     * Creates an instance of SplashScreen with the default display duration time of DEFAULT_DISPLAY_TIME ticks.
+     */
+    public SplashScreen()
     {
+        intDisplayDuration = DEFAULT_DISPLAY_TIME;
+    }
     
-    pbar = new JProgressBar();
-        pbar.setMinimum(0);
-        pbar.setMaximum(100);
-        pbar.setStringPainted(true);
-        pbar.setForeground(Color.LIGHT_GRAY);
-        add(pbar);
-        //pbar.setPreferredSize(new Dimension(310, 30));
-        //pbar.setBounds(50, 50, 10, 10);
-        
- 
+    
+    
+    /**
+     * Creates an instance of SplashScreen with the user-given input of intDisplayDuration ticks.
+     * If input is invalid, default to DEFAULT_DISPLAY_TIME.
+     * @param intDisplayDuration A non-negative integer for how long the splash screen should be displayed in ticks.
+     */
+    public SplashScreen(int intDisplayDuration)
+    {
+        if (intDisplayDuration >= 0)
+        {
+            this.intDisplayDuration = intDisplayDuration;
+            //myCP = this.getContentPane();
+            //myCP.setLayout(new GridLayout(2,1));
+            //Java Grid layout
+        }
+        else
+        {
+            this.intDisplayDuration = DEFAULT_DISPLAY_TIME;
+        }
+    }
+
+    
+    
+    /**
+     * Displays the progress bar.
+     */
+    public void startProgressBar()
+    {
+
+      //jpbLoadingBar = new JProgressBar();
+//        jpbLoadingBar.setMinimum(0);
+//        jpbLoadingBar.setMaximum(100);
+        //add(jpbLoadingBar);
+        //jpbLoadingBar.setPreferredSize(new Dimension(310, 30));
+        //jpbLoadingBar.setBounds(50, 50, 10, 10);
+
         Thread T1;
-        T1 = new Thread() {
-            
+        T1 = new Thread()
+        {
             @Override
-            public void run() {
+            public void run()
+            {
                 int i = 0;
-                while (i <= 100) {
-                    pbar.setValue(i);
-                    try {
+                while (i <= 100)
+                {
+                    jpbLoadingBar.setValue(i);
+                    try
+                    {
                         sleep(90);
-                    } catch (InterruptedException ex) {
+                    }
+                    catch (InterruptedException ex)
+                    {
                         Logger.getLogger(SplashScreen.class.getName()).log(Level.SEVERE, null, ex);
                     }
                     i++;
@@ -110,16 +112,94 @@ public class SplashScreen extends JWindow {
         };
         T1.start();
     }
-  
-  public void showSplashAndExit() {
-    showSplash();
-    System.exit(0);
-  }
- 
-  public static void main(String[] args) {
-      
-    SplashScreen splash = new SplashScreen(10000); //change time to display splash screen here
-    splash.showSplashAndExit();
+
     
-  }
+    
+    /**
+     * Displays the splash screen and then hides the splash screen when finished.
+     */
+    public void showSplash()
+    {
+        //declaration
+        JPanel jpContent;
+        JPanel jpLoadingBar;
+        int intSplashWindowWidth;
+        int intSplashWindowHeight;
+        Dimension dimScreen;
+        int intSplashPosX;
+        int intSplashPosY;
+        JLabel lblCopyright;
+        ImageIcon imicSplash;
+        Image imgSplash;
+        JLabel lblSplashImage;
+
+        //initialization and customization
+        //jpContent = (JPanel)getContentPane();
+        jpContent = new JPanel(new BorderLayout());
+        jpContent.setBackground(Color.BLACK);
+        jpLoadingBar = new JPanel();
+        //jpLoadingBar.setLayout(new FlowLayout());
+        jpLoadingBar.setBackground(Color.BLACK);
+        intSplashWindowWidth = 500;
+        intSplashWindowHeight = 250;
+        dimScreen = Toolkit.getDefaultToolkit().getScreenSize();
+        intSplashPosX = (dimScreen.width - intSplashWindowWidth) / 2;
+        intSplashPosY = (dimScreen.height - intSplashWindowHeight) / 2;
+        //code to resize image from: http://nullpointer.at/2011/08/21/java-code-snippets-howto-resize-an-imageicon
+        imicSplash = new ImageIcon(AppConstants.ROOT_FOLDER + AppConstants.IMAGE_DIR + "AppIcon-temp.png");   //load the image to a imageIcon
+        imgSplash = imicSplash.getImage().getScaledInstance(120, 120, Image.SCALE_SMOOTH);              // transform it 
+        lblSplashImage = new JLabel(new ImageIcon(imgSplash) );
+        lblCopyright = new JLabel("Copyright 2017, Penn State Berks IST", JLabel.CENTER);
+        lblCopyright.setForeground(Color.WHITE);
+        jpbLoadingBar = new JProgressBar();
+        jpbLoadingBar.setStringPainted(true);
+        jpbLoadingBar.setForeground(Color.LIGHT_GRAY);
+        jpbLoadingBar.setMinimum(0);
+        jpbLoadingBar.setMaximum(100);
+        jpbLoadingBar.setPreferredSize(new Dimension(intSplashWindowWidth - 20, 15));   //intSplashWindowWidth  - 20 pixels wide to account for two 10px borders, 15px-high to match textboxes (15px high by default, I believe)
+        setBounds(intSplashPosX, intSplashPosY, intSplashWindowWidth, intSplashWindowHeight);
+
+    //        JPanel jpContent = (JPanel)getContentPane();
+    //        jpContent.setBackground(Color.BLACK);
+    //
+    //        int intSplashWindowWidth = 500;
+    //        int intSplashWindowHeight = 250;
+    //
+    //        Dimension dimScreen = Toolkit.getDefaultToolkit().getScreenSize();
+    //        int intSplashPosX = (dimScreen.width - intSplashWindowWidth) / 2;
+    //        int intSplashPosY = (dimScreen.height - intSplashWindowHeight) / 2;
+
+//        setBounds(intSplashPosX, intSplashPosY, intSplashWindowWidth, intSplashWindowHeight);
+
+        /* code to re-size image found here http://www.nullpointer.at/2011/08/21/java-code-snippets-howto-resize-an-imageicon/ */
+
+//        ImageIcon imicSplash = new ImageIcon(AppConstants.ROOT_FOLDER + AppConstants.IMAGE_DIR + "AppIcon-temp.png");   //load the image to a imageIcon
+//        Image imgSplash = imicSplash.getImage().getScaledInstance(120, 120,  java.awt.Image.SCALE_SMOOTH);              // transform it 
+        //imicSplash = new ImageIcon(imgSplash);  // transform it back
+
+//        JLabel lblSplashImage = new JLabel(new ImageIcon(imgSplash));
+
+        //registration
+        jpLoadingBar.add(jpbLoadingBar);
+        jpContent.add(jpLoadingBar, BorderLayout.CENTER);
+        jpContent.add(lblSplashImage, BorderLayout.NORTH);
+        jpContent.add(lblCopyright, BorderLayout.SOUTH);
+        jpContent.setBorder(BorderFactory.createLineBorder(Color.ORANGE, 10) );  //draws border
+        add(jpContent);
+        
+        startProgressBar(); //to display progress bar
+
+        setVisible(true);   //displays splash
+
+        try
+        {
+            Thread.sleep(intDisplayDuration);
+        }
+        catch (Exception e)
+        {
+            //TODO: Add exception-handling code.
+        }
+
+        setVisible(false);
+    }
 }
