@@ -29,13 +29,13 @@ import java.util.logging.Logger;
  * 2017 April 4  - Initial program creation
  * 2017 April 5  - Shifted from making use of the JSplashScreen library to making use of a JWindow
  *                 Added the ability to resize splash screen image. Changed background & font colors.
- * 
  * 2017 April 7  - Added code for progress bar, which needs to be revised.
  * 2017 April 10 - Fixed progress bar (working and displays correctly on splash screen)
  *                 Minor change - Removed unused import. Implemented a GridLayout.
  * 2017 April 11 - Added tip of the day functionality 
  * 2017 April 12 - Minor changes including changing the grid layout and fonts/sizes. 
- *                 Addition of documentation & modification log
+ *                 Addition of documentation & modification log.
+ *                 Removed unused import.
  ****************************************************************************/
 
 
