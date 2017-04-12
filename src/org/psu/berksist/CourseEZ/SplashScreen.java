@@ -8,7 +8,6 @@ package org.psu.berksist.CourseEZ;
 import java.awt.Color;
 import java.awt.*;
 import java.io.BufferedReader;
-import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
 import static java.lang.Thread.sleep;
