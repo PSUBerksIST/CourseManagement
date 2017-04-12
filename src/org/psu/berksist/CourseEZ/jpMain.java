@@ -1,8 +1,3 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package org.psu.berksist.CourseEZ;
 
 import java.awt.Dimension;
@@ -52,8 +47,7 @@ public class jpMain extends javax.swing.JPanel {
     public void CreateFrame(JPanel jpIn, String strIn) {
         intWindowCounter++;
 
-        JInternalFrame jifTemp = new JInternalFrame("New Frame "
-                + intWindowCounter + " - " + strIn, true, true, true, true);
+        JInternalFrame jifTemp = new JInternalFrame(strIn, true, true, true, true);
 
         jifTemp.add(jpIn);
         jifTemp.pack();
