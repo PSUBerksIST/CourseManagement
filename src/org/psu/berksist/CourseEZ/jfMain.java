@@ -3,6 +3,7 @@ package org.psu.berksist.CourseEZ;
 import java.awt.Dimension;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
+import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.sql.ResultSet;
@@ -222,6 +223,7 @@ public class jfMain extends JFrame {
         jmiLoadUserOptions = new javax.swing.JMenuItem(gpa);
         jmiSaveUserOptions = new javax.swing.JMenuItem(spa);
         jmHelp = new javax.swing.JMenu();
+        jmHelpContents = new javax.swing.JMenuItem();
         jmiDatabaseInformation = new javax.swing.JMenuItem();
         jmiAbout = new javax.swing.JMenuItem();
 
@@ -315,6 +317,14 @@ public class jfMain extends JFrame {
         jmbMain.add(jmOptions);
 
         jmHelp.setText("Help");
+
+        jmHelpContents.setText("Help Contents");
+        jmHelpContents.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jmHelpContentsActionPerformed(evt);
+            }
+        });
+        jmHelp.add(jmHelpContents);
 
         jmiDatabaseInformation.setText("DB Info");
         jmiDatabaseInformation.addActionListener(new java.awt.event.ActionListener() {
@@ -421,6 +431,16 @@ public class jfMain extends JFrame {
         jfAbout.setVisible(true);
     }//GEN-LAST:event_jmiAboutActionPerformed
 
+    private void jmHelpContentsActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jmHelpContentsActionPerformed
+        try {
+            Runtime.getRuntime().exec("rundll32 url.dll,FileProtocolHandler " 
+                + "file:///C:/Users/xXRoa/Documents/HelpNDoc/Output/html/Course%20Management.html");
+        }
+        catch(IOException e) {
+            System.out.println(e);
+        }
+    }//GEN-LAST:event_jmHelpContentsActionPerformed
+
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
@@ -428,6 +448,7 @@ public class jfMain extends JFrame {
     private javax.swing.JMenu jmEdit;
     private javax.swing.JMenu jmFile;
     private javax.swing.JMenu jmHelp;
+    private javax.swing.JMenuItem jmHelpContents;
     private javax.swing.JMenu jmLookAndFeel;
     private javax.swing.JMenu jmOptions;
     private javax.swing.JMenu jmWindows;
