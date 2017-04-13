@@ -5,6 +5,7 @@
  */
 package org.psu.berksist.CourseEZ;
 
+import java.io.IOException;
 import java.util.Properties;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -29,9 +30,10 @@ public class AppControl {
     
     private String strRelPath = jfMain.class.getProtectionDomain().getCodeSource().getLocation().toString();
     
-    public static void main(String[] args) {
+    public static void main(String[] args) throws IOException
+    {
         
-        SplashScreen splash = new SplashScreen(4000); //change duration of splash screen here
+        SplashScreen splash = new SplashScreen(1000); //change duration of splash screen here
         splash.showSplash(); //to display splash screen
         
         new AppControl(args);
@@ -64,7 +66,7 @@ public class AppControl {
             formatter.printHelp("Course Management", CommandLineOptions.makeOptions());
             
         } catch (ParseException ex) {
-            Logger.getLogger(jfMain.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(jfMain.class.getName() ).log(Level.SEVERE, null, ex);
         }
         
         

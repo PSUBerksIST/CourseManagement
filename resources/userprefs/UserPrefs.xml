@@ -3,7 +3,7 @@
 <properties>
 <comment>Edit this file at your own risk.  It will be overwritten at program exit.</comment>
 <entry key="AppID">CourseEZ</entry>
-<entry key="LastConnectedDatabase">/Users/rishabhshanbhag/IST261-NEW/CourseManagement/CourseManagement/resources/database/dbCourseManagement-V9.db3</entry>
-<entry key="LookAndFeel">de.javasoft.plaf.synthetica.SyntheticaBlackEyeLookAndFeel</entry>
+<entry key="LastConnectedDatabase">/home/jaime/Desktop/code/CourseManagement/resources/database/dbCourseManagement-V9.db3</entry>
+<entry key="LookAndFeel">javax.swing.plaf.nimbus.NimbusLookAndFeel</entry>
 <entry key="AppVersion">1</entry>
 </properties>
