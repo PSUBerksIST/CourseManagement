@@ -565,7 +565,7 @@ public class SplashScreen extends JWindow
             
     } // TipoftheDay 
     
-    public static void main(String[] args) throws SQLException {
+    public static void main(String[] args) {
         
     SplashScreen myDBC = new SplashScreen();
     Connection cnMyC = myDBC.connectToDB();
