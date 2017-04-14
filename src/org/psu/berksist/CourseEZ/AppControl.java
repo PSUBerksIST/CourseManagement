@@ -33,7 +33,7 @@ public class AppControl {
     public static void main(String[] args) throws IOException
     {
         
-        SplashScreen splash = new SplashScreen(1000); //change duration of splash screen here
+        SplashScreen splash = new SplashScreen(10000); //change duration of splash screen here
         splash.showSplash(); //to display splash screen
         
         new AppControl(args);

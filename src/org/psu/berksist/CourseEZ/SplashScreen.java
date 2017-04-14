@@ -8,6 +8,7 @@ package org.psu.berksist.CourseEZ;
 import java.awt.Color;
 import java.awt.*;
 import java.io.BufferedReader;
+import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
 import static java.lang.Thread.sleep;
@@ -23,6 +24,8 @@ import java.util.logging.Logger;
  * @author rgs19
  * 
  *  ******************* MODIFICATION LOG *****************************************
+ *  2017 April 13   -   Minor changes to the file. Added an import so that splash screen works properly. 
+ *                      Increased splash screen display time.
  *  2017 April 12   -   Cleaned up merged file.
  *                      Moved declaration to main body of class.
  *                      Modified layout.    -JSS
@@ -51,7 +54,7 @@ public class SplashScreen extends JWindow
 {
     //declaration
     private static JProgressBar jpbLoadingBar;
-    private static final int DEFAULT_DISPLAY_TIME = 1000;
+    private static final int DEFAULT_DISPLAY_TIME = 10000;
     private static final int BORDER_WIDTH = 8;      //remember that the number of pixels occupied by the border is multiplied by 2
     private static final int SPLASH_IMAGE_WIDTH = 192;
     private static final int SPLASH_IMAGE_HEIGHT = 192;
