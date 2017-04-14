@@ -12,6 +12,7 @@ import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
 import static java.lang.Thread.sleep;
+import java.sql.*;
 import java.util.ArrayList;
 import java.util.Random;
 import java.util.List;
@@ -24,8 +25,9 @@ import java.util.logging.Logger;
  * @author rgs19
  * 
  *  ******************* MODIFICATION LOG *****************************************
+ *  2017 April 14   -   Added new tip of the day functionality to fetch quotes from a database. - RGS
  *  2017 April 13   -   Minor changes to the file. Added an import so that splash screen works properly. 
- *                      Increased splash screen display time.
+ *                      Increased splash screen display time. - RGS
  *  2017 April 12   -   Cleaned up merged file.
  *                      Moved declaration to main body of class.
  *                      Modified layout.    -JSS
@@ -53,6 +55,10 @@ import java.util.logging.Logger;
 public class SplashScreen extends JWindow
 {
     //declaration
+    private static final String strDBClass = "org.sqlite.JDBC";
+    private static final String strJDBCString = "jdbc:sqlite:";
+    private static String strDBName = "Today.db3"; //this is what worked on my Macbook. Makes use of the Today.db3 present in the IST261CourseManagement folder.  
+    private boolean bDebugging = true;
     private static JProgressBar jpbLoadingBar;
     private static final int DEFAULT_DISPLAY_TIME = 10000;
     private static final int BORDER_WIDTH = 8;      //remember that the number of pixels occupied by the border is multiplied by 2
@@ -248,6 +254,7 @@ public class SplashScreen extends JWindow
      */
     public void showSplash()
     {
+        
         //initialization and customization
         //jpContent = (JPanel)getContentPane();
 //        jpContent = new JPanel(new BorderLayout());
@@ -300,7 +307,8 @@ public class SplashScreen extends JWindow
         setBounds(intSplashPosX, intSplashPosY, intSplashWindowWidth, intSplashWindowHeight);
         rng = new Random();
         
-        //Code for Tip of the Day functionality
+
+        /* Code for Tip of the Day functionality
         try
         {
             BufferedReader reader = new BufferedReader(new FileReader(AppConstants.ROOT_FOLDER + "tipoftheday.txt") ); //fetches text from "tipoftheday.txt"
@@ -328,6 +336,9 @@ public class SplashScreen extends JWindow
         {
             //TODO: Add exception-handling code
         }
+        
+        */
+        
 
     //        JPanel jpContent = (JPanel)getContentPane();
     //        jpContent.setBackground(Color.BLACK);
@@ -384,7 +395,7 @@ public class SplashScreen extends JWindow
 //        jpSplash.add(lblCopyright, BorderLayout.SOUTH);
 //        jpSplash.setBorder(BorderFactory.createLineBorder(Color.ORANGE, BORDER_WIDTH) );
 //        add(jpSplash);
-        
+
         startProgressBar(); //to display progress bar
 
         setVisible(true);   //displays splash
@@ -400,5 +411,180 @@ public class SplashScreen extends JWindow
 
         setVisible(false);
     }   //showSplash()
+    
+    
+    public Connection connectToDB()
+    {
+    
+        Connection c = null;
+    try {
+      Class.forName(strDBClass);
+      c = DriverManager.getConnection(strJDBCString + strDBName);
+      return c;
+    } catch ( Exception e ) {
+      System.err.println( e.getClass().getName() + ": " + e.getMessage() );
+      return null;
+      // System.exit(0);
+    }
+    } // connectToDB
+
+    
+    public void printRSMetaData(ResultSet rsIn) throws SQLException
+    {
+        ResultSetMetaData rsMD = rsIn.getMetaData();
+        
+        System.out.println("Columns in the ResultSet = " + rsMD.getColumnCount());
+        
+        
+        if (bDebugging == true)
+        {
+            System.out.println("Made it to printsRSMetaData");
+        } // if bDebugging
+        
+        int intNumCols = rsMD.getColumnCount();
+        
+        for (int nLCV = 1; nLCV <= intNumCols; nLCV++)
+        {
+            // TODO: Add code to display column information
+           System.out.println("Column " + nLCV);
+           System.out.println("   Class:      " + rsMD.getColumnClassName(nLCV));
+           System.out.println("   Label:      " + rsMD.getColumnLabel(nLCV));
+           System.out.println("   Name:       " + rsMD.getColumnName(nLCV));
+           System.out.println("   Type:       " + rsMD.getColumnType(nLCV));
+           System.out.println("   Type Name:  " + rsMD.getColumnTypeName(nLCV));
+           System.out.println("\n\n");
+        } // for
+        
+        int intRowCounter = 0;
+        while(rsIn.next() == true)
+        {
+           intRowCounter++;
+             System.out.println("Row " + intRowCounter);
+             for (int nLCV = 1; nLCV <= intNumCols; nLCV++)
+        {
+         
+            switch(rsMD.getColumnType(nLCV))            
+            {
+                case 4: 
+                    System.out.println(rsMD.getColumnLabel(nLCV) +
+                            " = " + rsIn.getInt(nLCV));
+                    break;
+                
+                 case 12: 
+                    System.out.println(rsMD.getColumnLabel(nLCV) +
+                            " = " + rsIn.getString(nLCV));
+                    break;
+                     
+                 default:
+                     System.out.println("Column " + nLCV + "type number is " + rsMD.getColumnType(nLCV));
+                    
+                    
+                
+            } // switch
+            
+        } // for
+        
+             System.out.println("\n\n");
+        } // while
+        
+    } // printRSMetaData
+    
+    
+    public void printDBSchemas(DatabaseMetaData mdIn) throws SQLException
+    {
+          ResultSet rsSchemas = mdIn.getSchemas();
+          printRSMetaData(rsSchemas);
+          
+       
+          while(rsSchemas.next())
+          {
+              System.out.print(rsSchemas.getString(1)+ " \t" + rsSchemas.getString(2)+ "\n");
+              //ToDo: Add code to loop through columns, get and display data
+          } // while not past last row
+    } // print DBSchemas
+    
+    
+    
+    public void printDBInfo(Connection cnInput)
+    {
+        try {
+            DatabaseMetaData myMD = cnInput.getMetaData();
+            System.out.println("DB Product Name = " + myMD.getDatabaseProductName());
+            System.out.println("DB Product Version = " + myMD.getDatabaseProductVersion());
+           
+            // printDBSchemas(myMD);
+        } catch (SQLException ex) {
+            Logger.getLogger(DBConnection.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        
+        
+    }    
+    
+    public void printResultSet(ResultSet rsIn)
+    {
+        try {
+            ResultSetMetaData rsMD = rsIn.getMetaData();
+            int intColCount = rsMD.getColumnCount();
+            
+          //  System.out.println("Statement Executed:  " + rsIn.getStatement() + "\n");
+            
+            while (rsIn.next() == true)
+            {
+                for (int nLCV = 1; nLCV <= intColCount; nLCV++)
+                {
+                     System.out.println(rsMD.getColumnLabel(nLCV) +
+                            " = " + rsIn.getString(nLCV));
+                } // for
+                System.out.println("\n\n");
+            } // while not at end
+        
+           
+        } catch (SQLException ex) {
+            Logger.getLogger(DBConnection.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        
+        
+    }   
+        
+    public void doTipoftheDayPS(Connection cnIn)
+    {
+        try {
+            //Prints one of the randomquotes
+            PreparedStatement psRandomQ = cnIn.prepareStatement("SELECT QUOTE from vFiveRandomQuotes;");
+            ResultSet rsRandomQ = psRandomQ.executeQuery();
+            
+           // printRSMetaData(rsRandomQ);
+            printResultSet(rsRandomQ); //to test if quote is being fetched correctly
+            
+            lblTipOfTheDay.setText("rsRandomQ");
+        } 
+        
+        catch (SQLException ex) {
+            Logger.getLogger(DBConnection.class.getName()).log(Level.SEVERE, null, ex);
+        }
+            
+    } // TipoftheDay 
+    
+    public static void main(String[] args) throws SQLException {
+        
+    SplashScreen myDBC = new SplashScreen();
+    Connection cnMyC = myDBC.connectToDB();
+    if (cnMyC != null)
+    {
+    System.out.println("Opened database successfully\n");
+    myDBC.printDBInfo(cnMyC);
+            System.out.println("To test whether quote is being displayed:"); 
+            myDBC.doTipoftheDayPS(cnMyC);
+    
+        try {
+            cnMyC.close();
+        } catch (SQLException ex) {
+            Logger.getLogger(DBConnection.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    
   
+    }
+    
+    } //main
+    
 } // class SplashScreen
