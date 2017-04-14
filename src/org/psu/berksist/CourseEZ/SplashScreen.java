@@ -369,6 +369,27 @@ public class SplashScreen extends JWindow
 //        jpContent.add(lblCopyright, BorderLayout.SOUTH);
 //        jpContent.setBorder(BorderFactory.createLineBorder(Color.ORANGE, 10) );  //draws border
 //        add(jpContent);
+        
+        
+        
+        Connection cnMyC = connectToDB();
+        if (cnMyC != null)
+        {
+        System.out.println("Opened database successfully\n");
+        printDBInfo(cnMyC);
+        lblTipOfTheDay.setText(doTipOfTheDay(cnMyC) );
+    
+        try
+        {
+            cnMyC.close();
+        }
+        catch (SQLException ex)
+        {
+            Logger.getLogger(DBConnection.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+        
+
 
         //Layout 1: splash at top, then application name, then copyright, then space for tip of the day, then loading bar, then currently loading file
         jpAppInfo.add(lblSplashImage, BorderLayout.NORTH);
@@ -546,44 +567,48 @@ public class SplashScreen extends JWindow
         
     }   
         
-    public void doTipoftheDayPS(Connection cnIn)
+    public String doTipOfTheDay(Connection cnIn)
     {
-        try {
+        String strQuote = "";
+        try
+        {
             //Prints one of the randomquotes
             PreparedStatement psRandomQ = cnIn.prepareStatement("SELECT QUOTE from vFiveRandomQuotes;");
             ResultSet rsRandomQ = psRandomQ.executeQuery();
             
            // printRSMetaData(rsRandomQ);
-            printResultSet(rsRandomQ); //to test if quote is being fetched correctly
-            
-        } 
-        
-        catch (SQLException ex) {
+            //printResultSet(rsRandomQ); //to test if quote is being fetched correctly
+            System.out.println("[DEBUG] TotD=" + rsRandomQ.getString(1) );
+            strQuote = rsRandomQ.getString(1);
+        }
+        catch (SQLException ex)
+        {
             Logger.getLogger(DBConnection.class.getName()).log(Level.SEVERE, null, ex);
         }
+        return strQuote;
             
     } // TipoftheDay 
     
-    public static void main(String[] args) {
-        
-    SplashScreen myDBC = new SplashScreen();
-    Connection cnMyC = myDBC.connectToDB();
-    if (cnMyC != null)
-    {
-    System.out.println("Opened database successfully\n");
-    myDBC.printDBInfo(cnMyC);
-            System.out.println("To test whether quote is being displayed:"); 
-            myDBC.doTipoftheDayPS(cnMyC);
+//    public static void main(String[] args) {
+//        
+//    SplashScreen myDBC = new SplashScreen();
+//    Connection cnMyC = myDBC.connectToDB();
+//    if (cnMyC != null)
+//    {
+//    System.out.println("Opened database successfully\n");
+//    myDBC.printDBInfo(cnMyC);
+//            System.out.println("To test whether quote is being displayed:"); 
+//            myDBC.doTipOfTheDay(cnMyC);
+//    
+//        try {
+//            cnMyC.close();
+//        } catch (SQLException ex) {
+//            Logger.getLogger(DBConnection.class.getName()).log(Level.SEVERE, null, ex);
+//        }
+//    
+//  
+//    }
     
-        try {
-            cnMyC.close();
-        } catch (SQLException ex) {
-            Logger.getLogger(DBConnection.class.getName()).log(Level.SEVERE, null, ex);
-        }
-    
-  
-    }
-    
-    } //main
+//    } //main
     
 } // class SplashScreen
