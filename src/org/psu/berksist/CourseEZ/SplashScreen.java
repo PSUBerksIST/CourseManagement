@@ -556,7 +556,6 @@ public class SplashScreen extends JWindow
            // printRSMetaData(rsRandomQ);
             printResultSet(rsRandomQ); //to test if quote is being fetched correctly
             
-            lblTipOfTheDay.setText("rsRandomQ");
         } 
         
         catch (SQLException ex) {
