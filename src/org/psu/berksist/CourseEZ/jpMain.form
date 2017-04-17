@@ -25,14 +25,16 @@
                   </Group>
                   <Group type="102" alignment="1" attributes="0">
                       <Component id="jbCourse" min="-2" max="-2" attributes="0"/>
-                      <EmptySpace type="unrelated" max="-2" attributes="0"/>
+                      <EmptySpace max="-2" attributes="0"/>
                       <Component id="jbClass" min="-2" max="-2" attributes="0"/>
                       <EmptySpace max="-2" attributes="0"/>
                       <Component id="jbAssignments" min="-2" max="-2" attributes="0"/>
-                      <EmptySpace type="separate" max="-2" attributes="0"/>
+                      <EmptySpace max="-2" attributes="0"/>
                       <Component id="jbDocuments" min="-2" max="-2" attributes="0"/>
-                      <EmptySpace max="32767" attributes="0"/>
-                      <Component id="jtbMain" min="-2" pref="577" max="-2" attributes="0"/>
+                      <EmptySpace max="-2" attributes="0"/>
+                      <Component id="jbBooks" min="-2" max="-2" attributes="0"/>
+                      <EmptySpace type="separate" max="-2" attributes="0"/>
+                      <Component id="jtbMain" min="-2" pref="526" max="-2" attributes="0"/>
                   </Group>
               </Group>
           </Group>
@@ -47,6 +49,7 @@
                       <Component id="jbClass" alignment="3" min="-2" max="-2" attributes="0"/>
                       <Component id="jbAssignments" alignment="3" min="-2" max="-2" attributes="0"/>
                       <Component id="jbDocuments" alignment="3" min="-2" max="-2" attributes="0"/>
+                      <Component id="jbBooks" alignment="3" min="-2" max="-2" attributes="0"/>
                   </Group>
                   <Component id="jtbMain" alignment="1" min="-2" pref="25" max="-2" attributes="0"/>
               </Group>
@@ -147,5 +150,13 @@
         </DimensionLayout>
       </Layout>
     </Container>
+    <Component class="javax.swing.JButton" name="jbBooks">
+      <Properties>
+        <Property name="text" type="java.lang.String" value="Books"/>
+      </Properties>
+      <Events>
+        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="jbBooksActionPerformed"/>
+      </Events>
+    </Component>
   </SubComponents>
 </Form>

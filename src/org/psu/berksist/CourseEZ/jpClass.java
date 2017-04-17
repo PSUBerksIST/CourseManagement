@@ -60,7 +60,6 @@ public class jpClass extends javax.swing.JPanel {
         initComponents();
         setdbConnection(inConnection);;
         setjcbCourse();
-        
     }
     // This sets the local datbase connection
     private void setdbConnection(Connection inConnection){

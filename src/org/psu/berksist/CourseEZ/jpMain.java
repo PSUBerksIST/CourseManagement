@@ -76,6 +76,7 @@ public class jpMain extends javax.swing.JPanel {
         jbAddFrame = new javax.swing.JButton();
         jbTile = new javax.swing.JButton(taTile = new TileAction());
         jdpMain = new javax.swing.JDesktopPane();
+        jbBooks = new javax.swing.JButton();
 
         jbDocuments.setText("Resources");
         jbDocuments.addActionListener(new java.awt.event.ActionListener() {
@@ -138,6 +139,13 @@ public class jpMain extends javax.swing.JPanel {
             .addGap(0, 242, Short.MAX_VALUE)
         );
 
+        jbBooks.setText("Books");
+        jbBooks.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jbBooksActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
         layout.setHorizontalGroup(
@@ -150,14 +158,16 @@ public class jpMain extends javax.swing.JPanel {
                         .addContainerGap())
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                         .addComponent(jbCourse)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(jbClass)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(jbAssignments)
-                        .addGap(18, 18, 18)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(jbDocuments)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(jtbMain, javax.swing.GroupLayout.PREFERRED_SIZE, 577, javax.swing.GroupLayout.PREFERRED_SIZE))))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(jbBooks)
+                        .addGap(18, 18, 18)
+                        .addComponent(jtbMain, javax.swing.GroupLayout.PREFERRED_SIZE, 526, javax.swing.GroupLayout.PREFERRED_SIZE))))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -167,7 +177,8 @@ public class jpMain extends javax.swing.JPanel {
                         .addComponent(jbCourse)
                         .addComponent(jbClass)
                         .addComponent(jbAssignments)
-                        .addComponent(jbDocuments))
+                        .addComponent(jbDocuments)
+                        .addComponent(jbBooks))
                     .addComponent(jtbMain, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jdpMain)
@@ -207,10 +218,17 @@ public class jpMain extends javax.swing.JPanel {
 
     }//GEN-LAST:event_jbAddFrameActionPerformed
 
+    private void jbBooksActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jbBooksActionPerformed
+        JPanel Book = new jpBook(dbConnection);
+        Book.setName("Book");
+        CreateFrame(Book, Book.getName());
+    }//GEN-LAST:event_jbBooksActionPerformed
+
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton jbAddFrame;
     private javax.swing.JButton jbAssignments;
+    private javax.swing.JButton jbBooks;
     private javax.swing.JButton jbClass;
     private javax.swing.JButton jbCourse;
     private javax.swing.JButton jbDocuments;
