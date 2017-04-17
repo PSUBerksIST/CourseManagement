@@ -7,15 +7,25 @@ package org.psu.berksist.CourseEZ;
 
 /**
  *
- * @author Deathx
+ * @author Deathx, jss5783
+ * 
+ *  ******************* MODIFICATION LOG *****************************************
+ *  2017 April 17   - Started laying the foundation for report generation, including a GUI makeover. -JSS5783
  */
-public class jfReport extends javax.swing.JFrame {
-
+public class jfReport extends javax.swing.JFrame
+{
+    private static String strFilepath = new String(AppConstants.ROOT_FOLDER);   //TODO: replace with dedicated reports folder; currently pointing to /resources
+    private static String strFilename = new String("NewReport.docx");           //TODO: Replace with better default report name; maybe split into filename and file extension variables?
+    
     /**
      * Creates new form ReportFrame
      */
-    public jfReport() {
+    public jfReport()
+    {
         initComponents();
+        
+        txtfFilepath.setText(strFilepath);
+        txtfFilename.setText(strFilename);
         
     }
 
@@ -28,33 +38,118 @@ public class jfReport extends javax.swing.JFrame {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        jLabel1 = new javax.swing.JLabel();
+        btnFilepath = new javax.swing.JButton();
+        btnGenerateReport = new javax.swing.JButton();
+        txtfFilepath = new javax.swing.JTextField();
+        txtfFilename = new javax.swing.JTextField();
+        btnFilename = new javax.swing.JButton();
 
-        setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
+        setTitle("Generate Report");
 
-        jLabel1.setFont(new java.awt.Font("Tahoma", 1, 24)); // NOI18N
-        jLabel1.setForeground(new java.awt.Color(0, 0, 102));
-        jLabel1.setText("Reports have been made!!");
+        btnFilepath.setText("Change Filepath");
+        btnFilepath.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnFilepathActionPerformed(evt);
+            }
+        });
+
+        btnGenerateReport.setText("Generate Report");
+        btnGenerateReport.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnGenerateReportActionPerformed(evt);
+            }
+        });
+
+        btnFilename.setText("Change Filename");
+        btnFilename.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnFilenameActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addContainerGap(41, Short.MAX_VALUE)
-                .addComponent(jLabel1)
-                .addContainerGap(48, Short.MAX_VALUE))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(txtfFilepath, javax.swing.GroupLayout.DEFAULT_SIZE, 294, Short.MAX_VALUE)
+                    .addComponent(txtfFilename))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addComponent(btnFilename, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(btnFilepath, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+            .addGroup(layout.createSequentialGroup()
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(btnGenerateReport)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addGap(134, 134, 134)
-                .addComponent(jLabel1)
-                .addContainerGap(137, Short.MAX_VALUE))
+                .addContainerGap(18, Short.MAX_VALUE)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(txtfFilepath, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(btnFilepath))
+                .addGap(18, 18, Short.MAX_VALUE)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(txtfFilename, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(btnFilename))
+                .addGap(18, 18, Short.MAX_VALUE)
+                .addComponent(btnGenerateReport)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
+
+    /**
+     * Pick a new filepath to save reports in. (Doesn't pick files themselves, unless pointing at a folder to save in.) If invalid, changes aren't saved.
+     * @param evt 
+     */
+    private void btnFilepathActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnFilepathActionPerformed
+        /*
+        TODO
+        within a try... catch, open a dialog file picker, navigate to some directory location or folder file
+        check if valid location (might need to validate when actually trying to generate report in btnGenerateReportActionPerformed
+        if valid, then strFilepath = strNewFilepath
+        else do nothing (maybe pop an error dialog about invalid target)
+        */
+    }//GEN-LAST:event_btnFilepathActionPerformed
+
+    /**
+     * Generates a report.
+     * TODO: report data gets passed in how and where?
+     * @param evt 
+     */
+    private void btnGenerateReportActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnGenerateReportActionPerformed
+        /*
+        TODO
+        data gets passed, etc.
+        If file already exists, ask if the user wants to overwrite the preexisting file ("no" is default)
+        try to (over)write file
+        if successful, show dialog with "Report successfully generated!"
+        otherwise, show dialog with "Report generation failed." and error message.
+        */
+    }//GEN-LAST:event_btnGenerateReportActionPerformed
+
+    /**
+     * Pick a new filename.
+     * TODO: can pick from file picker dialog, I guess - just harvest for preexisting name that is a DOCX or PDF or whatever
+     * @param evt 
+     */
+    private void btnFilenameActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnFilenameActionPerformed
+        /*
+        TODO
+        within a try... catch, open a dialog file picker, navigate to some file or enter a new one to generate
+        check if valid name and filetype (might need to validate when actually trying to generate report in btnGenerateReportActionPerformed
+        if valid, then strFilename = strNewFilename
+        else do nothing (maybe pop an error dialog about invalid name and/or filetype)
+        */
+    }//GEN-LAST:event_btnFilenameActionPerformed
 
     /**
      * @param args the command line arguments
@@ -92,6 +187,10 @@ public class jfReport extends javax.swing.JFrame {
     }*/
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JLabel jLabel1;
+    private javax.swing.JButton btnFilename;
+    private javax.swing.JButton btnFilepath;
+    private javax.swing.JButton btnGenerateReport;
+    private javax.swing.JTextField txtfFilename;
+    private javax.swing.JTextField txtfFilepath;
     // End of variables declaration//GEN-END:variables
 }
