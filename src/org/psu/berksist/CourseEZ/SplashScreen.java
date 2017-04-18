@@ -21,7 +21,7 @@ import sas.swing.plaf.MultiLineLabelUI;
  * @author rgs19
  * 
  *  ******************* MODIFICATION LOG *****************************************
- *  2017 April 17   -   Quotes are now displayed properly.
+ *  2017 April 18   -   Quotes are now displayed properly.
  *                      Made use of a Multiline library - https://github.com/sasjo/multiline - RGS
  *  2017 April 14   -   Added new tip of the day functionality to fetch quotes from a database. - RGS
  *  2017 April 13   -   Minor changes to the file. Added an import so that splash screen works properly. 
