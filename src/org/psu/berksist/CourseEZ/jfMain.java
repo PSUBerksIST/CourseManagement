@@ -1,6 +1,7 @@
 package org.psu.berksist.CourseEZ;
 
 import java.awt.Dimension;
+import java.awt.event.KeyEvent;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.io.IOException;
@@ -22,6 +23,7 @@ import javax.swing.SwingUtilities;
 import javax.swing.UIManager;
 import javax.swing.UIManager.LookAndFeelInfo;
 import javax.swing.UnsupportedLookAndFeelException;
+import javax.swing.text.DefaultEditorKit;
 
 
 /**
@@ -31,20 +33,23 @@ import javax.swing.UnsupportedLookAndFeelException;
  * 
  * 
  ******************* MODIFICATION LOG *****************************************
+ * 2017 April 19    -   Added JMenuItem for jfReport under File.
+ *                      jfAbout's title is now implemented in the form's design itself. - JSS5783
  * 
- * 2017 March 29 - Added JMenuItem for jfAbout under Help. - JSS
+ * 2017 March 29    -   Added JMenuItem for jfAbout under Help. - JSS5783
  * 
- * 2017 January 31 - General housekeeping (formatted code for readability and 
- *                   consistency). - RQZ
+ * 2017 January 31  -   General housekeeping (formatted code for readability and 
+ *                      consistency). - RQZ
  * 
- * 2016 April 07   - Added library and loaded plaf for Pago Soft plaf. - WHB
+ * 2016 April 07    -   Added library and loaded plaf for Pago Soft plaf. - WHB
  * 
- * 2016 March 26   - Added exit menu item, finalize().  Created Help menu,
- *                   moved database info to help menu.- WHB 
- * 2016 March 25   - Added user preferences. - WHB
+ * 2016 March 26    -   Added exit menu item, finalize().
+ *                      Created Help menu, moved database info to help menu. - WHB
  * 
- * 2016 February 06 - Added code to dynamically create look and feel menu to
- *                    implement dynamic setting of PLAF. - WHB
+ * 2016 March 25    -   Added user preferences. - WHB
+ * 
+ * 2016 February 06 -   Added code to dynamically create look and feel menu
+ *                          to implement dynamic setting of PLAF. - WHB
  * 
  * 
  * 
@@ -211,9 +216,13 @@ public class jfMain extends JFrame {
         jmiAddFrame = new javax.swing.JMenuItem();
         jmiOpenDB = new javax.swing.JMenuItem(new OpenDatabaseAction(this, myProps));
         jmiTestTablePanel = new javax.swing.JMenuItem();
+        jmiGenerateReport = new javax.swing.JMenuItem();
         jSeparator1 = new javax.swing.JPopupMenu.Separator();
         jmiExit = new javax.swing.JMenuItem(new ExitAction(this));
         jmEdit = new javax.swing.JMenu();
+        jmiCut = new javax.swing.JMenuItem(new DefaultEditorKit.CutAction());
+        jmiCopy = new javax.swing.JMenuItem(new DefaultEditorKit.CopyAction());
+        jmiPaste = new javax.swing.JMenuItem(new DefaultEditorKit.PasteAction());
         jmWindows = new javax.swing.JMenu();
         jmiTile = new javax.swing.JMenuItem(new TileAction(jpMainPanel.jdpMain));
         jmiCascade = new javax.swing.JMenuItem(new CascadeAction(jpMainPanel.jdpMain));
@@ -259,6 +268,14 @@ public class jfMain extends JFrame {
             }
         });
         jmFile.add(jmiTestTablePanel);
+
+        jmiGenerateReport.setText("Generate Report");
+        jmiGenerateReport.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jmiGenerateReportActionPerformed(evt);
+            }
+        });
+        jmFile.add(jmiGenerateReport);
         jmFile.add(jSeparator1);
 
         jmiExit.setText("Exit");
@@ -272,6 +289,22 @@ public class jfMain extends JFrame {
         jmbMain.add(jmFile);
 
         jmEdit.setText("Edit");
+
+        jmiCut.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/CutIcon16.png"))); // NOI18N
+        jmiCut.setText("Cut");
+        jmEdit.add(jmiCut);
+        jmiCut.setMnemonic(KeyEvent.VK_X);
+
+        jmiCopy.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/CopyIcon16.png"))); // NOI18N
+        jmiCopy.setText("Copy");
+        jmEdit.add(jmiCopy);
+        jmiCopy.setMnemonic(KeyEvent.VK_C);
+
+        jmiPaste.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/PasteIcon16.png"))); // NOI18N
+        jmiPaste.setText("Paste");
+        jmEdit.add(jmiPaste);
+        jmiPaste.setMnemonic(KeyEvent.VK_V);
+
         jmbMain.add(jmEdit);
 
         jmWindows.setMnemonic('W');
@@ -427,7 +460,6 @@ public class jfMain extends JFrame {
      */
     private void jmiAboutActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jmiAboutActionPerformed
         JFrame jfAbout = new jfAbout();
-        jfAbout.setTitle("About");
         jfAbout.setVisible(true);
     }//GEN-LAST:event_jmiAboutActionPerformed
 
@@ -440,6 +472,16 @@ public class jfMain extends JFrame {
             System.out.println(e);
         }
     }//GEN-LAST:event_jmHelpContentsActionPerformed
+
+    /**
+     * Opens jfReport in a new window.
+     * @param evt 
+     */
+    private void jmiGenerateReportActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jmiGenerateReportActionPerformed
+        // TODO add your handling code here:
+        JFrame jfReport = new jfReport();
+        jfReport.setVisible(true);
+    }//GEN-LAST:event_jmiGenerateReportActionPerformed
 
 
 
@@ -456,11 +498,15 @@ public class jfMain extends JFrame {
     private javax.swing.JMenuItem jmiAbout;
     private javax.swing.JMenuItem jmiAddFrame;
     private javax.swing.JMenuItem jmiCascade;
+    private javax.swing.JMenuItem jmiCopy;
+    private javax.swing.JMenuItem jmiCut;
     private javax.swing.JMenuItem jmiDatabaseInformation;
     private javax.swing.JMenuItem jmiExit;
+    private javax.swing.JMenuItem jmiGenerateReport;
     private javax.swing.JMenuItem jmiLoadUserOptions;
     private javax.swing.JMenuItem jmiMinimize;
     private javax.swing.JMenuItem jmiOpenDB;
+    private javax.swing.JMenuItem jmiPaste;
     private javax.swing.JMenuItem jmiSaveUserOptions;
     private javax.swing.JMenuItem jmiTestTablePanel;
     private javax.swing.JMenuItem jmiTile;

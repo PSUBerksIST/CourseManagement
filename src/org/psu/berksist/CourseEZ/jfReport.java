@@ -5,12 +5,20 @@
  */
 package org.psu.berksist.CourseEZ;
 
+import java.io.File;
+import javax.swing.JFileChooser;
+import javax.swing.JOptionPane;
+import javax.swing.filechooser.FileNameExtensionFilter;
+
 /**
  *
  * @author Deathx, jss5783
  * 
  *  ******************* MODIFICATION LOG *****************************************
- *  2017 April 17   - Started laying the foundation for report generation, including a GUI makeover. -JSS5783
+ *  2017 April 19   -   Basic file-picking functionality added.
+ *                      Continued roughing in code (not sure how data and reports are being generated yet). -JSS5783
+ * 
+ *  2017 April 17   -   Started laying the foundation for report generation, including a GUI makeover. -JSS5783
  */
 public class jfReport extends javax.swing.JFrame
 {
@@ -111,13 +119,28 @@ public class jfReport extends javax.swing.JFrame
      * @param evt 
      */
     private void btnFilepathActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnFilepathActionPerformed
-        /*
-        TODO
-        within a try... catch, open a dialog file picker, navigate to some directory location or folder file
-        check if valid location (might need to validate when actually trying to generate report in btnGenerateReportActionPerformed
-        if valid, then strFilepath = strNewFilepath
-        else do nothing (maybe pop an error dialog about invalid target)
-        */
+        try
+        {
+            JFileChooser fc = new JFileChooser();
+            fc.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
+            int intFileChooserReturnValue = fc.showOpenDialog(this);
+            
+            if (intFileChooserReturnValue == JFileChooser.APPROVE_OPTION)   //if filepath is valid
+            {
+                //File file = fc.getSelectedFile();
+                File fileFilepath = fc.getCurrentDirectory();
+                strFilepath = fileFilepath.getPath();
+                txtfFilepath.setText(strFilepath);
+            }
+            else if (intFileChooserReturnValue == JFileChooser.ERROR_OPTION)
+            {
+                throw new Exception();  //not sure what pops error, but if one can choose an invalid filepath, then maybe pop an error dialog about invalid target?
+            }
+        }
+        catch (Exception e)
+        {
+            JOptionPane.showMessageDialog(this, e.toString(), "Error", JOptionPane.ERROR_MESSAGE);
+        }
     }//GEN-LAST:event_btnFilepathActionPerformed
 
     /**
@@ -128,11 +151,35 @@ public class jfReport extends javax.swing.JFrame
     private void btnGenerateReportActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnGenerateReportActionPerformed
         /*
         TODO
-        data gets passed, etc.
-        If file already exists, ask if the user wants to overwrite the preexisting file ("no" is default)
-        try to (over)write file
-        if successful, show dialog with "Report successfully generated!"
-        otherwise, show dialog with "Report generation failed." and error message.
+        try
+        {
+            //check if filepath is valid
+            //check if filename is valid
+            //check if data getting passed is valid here, I guess
+            //if file already exists
+            //  then ask if user wants to overwrite the preexisting file (default selection is "no")
+            //      if true
+            //          if file is (over)writeable ((and location can be written to))
+            //              try to overwrite preexisting file with passed-in data
+            //                  pop dialog stating "Report generated!"
+            //              catch any errors for whatever reason with an error dialog
+            //          otherwise
+            //              pop error dialog stating "Report generation failed!", that the file cannot be overwritten or location cannot be written to or whatever, and with error log
+            //otherwise
+            //  if location can be written to
+            //      try to write to file with passed-in data
+            //          pop dialog stating "Report generated!"
+            //      catch any errors for whatever reason with an error dialog with error log
+            //  otherwise
+            //      pop error dialog stating "Report generation failed!", that the file cannot be overwritten or location cannot be written to or whatever, and with error log
+            
+            //TODO: Possibly if a lot of reports get generated in short order, instead of dialog boxes, just pop colored labels to reduce clicking
+            //Also a bunch of radio buttons for filetype(s). i.e., PDF, DOCX, or both.
+        }
+        catch (Exception e)
+        {
+            JOptionPane.showMessageDialog(this, e.toString(), "Error", JOptionPane.ERROR_MESSAGE);
+        }
         */
     }//GEN-LAST:event_btnGenerateReportActionPerformed
 
@@ -144,16 +191,71 @@ public class jfReport extends javax.swing.JFrame
     private void btnFilenameActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnFilenameActionPerformed
         /*
         TODO
-        within a try... catch, open a dialog file picker, navigate to some file or enter a new one to generate
-        check if valid name and filetype (might need to validate when actually trying to generate report in btnGenerateReportActionPerformed
-        if valid, then strFilename = strNewFilename
-        else do nothing (maybe pop an error dialog about invalid name and/or filetype)
+        rather than pulling from wherever JFileChooser decides to start from,
+        check if current string in textbook is valid (since it can be typed in, not just FileChooser picked)
+        if valid, start there
+        otherwise, start from default location
+        should also be able to enter a new one in JFileChooser for future generation,
+        just as FileChoosers in other programs allow one to "reserve" a namespace without an actual preexisting file
         */
+                try
+        {
+            JFileChooser fc = new JFileChooser();
+            fc.setFileSelectionMode(JFileChooser.FILES_ONLY);
+//            fc.setFileFilter(new FileFilter()
+//                {
+//                    public String getDescription()
+//                    {
+//                        return "PDF (*.pdf)";
+//                    }
+//                    
+//                    public boolean accept(File f)
+//                    {
+//                        if (f.isDirectory() )
+//                        {
+//                            return true;
+//                        }
+//                        else
+//                        {
+//                            String filename = f.getName().toLowerCase();
+//                            return filename.endsWith(".pdf");
+//                        }
+//                    }
+//                });
+            fc.addChoosableFileFilter(new FileNameExtensionFilter("DOCX (*.docx)", "docx"));
+            fc.addChoosableFileFilter(new FileNameExtensionFilter("PDF (*.pdf)", "pdf"));
+            fc.setAcceptAllFileFilterUsed(false);
+            int intFileChooserReturnValue = fc.showOpenDialog(this);
+            
+            if (intFileChooserReturnValue == JFileChooser.APPROVE_OPTION)   //if filepath is valid
+            {
+                File fileFilename = fc.getSelectedFile();
+                strFilename = fileFilename.getName();
+                txtfFilename.setText(strFilename);
+            }
+            else if (intFileChooserReturnValue == JFileChooser.ERROR_OPTION)
+            {
+                throw new Exception();  //not sure what pops error, but if one can choose an invalid filepath, then maybe pop an error dialog about invalid target?
+            }
+        }
+        catch (Exception e)
+        {
+            JOptionPane.showMessageDialog(this, e.toString(), "Error", JOptionPane.ERROR_MESSAGE);
+        }
     }//GEN-LAST:event_btnFilenameActionPerformed
 
-    /**
-     * @param args the command line arguments
-     */
+//    for testing/debugging in isolation
+//    /**
+//     * @param args the command line arguments
+//     */
+//        public static void main(String[] args) {
+//            
+//        jfReport test = new jfReport();
+//        test.setVisible(true);
+//        
+//
+//        } //main
+        
    /* public static void main(String args[]) {
         /* Set the Nimbus look and feel */
         //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
@@ -185,7 +287,7 @@ public class jfReport extends javax.swing.JFrame
             }
         });
     }*/
-
+    
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnFilename;
     private javax.swing.JButton btnFilepath;

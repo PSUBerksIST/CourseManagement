@@ -7,24 +7,22 @@ package org.psu.berksist.CourseEZ;
 
 import java.awt.Color;
 import java.awt.*;
-import java.io.BufferedReader;
-import java.io.FileNotFoundException;
-import java.io.FileReader;
-import java.io.IOException;
 import static java.lang.Thread.sleep;
 import java.sql.*;
-import java.util.ArrayList;
 import java.util.Random;
-import java.util.List;
 import javax.swing.*;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import sas.swing.MultiLineLabel;
+import sas.swing.plaf.MultiLineLabelUI;
 
 /**
  *
  * @author rgs19
  * 
  *  ******************* MODIFICATION LOG *****************************************
+ *  2017 April 18   -   Quotes are now displayed properly.
+ *                      Made use of a Multiline library - https://github.com/sasjo/multiline - RGS
  *  2017 April 14   -   Added new tip of the day functionality to fetch quotes from a database. - RGS
  *  2017 April 13   -   Minor changes to the file. Added an import so that splash screen works properly. 
  *                      Increased splash screen display time. - RGS
@@ -65,7 +63,7 @@ public class SplashScreen extends JWindow
     private static final int SPLASH_IMAGE_WIDTH = 192;
     private static final int SPLASH_IMAGE_HEIGHT = 192;
     //private static String strTipOfTheDay;
-    private JLabel lblTipOfTheDay;
+    private MultiLineLabel lblTipOfTheDay;
     private JLabel lblLoading;
 //    private JPanel jpContent;
 //    private JPanel jpLoadingBar;
@@ -269,7 +267,7 @@ public class SplashScreen extends JWindow
         jpLoadingInfo = new JPanel(new BorderLayout() );
         jpLoadingInfo.setBackground(Color.BLACK);
         dimScreen = Toolkit.getDefaultToolkit().getScreenSize();
-        intSplashWindowWidth = 256;
+        intSplashWindowWidth = 260;
         intSplashWindowHeight = 384;
 //        intSplashWindowWidth = dimScreen.width / 4;         //one-fourth screen resolution
 //        intSplashWindowHeight = dimScreen.height / 2;       //one-half screen resolution
@@ -293,11 +291,13 @@ public class SplashScreen extends JWindow
         lblLoading.setForeground(Color.WHITE);
         lblLoading.setFont(new Font("Sans-Serif", Font.ITALIC, 12) );
         lblLoading.setHorizontalAlignment(JLabel.CENTER);
-        lblTipOfTheDay = new JLabel("Tip of the day!"); //TODO: Improve tip of the day code
+        lblTipOfTheDay = new MultiLineLabel("Tip of the day!");
+        //lblTipOfTheDay = new JLabel("Tip of the day!"); //TODO: Improve tip of the day code
         lblTipOfTheDay.setFont(new Font("Sans-Serif", Font.ITALIC, 12) );
         lblTipOfTheDay.setMaximumSize(new Dimension(intSplashWindowWidth - (BORDER_WIDTH * 2), 15) );   //TODO: Implement better handling of strings that are longer than the window can display on one line
         lblTipOfTheDay.setForeground(Color.WHITE);
-        lblTipOfTheDay.setHorizontalAlignment(JLabel.CENTER);
+        lblTipOfTheDay.setHorizontalAlignment(JLabel.CENTER
+        );
         jpbLoadingBar = new JProgressBar();
         jpbLoadingBar.setStringPainted(true);
         jpbLoadingBar.setForeground(Color.LIGHT_GRAY);
@@ -378,6 +378,9 @@ public class SplashScreen extends JWindow
         System.out.println("Opened database successfully\n");
         printDBInfo(cnMyC);
         lblTipOfTheDay.setText(doTipOfTheDay(cnMyC) );
+        //lblTipOfTheDay.setUI(MultiLineLabelUI.labelUI);
+        lblTipOfTheDay.setHorizontalTextAlignment(JLabel.CENTER);
+        //lblTipOfTheDay.setVerticalTextAlignment(JLabel.CENTER);
     
         try
         {
