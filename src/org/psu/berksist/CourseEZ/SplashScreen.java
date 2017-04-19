@@ -55,7 +55,7 @@ public class SplashScreen extends JWindow
     //declaration
     private static final String strDBClass = "org.sqlite.JDBC";
     private static final String strJDBCString = "jdbc:sqlite:";
-    private static String strDBName = "Today.db3"; //this is what worked on my Macbook. Makes use of the Today.db3 present in the IST261CourseManagement folder.  
+    private static String strDBName = "resources\\database\\Today.db3"; //this is what worked on my Macbook. Makes use of the Today.db3 present in the IST261CourseManagement folder.  
     private boolean bDebugging = true;
     private static JProgressBar jpbLoadingBar;
     private static final int DEFAULT_DISPLAY_TIME = 10000;
