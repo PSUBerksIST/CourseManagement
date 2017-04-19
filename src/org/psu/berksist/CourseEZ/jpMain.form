@@ -102,15 +102,6 @@
 
       <Layout class="org.netbeans.modules.form.compat2.layouts.DesignBoxLayout"/>
       <SubComponents>
-        <Component class="javax.swing.JButton" name="jbAddFrame">
-          <Properties>
-            <Property name="text" type="java.lang.String" value="Add"/>
-            <Property name="toolTipText" type="java.lang.String" value="Create and add new window"/>
-          </Properties>
-          <Events>
-            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="jbAddFrameActionPerformed"/>
-          </Events>
-        </Component>
         <Component class="javax.swing.JButton" name="jbTile">
           <Properties>
             <Property name="text" type="java.lang.String" editor="org.netbeans.modules.form.RADConnectionPropertyEditor">

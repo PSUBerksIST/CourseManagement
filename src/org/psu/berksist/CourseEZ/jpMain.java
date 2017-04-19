@@ -73,7 +73,6 @@ public class jpMain extends javax.swing.JPanel {
         jbCourse = new javax.swing.JButton();
         jbClass = new javax.swing.JButton();
         jtbMain = new javax.swing.JToolBar();
-        jbAddFrame = new javax.swing.JButton();
         jbTile = new javax.swing.JButton(taTile = new TileAction());
         jdpMain = new javax.swing.JDesktopPane();
         jbBooks = new javax.swing.JButton();
@@ -109,15 +108,6 @@ public class jpMain extends javax.swing.JPanel {
         jtbMain.setFloatable(false);
         jtbMain.setRollover(true);
         jtbMain.setToolTipText("");
-
-        jbAddFrame.setText("Add");
-        jbAddFrame.setToolTipText("Create and add new window");
-        jbAddFrame.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jbAddFrameActionPerformed(evt);
-            }
-        });
-        jtbMain.add(jbAddFrame);
 
         jbTile.setText("");
         jbTile.setToolTipText("");
@@ -212,12 +202,6 @@ public class jpMain extends javax.swing.JPanel {
 
     }//GEN-LAST:event_jbClassActionPerformed
 
-    private void jbAddFrameActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jbAddFrameActionPerformed
-
-        CreateFrame();
-
-    }//GEN-LAST:event_jbAddFrameActionPerformed
-
     private void jbBooksActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jbBooksActionPerformed
         JPanel Book = new jpBook(dbConnection);
         Book.setName("Book");
@@ -226,7 +210,6 @@ public class jpMain extends javax.swing.JPanel {
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JButton jbAddFrame;
     private javax.swing.JButton jbAssignments;
     private javax.swing.JButton jbBooks;
     private javax.swing.JButton jbClass;
