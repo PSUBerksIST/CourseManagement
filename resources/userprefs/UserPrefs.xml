@@ -3,7 +3,7 @@
 <properties>
 <comment>Edit this file at your own risk.  It will be overwritten at program exit.</comment>
 <entry key="AppID">CourseEZ</entry>
-<entry key="LastConnectedDatabase">C:\Users\Nicholas\Desktop\Spring 2017\IST 411\CourseManagement/resources/database/dbCourseManagement-V9.db3</entry>
-<entry key="LookAndFeel">javax.swing.plaf.nimbus.NimbusLookAndFeel</entry>
+<entry key="LastConnectedDatabase">\\udrive.win.psu.edu\Users\n\d\ndb5136\Desktop\Spring 2017\IST 261\NetBeans Projects\CourseManagement/resources/database/dbCourseManagement-V9.db3</entry>
 <entry key="AppVersion">1</entry>
+<entry key="LookAndFeel">javax.swing.plaf.nimbus.NimbusLookAndFeel</entry>
 </properties>
