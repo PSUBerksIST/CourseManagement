@@ -18,26 +18,28 @@ import javax.swing.event.HyperlinkEvent;
  * 
  * 
  *  ******************* MODIFICATION LOG *****************************************
+ * 2017 April 19 -  Added "About" to design form's title.
+ *                  Error dialogs should open centered on jfAbout now. - JSS5783
  * 2017 April  9 -  Changed references to libraries.txt/Libraries to resources.txt/Resources.
  *                  Changed anti-spam text to be a little more professional.
  *                  Changed resources.txt format and associated code.
  *                      Can now use one collective resource name that all associated files are collected under.
- *                  Hard-coded fix for Synthetica email in resources.txt and rbtnResourcesActionPerformed for now. -JSS
+ *                  Hard-coded fix for Synthetica email in resources.txt and rbtnResourcesActionPerformed for now. -JSS5783
  * 2017 April  7 -  Turned URL and email formatting code into functions.
  *                  +BUG: leading and trailing spaces in email addresses in contributors from ConvertToEmail.
  *                  TODO: Change how rbtnLibraries reads and displays resources.txt.
  *                      (Note: First line currently holds not-yet-implemented new format.
  *                      Delete that line if testing convertToEmail() before rbtnLibraries
- *                          is updated.) -JSS
+ *                          is updated.) -JSS5783
  * 2017 April  4 -  Removed HTTPS conversion code. If the user wants HTTPS,
  *                      they should run HTTPS Everywhere instead in Firefox or something.
  *                      Can't tell whether or not a website is equipped for HTTPS from here.
  *                  Modified code to not add "http://" when "https://" is in the TXT files.
  *                      If it's in the TXT, then it was probably added as an HTTPS-enabled website.
  *                  Added most of the JARS' information to resources.txt.
- *                  Added information to tools.txt. -JSS
+ *                  Added information to tools.txt. -JSS5783
  * 2017 April  3 -  Added email-handling code to rbtnLibraries.
- *                      (Should extract into a function later if used again.) -JSS
+ *                      (Should extract into a function later if used again.) -JSS5783
  * 2017 April  3 -  Added more comments.
  *                  rbtnLibraries is now also for "Other (in-program) Resources" like icons.
  *                  Made jtpText use HTML.
@@ -48,7 +50,7 @@ import javax.swing.event.HyperlinkEvent;
  *                  Additional students' and teacher's names and contact information added to contributors.txt.
  *                  Anti-spam text is now stripped on an individual basis,
  *                      rather than at the very end,
- *                      so emails can be displayed in all lowercase. -JSS
+ *                      so emails can be displayed in all lowercase. -JSS5783
  * 2017 March 31 -  Cleaned up code (added try... catch; comments; etc.).
  *                  Labels now update with program name and program version from AppConstants constants.
  *                  -BUG: Fixed bug with licenses.txt (there was an empty line).
@@ -56,14 +58,14 @@ import javax.swing.event.HyperlinkEvent;
  *                  Can have 0+ methods of contact for contributors.
  *                  Most library licenses added to licenses.txt.
  *                  Some students' emails added to contributors.txt
- *                      (somewhat obfuscated to try to prevent spambots scraping the file). -JSS
+ *                      (somewhat obfuscated to try to prevent spambots scraping the file). -JSS5783
  * 2017 March 30 -  Cleaned up rbtnContributorsActionPerformed code.
  *                  Removed rbtnChangelog, associated code, and TXT file.
  *                  Added rbtnTools and associated code.
  *                  Added lblDescription.
  *                  Changed rbtnLicenses to rbtnLibraries and associated code and TXT file.
- *                  +BUG: Doesn't read licenses.txt.    -JSS
- * 2017 March 29 -  Created jfAbout.java. Added basic rough functionality. - JSS
+ *                  +BUG: Doesn't read licenses.txt.    -JSS5783
+ * 2017 March 29 -  Created jfAbout.java. Added basic rough functionality. - JSS5783
  */
 public class jfAbout extends javax.swing.JFrame {
 
@@ -111,6 +113,7 @@ public class jfAbout extends javax.swing.JFrame {
         rbtnContributors = new javax.swing.JRadioButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
+        setTitle("About");
 
         lblVersionNumber.setText("VERSION_NUMBER");
 
@@ -125,15 +128,10 @@ public class jfAbout extends javax.swing.JFrame {
             jpAboutTitleLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jpAboutTitleLayout.createSequentialGroup()
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addComponent(lblProgramName)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jpAboutTitleLayout.createSequentialGroup()
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addComponent(lblDescription)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jpAboutTitleLayout.createSequentialGroup()
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addComponent(lblVersionNumber)
+                .addGroup(jpAboutTitleLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(lblProgramName)
+                    .addComponent(lblDescription)
+                    .addComponent(lblVersionNumber))
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         jpAboutTitleLayout.setVerticalGroup(
@@ -275,23 +273,23 @@ public class jfAbout extends javax.swing.JFrame {
                     }
                     catch (IOException e)   //if there's a problem reading a line in the file
                     {
-                        JOptionPane.showMessageDialog(null, "Error reading tools.txt.\n" + e.toString(),"Error", JOptionPane.ERROR_MESSAGE);
+                        JOptionPane.showMessageDialog(this, "Error reading tools.txt.\n" + e.toString(),"Error", JOptionPane.ERROR_MESSAGE);
                     }
                 }
                 catch (IOException e)   //should open if file can't be opened
                 {
-                    JOptionPane.showMessageDialog(null, "tools.txt cannot be opened.\n" + e.toString(),"Error", JOptionPane.ERROR_MESSAGE);
+                    JOptionPane.showMessageDialog(this, "tools.txt cannot be opened.\n" + e.toString(),"Error", JOptionPane.ERROR_MESSAGE);
                 }
             }
             else    //if tools.txt does NOT exist
             {
-                JOptionPane.showMessageDialog(null, "tools.txt cannot be found.","Error", JOptionPane.ERROR_MESSAGE);
+                JOptionPane.showMessageDialog(this, "tools.txt cannot be found.","Error", JOptionPane.ERROR_MESSAGE);
             }
         jspText.getVerticalScrollBar().setValue(1);
         }
         catch (Exception e) //generic exception
         {
-            JOptionPane.showMessageDialog(null, e.toString(),"Error", JOptionPane.ERROR_MESSAGE); //should print stack trace to message box
+            JOptionPane.showMessageDialog(this, e.toString(),"Error", JOptionPane.ERROR_MESSAGE); //should print stack trace to message box
         }
     }//GEN-LAST:event_rbtnToolsActionPerformed
 
@@ -357,22 +355,22 @@ public class jfAbout extends javax.swing.JFrame {
                     }
                     catch (IOException e)   //if there's a problem reading a line in the file
                     {
-                        JOptionPane.showMessageDialog(null, "Error reading contributors.txt.\n" + e.toString(),"Error", JOptionPane.ERROR_MESSAGE);
+                        JOptionPane.showMessageDialog(this, "Error reading contributors.txt.\n" + e.toString(),"Error", JOptionPane.ERROR_MESSAGE);
                     }
                 }
                 catch (IOException e)   //should open if file can't be opened
                 {
-                    JOptionPane.showMessageDialog(null, "contributors.txt cannot be opened.\n" + e.toString(),"Error", JOptionPane.ERROR_MESSAGE);
+                    JOptionPane.showMessageDialog(this, "contributors.txt cannot be opened.\n" + e.toString(),"Error", JOptionPane.ERROR_MESSAGE);
                 }
             }
             else    //if contributors.txt does NOT exist
             {
-                JOptionPane.showMessageDialog(null, "contributors.txt cannot be found.","Error", JOptionPane.ERROR_MESSAGE);
+                JOptionPane.showMessageDialog(this, "contributors.txt cannot be found.","Error", JOptionPane.ERROR_MESSAGE);
             }
         }
         catch (Exception e) //generic exception
         {
-            JOptionPane.showMessageDialog(null, e.toString(),"Error", JOptionPane.ERROR_MESSAGE); //should print stack trace to message box
+            JOptionPane.showMessageDialog(this, e.toString(),"Error", JOptionPane.ERROR_MESSAGE); //should print stack trace to message box
         }
     }//GEN-LAST:event_rbtnContributorsActionPerformed
 
@@ -447,22 +445,22 @@ public class jfAbout extends javax.swing.JFrame {
                     }
                     catch (IOException e)   //if there's a problem reading a line in the file
                     {
-                        JOptionPane.showMessageDialog(null, "Error reading resources.txt.\n" + e.toString(),"Error", JOptionPane.ERROR_MESSAGE);
+                        JOptionPane.showMessageDialog(this, "Error reading resources.txt.\n" + e.toString(),"Error", JOptionPane.ERROR_MESSAGE);
                     }
                 }
                 catch (IOException e)   //should open if file can't be opened
                 {
-                    JOptionPane.showMessageDialog(null, "resources.txt cannot be opened.\n" + e.toString(),"Error", JOptionPane.ERROR_MESSAGE);
+                    JOptionPane.showMessageDialog(this, "resources.txt cannot be opened.\n" + e.toString(),"Error", JOptionPane.ERROR_MESSAGE);
                 }
             }
             else    //if resources.txt does NOT exist
             {
-                JOptionPane.showMessageDialog(null, "resources.txt cannot be found.","Error", JOptionPane.ERROR_MESSAGE);
+                JOptionPane.showMessageDialog(this, "resources.txt cannot be found.","Error", JOptionPane.ERROR_MESSAGE);
             }
         }
         catch (Exception e) //generic exception
         {
-            JOptionPane.showMessageDialog(null, e.toString(),"Error", JOptionPane.ERROR_MESSAGE); //should print stack trace to message box
+            JOptionPane.showMessageDialog(this, e.toString(),"Error", JOptionPane.ERROR_MESSAGE); //should print stack trace to message box
         }
     }//GEN-LAST:event_rbtnResourcesActionPerformed
 
@@ -483,7 +481,7 @@ public class jfAbout extends javax.swing.JFrame {
                 catch (IOException | URISyntaxException ex)
                 {
                     //ex.printStackTrace(System.err);
-                    JOptionPane.showMessageDialog(null, ex.toString(), "Error", JOptionPane.ERROR_MESSAGE); //should print stack trace to message box
+                    JOptionPane.showMessageDialog(this, ex.toString(), "Error", JOptionPane.ERROR_MESSAGE); //should print stack trace to message box
                 }
             }
     }//GEN-LAST:event_jtpTextHyperlinkUpdate
