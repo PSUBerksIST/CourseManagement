@@ -4,6 +4,7 @@ import java.awt.Dimension;
 import java.awt.event.KeyEvent;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
+import java.io.File;
 import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
@@ -464,13 +465,13 @@ public class jfMain extends JFrame {
     }//GEN-LAST:event_jmiAboutActionPerformed
 
     private void jmHelpContentsActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jmHelpContentsActionPerformed
+        File HelpDoc = new File(AppConstants.ROOT_FOLDER + "HelpDoc");
         try {
             Runtime.getRuntime().exec("rundll32 url.dll,FileProtocolHandler " 
-                + "file:///C:/Users/xXRoa/Documents/HelpNDoc/Output/html/Course%20Management.html");
-        }
-        catch(IOException e) {
-            System.out.println(e);
-        }
+                + HelpDoc + "/Course Management.html");
+        } catch(IOException ex) {
+            Logger.getLogger(jfMain.class.getName()).log(Level.SEVERE, null, ex);
+        } // Opens the help document in a browser
     }//GEN-LAST:event_jmHelpContentsActionPerformed
 
     /**
