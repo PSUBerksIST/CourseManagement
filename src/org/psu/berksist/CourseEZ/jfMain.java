@@ -465,13 +465,19 @@ public class jfMain extends JFrame {
     }//GEN-LAST:event_jmiAboutActionPerformed
 
     private void jmHelpContentsActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jmHelpContentsActionPerformed
-        File HelpDoc = new File(AppConstants.ROOT_FOLDER + "HelpDoc");
+        
+        File HelpDoc = new File(AppConstants.ROOT_FOLDER + "HelpDoc" + "/CourseManagement.html");
+        OSDetector.open(HelpDoc);
+        
+        
+        /* File HelpDoc = new File(AppConstants.ROOT_FOLDER + "HelpDoc");
         try {
             Runtime.getRuntime().exec("rundll32 url.dll,FileProtocolHandler " 
                 + HelpDoc + "/Course Management.html");
         } catch(IOException ex) {
             Logger.getLogger(jfMain.class.getName()).log(Level.SEVERE, null, ex);
         } // Opens the help document in a browser
+        */
     }//GEN-LAST:event_jmHelpContentsActionPerformed
 
     /**
