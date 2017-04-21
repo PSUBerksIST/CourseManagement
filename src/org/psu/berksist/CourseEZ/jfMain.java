@@ -466,7 +466,7 @@ public class jfMain extends JFrame {
 
     private void jmHelpContentsActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jmHelpContentsActionPerformed
         
-        //TODO: Make sure the correct file is opening.
+        //TODO: Make sure the correct file is opening. - RGS
         File HelpDoc = new File(AppConstants.ROOT_FOLDER + "HelpDoc" + "/CourseManagement.html");
         OSDetector.open(HelpDoc);
         
