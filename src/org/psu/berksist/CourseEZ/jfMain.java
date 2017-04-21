@@ -5,6 +5,7 @@ import java.awt.event.KeyEvent;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
@@ -25,6 +26,7 @@ import javax.swing.UIManager;
 import javax.swing.UIManager.LookAndFeelInfo;
 import javax.swing.UnsupportedLookAndFeelException;
 import javax.swing.text.DefaultEditorKit;
+import org.docx4j.openpackaging.exceptions.Docx4JException;
 
 
 /**
@@ -236,6 +238,8 @@ public class jfMain extends JFrame {
         jmHelpContents = new javax.swing.JMenuItem();
         jmiDatabaseInformation = new javax.swing.JMenuItem();
         jmiAbout = new javax.swing.JMenuItem();
+        jMenu1 = new javax.swing.JMenu();
+        jMenuItem1 = new javax.swing.JMenuItem();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setTitle("Course EZ");
@@ -378,6 +382,18 @@ public class jfMain extends JFrame {
 
         jmbMain.add(jmHelp);
 
+        jMenu1.setText("Report");
+
+        jMenuItem1.setText("jMenuItem1");
+        jMenuItem1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jMenuItem1ActionPerformed(evt);
+            }
+        });
+        jMenu1.add(jMenuItem1);
+
+        jmbMain.add(jMenu1);
+
         setJMenuBar(jmbMain);
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
@@ -491,9 +507,25 @@ public class jfMain extends JFrame {
         jfReport.setVisible(true);
     }//GEN-LAST:event_jmiGenerateReportActionPerformed
 
+    private void jMenuItem1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem1ActionPerformed
+        // TODO add your handling code here:
+        Reports report1 = new Reports();
+        try {
+            report1.Syllabus(jpMainPanel.dbConnection);
+        } catch (Docx4JException ex) {
+            Logger.getLogger(jfMain.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (FileNotFoundException ex) {
+            Logger.getLogger(jfMain.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (SQLException ex) {
+            Logger.getLogger(jfMain.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }//GEN-LAST:event_jMenuItem1ActionPerformed
+
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JMenu jMenu1;
+    private javax.swing.JMenuItem jMenuItem1;
     private javax.swing.JPopupMenu.Separator jSeparator1;
     private javax.swing.JMenu jmEdit;
     private javax.swing.JMenu jmFile;

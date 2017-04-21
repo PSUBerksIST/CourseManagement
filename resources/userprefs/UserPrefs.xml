@@ -1,9 +1,9 @@
-<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE properties SYSTEM "http://java.sun.com/dtd/properties.dtd">
 <properties>
 <comment>Edit this file at your own risk.  It will be overwritten at program exit.</comment>
 <entry key="AppID">CourseEZ</entry>
-<entry key="LastConnectedDatabase">/Users/rishabhshanbhag/IST261-NEW/CourseManagement/resources/database/dbCourseManagement-V9.db3</entry>
+<entry key="LastConnectedDatabase">C:\Users\Deathx\Desktop\IST261\CourseManagement/resources/database/dbCourseManagement-V9.db3</entry>
 <entry key="AppVersion">1</entry>
 <entry key="LookAndFeel">javax.swing.plaf.nimbus.NimbusLookAndFeel</entry>
 </properties>

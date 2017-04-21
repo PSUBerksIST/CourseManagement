@@ -51,20 +51,20 @@ public class Reports {
       
         
         String  syllaMain = rs.getString("vchrDescription");
-        int age  = rs.getInt("intNumber");
-        String  address = rs.getString("vchrTitle");
+        int num  = rs.getInt("intNumber");
+        String  title = rs.getString("vchrTitle");
          
         mdp.addParagraphOfText(syllaMain);
-        mdp.addParagraphOfText( Integer.toString(age));
-        mdp.addParagraphOfText(address);
-        System.out.println();
+        mdp.addParagraphOfText( Integer.toString(num));
+        mdp.addParagraphOfText(title);
+ 
       
       rs.close();
       st.close();
      // c.close();
-    } catch ( Exception e ) {
+    } catch ( SQLException e ) {
       System.err.println( e.getClass().getName() + ": " + e.getMessage() );
-      System.exit(0);
+      //System.exit(0);
     }
                 
 		ProtectDocument protection = new ProtectDocument(wordMLPackage);
