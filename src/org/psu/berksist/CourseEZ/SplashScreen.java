@@ -21,6 +21,8 @@ import sas.swing.plaf.MultiLineLabelUI;
  * @author rgs19
  * 
  *  ******************* MODIFICATION LOG *****************************************
+ *  2017 April 21   -   Addition of the name of the person who says the quote.
+ *                      Quotes are now within a ' ' for a better look. - RGS
  *  2017 April 18   -   Quotes are now displayed properly.
  *                      Made use of a Multiline library - https://github.com/sasjo/multiline - RGS
  *  2017 April 14   -   Added new tip of the day functionality to fetch quotes from a database. - RGS
@@ -575,11 +577,11 @@ public class SplashScreen extends JWindow
         String strQuote = "";
         try
         {
-            //Prints one of the randomquotes
-            PreparedStatement psRandomQ = cnIn.prepareStatement("SELECT QUOTE from vFiveRandomQuotes;");
+            //Prints one of the randomquotes with the name of the person who said the quote
+            PreparedStatement psRandomQ = cnIn.prepareStatement("select '''' || QUOTE || '''' || ' - ' || NAME FROM vFiveRandomQuotes;");
             ResultSet rsRandomQ = psRandomQ.executeQuery();
             
-           // printRSMetaData(rsRandomQ);
+           //printRSMetaData(rsRandomQ);
             //printResultSet(rsRandomQ); //to test if quote is being fetched correctly
             System.out.println("[DEBUG] TotD=" + rsRandomQ.getString(1) );
             strQuote = rsRandomQ.getString(1);
