@@ -51,15 +51,62 @@ public class jpBook extends javax.swing.JPanel {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
+        jbAddBook = new javax.swing.JButton();
+        jScrollPane1 = new javax.swing.JScrollPane();
+        jtBooksDisplay = new javax.swing.JTable();
+
+        jbAddBook.setText("Add Book");
+
+        jtBooksDisplay.setModel(new javax.swing.table.DefaultTableModel(
+            new Object [][] {
+                {null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null}
+            },
+            new String [] {
+                "Title", "ISBN", "Edition", "Author", "Class", "Price", "Used"
+            }
+        ));
+        jtBooksDisplay.setAutoResizeMode(javax.swing.JTable.AUTO_RESIZE_ALL_COLUMNS);
+        jtBooksDisplay.setColumnSelectionAllowed(true);
+        jScrollPane1.setViewportView(jtBooksDisplay);
+        jtBooksDisplay.getColumnModel().getSelectionModel().setSelectionMode(javax.swing.ListSelectionModel.SINGLE_SELECTION);
+        if (jtBooksDisplay.getColumnModel().getColumnCount() > 0) {
+            jtBooksDisplay.getColumnModel().getColumn(0).setPreferredWidth(150);
+            jtBooksDisplay.getColumnModel().getColumn(1).setPreferredWidth(150);
+            jtBooksDisplay.getColumnModel().getColumn(2).setPreferredWidth(75);
+            jtBooksDisplay.getColumnModel().getColumn(3).setPreferredWidth(100);
+            jtBooksDisplay.getColumnModel().getColumn(4).setPreferredWidth(75);
+        }
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 400, Short.MAX_VALUE)
+            .addGroup(layout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(layout.createSequentialGroup()
+                        .addComponent(jbAddBook)
+                        .addGap(0, 0, Short.MAX_VALUE))
+                    .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 542, Short.MAX_VALUE))
+                .addContainerGap())
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 300, Short.MAX_VALUE)
+            .addGroup(layout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(jbAddBook)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 333, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
     }// </editor-fold>//GEN-END:initComponents
 
@@ -69,5 +116,8 @@ public class jpBook extends javax.swing.JPanel {
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JScrollPane jScrollPane1;
+    private javax.swing.JButton jbAddBook;
+    private javax.swing.JTable jtBooksDisplay;
     // End of variables declaration//GEN-END:variables
 }

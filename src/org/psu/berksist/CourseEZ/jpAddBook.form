@@ -1,0 +1,320 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+
+<Form version="1.3" maxVersion="1.9" type="org.netbeans.modules.form.forminfo.JPanelFormInfo">
+  <NonVisualComponents>
+    <Component class="javax.swing.JTextField" name="jTextField1">
+      <Properties>
+        <Property name="text" type="java.lang.String" value="jTextField1"/>
+      </Properties>
+    </Component>
+  </NonVisualComponents>
+  <AuxValues>
+    <AuxValue name="FormSettings_autoResourcing" type="java.lang.Integer" value="0"/>
+    <AuxValue name="FormSettings_autoSetComponentName" type="java.lang.Boolean" value="false"/>
+    <AuxValue name="FormSettings_generateFQN" type="java.lang.Boolean" value="true"/>
+    <AuxValue name="FormSettings_generateMnemonicsCode" type="java.lang.Boolean" value="false"/>
+    <AuxValue name="FormSettings_i18nAutoMode" type="java.lang.Boolean" value="false"/>
+    <AuxValue name="FormSettings_layoutCodeTarget" type="java.lang.Integer" value="1"/>
+    <AuxValue name="FormSettings_listenerGenerationStyle" type="java.lang.Integer" value="0"/>
+    <AuxValue name="FormSettings_variablesLocal" type="java.lang.Boolean" value="false"/>
+    <AuxValue name="FormSettings_variablesModifier" type="java.lang.Integer" value="2"/>
+  </AuxValues>
+
+  <Layout>
+    <DimensionLayout dim="0">
+      <Group type="103" groupAlignment="0" attributes="0">
+          <Group type="102" attributes="0">
+              <EmptySpace max="-2" attributes="0"/>
+              <Group type="103" groupAlignment="0" max="-2" attributes="0">
+                  <Group type="102" attributes="0">
+                      <Component id="jlOptional" min="-2" max="-2" attributes="0"/>
+                      <EmptySpace type="separate" max="-2" attributes="0"/>
+                      <Component id="jtfOptional" max="32767" attributes="0"/>
+                  </Group>
+                  <Group type="102" attributes="0">
+                      <Component id="jlRequired" min="-2" max="-2" attributes="0"/>
+                      <EmptySpace type="separate" max="-2" attributes="0"/>
+                      <Component id="jtfRequired" max="32767" attributes="0"/>
+                  </Group>
+                  <Group type="102" attributes="0">
+                      <Component id="jlInUse" min="-2" max="-2" attributes="0"/>
+                      <EmptySpace type="separate" max="-2" attributes="0"/>
+                      <Component id="jtfInUse" max="32767" attributes="0"/>
+                  </Group>
+                  <Group type="102" attributes="0">
+                      <Component id="jlTitle" min="-2" max="-2" attributes="0"/>
+                      <EmptySpace type="unrelated" max="-2" attributes="0"/>
+                      <Component id="jtfTitle" max="32767" attributes="0"/>
+                  </Group>
+                  <Group type="102" alignment="0" attributes="0">
+                      <Component id="jlAuthor" min="-2" max="-2" attributes="0"/>
+                      <EmptySpace type="unrelated" max="-2" attributes="0"/>
+                      <Component id="jtfAuthor" max="32767" attributes="0"/>
+                  </Group>
+                  <Group type="102" alignment="0" attributes="0">
+                      <Component id="jlISBN" min="-2" max="-2" attributes="0"/>
+                      <EmptySpace type="unrelated" max="-2" attributes="0"/>
+                      <Component id="jtfISBN" max="32767" attributes="0"/>
+                  </Group>
+                  <Group type="102" alignment="0" attributes="0">
+                      <Component id="jlWebsite" min="-2" max="-2" attributes="0"/>
+                      <EmptySpace type="unrelated" max="-2" attributes="0"/>
+                      <Component id="jtfClass1" max="32767" attributes="0"/>
+                  </Group>
+                  <Group type="102" alignment="0" attributes="0">
+                      <Component id="jlPublisher" min="-2" max="-2" attributes="0"/>
+                      <EmptySpace type="unrelated" max="-2" attributes="0"/>
+                      <Component id="jtfPublisher" min="-2" pref="100" max="-2" attributes="0"/>
+                  </Group>
+                  <Group type="102" attributes="0">
+                      <Component id="jlClass" min="-2" max="-2" attributes="0"/>
+                      <EmptySpace type="unrelated" max="-2" attributes="0"/>
+                      <Component id="jtfClass" min="-2" pref="118" max="-2" attributes="0"/>
+                  </Group>
+              </Group>
+              <Group type="103" groupAlignment="0" attributes="0">
+                  <Group type="102" attributes="0">
+                      <EmptySpace type="separate" max="-2" attributes="0"/>
+                      <Group type="103" groupAlignment="0" max="-2" attributes="0">
+                          <Group type="102" attributes="0">
+                              <Component id="jlEdition" min="-2" max="-2" attributes="0"/>
+                              <EmptySpace type="separate" max="-2" attributes="0"/>
+                              <Component id="jtfEdition" max="32767" attributes="0"/>
+                          </Group>
+                          <Group type="102" alignment="0" attributes="0">
+                              <Component id="jlPrice" min="-2" max="-2" attributes="0"/>
+                              <EmptySpace type="separate" max="-2" attributes="0"/>
+                              <Component id="jtfPrice" max="32767" attributes="0"/>
+                          </Group>
+                          <Group type="102" attributes="0">
+                              <Component id="jlPowerpoints" min="-2" max="-2" attributes="0"/>
+                              <EmptySpace type="unrelated" max="-2" attributes="0"/>
+                              <Component id="jtfPowerpoints" min="-2" pref="50" max="-2" attributes="0"/>
+                          </Group>
+                          <Group type="102" attributes="0">
+                              <Component id="jlSolutions" min="-2" max="-2" attributes="0"/>
+                              <EmptySpace type="separate" max="-2" attributes="0"/>
+                              <Component id="jtfSolutions" max="32767" attributes="0"/>
+                          </Group>
+                          <Group type="102" attributes="0">
+                              <Component id="jlTests" min="-2" max="-2" attributes="0"/>
+                              <EmptySpace type="separate" max="-2" attributes="0"/>
+                              <Component id="jtfTests" max="32767" attributes="0"/>
+                          </Group>
+                          <Group type="102" attributes="0">
+                              <Component id="jlManual" min="-2" max="-2" attributes="0"/>
+                              <EmptySpace type="separate" max="-2" attributes="0"/>
+                              <Component id="jtfManual" max="32767" attributes="0"/>
+                          </Group>
+                      </Group>
+                      <EmptySpace max="32767" attributes="0"/>
+                  </Group>
+                  <Group type="102" alignment="1" attributes="0">
+                      <EmptySpace max="32767" attributes="0"/>
+                      <Group type="103" groupAlignment="0" max="-2" attributes="0">
+                          <Component id="jbCancel" pref="76" max="32767" attributes="0"/>
+                          <Component id="jbSave" max="32767" attributes="0"/>
+                      </Group>
+                      <EmptySpace min="-2" pref="38" max="-2" attributes="0"/>
+                  </Group>
+              </Group>
+          </Group>
+      </Group>
+    </DimensionLayout>
+    <DimensionLayout dim="1">
+      <Group type="103" groupAlignment="0" attributes="0">
+          <Group type="102" alignment="0" attributes="0">
+              <EmptySpace min="-2" pref="23" max="-2" attributes="0"/>
+              <Group type="103" groupAlignment="3" attributes="0">
+                  <Component id="jlTitle" alignment="3" min="-2" max="-2" attributes="0"/>
+                  <Component id="jtfTitle" alignment="3" min="-2" max="-2" attributes="0"/>
+                  <Component id="jlEdition" alignment="3" min="-2" max="-2" attributes="0"/>
+                  <Component id="jtfEdition" alignment="3" min="-2" max="-2" attributes="0"/>
+              </Group>
+              <EmptySpace type="unrelated" max="-2" attributes="0"/>
+              <Group type="103" groupAlignment="3" attributes="0">
+                  <Component id="jlAuthor" alignment="3" min="-2" max="-2" attributes="0"/>
+                  <Component id="jtfAuthor" alignment="3" min="-2" max="-2" attributes="0"/>
+                  <Component id="jlPrice" alignment="3" min="-2" max="-2" attributes="0"/>
+                  <Component id="jtfPrice" alignment="3" min="-2" max="-2" attributes="0"/>
+              </Group>
+              <EmptySpace type="unrelated" max="-2" attributes="0"/>
+              <Group type="103" groupAlignment="3" attributes="0">
+                  <Component id="jlISBN" alignment="3" min="-2" max="-2" attributes="0"/>
+                  <Component id="jtfISBN" alignment="3" min="-2" max="-2" attributes="0"/>
+                  <Component id="jlPowerpoints" alignment="3" min="-2" max="-2" attributes="0"/>
+                  <Component id="jtfPowerpoints" alignment="3" min="-2" max="-2" attributes="0"/>
+              </Group>
+              <EmptySpace type="unrelated" max="-2" attributes="0"/>
+              <Group type="103" groupAlignment="3" attributes="0">
+                  <Component id="jlWebsite" alignment="3" min="-2" max="-2" attributes="0"/>
+                  <Component id="jtfClass1" alignment="3" min="-2" max="-2" attributes="0"/>
+                  <Component id="jlSolutions" alignment="3" min="-2" max="-2" attributes="0"/>
+                  <Component id="jtfSolutions" alignment="3" min="-2" max="-2" attributes="0"/>
+              </Group>
+              <EmptySpace type="unrelated" max="-2" attributes="0"/>
+              <Group type="103" groupAlignment="3" attributes="0">
+                  <Component id="jlPublisher" alignment="3" min="-2" max="-2" attributes="0"/>
+                  <Component id="jtfPublisher" alignment="3" min="-2" max="-2" attributes="0"/>
+                  <Component id="jlTests" alignment="3" min="-2" max="-2" attributes="0"/>
+                  <Component id="jtfTests" alignment="3" min="-2" max="-2" attributes="0"/>
+              </Group>
+              <EmptySpace type="unrelated" max="-2" attributes="0"/>
+              <Group type="103" groupAlignment="3" attributes="0">
+                  <Component id="jlClass" alignment="3" min="-2" max="-2" attributes="0"/>
+                  <Component id="jtfClass" alignment="3" min="-2" max="-2" attributes="0"/>
+                  <Component id="jlManual" alignment="3" min="-2" max="-2" attributes="0"/>
+                  <Component id="jtfManual" alignment="3" min="-2" max="-2" attributes="0"/>
+              </Group>
+              <EmptySpace type="unrelated" max="-2" attributes="0"/>
+              <Group type="103" groupAlignment="3" attributes="0">
+                  <Component id="jlInUse" alignment="3" min="-2" max="-2" attributes="0"/>
+                  <Component id="jtfInUse" alignment="3" min="-2" max="-2" attributes="0"/>
+              </Group>
+              <EmptySpace type="unrelated" max="-2" attributes="0"/>
+              <Group type="103" groupAlignment="3" attributes="0">
+                  <Component id="jlRequired" alignment="3" min="-2" max="-2" attributes="0"/>
+                  <Component id="jtfRequired" alignment="3" min="-2" max="-2" attributes="0"/>
+                  <Component id="jbSave" alignment="3" min="-2" max="-2" attributes="0"/>
+              </Group>
+              <EmptySpace type="unrelated" max="-2" attributes="0"/>
+              <Group type="103" groupAlignment="3" attributes="0">
+                  <Component id="jlOptional" alignment="3" min="-2" max="-2" attributes="0"/>
+                  <Component id="jtfOptional" alignment="3" min="-2" max="-2" attributes="0"/>
+                  <Component id="jbCancel" alignment="3" min="-2" max="-2" attributes="0"/>
+              </Group>
+              <EmptySpace max="32767" attributes="0"/>
+          </Group>
+      </Group>
+    </DimensionLayout>
+  </Layout>
+  <SubComponents>
+    <Component class="javax.swing.JLabel" name="jlTitle">
+      <Properties>
+        <Property name="text" type="java.lang.String" value="Title : "/>
+      </Properties>
+    </Component>
+    <Component class="javax.swing.JLabel" name="jlAuthor">
+      <Properties>
+        <Property name="text" type="java.lang.String" value="Author : "/>
+      </Properties>
+    </Component>
+    <Component class="javax.swing.JLabel" name="jlISBN">
+      <Properties>
+        <Property name="text" type="java.lang.String" value="ISBN : "/>
+      </Properties>
+    </Component>
+    <Component class="javax.swing.JLabel" name="jlWebsite">
+      <Properties>
+        <Property name="text" type="java.lang.String" value="Website : "/>
+      </Properties>
+    </Component>
+    <Component class="javax.swing.JLabel" name="jlPublisher">
+      <Properties>
+        <Property name="text" type="java.lang.String" value="Publisher : "/>
+      </Properties>
+    </Component>
+    <Component class="javax.swing.JLabel" name="jlClass">
+      <Properties>
+        <Property name="text" type="java.lang.String" value="Class : "/>
+      </Properties>
+    </Component>
+    <Component class="javax.swing.JTextField" name="jtfPublisher">
+      <Events>
+        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="jtfPublisherActionPerformed"/>
+      </Events>
+    </Component>
+    <Component class="javax.swing.JTextField" name="jtfClass">
+      <Events>
+        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="jtfClassActionPerformed"/>
+      </Events>
+    </Component>
+    <Component class="javax.swing.JTextField" name="jtfClass1">
+      <Events>
+        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="jtfClass1ActionPerformed"/>
+      </Events>
+    </Component>
+    <Component class="javax.swing.JTextField" name="jtfISBN">
+    </Component>
+    <Component class="javax.swing.JTextField" name="jtfAuthor">
+    </Component>
+    <Component class="javax.swing.JTextField" name="jtfTitle">
+    </Component>
+    <Component class="javax.swing.JLabel" name="jlEdition">
+      <Properties>
+        <Property name="text" type="java.lang.String" value="Edition : "/>
+      </Properties>
+    </Component>
+    <Component class="javax.swing.JLabel" name="jlPrice">
+      <Properties>
+        <Property name="text" type="java.lang.String" value="Price : "/>
+      </Properties>
+    </Component>
+    <Component class="javax.swing.JTextField" name="jtfEdition">
+    </Component>
+    <Component class="javax.swing.JTextField" name="jtfPrice">
+      <Events>
+        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="jtfPriceActionPerformed"/>
+      </Events>
+    </Component>
+    <Component class="javax.swing.JLabel" name="jlInUse">
+      <Properties>
+        <Property name="text" type="java.lang.String" value="In Use : "/>
+      </Properties>
+    </Component>
+    <Component class="javax.swing.JTextField" name="jtfInUse">
+    </Component>
+    <Component class="javax.swing.JLabel" name="jlRequired">
+      <Properties>
+        <Property name="text" type="java.lang.String" value="Required : "/>
+      </Properties>
+    </Component>
+    <Component class="javax.swing.JTextField" name="jtfRequired">
+    </Component>
+    <Component class="javax.swing.JLabel" name="jlOptional">
+      <Properties>
+        <Property name="text" type="java.lang.String" value="Optional : "/>
+      </Properties>
+    </Component>
+    <Component class="javax.swing.JTextField" name="jtfOptional">
+    </Component>
+    <Component class="javax.swing.JLabel" name="jlPowerpoints">
+      <Properties>
+        <Property name="text" type="java.lang.String" value="Powerpoints : "/>
+      </Properties>
+    </Component>
+    <Component class="javax.swing.JTextField" name="jtfPowerpoints">
+    </Component>
+    <Component class="javax.swing.JLabel" name="jlSolutions">
+      <Properties>
+        <Property name="text" type="java.lang.String" value="Solutions : "/>
+      </Properties>
+    </Component>
+    <Component class="javax.swing.JTextField" name="jtfSolutions">
+    </Component>
+    <Component class="javax.swing.JLabel" name="jlTests">
+      <Properties>
+        <Property name="text" type="java.lang.String" value="Tests : "/>
+      </Properties>
+    </Component>
+    <Component class="javax.swing.JTextField" name="jtfTests">
+    </Component>
+    <Component class="javax.swing.JLabel" name="jlManual">
+      <Properties>
+        <Property name="text" type="java.lang.String" value="Manual :"/>
+      </Properties>
+    </Component>
+    <Component class="javax.swing.JTextField" name="jtfManual">
+    </Component>
+    <Component class="javax.swing.JButton" name="jbSave">
+      <Properties>
+        <Property name="text" type="java.lang.String" value="Save"/>
+      </Properties>
+    </Component>
+    <Component class="javax.swing.JButton" name="jbCancel">
+      <Properties>
+        <Property name="text" type="java.lang.String" value="Cancel"/>
+      </Properties>
+    </Component>
+  </SubComponents>
+</Form>
