@@ -496,7 +496,7 @@ public class jfMain extends JFrame {
             Class htmlBrowserClass;
             htmlBrowserClass = Class.forName("oracle.help.htmlBrowser.ICEBrowser");
             Help myH = new Help(htmlBrowserClass);
-            HelpSet myHS = new HelpSet(ClassInfo.class, HelpDoc + "/Course Management.html");
+            HelpSet myHS = new HelpSet(ClassInfo.class, HelpDoc + "/CourseManagement.html");
             myH.addBook(myHS);
             myH.showNavigatorWindow();
         } catch (HelpSetParseException | ClassNotFoundException ex) {
@@ -512,14 +512,14 @@ public class jfMain extends JFrame {
         try {
             if (OSDetector.isWindows) {
                 Runtime.getRuntime().exec("rundll32 url.dll,FileProtocolHandler " 
-                    + HelpDoc + "/Course Management.html");
+                    + HelpDoc + "/CourseManagement.html");
             }
             else if (OSDetector.isMac || OSDetector.isLinux) {
                 Runtime.getRuntime().exec("/usr/bin/open" + HelpDoc
-                        + "/Course Management.html");
+                        + "/CourseManagement.html");
             }
             else {
-                Runtime.getRuntime().exec(HelpDoc + "/Course Management.hmtl");
+                Runtime.getRuntime().exec(HelpDoc + "/CourseManagement.hmtl");
             }
         } catch(IOException ex) {
             Logger.getLogger(jfMain.class.getName()).log(Level.SEVERE, null, ex);
