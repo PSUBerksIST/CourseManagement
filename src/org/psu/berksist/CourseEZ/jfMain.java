@@ -485,20 +485,45 @@ public class jfMain extends JFrame {
     }//GEN-LAST:event_jmiAboutActionPerformed
 
     private void jmHelpContentsActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jmHelpContentsActionPerformed
+        /** 
+         * Action performed that opens HelpDoc
+         * Old methods are commented out 
+         * mrs6041 Michael Strizziere
+         */
+
+        // Opening HelpDoc via ICEBrowser
+        /* try {
+            Class htmlBrowserClass;
+            htmlBrowserClass = Class.forName("oracle.help.htmlBrowser.ICEBrowser");
+            Help myH = new Help(htmlBrowserClass);
+            HelpSet myHS = new HelpSet(ClassInfo.class, HelpDoc + "/Course Management.html");
+            myH.addBook(myHS);
+            myH.showNavigatorWindow();
+        } catch (HelpSetParseException | ClassNotFoundException ex) {
+            Logger.getLogger(helpTester.class.getName()).log(Level.SEVERE, null, ex);
+        } */
         
-        //TODO: Make sure the correct file is opening. - RGS
+        // Opening HelpDoc via OSDetector class
         File HelpDoc = new File(AppConstants.ROOT_FOLDER + "HelpDoc" + "/CourseManagement.html");
         OSDetector.open(HelpDoc);
         
-        
+        // This method of opening HelpDoc is now done inside of the OSDetector class
         /* File HelpDoc = new File(AppConstants.ROOT_FOLDER + "HelpDoc");
         try {
-            Runtime.getRuntime().exec("rundll32 url.dll,FileProtocolHandler " 
-                + HelpDoc + "/Course Management.html");
+            if (OSDetector.isWindows) {
+                Runtime.getRuntime().exec("rundll32 url.dll,FileProtocolHandler " 
+                    + HelpDoc + "/Course Management.html");
+            }
+            else if (OSDetector.isMac || OSDetector.isLinux) {
+                Runtime.getRuntime().exec("/usr/bin/open" + HelpDoc
+                        + "/Course Management.html");
+            }
+            else {
+                Runtime.getRuntime().exec(HelpDoc + "/Course Management.hmtl");
+            }
         } catch(IOException ex) {
             Logger.getLogger(jfMain.class.getName()).log(Level.SEVERE, null, ex);
-        } // Opens the help document in a browser
-        */
+        } */
     }//GEN-LAST:event_jmHelpContentsActionPerformed
 
     /**
