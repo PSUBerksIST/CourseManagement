@@ -6,21 +6,36 @@
 package org.psu.berksist.CourseEZ;
 
 import java.io.File;
+import java.io.FileNotFoundException;
+import java.sql.Connection;
+import java.sql.SQLException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
 import javax.swing.filechooser.FileNameExtensionFilter;
+import org.docx4j.openpackaging.exceptions.Docx4JException;
 
 /**
  *
  * @author Deathx, jss5783
  * 
  *  ******************* MODIFICATION LOG *****************************************
+ *  2017 April 24   -   Radio buttons now update filetype.
+ *                      Load button now updates profile type behind the scenes.
+ *                      Worked on moving the report generation code here.
+ *                      !BUG: Doesn't generate. Connection doesn't seem to be correctly passed?
+ *                      !BUG: Commented out logger and just used serr for exception-reporting because of
+ *                          "Failed to load class 'org.slf4j.impl.StaticLoggerBinder'." -JSS5783
+ * 
  *  2017 April 20   -   WIP: GUI overhaul continued.
  *                          GUI-side dummy data complete.
  *                      Filename chooser can now choose nonexistent files in preparation for saving.
  *                      File choosers now start in the Resources folder instead of the user's root directory.
  *                      BUGFIX: Filepaths are now selected properly. -JSS5783
+ * 
  *  2017 April 20   -   WIP: GUI overhaul. -JSS5783
+ * 
  *  2017 April 19   -   Basic file-picking functionality added.
  *                      Continued roughing in code (not sure how data and reports are being generated yet). -JSS5783
  * 
@@ -28,15 +43,25 @@ import javax.swing.filechooser.FileNameExtensionFilter;
  */
 public class jfReport extends javax.swing.JFrame
 {
+    Connection dbLocalConnection;
     private static String strFilepath = new String(AppConstants.ROOT_FOLDER);   //TODO: replace with dedicated reports folder; currently pointing to /resources
     private static String strFilename = new String("NewReport");           //TODO: Replace with better default report name; maybe split into filename and file extension variables?
+    private static int intSelectedProfile = -1;
+    private static final int DOCX_ONLY = 0;
+    private static final int DOCX_AND_PDF = 1;
+    private static final int PDF_ONLY = 2;
+    private static int intFiletype = DOCX_AND_PDF;
+    
     
     /**
      * Creates new form ReportFrame
+     * @param inConnection Database connection
      */
-    public jfReport()
+    public jfReport(Connection inConnection)
     {
         initComponents();
+        
+        dbLocalConnection = inConnection;
         
         txtfFilepath.setText(strFilepath);
         txtfFilename.setText(strFilename);
@@ -59,7 +84,7 @@ public class jfReport extends javax.swing.JFrame
         btnDeleteProfile = new javax.swing.JButton();
         btnSaveProfile = new javax.swing.JButton();
         scpListProfile = new javax.swing.JScrollPane();
-        listProfile = new javax.swing.JList<>();
+        lstProfile = new javax.swing.JList<>();
         jpClass = new javax.swing.JPanel();
         cmbDepartment = new javax.swing.JComboBox<>();
         cmbCourse = new javax.swing.JComboBox<>();
@@ -67,7 +92,7 @@ public class jfReport extends javax.swing.JFrame
         lblDepartment = new javax.swing.JLabel();
         lblCourse = new javax.swing.JLabel();
         lblSection = new javax.swing.JLabel();
-        jTabbedPane1 = new javax.swing.JTabbedPane();
+        jTabbedPanel = new javax.swing.JTabbedPane();
         jpTemplate = new javax.swing.JPanel();
         jScrollPane2 = new javax.swing.JScrollPane();
         listTemplateDefaultComponents = new javax.swing.JList<>();
@@ -114,18 +139,23 @@ public class jfReport extends javax.swing.JFrame
         btnNewProfile.setText("New");
 
         btnLoadProfile.setText("Load");
+        btnLoadProfile.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnLoadProfileActionPerformed(evt);
+            }
+        });
 
         btnDeleteProfile.setText("Delete");
 
         btnSaveProfile.setText("Save");
 
-        listProfile.setModel(new javax.swing.AbstractListModel<String>() {
-            String[] strings = { "Syllabus" };
+        lstProfile.setModel(new javax.swing.AbstractListModel<String>() {
+            String[] strings = { "Assignment", "Syllabus" };
             public int getSize() { return strings.length; }
             public String getElementAt(int i) { return strings[i]; }
         });
-        listProfile.setSelectionMode(javax.swing.ListSelectionModel.SINGLE_SELECTION);
-        scpListProfile.setViewportView(listProfile);
+        lstProfile.setSelectionMode(javax.swing.ListSelectionModel.SINGLE_SELECTION);
+        scpListProfile.setViewportView(lstProfile);
 
         javax.swing.GroupLayout jpProfileLayout = new javax.swing.GroupLayout(jpProfile);
         jpProfile.setLayout(jpProfileLayout);
@@ -206,6 +236,17 @@ public class jfReport extends javax.swing.JFrame
                 .addGap(0, 12, Short.MAX_VALUE))
         );
 
+        jTabbedPanel.addChangeListener(new javax.swing.event.ChangeListener() {
+            public void stateChanged(javax.swing.event.ChangeEvent evt) {
+                jTabbedPanelStateChanged(evt);
+            }
+        });
+        jTabbedPanel.addFocusListener(new java.awt.event.FocusAdapter() {
+            public void focusGained(java.awt.event.FocusEvent evt) {
+                jTabbedPanelFocusGained(evt);
+            }
+        });
+
         listTemplateDefaultComponents.setBorder(javax.swing.BorderFactory.createTitledBorder("Default Components"));
         listTemplateDefaultComponents.setModel(new javax.swing.AbstractListModel<String>() {
             String[] strings = { "ASSIGNMENT", "CLASS_NAME", "COURSE_DESCRIPTION", "PROJECT_INDIVIDUAL", "PROJECT_GROUP", "RESOURCE_REQUIREMENTS{COLUMNS,ROWS}", "SCHEDULE{COLUMNS,ROWS}" };
@@ -223,6 +264,7 @@ public class jfReport extends javax.swing.JFrame
         });
         listTemplateComponents.setSelectionMode(javax.swing.ListSelectionModel.SINGLE_SELECTION);
         listTemplateComponents.setToolTipText("");
+        listTemplateComponents.setDropMode(javax.swing.DropMode.INSERT);
         jScrollPane3.setViewportView(listTemplateComponents);
 
         btnTemplateAddComponentToTemplate.setText(">>");
@@ -347,7 +389,7 @@ public class jfReport extends javax.swing.JFrame
                 .addContainerGap())
         );
 
-        jTabbedPane1.addTab("Template", jpTemplate);
+        jTabbedPanel.addTab("Template", jpTemplate);
 
         lstContentsAvailableContentItems.setBorder(javax.swing.BorderFactory.createTitledBorder("Unassigned Content Items"));
         lstContentsAvailableContentItems.setModel(new javax.swing.AbstractListModel<String>() {
@@ -450,7 +492,7 @@ public class jfReport extends javax.swing.JFrame
                 .addContainerGap())
         );
 
-        jTabbedPane1.addTab("Contents", jpContents);
+        jTabbedPanel.addTab("Contents", jpContents);
 
         txtfFilepath.addFocusListener(new java.awt.event.FocusAdapter() {
             public void focusLost(java.awt.event.FocusEvent evt) {
@@ -508,9 +550,19 @@ public class jfReport extends javax.swing.JFrame
         buttonGroup1.add(rbtnDocxAndPdf);
         rbtnDocxAndPdf.setSelected(true);
         rbtnDocxAndPdf.setText("DOCX + PDF");
+        rbtnDocxAndPdf.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                rbtnDocxAndPdfActionPerformed(evt);
+            }
+        });
 
         buttonGroup1.add(rbtnPdf);
         rbtnPdf.setText("PDF");
+        rbtnPdf.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                rbtnPdfActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout jpGenerateReportLayout = new javax.swing.GroupLayout(jpGenerateReport);
         jpGenerateReport.setLayout(jpGenerateReportLayout);
@@ -573,7 +625,7 @@ public class jfReport extends javax.swing.JFrame
                 .addContainerGap(59, Short.MAX_VALUE))
         );
 
-        jTabbedPane1.addTab("Generation", jpGeneration);
+        jTabbedPanel.addTab("Generation", jpGeneration);
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -584,7 +636,7 @@ public class jfReport extends javax.swing.JFrame
                 .addComponent(jpProfile, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addComponent(jTabbedPane1)
+                    .addComponent(jTabbedPanel)
                     .addComponent(jpClass, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
@@ -596,7 +648,7 @@ public class jfReport extends javax.swing.JFrame
                     .addGroup(layout.createSequentialGroup()
                         .addComponent(jpClass, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jTabbedPane1))
+                        .addComponent(jTabbedPanel))
                     .addComponent(jpProfile, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addContainerGap())
         );
@@ -673,6 +725,56 @@ public class jfReport extends javax.swing.JFrame
             JOptionPane.showMessageDialog(this, e.toString(), "Error", JOptionPane.ERROR_MESSAGE);
         }
         */
+        
+        //TODO: Replace code here with smartcode, instead of checking for selected template and generating based on that.
+        Reports report = new Reports();
+        
+        if (intSelectedProfile == 0) //Assignment
+        {
+            try
+            {
+                report.Assignment(dbLocalConnection, strFilepath, strFilename, intFiletype);
+            }
+            catch (Docx4JException ex)
+            {
+                //Logger.getLogger(jfReport.class.getName()).log(Level.SEVERE, null, ex);
+                System.err.println(ex.toString() );
+            }
+            catch (FileNotFoundException ex)
+            {
+                //Logger.getLogger(jfReport.class.getName()).log(Level.SEVERE, null, ex);
+                System.err.println(ex.toString() );
+            }
+              //TODO: Reports.Assignment() needs to be fleshed out more rather than just basic dummy data
+            catch (SQLException ex)
+            {
+                //Logger.getLogger(jfReport.class.getName() ).log(Level.SEVERE, null, ex);
+                System.err.println(ex.toString() );
+            }
+        }
+        else if (intSelectedProfile ==1)    //Syllabus
+        {
+            try
+            {
+                report.Syllabus(dbLocalConnection, strFilepath, strFilename, intFiletype);
+            }
+            catch (Docx4JException ex)
+            {
+                //Logger.getLogger(jfReport.class.getName()).log(Level.SEVERE, null, ex);
+                System.err.println(ex.toString() );
+            }
+            catch (FileNotFoundException ex)
+            {
+                //Logger.getLogger(jfReport.class.getName()).log(Level.SEVERE, null, ex);
+                System.err.println(ex.toString() );
+            }
+            catch (SQLException ex)
+            {
+                //Logger.getLogger(jfReport.class.getName() ).log(Level.SEVERE, null, ex);
+                System.err.println(ex.toString() );
+            }
+        }
+        
     }//GEN-LAST:event_btnGenerateReportActionPerformed
 
     /**
@@ -772,13 +874,63 @@ public class jfReport extends javax.swing.JFrame
         // TODO add your handling code here:
     }//GEN-LAST:event_btnContentsAssignContentItemToTableActionPerformed
 
+    /**
+     * Selects rbtnDocx and sets intFiletype to DOCX.
+     * @param evt 
+     */
     private void rbtnDocxActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_rbtnDocxActionPerformed
-        // TODO add your handling code here:
+        rbtnDocx.setSelected(true);
+        intFiletype = DOCX_ONLY;
     }//GEN-LAST:event_rbtnDocxActionPerformed
 
     private void btnRemoveComponentFromTableActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnRemoveComponentFromTableActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_btnRemoveComponentFromTableActionPerformed
+
+    private void jTabbedPanelFocusGained(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_jTabbedPanelFocusGained
+        // TODO add your handling code here:
+    }//GEN-LAST:event_jTabbedPanelFocusGained
+
+    /**
+     * When selected tab changes to Content (middle tab), information is loaded in from the database.
+     * @param evt 
+     */
+    private void jTabbedPanelStateChanged(javax.swing.event.ChangeEvent evt) {//GEN-FIRST:event_jTabbedPanelStateChanged
+        if (jTabbedPanel.getSelectedIndex() == 1)
+        {
+            //TODO: Should also detect DB changes, or at least include a refresh button somewhere
+        }
+        //System.out.println("[DEBUG] Current tab name=" + jTabbedPanel.getTitleAt(jTabbedPanel.getSelectedIndex() ) + " | Current tab index=" + jTabbedPanel.getSelectedIndex() );
+    }//GEN-LAST:event_jTabbedPanelStateChanged
+
+    /**
+     * Loads the selected profile.
+     * TODO: Should probably also make sure it's okay to load (and lose any possible changes to the current profile/report) before actually loading.
+     * @param evt 
+     */
+    private void btnLoadProfileActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnLoadProfileActionPerformed
+        //TODO: Add actual loading code
+        intSelectedProfile = lstProfile.getSelectedIndex();
+        System.out.println("[DEBUG] Filepath=" + strFilepath + " | Filename=" + strFilename + " | Filetype=" + intFiletype);
+    }//GEN-LAST:event_btnLoadProfileActionPerformed
+
+    /**
+     * Selects rbtnDocxAndPdf and sets intFiletype to DOCX and PDF.
+     * @param evt 
+     */
+    private void rbtnDocxAndPdfActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_rbtnDocxAndPdfActionPerformed
+        rbtnDocxAndPdf.setSelected(true);
+        intFiletype = DOCX_AND_PDF;
+    }//GEN-LAST:event_rbtnDocxAndPdfActionPerformed
+
+    /**
+     * Selects rbtnPdf and sets intFiletype to PDF.
+     * @param evt 
+     */
+    private void rbtnPdfActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_rbtnPdfActionPerformed
+        rbtnPdf.setSelected(true);
+        intFiletype = PDF_ONLY;
+    }//GEN-LAST:event_rbtnPdfActionPerformed
 
 //    for testing/debugging in isolation
 //    /**
@@ -849,7 +1001,7 @@ public class jfReport extends javax.swing.JFrame
     private javax.swing.JScrollPane jScrollPane4;
     private javax.swing.JScrollPane jScrollPane5;
     private javax.swing.JScrollPane jScrollPane7;
-    private javax.swing.JTabbedPane jTabbedPane1;
+    private javax.swing.JTabbedPane jTabbedPanel;
     private javax.swing.JPanel jpClass;
     private javax.swing.JPanel jpContents;
     private javax.swing.JPanel jpGenerateReport;
@@ -864,10 +1016,10 @@ public class jfReport extends javax.swing.JFrame
     private javax.swing.JLabel lblRows;
     private javax.swing.JLabel lblSection;
     private javax.swing.JList<String> listContentsAssignedContentItems;
-    private javax.swing.JList<String> listProfile;
     private javax.swing.JList<String> listTemplateComponents;
     private javax.swing.JList<String> listTemplateDefaultComponents;
     private javax.swing.JList<String> lstContentsAvailableContentItems;
+    private javax.swing.JList<String> lstProfile;
     private javax.swing.JRadioButton rbtnDocx;
     private javax.swing.JRadioButton rbtnDocxAndPdf;
     private javax.swing.JRadioButton rbtnPdf;

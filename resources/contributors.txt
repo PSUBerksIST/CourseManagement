@@ -17,7 +17,7 @@ Masalaitis;Aras;avm5750ANTISPAMTEXT@psu.edu
 Mulane;Venu;vlm5190ANTISPAMTEXT@psu.edu
 Nagesh;Divyank;dvn5156ANTISPAMTEXT@psu.edu
 Omelko;Paul;github.com/pmo5053;pmo5053ANTISPAMTEXT@psu.edu
-Regimbal;David;dar5417ANTISPAMTEXT@psu.edu
+Regimbal;David;dar5417ANTISPAMTEXT@psu.edu;regimbal93ANTISPAMTEXT@gmail.com
 Seaman;Jaime;github.com/jss5783;jss5783ANTISPAMTEXT@psu.edu
 Shanbhag;Rishabh;rgs19ANTISPAMTEXT@psu.edu
 Strizziere;Michael;mrs6041ANTISPAMTEXT@psu.edu
