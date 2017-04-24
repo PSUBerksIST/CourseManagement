@@ -76,6 +76,7 @@ public class jpMain extends javax.swing.JPanel {
         jbTile = new javax.swing.JButton(taTile = new TileAction());
         jdpMain = new javax.swing.JDesktopPane();
         jbBooks = new javax.swing.JButton();
+        jbSemester = new javax.swing.JButton();
 
         jbDocuments.setText("Resources");
         jbDocuments.addActionListener(new java.awt.event.ActionListener() {
@@ -136,6 +137,13 @@ public class jpMain extends javax.swing.JPanel {
             }
         });
 
+        jbSemester.setText("Semester");
+        jbSemester.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jbSemesterActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
         layout.setHorizontalGroup(
@@ -147,8 +155,11 @@ public class jpMain extends javax.swing.JPanel {
                         .addComponent(jdpMain)
                         .addContainerGap())
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                        .addGap(0, 0, Short.MAX_VALUE)
+                        .addComponent(jbSemester)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                         .addComponent(jbCourse)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                         .addComponent(jbClass)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(jbAssignments)
@@ -156,8 +167,8 @@ public class jpMain extends javax.swing.JPanel {
                         .addComponent(jbDocuments)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(jbBooks)
-                        .addGap(18, 18, 18)
-                        .addComponent(jtbMain, javax.swing.GroupLayout.PREFERRED_SIZE, 526, javax.swing.GroupLayout.PREFERRED_SIZE))))
+                        .addGap(49, 49, 49)
+                        .addComponent(jtbMain, javax.swing.GroupLayout.PREFERRED_SIZE, 388, javax.swing.GroupLayout.PREFERRED_SIZE))))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -168,7 +179,8 @@ public class jpMain extends javax.swing.JPanel {
                         .addComponent(jbClass)
                         .addComponent(jbAssignments)
                         .addComponent(jbDocuments)
-                        .addComponent(jbBooks))
+                        .addComponent(jbBooks)
+                        .addComponent(jbSemester))
                     .addComponent(jtbMain, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jdpMain)
@@ -208,6 +220,12 @@ public class jpMain extends javax.swing.JPanel {
         CreateFrame(Book, Book.getName());
     }//GEN-LAST:event_jbBooksActionPerformed
 
+    private void jbSemesterActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jbSemesterActionPerformed
+//     JPanel Semester = new jpSemester(dbConnection);
+//        Semester.setName("Semester");
+//        CreateFrame(Semester, Semester.getName());
+    }//GEN-LAST:event_jbSemesterActionPerformed
+
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton jbAssignments;
@@ -215,6 +233,7 @@ public class jpMain extends javax.swing.JPanel {
     private javax.swing.JButton jbClass;
     private javax.swing.JButton jbCourse;
     private javax.swing.JButton jbDocuments;
+    private javax.swing.JButton jbSemester;
     public javax.swing.JButton jbTile;
     public javax.swing.JDesktopPane jdpMain;
     private javax.swing.JToolBar jtbMain;

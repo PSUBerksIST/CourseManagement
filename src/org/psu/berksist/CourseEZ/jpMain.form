@@ -24,8 +24,11 @@
                       <EmptySpace max="-2" attributes="0"/>
                   </Group>
                   <Group type="102" alignment="1" attributes="0">
+                      <EmptySpace min="0" pref="0" max="32767" attributes="0"/>
+                      <Component id="jbSemester" min="-2" max="-2" attributes="0"/>
+                      <EmptySpace type="unrelated" max="-2" attributes="0"/>
                       <Component id="jbCourse" min="-2" max="-2" attributes="0"/>
-                      <EmptySpace max="-2" attributes="0"/>
+                      <EmptySpace type="unrelated" max="-2" attributes="0"/>
                       <Component id="jbClass" min="-2" max="-2" attributes="0"/>
                       <EmptySpace max="-2" attributes="0"/>
                       <Component id="jbAssignments" min="-2" max="-2" attributes="0"/>
@@ -33,8 +36,8 @@
                       <Component id="jbDocuments" min="-2" max="-2" attributes="0"/>
                       <EmptySpace max="-2" attributes="0"/>
                       <Component id="jbBooks" min="-2" max="-2" attributes="0"/>
-                      <EmptySpace type="separate" max="-2" attributes="0"/>
-                      <Component id="jtbMain" min="-2" pref="526" max="-2" attributes="0"/>
+                      <EmptySpace min="-2" pref="49" max="-2" attributes="0"/>
+                      <Component id="jtbMain" min="-2" pref="388" max="-2" attributes="0"/>
                   </Group>
               </Group>
           </Group>
@@ -50,6 +53,7 @@
                       <Component id="jbAssignments" alignment="3" min="-2" max="-2" attributes="0"/>
                       <Component id="jbDocuments" alignment="3" min="-2" max="-2" attributes="0"/>
                       <Component id="jbBooks" alignment="3" min="-2" max="-2" attributes="0"/>
+                      <Component id="jbSemester" alignment="3" min="-2" max="-2" attributes="0"/>
                   </Group>
                   <Component id="jtbMain" alignment="1" min="-2" pref="25" max="-2" attributes="0"/>
               </Group>
@@ -147,6 +151,14 @@
       </Properties>
       <Events>
         <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="jbBooksActionPerformed"/>
+      </Events>
+    </Component>
+    <Component class="javax.swing.JButton" name="jbSemester">
+      <Properties>
+        <Property name="text" type="java.lang.String" value="Semester"/>
+      </Properties>
+      <Events>
+        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="jbSemesterActionPerformed"/>
       </Events>
     </Component>
   </SubComponents>
