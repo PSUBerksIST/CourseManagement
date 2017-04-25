@@ -6,7 +6,6 @@ import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.io.File;
 import java.io.FileNotFoundException;
-import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.sql.ResultSet;
@@ -521,7 +520,7 @@ public class jfMain extends JFrame {
             else {
                 Runtime.getRuntime().exec(HelpDoc + "/CourseManagement.hmtl");
             }
-        } catch(IOException ex) {
+        } catch(Exception ex) {
             Logger.getLogger(jfMain.class.getName()).log(Level.SEVERE, null, ex);
         } */
     }//GEN-LAST:event_jmHelpContentsActionPerformed
