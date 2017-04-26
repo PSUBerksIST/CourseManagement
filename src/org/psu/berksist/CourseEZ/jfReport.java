@@ -9,8 +9,7 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.sql.Connection;
 import java.sql.SQLException;
-import java.util.logging.Level;
-import java.util.logging.Logger;
+import javax.swing.DefaultListModel;
 import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
 import javax.swing.filechooser.FileNameExtensionFilter;
@@ -21,6 +20,13 @@ import org.docx4j.openpackaging.exceptions.Docx4JException;
  * @author Deathx, jss5783
  * 
  *  ******************* MODIFICATION LOG *****************************************
+ *  2017 April 25   -   BUGFIX: Shows error message when no profile is loaded and the user tries to generate files.
+ *                      Rearranged Template tab so table-related components can be easily hidden/shown as needed.
+ *                      Components can now be added and removed from lstTemplateComponents
+ *                          (technically lmodelLstTemplateComponents).
+ *                      Added (currently blank) Preview tab.
+ *                      Disabled cmbCourse and cmbSection in preparation for loading in actual departments/etc.
+ *                          from database. -JSS5783
  *  2017 April 24   -   Radio buttons now update filetype.
  *                      Load button now updates profile type behind the scenes.
  *                      Worked on moving the report generation code here.
@@ -51,6 +57,7 @@ public class jfReport extends javax.swing.JFrame
     private static final int DOCX_AND_PDF = 1;
     private static final int PDF_ONLY = 2;
     private static int intFiletype = DOCX_AND_PDF;
+    private static DefaultListModel lmodelLstTemplateComponents = new DefaultListModel();
     
     
     /**
@@ -65,6 +72,16 @@ public class jfReport extends javax.swing.JFrame
         
         txtfFilepath.setText(strFilepath);
         txtfFilename.setText(strFilename);
+        
+        jpTemplateTable.setVisible(false);
+        
+        //load departments from dbLocalConnection into cmbDepartments
+        //TODO: get number of departments from database, process it, etc.
+        //database: get number of departments
+//        for (int i = 0; i < NUMBEROFDEPARTMENTTYPESINDATABASE; i++)
+//          {
+//              cmbDepartment.addItem(CURRENTDEPARTMENTTYPE_INDEXINDATABASE(i) );
+//          }
         
     }
 
@@ -92,16 +109,15 @@ public class jfReport extends javax.swing.JFrame
         lblDepartment = new javax.swing.JLabel();
         lblCourse = new javax.swing.JLabel();
         lblSection = new javax.swing.JLabel();
-        jTabbedPanel = new javax.swing.JTabbedPane();
+        jtpEditor = new javax.swing.JTabbedPane();
         jpTemplate = new javax.swing.JPanel();
         jScrollPane2 = new javax.swing.JScrollPane();
-        listTemplateDefaultComponents = new javax.swing.JList<>();
+        lstTemplateDefaultComponents = new javax.swing.JList<>();
         jScrollPane3 = new javax.swing.JScrollPane();
-        listTemplateComponents = new javax.swing.JList<>();
+        lstTemplateComponents = new javax.swing.JList<>();
         btnTemplateAddComponentToTemplate = new javax.swing.JButton();
         btnTemplateRemoveComponentFromTemplate = new javax.swing.JButton();
-        jScrollPane4 = new javax.swing.JScrollPane();
-        tableTemplateTableContents = new javax.swing.JTable();
+        jpTemplateTable = new javax.swing.JPanel();
         btnAddComponentToTable = new javax.swing.JButton();
         btnRemoveComponentFromTable = new javax.swing.JButton();
         jpTemplateTableSize = new javax.swing.JPanel();
@@ -109,6 +125,9 @@ public class jfReport extends javax.swing.JFrame
         spinnerRows = new javax.swing.JSpinner();
         lblColumns = new javax.swing.JLabel();
         lblRows = new javax.swing.JLabel();
+        btnTemplateUpdateTable = new javax.swing.JButton();
+        jScrollPane4 = new javax.swing.JScrollPane();
+        tableTemplateTableContents = new javax.swing.JTable();
         jpContents = new javax.swing.JPanel();
         jScrollPane5 = new javax.swing.JScrollPane();
         lstContentsAvailableContentItems = new javax.swing.JList<>();
@@ -116,10 +135,15 @@ public class jfReport extends javax.swing.JFrame
         listContentsAssignedContentItems = new javax.swing.JList<>();
         jScrollPane7 = new javax.swing.JScrollPane();
         tableContentsAssignedContentItems = new javax.swing.JTable();
-        btnContentsRemoveContentItemFromList = new javax.swing.JButton();
-        btnContentsAssignContentItemToList = new javax.swing.JButton();
-        btnContentsAssignContentItemToTable = new javax.swing.JButton();
-        btnContentsRemoveContentItemFromTable = new javax.swing.JButton();
+        btnContentsRemoveSelectedContentItemFromList = new javax.swing.JButton();
+        btnContentsAssignSelectedContentItemToList = new javax.swing.JButton();
+        btnContentsAssignSelectedContentItemToTable = new javax.swing.JButton();
+        btnContentsRemoveSelectedContentItemFromTable = new javax.swing.JButton();
+        btnContentsAssignAllContentItemsToList = new javax.swing.JButton();
+        btnContentsRemoveAllContentItemsFromList = new javax.swing.JButton();
+        btnContentsAssignAllContentItemsToTable = new javax.swing.JButton();
+        btnContentsRemoveAllContentItemsFromTable = new javax.swing.JButton();
+        jPanel1 = new javax.swing.JPanel();
         jpGeneration = new javax.swing.JPanel();
         txtfFilepath = new javax.swing.JTextField();
         btnFilepath = new javax.swing.JButton();
@@ -170,7 +194,7 @@ public class jfReport extends javax.swing.JFrame
                             .addComponent(btnSaveProfile, javax.swing.GroupLayout.DEFAULT_SIZE, 77, Short.MAX_VALUE))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addGroup(jpProfileLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(btnDeleteProfile, javax.swing.GroupLayout.DEFAULT_SIZE, 70, Short.MAX_VALUE)
+                            .addComponent(btnDeleteProfile, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                             .addComponent(btnLoadProfile, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
                     .addComponent(scpListProfile))
                 .addContainerGap())
@@ -192,11 +216,9 @@ public class jfReport extends javax.swing.JFrame
 
         jpClass.setBorder(javax.swing.BorderFactory.createTitledBorder("Class"));
 
-        cmbDepartment.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "IST" }));
+        cmbCourse.setEnabled(false);
 
-        cmbCourse.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "261" }));
-
-        cmbSection.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "001" }));
+        cmbSection.setEnabled(false);
 
         lblDepartment.setText("Department:");
 
@@ -236,40 +258,107 @@ public class jfReport extends javax.swing.JFrame
                 .addGap(0, 12, Short.MAX_VALUE))
         );
 
-        jTabbedPanel.addChangeListener(new javax.swing.event.ChangeListener() {
+        jtpEditor.addChangeListener(new javax.swing.event.ChangeListener() {
             public void stateChanged(javax.swing.event.ChangeEvent evt) {
-                jTabbedPanelStateChanged(evt);
+                jtpEditorStateChanged(evt);
             }
         });
-        jTabbedPanel.addFocusListener(new java.awt.event.FocusAdapter() {
+        jtpEditor.addFocusListener(new java.awt.event.FocusAdapter() {
             public void focusGained(java.awt.event.FocusEvent evt) {
-                jTabbedPanelFocusGained(evt);
+                jtpEditorFocusGained(evt);
             }
         });
 
-        listTemplateDefaultComponents.setBorder(javax.swing.BorderFactory.createTitledBorder("Default Components"));
-        listTemplateDefaultComponents.setModel(new javax.swing.AbstractListModel<String>() {
-            String[] strings = { "ASSIGNMENT", "CLASS_NAME", "COURSE_DESCRIPTION", "PROJECT_INDIVIDUAL", "PROJECT_GROUP", "RESOURCE_REQUIREMENTS{COLUMNS,ROWS}", "SCHEDULE{COLUMNS,ROWS}" };
+        lstTemplateDefaultComponents.setBorder(javax.swing.BorderFactory.createTitledBorder("Default Components"));
+        lstTemplateDefaultComponents.setModel(new javax.swing.AbstractListModel<String>() {
+            String[] strings = { "TASK", "ASSIGNMENT", "CLASS_NAME", "COURSE_DESCRIPTION", "PROJECT_INDIVIDUAL", "PROJECT_GROUP", "RESOURCE_REQUIREMENTS{COLUMNS,ROWS}", "CLASS_SCHEDULE{COLUMNS,ROWS}", "DATE" };
             public int getSize() { return strings.length; }
             public String getElementAt(int i) { return strings[i]; }
         });
-        listTemplateDefaultComponents.setSelectionMode(javax.swing.ListSelectionModel.SINGLE_SELECTION);
-        jScrollPane2.setViewportView(listTemplateDefaultComponents);
+        lstTemplateDefaultComponents.setSelectionMode(javax.swing.ListSelectionModel.SINGLE_SELECTION);
+        jScrollPane2.setViewportView(lstTemplateDefaultComponents);
 
-        listTemplateComponents.setBorder(javax.swing.BorderFactory.createTitledBorder("Template Components"));
-        listTemplateComponents.setModel(new javax.swing.AbstractListModel<String>() {
-            String[] strings = { "CLASS_NAME", "COURSE_DESCRIPTION", "CONTACT_INFORMATION", "RESOURCE_REQUIREMENTS{3,1}", "SCHEDULE{2,3}" };
-            public int getSize() { return strings.length; }
-            public String getElementAt(int i) { return strings[i]; }
+        lstTemplateComponents.setBorder(javax.swing.BorderFactory.createTitledBorder("Template Components"));
+        lstTemplateComponents.setModel(lmodelLstTemplateComponents);
+        lstTemplateComponents.setSelectionMode(javax.swing.ListSelectionModel.SINGLE_SELECTION);
+        lstTemplateComponents.setToolTipText("");
+        lstTemplateComponents.setDropMode(javax.swing.DropMode.INSERT);
+        lstTemplateComponents.addListSelectionListener(new javax.swing.event.ListSelectionListener() {
+            public void valueChanged(javax.swing.event.ListSelectionEvent evt) {
+                lstTemplateComponentsValueChanged(evt);
+            }
         });
-        listTemplateComponents.setSelectionMode(javax.swing.ListSelectionModel.SINGLE_SELECTION);
-        listTemplateComponents.setToolTipText("");
-        listTemplateComponents.setDropMode(javax.swing.DropMode.INSERT);
-        jScrollPane3.setViewportView(listTemplateComponents);
+        jScrollPane3.setViewportView(lstTemplateComponents);
 
-        btnTemplateAddComponentToTemplate.setText(">>");
+        btnTemplateAddComponentToTemplate.setText(">");
+        btnTemplateAddComponentToTemplate.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnTemplateAddComponentToTemplateActionPerformed(evt);
+            }
+        });
 
-        btnTemplateRemoveComponentFromTemplate.setText("<<");
+        btnTemplateRemoveComponentFromTemplate.setText("<");
+        btnTemplateRemoveComponentFromTemplate.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnTemplateRemoveComponentFromTemplateActionPerformed(evt);
+            }
+        });
+
+        btnAddComponentToTable.setText(">");
+        btnAddComponentToTable.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnAddComponentToTableActionPerformed(evt);
+            }
+        });
+
+        btnRemoveComponentFromTable.setText("<");
+        btnRemoveComponentFromTable.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnRemoveComponentFromTableActionPerformed(evt);
+            }
+        });
+
+        jpTemplateTableSize.setBorder(javax.swing.BorderFactory.createTitledBorder("Table Size"));
+
+        lblColumns.setText("Columns:");
+
+        lblRows.setText("Rows:");
+
+        btnTemplateUpdateTable.setText("Update Table");
+        btnTemplateUpdateTable.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnTemplateUpdateTableActionPerformed(evt);
+            }
+        });
+
+        javax.swing.GroupLayout jpTemplateTableSizeLayout = new javax.swing.GroupLayout(jpTemplateTableSize);
+        jpTemplateTableSize.setLayout(jpTemplateTableSizeLayout);
+        jpTemplateTableSizeLayout.setHorizontalGroup(
+            jpTemplateTableSizeLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jpTemplateTableSizeLayout.createSequentialGroup()
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(lblColumns)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(spinnerColumns, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(51, 51, 51)
+                .addComponent(lblRows)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(spinnerRows, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(btnTemplateUpdateTable)
+                .addGap(24, 24, 24))
+        );
+        jpTemplateTableSizeLayout.setVerticalGroup(
+            jpTemplateTableSizeLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jpTemplateTableSizeLayout.createSequentialGroup()
+                .addGroup(jpTemplateTableSizeLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(spinnerColumns, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(spinnerRows, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(lblColumns)
+                    .addComponent(lblRows)
+                    .addComponent(btnTemplateUpdateTable))
+                .addGap(0, 7, Short.MAX_VALUE))
+        );
 
         tableTemplateTableContents.setBorder(javax.swing.BorderFactory.createTitledBorder(""));
         tableTemplateTableContents.setModel(new javax.swing.table.DefaultTableModel(
@@ -299,45 +388,32 @@ public class jfReport extends javax.swing.JFrame
         });
         jScrollPane4.setViewportView(tableTemplateTableContents);
 
-        btnAddComponentToTable.setText(">>");
-
-        btnRemoveComponentFromTable.setText("<<");
-        btnRemoveComponentFromTable.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnRemoveComponentFromTableActionPerformed(evt);
-            }
-        });
-
-        jpTemplateTableSize.setBorder(javax.swing.BorderFactory.createTitledBorder("Table Size"));
-
-        lblColumns.setText("Columns:");
-
-        lblRows.setText("Rows:");
-
-        javax.swing.GroupLayout jpTemplateTableSizeLayout = new javax.swing.GroupLayout(jpTemplateTableSize);
-        jpTemplateTableSize.setLayout(jpTemplateTableSizeLayout);
-        jpTemplateTableSizeLayout.setHorizontalGroup(
-            jpTemplateTableSizeLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jpTemplateTableSizeLayout.createSequentialGroup()
-                .addContainerGap(60, Short.MAX_VALUE)
-                .addComponent(lblColumns)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(spinnerColumns, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(50, 50, 50)
-                .addComponent(lblRows)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(spinnerRows, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(49, Short.MAX_VALUE))
+        javax.swing.GroupLayout jpTemplateTableLayout = new javax.swing.GroupLayout(jpTemplateTable);
+        jpTemplateTable.setLayout(jpTemplateTableLayout);
+        jpTemplateTableLayout.setHorizontalGroup(
+            jpTemplateTableLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jpTemplateTableLayout.createSequentialGroup()
+                .addGroup(jpTemplateTableLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(btnAddComponentToTable, javax.swing.GroupLayout.DEFAULT_SIZE, 51, Short.MAX_VALUE)
+                    .addComponent(btnRemoveComponentFromTable, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addGroup(jpTemplateTableLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addComponent(jpTemplateTableSize, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(jScrollPane4, javax.swing.GroupLayout.DEFAULT_SIZE, 482, Short.MAX_VALUE)))
         );
-        jpTemplateTableSizeLayout.setVerticalGroup(
-            jpTemplateTableSizeLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jpTemplateTableSizeLayout.createSequentialGroup()
-                .addGroup(jpTemplateTableSizeLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(spinnerColumns, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(spinnerRows, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(lblColumns)
-                    .addComponent(lblRows))
-                .addGap(0, 8, Short.MAX_VALUE))
+        jpTemplateTableLayout.setVerticalGroup(
+            jpTemplateTableLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jpTemplateTableLayout.createSequentialGroup()
+                .addGap(62, 62, 62)
+                .addComponent(btnAddComponentToTable)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(btnRemoveComponentFromTable)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+            .addGroup(jpTemplateTableLayout.createSequentialGroup()
+                .addComponent(jpTemplateTableSize, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jScrollPane4, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE)
+                .addContainerGap())
         );
 
         javax.swing.GroupLayout jpTemplateLayout = new javax.swing.GroupLayout(jpTemplate);
@@ -349,16 +425,13 @@ public class jfReport extends javax.swing.JFrame
                 .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 178, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(jpTemplateLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(jpTemplateLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                        .addComponent(btnTemplateAddComponentToTemplate, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(btnTemplateRemoveComponentFromTemplate, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(btnAddComponentToTable))
-                    .addComponent(btnRemoveComponentFromTable))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(jpTemplateLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addComponent(jpTemplateTableSize, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(jScrollPane3)
-                    .addComponent(jScrollPane4, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE))
+                    .addGroup(jpTemplateLayout.createSequentialGroup()
+                        .addGroup(jpTemplateLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                            .addComponent(btnTemplateAddComponentToTemplate, javax.swing.GroupLayout.DEFAULT_SIZE, 54, Short.MAX_VALUE)
+                            .addComponent(btnTemplateRemoveComponentFromTemplate, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(jScrollPane3))
+                    .addComponent(jpTemplateTable, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addContainerGap())
         );
         jpTemplateLayout.setVerticalGroup(
@@ -366,30 +439,21 @@ public class jfReport extends javax.swing.JFrame
             .addGroup(jpTemplateLayout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(jpTemplateLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jScrollPane2)
+                    .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 357, Short.MAX_VALUE)
                     .addGroup(jpTemplateLayout.createSequentialGroup()
                         .addGroup(jpTemplateLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addGroup(jpTemplateLayout.createSequentialGroup()
-                                .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, 148, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(jpTemplateTableSize, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, 148, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addGroup(jpTemplateLayout.createSequentialGroup()
                                 .addGap(25, 25, 25)
                                 .addComponent(btnTemplateAddComponentToTemplate)
                                 .addGap(18, 18, 18)
                                 .addComponent(btnTemplateRemoveComponentFromTemplate)))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addGroup(jpTemplateLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addGroup(jpTemplateLayout.createSequentialGroup()
-                                .addComponent(btnAddComponentToTable)
-                                .addGap(18, 18, 18)
-                                .addComponent(btnRemoveComponentFromTable)
-                                .addGap(0, 60, Short.MAX_VALUE))
-                            .addComponent(jScrollPane4, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE))))
-                .addContainerGap())
+                        .addComponent(jpTemplateTable, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
-        jTabbedPanel.addTab("Template", jpTemplate);
+        jtpEditor.addTab("Template", jpTemplate);
 
         lstContentsAvailableContentItems.setBorder(javax.swing.BorderFactory.createTitledBorder("Unassigned Content Items"));
         lstContentsAvailableContentItems.setModel(new javax.swing.AbstractListModel<String>() {
@@ -437,18 +501,26 @@ public class jfReport extends javax.swing.JFrame
         });
         jScrollPane7.setViewportView(tableContentsAssignedContentItems);
 
-        btnContentsRemoveContentItemFromList.setText(">>");
+        btnContentsRemoveSelectedContentItemFromList.setText(">");
 
-        btnContentsAssignContentItemToList.setText("<<");
+        btnContentsAssignSelectedContentItemToList.setText("<");
 
-        btnContentsAssignContentItemToTable.setText("<<");
-        btnContentsAssignContentItemToTable.addActionListener(new java.awt.event.ActionListener() {
+        btnContentsAssignSelectedContentItemToTable.setText("<");
+        btnContentsAssignSelectedContentItemToTable.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnContentsAssignContentItemToTableActionPerformed(evt);
+                btnContentsAssignSelectedContentItemToTableActionPerformed(evt);
             }
         });
 
-        btnContentsRemoveContentItemFromTable.setText(">>");
+        btnContentsRemoveSelectedContentItemFromTable.setText(">");
+
+        btnContentsAssignAllContentItemsToList.setText("<<");
+
+        btnContentsRemoveAllContentItemsFromList.setText(">>");
+
+        btnContentsAssignAllContentItemsToTable.setText("<<");
+
+        btnContentsRemoveAllContentItemsFromTable.setText(">>");
 
         javax.swing.GroupLayout jpContentsLayout = new javax.swing.GroupLayout(jpContents);
         jpContents.setLayout(jpContentsLayout);
@@ -461,12 +533,16 @@ public class jfReport extends javax.swing.JFrame
                     .addComponent(jScrollPane7, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(jpContentsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(btnContentsRemoveContentItemFromList)
-                    .addComponent(btnContentsAssignContentItemToList)
-                    .addComponent(btnContentsAssignContentItemToTable)
-                    .addComponent(btnContentsRemoveContentItemFromTable))
+                    .addComponent(btnContentsRemoveSelectedContentItemFromList)
+                    .addComponent(btnContentsAssignSelectedContentItemToList)
+                    .addComponent(btnContentsAssignSelectedContentItemToTable)
+                    .addComponent(btnContentsRemoveSelectedContentItemFromTable)
+                    .addComponent(btnContentsAssignAllContentItemsToList)
+                    .addComponent(btnContentsRemoveAllContentItemsFromList)
+                    .addComponent(btnContentsAssignAllContentItemsToTable)
+                    .addComponent(btnContentsRemoveAllContentItemsFromTable))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jScrollPane5, javax.swing.GroupLayout.DEFAULT_SIZE, 253, Short.MAX_VALUE)
+                .addComponent(jScrollPane5, javax.swing.GroupLayout.DEFAULT_SIZE, 408, Short.MAX_VALUE)
                 .addContainerGap())
         );
         jpContentsLayout.setVerticalGroup(
@@ -479,20 +555,40 @@ public class jfReport extends javax.swing.JFrame
                         .addGap(18, 18, 18)
                         .addComponent(jScrollPane7, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE))
                     .addGroup(jpContentsLayout.createSequentialGroup()
-                        .addGap(70, 70, 70)
-                        .addComponent(btnContentsAssignContentItemToList)
+                        .addGap(35, 35, 35)
+                        .addComponent(btnContentsAssignAllContentItemsToList)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(btnContentsRemoveContentItemFromList)
-                        .addGap(124, 124, 124)
-                        .addComponent(btnContentsAssignContentItemToTable)
+                        .addComponent(btnContentsAssignSelectedContentItemToList)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(btnContentsRemoveContentItemFromTable)
-                        .addGap(0, 30, Short.MAX_VALUE))
+                        .addComponent(btnContentsRemoveSelectedContentItemFromList)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(btnContentsRemoveAllContentItemsFromList)
+                        .addGap(54, 54, 54)
+                        .addComponent(btnContentsAssignAllContentItemsToTable)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(btnContentsAssignSelectedContentItemToTable)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(btnContentsRemoveSelectedContentItemFromTable)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(btnContentsRemoveAllContentItemsFromTable))
                     .addComponent(jScrollPane5, javax.swing.GroupLayout.Alignment.TRAILING))
                 .addContainerGap())
         );
 
-        jTabbedPanel.addTab("Contents", jpContents);
+        jtpEditor.addTab("Contents", jpContents);
+
+        javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
+        jPanel1.setLayout(jPanel1Layout);
+        jPanel1Layout.setHorizontalGroup(
+            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 753, Short.MAX_VALUE)
+        );
+        jPanel1Layout.setVerticalGroup(
+            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 381, Short.MAX_VALUE)
+        );
+
+        jtpEditor.addTab("Preview", jPanel1);
 
         txtfFilepath.addFocusListener(new java.awt.event.FocusAdapter() {
             public void focusLost(java.awt.event.FocusEvent evt) {
@@ -569,13 +665,13 @@ public class jfReport extends javax.swing.JFrame
         jpGenerateReportLayout.setHorizontalGroup(
             jpGenerateReportLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jpGenerateReportLayout.createSequentialGroup()
-                .addContainerGap(112, Short.MAX_VALUE)
+                .addContainerGap(189, Short.MAX_VALUE)
                 .addComponent(rbtnDocx)
                 .addGap(60, 60, 60)
                 .addComponent(rbtnDocxAndPdf)
                 .addGap(75, 75, 75)
                 .addComponent(rbtnPdf)
-                .addContainerGap(113, Short.MAX_VALUE))
+                .addContainerGap(189, Short.MAX_VALUE))
         );
         jpGenerateReportLayout.setVerticalGroup(
             jpGenerateReportLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -610,22 +706,22 @@ public class jfReport extends javax.swing.JFrame
         jpGenerationLayout.setVerticalGroup(
             jpGenerationLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jpGenerationLayout.createSequentialGroup()
-                .addContainerGap(31, Short.MAX_VALUE)
+                .addContainerGap(32, Short.MAX_VALUE)
                 .addGroup(jpGenerationLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(txtfFilepath, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(btnFilepath))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 27, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 28, Short.MAX_VALUE)
                 .addGroup(jpGenerationLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(txtfFilename, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(btnFilename))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 66, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 67, Short.MAX_VALUE)
                 .addComponent(jpGenerateReport, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 62, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 63, Short.MAX_VALUE)
                 .addComponent(btnGenerateReport)
-                .addContainerGap(59, Short.MAX_VALUE))
+                .addContainerGap(60, Short.MAX_VALUE))
         );
 
-        jTabbedPanel.addTab("Generation", jpGeneration);
+        jtpEditor.addTab("Generation", jpGeneration);
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -636,7 +732,7 @@ public class jfReport extends javax.swing.JFrame
                 .addComponent(jpProfile, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addComponent(jTabbedPanel)
+                    .addComponent(jtpEditor)
                     .addComponent(jpClass, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
@@ -648,7 +744,7 @@ public class jfReport extends javax.swing.JFrame
                     .addGroup(layout.createSequentialGroup()
                         .addComponent(jpClass, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jTabbedPanel))
+                        .addComponent(jtpEditor))
                     .addComponent(jpProfile, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addContainerGap())
         );
@@ -729,51 +825,57 @@ public class jfReport extends javax.swing.JFrame
         //TODO: Replace code here with smartcode, instead of checking for selected template and generating based on that.
         Reports report = new Reports();
         
-        if (intSelectedProfile == 0) //Assignment
+        switch(intSelectedProfile)
         {
-            try
-            {
-                report.Assignment(dbLocalConnection, strFilepath, strFilename, intFiletype);
-            }
-            catch (Docx4JException ex)
-            {
-                //Logger.getLogger(jfReport.class.getName()).log(Level.SEVERE, null, ex);
-                System.err.println(ex.toString() );
-            }
-            catch (FileNotFoundException ex)
-            {
-                //Logger.getLogger(jfReport.class.getName()).log(Level.SEVERE, null, ex);
-                System.err.println(ex.toString() );
-            }
-              //TODO: Reports.Assignment() needs to be fleshed out more rather than just basic dummy data
-            catch (SQLException ex)
-            {
-                //Logger.getLogger(jfReport.class.getName() ).log(Level.SEVERE, null, ex);
-                System.err.println(ex.toString() );
-            }
-        }
-        else if (intSelectedProfile ==1)    //Syllabus
-        {
-            try
-            {
-                report.Syllabus(dbLocalConnection, strFilepath, strFilename, intFiletype);
-            }
-            catch (Docx4JException ex)
-            {
-                //Logger.getLogger(jfReport.class.getName()).log(Level.SEVERE, null, ex);
-                System.err.println(ex.toString() );
-            }
-            catch (FileNotFoundException ex)
-            {
-                //Logger.getLogger(jfReport.class.getName()).log(Level.SEVERE, null, ex);
-                System.err.println(ex.toString() );
-            }
-            catch (SQLException ex)
-            {
-                //Logger.getLogger(jfReport.class.getName() ).log(Level.SEVERE, null, ex);
-                System.err.println(ex.toString() );
-            }
-        }
+            case -1:    //nothing selected
+                JOptionPane.showMessageDialog(this, "No profile loaded.","Error", JOptionPane.ERROR_MESSAGE);
+                break;
+            case 0:     //Assignment
+                try
+                {
+                    report.Assignment(dbLocalConnection, strFilepath, strFilename, intFiletype);
+                }
+                catch (Docx4JException ex)
+                {
+                    //Logger.getLogger(jfReport.class.getName()).log(Level.SEVERE, null, ex);
+                    System.err.println(ex.toString() );
+                }
+                catch (FileNotFoundException ex)
+                {
+                    //Logger.getLogger(jfReport.class.getName()).log(Level.SEVERE, null, ex);
+                    System.err.println(ex.toString() );
+                }
+                //TODO: Reports.Assignment() needs to be fleshed out more rather than just basic dummy data
+                catch (SQLException ex)
+                {
+                    //Logger.getLogger(jfReport.class.getName() ).log(Level.SEVERE, null, ex);
+                    System.err.println(ex.toString() );
+                }
+                break;
+            case 1: //Syllabus
+                try
+                {
+                    report.Syllabus(dbLocalConnection, strFilepath, strFilename, intFiletype);
+                }
+                catch (Docx4JException ex)
+                {
+                    //Logger.getLogger(jfReport.class.getName()).log(Level.SEVERE, null, ex);
+                    System.err.println(ex.toString() );
+                }
+                catch (FileNotFoundException ex)
+                {
+                    //Logger.getLogger(jfReport.class.getName()).log(Level.SEVERE, null, ex);
+                    System.err.println(ex.toString() );
+                }
+                catch (SQLException ex)
+                {
+                    //Logger.getLogger(jfReport.class.getName() ).log(Level.SEVERE, null, ex);
+                    System.err.println(ex.toString() );
+                }
+                break;
+            default:
+                break;
+        }   //end of switch(intSelectedProfile)
         
     }//GEN-LAST:event_btnGenerateReportActionPerformed
 
@@ -870,9 +972,9 @@ public class jfReport extends javax.swing.JFrame
         // TODO add your handling code here:
     }//GEN-LAST:event_txtfFilenameFocusLost
 
-    private void btnContentsAssignContentItemToTableActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnContentsAssignContentItemToTableActionPerformed
+    private void btnContentsAssignSelectedContentItemToTableActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnContentsAssignSelectedContentItemToTableActionPerformed
         // TODO add your handling code here:
-    }//GEN-LAST:event_btnContentsAssignContentItemToTableActionPerformed
+    }//GEN-LAST:event_btnContentsAssignSelectedContentItemToTableActionPerformed
 
     /**
      * Selects rbtnDocx and sets intFiletype to DOCX.
@@ -887,21 +989,21 @@ public class jfReport extends javax.swing.JFrame
         // TODO add your handling code here:
     }//GEN-LAST:event_btnRemoveComponentFromTableActionPerformed
 
-    private void jTabbedPanelFocusGained(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_jTabbedPanelFocusGained
+    private void jtpEditorFocusGained(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_jtpEditorFocusGained
         // TODO add your handling code here:
-    }//GEN-LAST:event_jTabbedPanelFocusGained
+    }//GEN-LAST:event_jtpEditorFocusGained
 
     /**
      * When selected tab changes to Content (middle tab), information is loaded in from the database.
      * @param evt 
      */
-    private void jTabbedPanelStateChanged(javax.swing.event.ChangeEvent evt) {//GEN-FIRST:event_jTabbedPanelStateChanged
-        if (jTabbedPanel.getSelectedIndex() == 1)
+    private void jtpEditorStateChanged(javax.swing.event.ChangeEvent evt) {//GEN-FIRST:event_jtpEditorStateChanged
+        if (jtpEditor.getSelectedIndex() == 1)
         {
             //TODO: Should also detect DB changes, or at least include a refresh button somewhere
         }
         //System.out.println("[DEBUG] Current tab name=" + jTabbedPanel.getTitleAt(jTabbedPanel.getSelectedIndex() ) + " | Current tab index=" + jTabbedPanel.getSelectedIndex() );
-    }//GEN-LAST:event_jTabbedPanelStateChanged
+    }//GEN-LAST:event_jtpEditorStateChanged
 
     /**
      * Loads the selected profile.
@@ -931,6 +1033,107 @@ public class jfReport extends javax.swing.JFrame
         rbtnPdf.setSelected(true);
         intFiletype = PDF_ONLY;
     }//GEN-LAST:event_rbtnPdfActionPerformed
+
+    /**
+     * Adds selected element from lstTemplateDefaultComponents to lstTemplateComponents (by way of lmodelLstTemplateComponents).
+     * @param evt 
+     */
+    private void btnTemplateAddComponentToTemplateActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnTemplateAddComponentToTemplateActionPerformed
+        if (lstTemplateDefaultComponents.getSelectedIndex() != -1)
+        {
+            lmodelLstTemplateComponents.addElement(lstTemplateDefaultComponents.getSelectedValue() );
+            if (lstTemplateDefaultComponents.getSelectedValue().contains("{") == true)  //if the selected component is an array of some sort
+            {
+                //TODO: Create new array and associate it with the added component
+            }
+        }
+    }//GEN-LAST:event_btnTemplateAddComponentToTemplateActionPerformed
+
+    /**
+     * Removes selected element from lstTemplateComponents (by way of lmodelLstTemplateComponents).
+     * @param evt 
+     */
+    private void btnTemplateRemoveComponentFromTemplateActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnTemplateRemoveComponentFromTemplateActionPerformed
+        if (lstTemplateComponents.getSelectedIndex() != -1)
+        {
+            //if deleting a table component
+            if (lstTemplateComponents.getSelectedValue().contains("{") == true)
+            {
+                jpTemplateTable.setVisible(false);
+            }
+            lmodelLstTemplateComponents.removeElementAt(lstTemplateComponents.getSelectedIndex() );
+        }
+    }//GEN-LAST:event_btnTemplateRemoveComponentFromTemplateActionPerformed
+
+    /**
+     * Adds selected element from lstTemplateDefaultComponents to aTemplateComponents (by way of lmodelLstTemplateComponents).
+     * @param evt 
+     */
+    private void btnAddComponentToTableActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAddComponentToTableActionPerformed
+        //if a non-table component is selected in lstTemplateComponents and tableTemplateTableContents has at least 1 cell (at least 1 row and at least 1 column)
+        if (lstTemplateComponents.getSelectedIndex() != -1 && lstTemplateComponents.getSelectedValue().contains("{") == false && tableTemplateTableContents.getRowCount() > 0 && tableTemplateTableContents.getColumnCount() > 0)
+        {
+            tableTemplateTableContents.setValueAt(evt, tableTemplateTableContents.getSelectedRow(), tableTemplateTableContents.getSelectedColumn() );
+        }
+    }//GEN-LAST:event_btnAddComponentToTableActionPerformed
+
+    /**
+     * Shows jpTemplateTable (array-related components) if lstTemplateComponents's selected value is an array.
+     * Disables related components if lstTemplateComponents's selected value is not an array.
+     * @param evt 
+     */
+    private void lstTemplateComponentsValueChanged(javax.swing.event.ListSelectionEvent evt) {//GEN-FIRST:event_lstTemplateComponentsValueChanged
+        if (lstTemplateComponents.isSelectionEmpty() == false)
+        {
+            if (lstTemplateComponents.getSelectedValue().contains("{") == true)
+            {
+                //shows array-related components
+                jpTemplateTable.setVisible(true);
+
+                //TODO: Load array's components into tableTemplateTableContents
+
+                //load in table's row and column values for the array
+                if (lstTemplateComponents.getSelectedValue().contains("COLUMNS") == true)
+                {
+                    spinnerColumns.setValue(0);
+                }
+                else
+                {
+                    //returns the selected component's COLUMNS value by searching for the indexes of ["{", ",").
+                    spinnerColumns.setValue(lstTemplateComponents.getSelectedValue().substring(lstTemplateComponents.getSelectedValue().indexOf("{"), lstTemplateComponents.getSelectedValue().indexOf(",") ) );
+                }
+
+                if (lstTemplateComponents.getSelectedValue().contains("ROWS") == true)
+                {
+                    spinnerRows.setValue(0);
+                }
+                else
+                {
+                    //returns the selected component's ROWS value by searching for the indexes of [",", "}").
+                    spinnerRows.setValue(lstTemplateComponents.getSelectedValue().substring(lstTemplateComponents.getSelectedValue().indexOf(","), lstTemplateComponents.getSelectedValue().indexOf("}") ) );
+                }
+
+            }   //if (lstTemplateComponents.getSelectedValue().contains("{") == true)
+            else
+            {
+                //hide array-related components
+                jpTemplateTable.setVisible(false);
+            }
+        }
+    }//GEN-LAST:event_lstTemplateComponentsValueChanged
+
+    /**
+     * Updates tableTemplateTableContents with the non-negative values in spinnerColumns and spinnerRows.
+     * @param evt 
+     */
+    private void btnTemplateUpdateTableActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnTemplateUpdateTableActionPerformed
+        //TODO: tableTemplateTableContents should probably not have the column sort/name buttons? showing
+        //tableTemplateTableContents should also probably be 1 column x 2 rows at minimum,
+        //with the first row being editable somehow for titles, perhaps, or maybe if using the
+        //"1 row = template for the entire table" idea, then the first row, when pulling in data from
+        //the database, should instead load in cleaner-looking defaults based on the components in the cells
+        //(e.g., TASK = Task or Assignment or something not all in caps).
+    }//GEN-LAST:event_btnTemplateUpdateTableActionPerformed
 
 //    for testing/debugging in isolation
 //    /**
@@ -978,10 +1181,14 @@ public class jfReport extends javax.swing.JFrame
     
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnAddComponentToTable;
-    private javax.swing.JButton btnContentsAssignContentItemToList;
-    private javax.swing.JButton btnContentsAssignContentItemToTable;
-    private javax.swing.JButton btnContentsRemoveContentItemFromList;
-    private javax.swing.JButton btnContentsRemoveContentItemFromTable;
+    private javax.swing.JButton btnContentsAssignAllContentItemsToList;
+    private javax.swing.JButton btnContentsAssignAllContentItemsToTable;
+    private javax.swing.JButton btnContentsAssignSelectedContentItemToList;
+    private javax.swing.JButton btnContentsAssignSelectedContentItemToTable;
+    private javax.swing.JButton btnContentsRemoveAllContentItemsFromList;
+    private javax.swing.JButton btnContentsRemoveAllContentItemsFromTable;
+    private javax.swing.JButton btnContentsRemoveSelectedContentItemFromList;
+    private javax.swing.JButton btnContentsRemoveSelectedContentItemFromTable;
     private javax.swing.JButton btnDeleteProfile;
     private javax.swing.JButton btnFilename;
     private javax.swing.JButton btnFilepath;
@@ -992,34 +1199,37 @@ public class jfReport extends javax.swing.JFrame
     private javax.swing.JButton btnSaveProfile;
     private javax.swing.JButton btnTemplateAddComponentToTemplate;
     private javax.swing.JButton btnTemplateRemoveComponentFromTemplate;
+    private javax.swing.JButton btnTemplateUpdateTable;
     private javax.swing.ButtonGroup buttonGroup1;
     private javax.swing.JComboBox<String> cmbCourse;
     private javax.swing.JComboBox<String> cmbDepartment;
     private javax.swing.JComboBox<String> cmbSection;
+    private javax.swing.JPanel jPanel1;
     private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JScrollPane jScrollPane3;
     private javax.swing.JScrollPane jScrollPane4;
     private javax.swing.JScrollPane jScrollPane5;
     private javax.swing.JScrollPane jScrollPane7;
-    private javax.swing.JTabbedPane jTabbedPanel;
     private javax.swing.JPanel jpClass;
     private javax.swing.JPanel jpContents;
     private javax.swing.JPanel jpGenerateReport;
     private javax.swing.JPanel jpGeneration;
     private javax.swing.JPanel jpProfile;
     private javax.swing.JPanel jpTemplate;
+    private javax.swing.JPanel jpTemplateTable;
     private javax.swing.JPanel jpTemplateTableSize;
     private javax.swing.JScrollPane jspListContentsAssignedComponents;
+    private javax.swing.JTabbedPane jtpEditor;
     private javax.swing.JLabel lblColumns;
     private javax.swing.JLabel lblCourse;
     private javax.swing.JLabel lblDepartment;
     private javax.swing.JLabel lblRows;
     private javax.swing.JLabel lblSection;
     private javax.swing.JList<String> listContentsAssignedContentItems;
-    private javax.swing.JList<String> listTemplateComponents;
-    private javax.swing.JList<String> listTemplateDefaultComponents;
     private javax.swing.JList<String> lstContentsAvailableContentItems;
     private javax.swing.JList<String> lstProfile;
+    private javax.swing.JList<String> lstTemplateComponents;
+    private javax.swing.JList<String> lstTemplateDefaultComponents;
     private javax.swing.JRadioButton rbtnDocx;
     private javax.swing.JRadioButton rbtnDocxAndPdf;
     private javax.swing.JRadioButton rbtnPdf;
