@@ -8,7 +8,11 @@ package org.psu.berksist.CourseEZ;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.sql.Connection;
+import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Statement;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.DefaultListModel;
 import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
@@ -20,6 +24,10 @@ import org.docx4j.openpackaging.exceptions.Docx4JException;
  * @author Deathx, jss5783
  * 
  *  ******************* MODIFICATION LOG *****************************************
+ *  2017 April 27   -   Departments now loaded into cmbDepartment upon jfReport's creation.
+ *                      Courses are loaded into cmbCourse when cmbDepartment has an actual department selected.
+ *                      Beginnings of adding new profile functionality.
+ *                      Content tab "hidden" (deleted, because disabling it doesn't work as desired) on jfReport's creation. -JSS5783
  *  2017 April 25   -   BUGFIX: Shows error message when no profile is loaded and the user tries to generate files.
  *                      Rearranged Template tab so table-related components can be easily hidden/shown as needed.
  *                      Components can now be added and removed from lstTemplateComponents
@@ -58,6 +66,9 @@ public class jfReport extends javax.swing.JFrame
     private static final int PDF_ONLY = 2;
     private static int intFiletype = DOCX_AND_PDF;
     private static DefaultListModel lmodelLstTemplateComponents = new DefaultListModel();
+    private static Statement st;
+    private static ResultSet rs;
+    
     
     
     /**
@@ -74,6 +85,26 @@ public class jfReport extends javax.swing.JFrame
         txtfFilename.setText(strFilename);
         
         jpTemplateTable.setVisible(false);
+        
+        jtpEditor.removeTabAt(1);   //removes the Content tab
+        //jtpEditor.add(jpContent, 1);    //re-adds the Content tab
+        
+        //load departments into cmbDepartment
+        try
+        {
+            cmbDepartment.addItem("---");
+            st = dbLocalConnection.createStatement();
+            rs = st.executeQuery("SELECT vchrName FROM DEPARTMENT");
+            
+            while (rs.next() )
+            {
+                cmbDepartment.addItem(rs.getString("vchrName") );
+            }
+        }
+        catch (SQLException ex)
+        {
+            Logger.getLogger(jpEditCourse.class.getName()).log(Level.SEVERE, null, ex);
+        }
         
         //load departments from dbLocalConnection into cmbDepartments
         //TODO: get number of departments from database, process it, etc.
@@ -161,6 +192,11 @@ public class jfReport extends javax.swing.JFrame
         jpProfile.setBorder(javax.swing.BorderFactory.createTitledBorder("Profile"));
 
         btnNewProfile.setText("New");
+        btnNewProfile.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnNewProfileActionPerformed(evt);
+            }
+        });
 
         btnLoadProfile.setText("Load");
         btnLoadProfile.addActionListener(new java.awt.event.ActionListener() {
@@ -215,6 +251,12 @@ public class jfReport extends javax.swing.JFrame
         );
 
         jpClass.setBorder(javax.swing.BorderFactory.createTitledBorder("Class"));
+
+        cmbDepartment.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                cmbDepartmentActionPerformed(evt);
+            }
+        });
 
         cmbCourse.setEnabled(false);
 
@@ -1134,6 +1176,74 @@ public class jfReport extends javax.swing.JFrame
         //the database, should instead load in cleaner-looking defaults based on the components in the cells
         //(e.g., TASK = Task or Assignment or something not all in caps).
     }//GEN-LAST:event_btnTemplateUpdateTableActionPerformed
+
+    /**
+     * Creates a new template profile.
+     * @param evt 
+     */
+    private void btnNewProfileActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnNewProfileActionPerformed
+        String strOutput = new String();
+        strOutput = JOptionPane.showInputDialog(this, "Enter the new profile's name below.");
+        if (strOutput.isEmpty() == false && strOutput != null)
+        {
+            System.out.println("[DEBUG] New profile can be created successfully.");
+            //TODO
+            //iterate through preexisting list to make sure new name is not duplicate
+            //  if duplicate,
+            //      break
+            //add new profile to lstProfile
+            //add new entry in profiles.txt or something
+        }
+        else
+        {
+            System.out.println("[DEBUG] New profile cannot be created successfully (null or empty string).");
+        }
+    }//GEN-LAST:event_btnNewProfileActionPerformed
+
+    /**
+     * Enables and loads into cmbCourse the available courses for the selected department.
+     * @param evt 
+     */
+    private void cmbDepartmentActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cmbDepartmentActionPerformed
+        if (cmbDepartment.getSelectedItem().equals("---") == false)
+        {
+            try
+            {
+                cmbCourse.removeAllItems();
+                cmbCourse.addItem("---");
+                Statement st = dbLocalConnection.createStatement();
+                ResultSet rs = st.executeQuery("SELECT COURSE.intNumber " +
+                    "FROM COURSE " +
+                    "WHERE COURSE.fkDEPARTMENT_intID = (SELECT intID " +
+                    "    FROM DEPARTMENT " +
+                    "    WHERE LIKE(DEPARTMENT.vchrName, \"" + cmbDepartment.getSelectedItem().toString() + "\") " +
+                    "    )");
+
+                while (rs.next())
+                {
+                    cmbCourse.addItem(rs.getString("intNumber") );
+                }
+                cmbCourse.setEnabled(true);
+            }
+            catch (SQLException ex)
+            {
+                Logger.getLogger(jpEditCourse.class.getName()).log(Level.SEVERE, null, ex);
+                //in case cmbCourse was still enabled from a previous event trigger and something went wrong,
+                //to prevent breaking cmbCourse
+                //resets cmbCourse to "unused" state for tidying up
+                cmbCourse.setEnabled(false);
+                cmbCourse.removeAllItems();
+                cmbCourse.addItem("---");
+            }
+        }
+        else
+        {
+            //resets cmbCourse to "unused" state for tidying up
+            cmbCourse.setEnabled(false);
+            cmbCourse.removeAllItems();
+            cmbCourse.addItem("---");
+        }
+    }//GEN-LAST:event_cmbDepartmentActionPerformed
 
 //    for testing/debugging in isolation
 //    /**

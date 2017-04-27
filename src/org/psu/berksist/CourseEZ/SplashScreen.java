@@ -21,6 +21,9 @@ import sas.swing.plaf.MultiLineLabelUI;
  * @author rgs19
  * 
  *  ******************* MODIFICATION LOG *****************************************
+ *  2017 April 27   -   Replaced splash image name with constant name.
+ *                      Modified color scheme to match image (as constants for easy modification).
+ *                      Moved custom splash images to images folder from resources folder. -JSS5783
  *  2017 April 21   -   Addition of the name of the person who says the quote.
  *                      Quotes are now within a ' ' for a better look. - RGS
  *  2017 April 18   -   Quotes are now displayed properly.
@@ -64,6 +67,14 @@ public class SplashScreen extends JWindow
     private static final int BORDER_WIDTH = 8;      //remember that the number of pixels occupied by the border is multiplied by 2
     private static final int SPLASH_IMAGE_WIDTH = 192;
     private static final int SPLASH_IMAGE_HEIGHT = 192;
+    //private static final Color BORDER_COLOR = Color.ORANGE;   //old color scheme before custom splash image was used
+    private static final Color BORDER_COLOR = Color.BLUE;
+    //private static final Color BACKGROUND_COLOR = Color.BLACK;  //old color scheme before custom splash image was used
+    private static final Color BACKGROUND_COLOR = Color.WHITE;
+//    private static final Color TEXT_COLOR = Color.WHITE;    //old color scheme before custom splash image was used
+    private static final Color TEXT_COLOR = Color.BLUE;
+//    private static final Color LOADING_COLOR = Color.LIGHT_GRAY;    //old color scheme before custom splash image was used
+    private static final Color LOADING_COLOR = Color.BLUE;
     //private static String strTipOfTheDay;
     private MultiLineLabel lblTipOfTheDay;
     private JLabel lblLoading;
@@ -263,11 +274,11 @@ public class SplashScreen extends JWindow
 //        //jpLoadingBar.setLayout(new FlowLayout());
 //        jpLoadingBar.setBackground(Color.BLACK);
         jpSplash = new JPanel(new BorderLayout() );
-        jpSplash.setBackground(Color.BLACK);
+        jpSplash.setBackground(BACKGROUND_COLOR);
         jpAppInfo = new JPanel(new BorderLayout() );
-        jpAppInfo.setBackground(Color.BLACK);
+        jpAppInfo.setBackground(BACKGROUND_COLOR);
         jpLoadingInfo = new JPanel(new BorderLayout() );
-        jpLoadingInfo.setBackground(Color.BLACK);
+        jpLoadingInfo.setBackground(BACKGROUND_COLOR);
         dimScreen = Toolkit.getDefaultToolkit().getScreenSize();
         intSplashWindowWidth = 260;
         intSplashWindowHeight = 384;
@@ -276,33 +287,33 @@ public class SplashScreen extends JWindow
         intSplashPosX = (dimScreen.width - intSplashWindowWidth) / 2;
         intSplashPosY = (dimScreen.height - intSplashWindowHeight) / 2;
         //code to resize image from: http://nullpointer.at/2011/08/21/java-code-snippets-howto-resize-an-imageicon
-        imicSplash = new ImageIcon(AppConstants.ROOT_FOLDER + AppConstants.IMAGE_DIR + "AppIcon-temp.png");   //load the image to a imageIcon
+        imicSplash = new ImageIcon(AppConstants.ROOT_FOLDER + AppConstants.IMAGE_DIR + AppConstants.SPLASH_IMAGE_NAME);   //load the image to a imageIcon
         imgSplash = imicSplash.getImage().getScaledInstance(SPLASH_IMAGE_WIDTH, SPLASH_IMAGE_HEIGHT, Image.SCALE_SMOOTH);              // transform it 
         //imgSplash = imicSplash.getImage().getScaledInstance(intSplashWindowWidth - (BORDER_WIDTH * 2), intSplashWindowHeight / 2, Image.SCALE_SMOOTH);   //scales the image to splash width - 20px border and half splash height
         //TODO: Probably better to scale the splash and image not based on monitor, since it can vary so much (e.g., 4:3, 16:9, etc.)
         lblApplicationName = new JLabel(AppConstants.APP_ID);
-        lblApplicationName.setForeground(Color.WHITE);
+        lblApplicationName.setForeground(TEXT_COLOR);
         lblApplicationName.setFont(new Font("Sans-Serif", Font.BOLD, 24) );
         lblApplicationName.setHorizontalAlignment(JLabel.CENTER);
         lblSplashImage = new JLabel(new ImageIcon(imgSplash) );
         lblCopyright = new JLabel("Copyright 2017, Penn State Berks IST");
         lblCopyright.setHorizontalAlignment(JLabel.CENTER);
         lblCopyright.setFont(new Font("Sans-Serif", Font.PLAIN, 12) );
-        lblCopyright.setForeground(Color.WHITE);
+        lblCopyright.setForeground(TEXT_COLOR);
         lblLoading = new JLabel("Now loading...");  //TODO: Add code elsewhere to make this change dynamically
-        lblLoading.setForeground(Color.WHITE);
+        lblLoading.setForeground(TEXT_COLOR);
         lblLoading.setFont(new Font("Sans-Serif", Font.ITALIC, 12) );
         lblLoading.setHorizontalAlignment(JLabel.CENTER);
         lblTipOfTheDay = new MultiLineLabel("Tip of the day!");
         //lblTipOfTheDay = new JLabel("Tip of the day!"); //TODO: Improve tip of the day code
         lblTipOfTheDay.setFont(new Font("Sans-Serif", Font.ITALIC, 12) );
         lblTipOfTheDay.setMaximumSize(new Dimension(intSplashWindowWidth - (BORDER_WIDTH * 2), 15) );   //TODO: Implement better handling of strings that are longer than the window can display on one line
-        lblTipOfTheDay.setForeground(Color.WHITE);
+        lblTipOfTheDay.setForeground(TEXT_COLOR);
         lblTipOfTheDay.setHorizontalAlignment(JLabel.CENTER
         );
         jpbLoadingBar = new JProgressBar();
         jpbLoadingBar.setStringPainted(true);
-        jpbLoadingBar.setForeground(Color.LIGHT_GRAY);
+        jpbLoadingBar.setForeground(LOADING_COLOR);
         jpbLoadingBar.setMinimum(0);
         jpbLoadingBar.setMaximum(100);
         jpbLoadingBar.setPreferredSize(new Dimension(intSplashWindowWidth - (BORDER_WIDTH * 2), 15));   //intSplashWindowWidth  - 20 pixels wide to account for two 10px borders, 15px-high to match textboxes (15px high by default, I believe)
@@ -406,7 +417,7 @@ public class SplashScreen extends JWindow
         jpSplash.add(jpAppInfo, BorderLayout.NORTH);
         jpSplash.add(lblTipOfTheDay, BorderLayout.CENTER);
         jpSplash.add(jpLoadingInfo, BorderLayout.SOUTH);
-        jpSplash.setBorder(BorderFactory.createLineBorder(Color.ORANGE, BORDER_WIDTH) );
+        jpSplash.setBorder(BorderFactory.createLineBorder(BORDER_COLOR, BORDER_WIDTH) );
         add(jpSplash);
         
         //Layout 2: splash at top, then application name, then tip of the day, then currently loading file, then loading bar, then copyright

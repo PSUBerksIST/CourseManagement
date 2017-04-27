@@ -13,12 +13,10 @@ import javax.swing.UIManager;
  * @version 0.1
  * 
  * Central location for all application constants.
- */
-
-/*
-    MODIFICATION LOG
-
-   2016 March 25 - Initial creation - WHB
+ * 
+ *  ******************* MODIFICATION LOG *****************************************
+ *  2017 April 27   -   Added SPLASH_IMAGE_NAME. - JSS5783
+ *  2016 March 25   -   Initial creation - WHB
 
 */
 public class AppConstants 
@@ -31,6 +29,8 @@ public class AppConstants
     public static String LAST_DB = "LastConnectedDatabase";
     
     public static String DEFAULT_LAF = getLAFClass("Nimbus");
+    
+    public static final String SPLASH_IMAGE_NAME = "LIONScroll_-_splash_v0_2017_04_23_alt-colors.png";
     
     
     // File Names ------------------------------------
