@@ -484,12 +484,13 @@ public class jfMain extends JFrame {
     }//GEN-LAST:event_jmiAboutActionPerformed
 
     private void jmHelpContentsActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jmHelpContentsActionPerformed
+      
         /** 
          * Action performed that opens HelpDoc
          * Old methods are commented out 
          * mrs6041 Michael Strizziere
-         */
-
+         */ 
+        
         // Opening HelpDoc via ICEBrowser
         /* try {
             Class htmlBrowserClass;
@@ -503,8 +504,8 @@ public class jfMain extends JFrame {
         } */
         
         // Opening HelpDoc via OSDetector class
-        File HelpDoc = new File(AppConstants.ROOT_FOLDER + "HelpDoc" + "/CourseManagement.html");
-        OSDetector.open(HelpDoc);
+        //File HelpDoc = new File(AppConstants.ROOT_FOLDER + "HelpDoc" + "/CourseManagement.html");
+        //OSDetector.open(HelpDoc);
         
         // This method of opening HelpDoc is now done inside of the OSDetector class
         /* File HelpDoc = new File(AppConstants.ROOT_FOLDER + "HelpDoc");
