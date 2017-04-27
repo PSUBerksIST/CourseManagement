@@ -26,17 +26,8 @@ public class jfHelp extends javax.swing.JFrame {
      * Creates new form jfHelp
      */
     public jfHelp() {
-        initComponents();
-        
-        new jfHelp().setVisible(true);
-                
-                File HelpDoc = new File(AppConstants.ROOT_FOLDER + "HelpDoc" + "/CourseManagement.html");
-                try {
-                    jEditorPane1.setPage(HelpDoc.toURI().toURL());
-                } catch (IOException ex) {
-                    Logger.getLogger(jfHelp.class.getName()).log(Level.SEVERE, null, ex);
-                }
-                
+        initComponents(); 
+          
     }
 
     /**
