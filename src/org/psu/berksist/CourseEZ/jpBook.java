@@ -59,19 +59,19 @@ public class jpBook extends javax.swing.JPanel {
 
         jtBooksDisplay.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
-                {null, null, null, null, null, null, null},
-                {null, null, null, null, null, null, null},
-                {null, null, null, null, null, null, null},
-                {null, null, null, null, null, null, null},
-                {null, null, null, null, null, null, null},
-                {null, null, null, null, null, null, null},
-                {null, null, null, null, null, null, null},
-                {null, null, null, null, null, null, null},
-                {null, null, null, null, null, null, null},
-                {null, null, null, null, null, null, null}
+                {null, null, null, null, null, null},
+                {null, null, null, null, null, null},
+                {null, null, null, null, null, null},
+                {null, null, null, null, null, null},
+                {null, null, null, null, null, null},
+                {null, null, null, null, null, null},
+                {null, null, null, null, null, null},
+                {null, null, null, null, null, null},
+                {null, null, null, null, null, null},
+                {null, null, null, null, null, null}
             },
             new String [] {
-                "Title", "ISBN", "Edition", "Author", "Class", "Price", "Used"
+                "Title", "ISBN", "Edition", "Author", "Price", "Used"
             }
         ));
         jtBooksDisplay.setAutoResizeMode(javax.swing.JTable.AUTO_RESIZE_ALL_COLUMNS);
@@ -83,7 +83,6 @@ public class jpBook extends javax.swing.JPanel {
             jtBooksDisplay.getColumnModel().getColumn(1).setPreferredWidth(150);
             jtBooksDisplay.getColumnModel().getColumn(2).setPreferredWidth(75);
             jtBooksDisplay.getColumnModel().getColumn(3).setPreferredWidth(100);
-            jtBooksDisplay.getColumnModel().getColumn(4).setPreferredWidth(75);
         }
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
