@@ -5,17 +5,27 @@
  */
 package org.psu.berksist.CourseEZ;
 
+import java.sql.Connection;
+
 /**
  *
  * @author Nicholas
  */
 public class jpAddBook extends javax.swing.JPanel {
 
+    private Connection dbConnection;
+    
     /**
      * Creates new form jpAddBook
      */
     public jpAddBook() {
         initComponents();
+    }
+    
+    public jpAddBook(Connection inConnection)
+    {
+        initComponents();
+        dbConnection = inConnection;
     }
 
     /**

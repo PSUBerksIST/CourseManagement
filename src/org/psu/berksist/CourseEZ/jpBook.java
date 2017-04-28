@@ -6,8 +6,21 @@
 package org.psu.berksist.CourseEZ;
 
 import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import javax.swing.JDialog;
+import javax.swing.JPanel;
+import javax.swing.RowSorter;
+import javax.swing.SortOrder;
+import javax.swing.event.TableModelEvent;
+import javax.swing.event.TableModelListener;
+import javax.swing.table.DefaultTableModel;
 
 /**
  *
@@ -16,9 +29,13 @@ import java.sql.Statement;
 public class jpBook extends javax.swing.JPanel {
 
     
-    private Statement st;
-    
+    private Statement st;    
     private Connection dbConnection;
+    
+    private SortRows tableSort;
+    List<Integer> selectedBookIDs = new ArrayList<>();
+    private TableChangeListener tcListener = new TableChangeListener();
+    
     
     /**
      * Creates new form jpBook
@@ -28,6 +45,7 @@ public class jpBook extends javax.swing.JPanel {
     }
     
     public jpBook(Connection inConnection){
+        
         initComponents();
         setdbConnection(inConnection);;
         setjcbBook();
@@ -56,22 +74,38 @@ public class jpBook extends javax.swing.JPanel {
         jtBooksDisplay = new javax.swing.JTable();
 
         jbAddBook.setText("Add Book");
+        jbAddBook.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jbAddBookActionPerformed(evt);
+            }
+        });
 
+        jtBooksDisplay.setAutoCreateRowSorter(true);
         jtBooksDisplay.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
-                {null, null, null, null, null, null},
-                {null, null, null, null, null, null},
-                {null, null, null, null, null, null},
-                {null, null, null, null, null, null},
-                {null, null, null, null, null, null},
-                {null, null, null, null, null, null},
-                {null, null, null, null, null, null},
-                {null, null, null, null, null, null},
-                {null, null, null, null, null, null},
-                {null, null, null, null, null, null}
+                {null, null, null, null, null},
+                {null, null, null, null, null},
+                {null, null, null, null, null},
+                {null, null, null, null, null},
+                {null, null, null, null, null},
+                {null, null, null, null, null},
+                {null, null, null, null, null},
+                {null, null, null, null, null},
+                {null, null, null, null, null},
+                {null, null, null, null, null},
+                {null, null, null, null, null},
+                {null, null, null, null, null},
+                {null, null, null, null, null},
+                {null, null, null, null, null},
+                {null, null, null, null, null},
+                {null, null, null, null, null},
+                {null, null, null, null, null},
+                {null, null, null, null, null},
+                {null, null, null, null, null},
+                {null, null, null, null, null}
             },
             new String [] {
-                "Title", "ISBN", "Edition", "Author", "Price", "Used"
+                "Title", "ISBN", "Edition", "Author", "Price"
             }
         ));
         jtBooksDisplay.setAutoResizeMode(javax.swing.JTable.AUTO_RESIZE_ALL_COLUMNS);
@@ -95,7 +129,7 @@ public class jpBook extends javax.swing.JPanel {
                     .addGroup(layout.createSequentialGroup()
                         .addComponent(jbAddBook)
                         .addGap(0, 0, Short.MAX_VALUE))
-                    .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 542, Short.MAX_VALUE))
+                    .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 663, Short.MAX_VALUE))
                 .addContainerGap())
         );
         layout.setVerticalGroup(
@@ -104,13 +138,126 @@ public class jpBook extends javax.swing.JPanel {
                 .addContainerGap()
                 .addComponent(jbAddBook)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 333, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 456, Short.MAX_VALUE)
+                .addContainerGap())
         );
     }// </editor-fold>//GEN-END:initComponents
 
-    private void setjcbBook() {
+    private void jbAddBookActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jbAddBookActionPerformed
         
+        JDialog jdAddBook = new JDialog();
+        JPanel AddBook = new jpAddBook(dbConnection);
+        jdAddBook.add(AddBook);
+        jdAddBook.setSize(360,540);
+        jdAddBook.setVisible(true);
+        
+    }//GEN-LAST:event_jbAddBookActionPerformed
+
+    private void setjcbBook() 
+    {
+        tableSort = new SortRows(jtBooksDisplay);
+        tableSort.setColDirection(jtBooksDisplay.getColumnModel()
+                .getColumnIndex("Title"), SortRows.ASC);
+        
+        setBooks();
+        
+        jtBooksDisplay.getModel().addTableModelListener(tcListener);
+    }
+    
+    private void setBooks()
+    {
+        tableSort.setCurrentSort((List<RowSorter.SortKey>) jtBooksDisplay.getRowSorter().getSortKeys());
+        
+        try
+        {
+            DefaultTableModel model = (DefaultTableModel) jtBooksDisplay.getModel();
+        
+            // Reset the JTable in case we are coming back a second time
+            model.setRowCount(0);
+            model.setColumnCount(0);
+            
+            // Create our columns
+            model.addColumn("Title");
+            model.addColumn("ISBN");
+            model.addColumn("Edition");
+            model.addColumn("Author");
+            model.addColumn("Price");
+            
+            // Set column widths so everything can fit properly
+            jtBooksDisplay.getColumnModel().getColumn(0).setPreferredWidth(300);
+            jtBooksDisplay.getColumnModel().getColumn(1).setPreferredWidth(150);
+            jtBooksDisplay.getColumnModel().getColumn(2).setPreferredWidth(75);
+            jtBooksDisplay.getColumnModel().getColumn(3).setPreferredWidth(100);
+            jtBooksDisplay.getColumnModel().getColumn(4).setPreferredWidth(75);
+            
+            PreparedStatement psBooks = dbConnection.prepareStatement(
+                    "SELECT vchrTitle AS Title, chrISBN, vchrEdition, vchrLastName, decPrice"
+                            + " FROM vTEXTBOOK_INFO");
+        
+            ResultSet result = psBooks.executeQuery();
+            
+            while (result.next()) 
+            {
+                /**
+                boolean g;
+                if(result.getString("Group") == null) // shouldn't be null, but just in case
+                {
+                    g = false;
+                }
+                else
+                {
+                    g = result.getBoolean("Group");
+                }
+                
+                String strGroup = g ? "Yes" : "No";
+                
+                boolean b = selectedBookIDs.contains(result.getInt("intID"));
+                
+                */
+                // Add our row to the JTable
+                model.addRow(new Object[]{ result.getString("Title"), result.getString("chrISBN"), 
+                    result.getString("vchrEdition"), result.getString("vchrLastName"), result.getDouble("decPrice")});
+                
+            }
+            
+            tableSort.applyCurrentSort();
+            
+        
+        
+        } 
+        catch (SQLException ex) 
+        {
+            Logger.getLogger(jpBook.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+    
+    private class TableChangeListener implements TableModelListener{
+
+        @Override
+        public void tableChanged(TableModelEvent e) {
+            // On a table change update our local store of selectedAssignmentIDs
+            if (e.getColumn() == 0){
+
+                int assignmentID = Integer.parseInt(jtBooksDisplay.getModel().getValueAt(e.getLastRow(),1).toString());
+
+                if ((boolean) jtBooksDisplay.getModel().getValueAt(e.getLastRow(), 0)){
+
+                    if (!selectedBookIDs.contains(assignmentID)){
+                        selectedBookIDs.add(assignmentID);
+                    }
+                } else {
+                    if (selectedBookIDs.contains(assignmentID)){
+                        selectedBookIDs.remove(selectedBookIDs.indexOf(assignmentID));
+                    }
+
+                }
+
+                // Show the programmer what IDs are selected
+                System.out.println(selectedBookIDs);
+
+            }
+        }
+    
     }
 
 
