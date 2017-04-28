@@ -21,6 +21,7 @@ import sas.swing.plaf.MultiLineLabelUI;
  * @author rgs19
  * 
  *  ******************* MODIFICATION LOG *****************************************
+ *  2017 April 27   -   Tweaked color scheme. -JSS5783
  *  2017 April 27   -   Replaced splash image name with constant name.
  *                      Modified color scheme to match image (as constants for easy modification).
  *                      Moved custom splash images to images folder from resources folder. -JSS5783
@@ -68,13 +69,13 @@ public class SplashScreen extends JWindow
     private static final int SPLASH_IMAGE_WIDTH = 192;
     private static final int SPLASH_IMAGE_HEIGHT = 192;
     //private static final Color BORDER_COLOR = Color.ORANGE;   //old color scheme before custom splash image was used
-    private static final Color BORDER_COLOR = Color.BLUE;
+    private static final Color BORDER_COLOR = new Color(0, 0, 128);
     //private static final Color BACKGROUND_COLOR = Color.BLACK;  //old color scheme before custom splash image was used
-    private static final Color BACKGROUND_COLOR = Color.WHITE;
+    private static final Color BACKGROUND_COLOR = new Color(98, 128, 192);
 //    private static final Color TEXT_COLOR = Color.WHITE;    //old color scheme before custom splash image was used
-    private static final Color TEXT_COLOR = Color.BLUE;
+    private static final Color TEXT_COLOR = Color.WHITE;
 //    private static final Color LOADING_COLOR = Color.LIGHT_GRAY;    //old color scheme before custom splash image was used
-    private static final Color LOADING_COLOR = Color.BLUE;
+    private static final Color LOADING_COLOR = BORDER_COLOR;
     //private static String strTipOfTheDay;
     private MultiLineLabel lblTipOfTheDay;
     private JLabel lblLoading;
@@ -309,8 +310,7 @@ public class SplashScreen extends JWindow
         lblTipOfTheDay.setFont(new Font("Sans-Serif", Font.ITALIC, 12) );
         lblTipOfTheDay.setMaximumSize(new Dimension(intSplashWindowWidth - (BORDER_WIDTH * 2), 15) );   //TODO: Implement better handling of strings that are longer than the window can display on one line
         lblTipOfTheDay.setForeground(TEXT_COLOR);
-        lblTipOfTheDay.setHorizontalAlignment(JLabel.CENTER
-        );
+        lblTipOfTheDay.setHorizontalAlignment(JLabel.CENTER);
         jpbLoadingBar = new JProgressBar();
         jpbLoadingBar.setStringPainted(true);
         jpbLoadingBar.setForeground(LOADING_COLOR);

@@ -24,6 +24,11 @@ import org.docx4j.openpackaging.exceptions.Docx4JException;
  * @author Deathx, jss5783
  * 
  *  ******************* MODIFICATION LOG *****************************************
+ *  2017 April 27   -   !BUG: Selecting anything after selecting from one of the Department/Course/Section dialogs throws an error and doesn't work.
+ *                          As far as I can tell, it's triggering the other ActionListeners.
+ *                          !WORKAROUND: Updates on FocusLost. It kind of works now.
+ *                      Can now add and delete profiles, list-wise. (No dynamic profiles yet.)
+ *                      Started work on progress bar. Reports.java code should probably be moved here so milestones can update the progress bar. -JSS5783
  *  2017 April 27   -   Departments now loaded into cmbDepartment upon jfReport's creation.
  *                      Courses are loaded into cmbCourse when cmbDepartment has an actual department selected.
  *                      Beginnings of adding new profile functionality.
@@ -66,6 +71,8 @@ public class jfReport extends javax.swing.JFrame
     private static final int PDF_ONLY = 2;
     private static int intFiletype = DOCX_AND_PDF;
     private static DefaultListModel lmodelLstTemplateComponents = new DefaultListModel();
+    private static DefaultListModel lmodelLstProfile = new DefaultListModel();
+    //private static Object[][] aObj = new Object[][];
     private static Statement st;
     private static ResultSet rs;
     
@@ -85,25 +92,35 @@ public class jfReport extends javax.swing.JFrame
         txtfFilename.setText(strFilename);
         
         jpTemplateTable.setVisible(false);
+        lblGenerationProgress.setVisible(false);
+        jpbGenerationProgress.setVisible(false);
+        
+        //TODO: remove dummy profiles here in favor of dynamically loading real ones from a file
+        lmodelLstProfile.addElement("Assignment");
+        lmodelLstProfile.addElement("Syllabus");
         
         jtpEditor.removeTabAt(1);   //removes the Content tab
         //jtpEditor.add(jpContent, 1);    //re-adds the Content tab
         
+//        cmbDepartment.addItem("---");
+//        cmbCourse.addItem("---");
+//        cmbSection.addItem("---");
+        
         //load departments into cmbDepartment
         try
         {
-            cmbDepartment.addItem("---");
             st = dbLocalConnection.createStatement();
             rs = st.executeQuery("SELECT vchrName FROM DEPARTMENT");
             
             while (rs.next() )
             {
+                System.out.println("[DEBUG] vchrName=" + rs.getString("vchrName") );
                 cmbDepartment.addItem(rs.getString("vchrName") );
             }
         }
         catch (SQLException ex)
         {
-            Logger.getLogger(jpEditCourse.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(jfReport.class.getName()).log(Level.SEVERE, null, ex);
         }
         
         //load departments from dbLocalConnection into cmbDepartments
@@ -174,7 +191,7 @@ public class jfReport extends javax.swing.JFrame
         btnContentsRemoveAllContentItemsFromList = new javax.swing.JButton();
         btnContentsAssignAllContentItemsToTable = new javax.swing.JButton();
         btnContentsRemoveAllContentItemsFromTable = new javax.swing.JButton();
-        jPanel1 = new javax.swing.JPanel();
+        jpPreview = new javax.swing.JPanel();
         jpGeneration = new javax.swing.JPanel();
         txtfFilepath = new javax.swing.JTextField();
         btnFilepath = new javax.swing.JButton();
@@ -185,6 +202,8 @@ public class jfReport extends javax.swing.JFrame
         rbtnDocx = new javax.swing.JRadioButton();
         rbtnDocxAndPdf = new javax.swing.JRadioButton();
         rbtnPdf = new javax.swing.JRadioButton();
+        jpbGenerationProgress = new javax.swing.JProgressBar();
+        lblGenerationProgress = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         setTitle("Generate Report");
@@ -206,14 +225,15 @@ public class jfReport extends javax.swing.JFrame
         });
 
         btnDeleteProfile.setText("Delete");
+        btnDeleteProfile.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnDeleteProfileActionPerformed(evt);
+            }
+        });
 
         btnSaveProfile.setText("Save");
 
-        lstProfile.setModel(new javax.swing.AbstractListModel<String>() {
-            String[] strings = { "Assignment", "Syllabus" };
-            public int getSize() { return strings.length; }
-            public String getElementAt(int i) { return strings[i]; }
-        });
+        lstProfile.setModel(lmodelLstProfile);
         lstProfile.setSelectionMode(javax.swing.ListSelectionModel.SINGLE_SELECTION);
         scpListProfile.setViewportView(lstProfile);
 
@@ -252,6 +272,12 @@ public class jfReport extends javax.swing.JFrame
 
         jpClass.setBorder(javax.swing.BorderFactory.createTitledBorder("Class"));
 
+        cmbDepartment.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "---" }));
+        cmbDepartment.addFocusListener(new java.awt.event.FocusAdapter() {
+            public void focusLost(java.awt.event.FocusEvent evt) {
+                cmbDepartmentFocusLost(evt);
+            }
+        });
         cmbDepartment.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 cmbDepartmentActionPerformed(evt);
@@ -259,6 +285,16 @@ public class jfReport extends javax.swing.JFrame
         });
 
         cmbCourse.setEnabled(false);
+        cmbCourse.addFocusListener(new java.awt.event.FocusAdapter() {
+            public void focusLost(java.awt.event.FocusEvent evt) {
+                cmbCourseFocusLost(evt);
+            }
+        });
+        cmbCourse.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                cmbCourseActionPerformed(evt);
+            }
+        });
 
         cmbSection.setEnabled(false);
 
@@ -303,11 +339,6 @@ public class jfReport extends javax.swing.JFrame
         jtpEditor.addChangeListener(new javax.swing.event.ChangeListener() {
             public void stateChanged(javax.swing.event.ChangeEvent evt) {
                 jtpEditorStateChanged(evt);
-            }
-        });
-        jtpEditor.addFocusListener(new java.awt.event.FocusAdapter() {
-            public void focusGained(java.awt.event.FocusEvent evt) {
-                jtpEditorFocusGained(evt);
             }
         });
 
@@ -548,11 +579,6 @@ public class jfReport extends javax.swing.JFrame
         btnContentsAssignSelectedContentItemToList.setText("<");
 
         btnContentsAssignSelectedContentItemToTable.setText("<");
-        btnContentsAssignSelectedContentItemToTable.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnContentsAssignSelectedContentItemToTableActionPerformed(evt);
-            }
-        });
 
         btnContentsRemoveSelectedContentItemFromTable.setText(">");
 
@@ -619,18 +645,18 @@ public class jfReport extends javax.swing.JFrame
 
         jtpEditor.addTab("Contents", jpContents);
 
-        javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
-        jPanel1.setLayout(jPanel1Layout);
-        jPanel1Layout.setHorizontalGroup(
-            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+        javax.swing.GroupLayout jpPreviewLayout = new javax.swing.GroupLayout(jpPreview);
+        jpPreview.setLayout(jpPreviewLayout);
+        jpPreviewLayout.setHorizontalGroup(
+            jpPreviewLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGap(0, 753, Short.MAX_VALUE)
         );
-        jPanel1Layout.setVerticalGroup(
-            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+        jpPreviewLayout.setVerticalGroup(
+            jpPreviewLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGap(0, 381, Short.MAX_VALUE)
         );
 
-        jtpEditor.addTab("Preview", jPanel1);
+        jtpEditor.addTab("Preview", jpPreview);
 
         txtfFilepath.addFocusListener(new java.awt.event.FocusAdapter() {
             public void focusLost(java.awt.event.FocusEvent evt) {
@@ -723,6 +749,8 @@ public class jfReport extends javax.swing.JFrame
                 .addComponent(rbtnPdf))
         );
 
+        lblGenerationProgress.setText("[PROGRESS_BAR]");
+
         javax.swing.GroupLayout jpGenerationLayout = new javax.swing.GroupLayout(jpGeneration);
         jpGeneration.setLayout(jpGenerationLayout);
         jpGenerationLayout.setHorizontalGroup(
@@ -739,9 +767,17 @@ public class jfReport extends javax.swing.JFrame
                             .addComponent(btnFilepath, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 120, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addComponent(btnFilename, javax.swing.GroupLayout.Alignment.TRAILING)))
                     .addComponent(jpGenerateReport, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jpGenerationLayout.createSequentialGroup()
+                .addContainerGap(14, Short.MAX_VALUE))
+            .addGroup(jpGenerationLayout.createSequentialGroup()
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(lblGenerationProgress)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+            .addGroup(jpGenerationLayout.createSequentialGroup()
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(jpbGenerationProgress, javax.swing.GroupLayout.PREFERRED_SIZE, 300, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+            .addGroup(jpGenerationLayout.createSequentialGroup()
+                .addGap(317, 317, 317)
                 .addComponent(btnGenerateReport)
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
@@ -758,9 +794,13 @@ public class jfReport extends javax.swing.JFrame
                     .addComponent(btnFilename))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 67, Short.MAX_VALUE)
                 .addComponent(jpGenerateReport, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 63, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 28, Short.MAX_VALUE)
+                .addComponent(lblGenerationProgress)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(jpbGenerationProgress, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(btnGenerateReport)
-                .addContainerGap(60, Short.MAX_VALUE))
+                .addContainerGap(36, Short.MAX_VALUE))
         );
 
         jtpEditor.addTab("Generation", jpGeneration);
@@ -875,7 +915,10 @@ public class jfReport extends javax.swing.JFrame
             case 0:     //Assignment
                 try
                 {
+                    lblGenerationProgress.setVisible(true);
+                    lblGenerationProgress.setText("Generating files...");
                     report.Assignment(dbLocalConnection, strFilepath, strFilename, intFiletype);
+                    lblGenerationProgress.setText("Generation complete!");
                 }
                 catch (Docx4JException ex)
                 {
@@ -1014,10 +1057,6 @@ public class jfReport extends javax.swing.JFrame
         // TODO add your handling code here:
     }//GEN-LAST:event_txtfFilenameFocusLost
 
-    private void btnContentsAssignSelectedContentItemToTableActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnContentsAssignSelectedContentItemToTableActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_btnContentsAssignSelectedContentItemToTableActionPerformed
-
     /**
      * Selects rbtnDocx and sets intFiletype to DOCX.
      * @param evt 
@@ -1031,20 +1070,24 @@ public class jfReport extends javax.swing.JFrame
         // TODO add your handling code here:
     }//GEN-LAST:event_btnRemoveComponentFromTableActionPerformed
 
-    private void jtpEditorFocusGained(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_jtpEditorFocusGained
-        // TODO add your handling code here:
-    }//GEN-LAST:event_jtpEditorFocusGained
-
     /**
-     * When selected tab changes to Content (middle tab), information is loaded in from the database.
+     * When selected tab changes to Preview, information is loaded in from the database.
      * @param evt 
      */
     private void jtpEditorStateChanged(javax.swing.event.ChangeEvent evt) {//GEN-FIRST:event_jtpEditorStateChanged
-        if (jtpEditor.getSelectedIndex() == 1)
+        if (jtpEditor.getTitleAt(jtpEditor.getSelectedIndex() ).equals("Preview") == true)
         {
             //TODO: Should also detect DB changes, or at least include a refresh button somewhere
+            if (cmbDepartment.getSelectedItem().equals("---") == false && cmbCourse.getSelectedItem().equals("---") == false && cmbSection.getSelectedItem().equals("---") == false)
+            {
+                System.out.println("[DEBUG] Preview tab is now selected. Valid class is selected!");
+            }
+            else if (cmbDepartment.getSelectedItem().equals("---") == true || cmbCourse.getSelectedItem().equals("---") == true || cmbSection.getSelectedItem().equals("---") == true)
+            {
+                System.out.println("[DEBUG] Preview tab is now selected. No valid class selected!");
+            }
         }
-        //System.out.println("[DEBUG] Current tab name=" + jTabbedPanel.getTitleAt(jTabbedPanel.getSelectedIndex() ) + " | Current tab index=" + jTabbedPanel.getSelectedIndex() );
+        //System.out.println("[DEBUG] Current tab name=" + jtpEditor.getTitleAt(jtpEditor.getSelectedIndex() ) + " | Current tab index=" + jtpEditor.getSelectedIndex() );
     }//GEN-LAST:event_jtpEditorStateChanged
 
     /**
@@ -1182,21 +1225,50 @@ public class jfReport extends javax.swing.JFrame
      * @param evt 
      */
     private void btnNewProfileActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnNewProfileActionPerformed
-        String strOutput = new String();
-        strOutput = JOptionPane.showInputDialog(this, "Enter the new profile's name below.");
-        if (strOutput.isEmpty() == false && strOutput != null)
+        String strNewProfileName = new String();
+        boolean isDuplicate = false;
+        
+        strNewProfileName = JOptionPane.showInputDialog(this, "Enter the new profile's name below.");
+        try
         {
-            System.out.println("[DEBUG] New profile can be created successfully.");
-            //TODO
-            //iterate through preexisting list to make sure new name is not duplicate
-            //  if duplicate,
-            //      break
-            //add new profile to lstProfile
-            //add new entry in profiles.txt or something
+            if (strNewProfileName.isEmpty() == false && strNewProfileName != null)
+            {
+                for (int i = 0; i < lmodelLstProfile.getSize(); i++)
+                {
+                    if (lmodelLstProfile.getElementAt(i).equals(strNewProfileName) == true)
+                    {
+                        isDuplicate = true;
+                        break;
+                    }
+                }
+                if (isDuplicate == false)
+                {
+                    System.out.println("[DEBUG] New profile can be created successfully.");
+                    lmodelLstProfile.addElement(strNewProfileName);
+                }
+                else
+                {
+                    System.out.println("[DEBUG] New profile cannot be created: is duplicate.");
+                }
+                //TODO
+                //iterate through preexisting list to make sure new name is not duplicate
+                //  if duplicate,
+                //      break
+                //add new profile to lstProfile
+                //add new entry in profiles.txt or something
+            }
+            else
+            {
+                System.out.println("[DEBUG] New profile cannot be created successfully (null or empty string).");
+            }
         }
-        else
+        catch (NullPointerException npe)    //thrown when canceled? TODO (low-priority): handle user clicking Cancel in input dialog properly instead of just catching the resulting exception
         {
-            System.out.println("[DEBUG] New profile cannot be created successfully (null or empty string).");
+            System.out.println("[DEBUG] Cancel button was probably clicked.\n" + npe.toString() );
+        }
+        catch (Exception e)
+        {
+            System.err.println("[DEBUG] " + e.toString() );
         }
     }//GEN-LAST:event_btnNewProfileActionPerformed
 
@@ -1205,45 +1277,201 @@ public class jfReport extends javax.swing.JFrame
      * @param evt 
      */
     private void cmbDepartmentActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cmbDepartmentActionPerformed
+//        if (cmbDepartment.getSelectedItem().equals("---") == false)
+//        //if (cmbDepartment.getSelectedIndex() != -1)
+//        {
+//            try
+//            {
+//                cmbCourse.removeAllItems();
+//                cmbCourse.addItem("---");
+//                st = dbLocalConnection.createStatement();
+//                rs = st.executeQuery("SELECT intNumber " +
+//                    "FROM COURSE " +
+//                    "WHERE fkDEPARTMENT_intID = (SELECT intID " +
+//                    "    FROM DEPARTMENT " +
+//                    "    WHERE vchrName = \"" + cmbDepartment.getSelectedItem().toString() + "\")");
+//
+//                while (rs.next())
+//                {
+//                    System.out.println("[DEBUG] intNumber=" + rs.getString("intNumber") );
+//                    cmbCourse.addItem(rs.getString("intNumber") );
+//                }
+////                cmbCourse.setSelectedIndex(-1);
+//                cmbCourse.setEnabled(true);
+//            }
+//            catch (SQLException ex)
+//            {
+//                Logger.getLogger(jfReport.class.getName()).log(Level.SEVERE, null, ex);
+//                //in case cmbCourse was still enabled from a previous event trigger and something went wrong,
+//                //to prevent breaking cmbCourse
+//                //resets cmbCourse to "unused" state for tidying up
+//                cmbCourse.removeAllItems();
+//                cmbCourse.addItem("---");
+////                cmbCourse.setSelectedIndex(-1);
+//                cmbCourse.setEnabled(false);
+//            }
+//        }
+////        else
+////        {
+////            //resets cmbCourse to "unused" state for tidying up
+////            cmbCourse.removeAllItems();
+////            cmbCourse.addItem("---");
+//////            cmbCourse.setSelectedIndex(-1);
+////            cmbCourse.setEnabled(false);
+////        }
+    }//GEN-LAST:event_cmbDepartmentActionPerformed
+
+    /**
+     * Enables and loads into cmbSection the available classes for the selected course.
+     * @param evt 
+     */
+    private void cmbCourseActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cmbCourseActionPerformed
+//        if (cmbCourse.getSelectedItem().equals("---") == false)
+//        {
+//            try
+//            {
+//                cmbSection.removeAllItems();
+//                cmbSection.addItem("---");
+//                st = dbLocalConnection.createStatement();
+//                rs = st.executeQuery("SELECT intSection " +
+//                    "FROM CLASS " +
+//                    "WHERE fkCOURSE_intID = (SELECT intID " +
+//                    "    FROM COURSE " +
+//                    "    WHERE intNumber = \"" + cmbCourse.getSelectedItem().toString() + "\")");
+//
+//                while (rs.next())
+//                {
+//                    System.out.println("[DEBUG] intSection=" + rs.getString("intSection") );
+//                    cmbSection.addItem(rs.getString("intSection") );
+//                }
+//                cmbSection.setEnabled(true);
+//            }
+//            catch (SQLException ex)
+//            {
+//                Logger.getLogger(jfReport.class.getName()).log(Level.SEVERE, null, ex);
+//                //in case cmbSection was still enabled from a previous event trigger and something went wrong,
+//                //to prevent breaking cmbSection
+//                //resets cmbSection to "unused" state for tidying up
+//                cmbSection.removeAllItems();
+//                cmbSection.addItem("---");
+////                cmbSection.setSelectedIndex(-1);
+//                cmbSection.setEnabled(false);
+//            }
+//        }
+////        else
+////        {
+////            //resets cmbSection to "unused" state for tidying up
+////            cmbSection.removeAllItems();
+////            cmbSection.addItem("---");
+//////            cmbSection.setSelectedIndex(-1);
+////            cmbSection.setEnabled(false);
+////        }
+    }//GEN-LAST:event_cmbCourseActionPerformed
+
+    private void cmbDepartmentFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_cmbDepartmentFocusLost
         if (cmbDepartment.getSelectedItem().equals("---") == false)
+        //if (cmbDepartment.getSelectedIndex() != -1)
         {
             try
             {
                 cmbCourse.removeAllItems();
                 cmbCourse.addItem("---");
-                Statement st = dbLocalConnection.createStatement();
-                ResultSet rs = st.executeQuery("SELECT COURSE.intNumber " +
+                st = dbLocalConnection.createStatement();
+                rs = st.executeQuery("SELECT intNumber " +
                     "FROM COURSE " +
-                    "WHERE COURSE.fkDEPARTMENT_intID = (SELECT intID " +
+                    "WHERE fkDEPARTMENT_intID = (SELECT intID " +
                     "    FROM DEPARTMENT " +
-                    "    WHERE LIKE(DEPARTMENT.vchrName, \"" + cmbDepartment.getSelectedItem().toString() + "\") " +
-                    "    )");
+                    "    WHERE vchrName = \"" + cmbDepartment.getSelectedItem().toString() + "\")");
 
                 while (rs.next())
                 {
+                    System.out.println("[DEBUG] intNumber=" + rs.getString("intNumber") );
                     cmbCourse.addItem(rs.getString("intNumber") );
                 }
+//                cmbCourse.setSelectedIndex(-1);
                 cmbCourse.setEnabled(true);
             }
             catch (SQLException ex)
             {
-                Logger.getLogger(jpEditCourse.class.getName()).log(Level.SEVERE, null, ex);
+                Logger.getLogger(jfReport.class.getName()).log(Level.SEVERE, null, ex);
                 //in case cmbCourse was still enabled from a previous event trigger and something went wrong,
                 //to prevent breaking cmbCourse
                 //resets cmbCourse to "unused" state for tidying up
-                cmbCourse.setEnabled(false);
                 cmbCourse.removeAllItems();
                 cmbCourse.addItem("---");
+//                cmbCourse.setSelectedIndex(-1);
+                cmbCourse.setEnabled(false);
             }
         }
-        else
+//        else
+//        {
+//            //resets cmbCourse to "unused" state for tidying up
+//            cmbCourse.removeAllItems();
+//            cmbCourse.addItem("---");
+////            cmbCourse.setSelectedIndex(-1);
+//            cmbCourse.setEnabled(false);
+//        }
+    }//GEN-LAST:event_cmbDepartmentFocusLost
+
+    private void cmbCourseFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_cmbCourseFocusLost
+        if (cmbCourse.getSelectedItem().equals("---") == false)
         {
-            //resets cmbCourse to "unused" state for tidying up
-            cmbCourse.setEnabled(false);
-            cmbCourse.removeAllItems();
-            cmbCourse.addItem("---");
+            try
+            {
+                cmbSection.removeAllItems();
+                cmbSection.addItem("---");
+                st = dbLocalConnection.createStatement();
+                rs = st.executeQuery("SELECT intSection " +
+                    "FROM CLASS " +
+                    "WHERE fkCOURSE_intID = (SELECT intID " +
+                    "    FROM COURSE " +
+                    "    WHERE intNumber = \"" + cmbCourse.getSelectedItem().toString() + "\")");
+
+                while (rs.next())
+                {
+                    System.out.println("[DEBUG] intSection=" + rs.getString("intSection") );
+                    cmbSection.addItem(rs.getString("intSection") );
+                }
+                cmbSection.setEnabled(true);
+            }
+            catch (SQLException ex)
+            {
+                Logger.getLogger(jfReport.class.getName()).log(Level.SEVERE, null, ex);
+                //in case cmbSection was still enabled from a previous event trigger and something went wrong,
+                //to prevent breaking cmbSection
+                //resets cmbSection to "unused" state for tidying up
+                cmbSection.removeAllItems();
+                cmbSection.addItem("---");
+//                cmbSection.setSelectedIndex(-1);
+                cmbSection.setEnabled(false);
+            }
         }
-    }//GEN-LAST:event_cmbDepartmentActionPerformed
+//        else
+//        {
+//            //resets cmbSection to "unused" state for tidying up
+//            cmbSection.removeAllItems();
+//            cmbSection.addItem("---");
+////            cmbSection.setSelectedIndex(-1);
+//            cmbSection.setEnabled(false);
+//        }
+    }//GEN-LAST:event_cmbCourseFocusLost
+
+    /**
+     * Delete selected template profile.
+     * @param evt 
+     */
+    private void btnDeleteProfileActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnDeleteProfileActionPerformed
+        //TODO: Add DefaultListModel to lstProfile so it actually deletes the selected object
+        if (lstProfile.getSelectedIndex() != -1)
+        {
+            //lpTODO: "No" should be the default option, to avoid any accidental deletions
+            int intDialogResult = JOptionPane.showConfirmDialog(this, "Are you sure you want to delete " + lmodelLstProfile.getElementAt(lstProfile.getSelectedIndex() ) + "?", "Delete Profile", JOptionPane.YES_NO_OPTION, JOptionPane.WARNING_MESSAGE);
+            if (intDialogResult == JOptionPane.YES_OPTION)
+            {
+                lmodelLstProfile.removeElementAt(lstProfile.getSelectedIndex() );
+            }
+        }
+    }//GEN-LAST:event_btnDeleteProfileActionPerformed
 
 //    for testing/debugging in isolation
 //    /**
@@ -1314,7 +1542,6 @@ public class jfReport extends javax.swing.JFrame
     private javax.swing.JComboBox<String> cmbCourse;
     private javax.swing.JComboBox<String> cmbDepartment;
     private javax.swing.JComboBox<String> cmbSection;
-    private javax.swing.JPanel jPanel1;
     private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JScrollPane jScrollPane3;
     private javax.swing.JScrollPane jScrollPane4;
@@ -1324,15 +1551,18 @@ public class jfReport extends javax.swing.JFrame
     private javax.swing.JPanel jpContents;
     private javax.swing.JPanel jpGenerateReport;
     private javax.swing.JPanel jpGeneration;
+    private javax.swing.JPanel jpPreview;
     private javax.swing.JPanel jpProfile;
     private javax.swing.JPanel jpTemplate;
     private javax.swing.JPanel jpTemplateTable;
     private javax.swing.JPanel jpTemplateTableSize;
+    private javax.swing.JProgressBar jpbGenerationProgress;
     private javax.swing.JScrollPane jspListContentsAssignedComponents;
     private javax.swing.JTabbedPane jtpEditor;
     private javax.swing.JLabel lblColumns;
     private javax.swing.JLabel lblCourse;
     private javax.swing.JLabel lblDepartment;
+    private javax.swing.JLabel lblGenerationProgress;
     private javax.swing.JLabel lblRows;
     private javax.swing.JLabel lblSection;
     private javax.swing.JList<String> listContentsAssignedContentItems;
