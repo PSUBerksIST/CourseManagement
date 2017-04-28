@@ -7,6 +7,7 @@ package org.psu.berksist.CourseEZ;
 
 import java.io.File;
 import java.io.FileNotFoundException;
+import static java.lang.Thread.sleep;
 import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -24,6 +25,9 @@ import org.docx4j.openpackaging.exceptions.Docx4JException;
  * @author Deathx, jss5783
  * 
  *  ******************* MODIFICATION LOG *****************************************
+ *  2017 April 28   -   !BUGFIX: lmodelLstTemplateProfiles is no longer static,
+ *                          so opening jfReport doesn't create duplicate (currently hard-coded) profiles.
+ *                      Still trying to fix the Class choosers. -JSS5783
  *  2017 April 27   -   !BUG: Selecting anything after selecting from one of the Department/Course/Section dialogs throws an error and doesn't work.
  *                          As far as I can tell, it's triggering the other ActionListeners.
  *                          !WORKAROUND: Updates on FocusLost. It kind of works now.
@@ -33,7 +37,7 @@ import org.docx4j.openpackaging.exceptions.Docx4JException;
  *                      Courses are loaded into cmbCourse when cmbDepartment has an actual department selected.
  *                      Beginnings of adding new profile functionality.
  *                      Content tab "hidden" (deleted, because disabling it doesn't work as desired) on jfReport's creation. -JSS5783
- *  2017 April 25   -   BUGFIX: Shows error message when no profile is loaded and the user tries to generate files.
+ *  2017 April 25   -   !BUGFIX: Shows error message when no profile is loaded and the user tries to generate files.
  *                      Rearranged Template tab so table-related components can be easily hidden/shown as needed.
  *                      Components can now be added and removed from lstTemplateComponents
  *                          (technically lmodelLstTemplateComponents).
@@ -71,10 +75,14 @@ public class jfReport extends javax.swing.JFrame
     private static final int PDF_ONLY = 2;
     private static int intFiletype = DOCX_AND_PDF;
     private static DefaultListModel lmodelLstTemplateComponents = new DefaultListModel();
-    private static DefaultListModel lmodelLstProfile = new DefaultListModel();
+//    private static DefaultListModel lmodelLstProfile = new DefaultListModel();
+    private DefaultListModel lmodelLstProfile = new DefaultListModel();
     //private static Object[][] aObj = new Object[][];
     private static Statement st;
     private static ResultSet rs;
+    private static boolean bDepartmentsReady = false;
+    private static boolean bCoursesReady = false;
+    private static boolean bSectionsReady = false;
     
     
     
@@ -96,8 +104,11 @@ public class jfReport extends javax.swing.JFrame
         jpbGenerationProgress.setVisible(false);
         
         //TODO: remove dummy profiles here in favor of dynamically loading real ones from a file
-        lmodelLstProfile.addElement("Assignment");
-        lmodelLstProfile.addElement("Syllabus");
+//        if (lmodelLstProfile.isEmpty() == true) //only load if list is empty, otherwise duplicates result when jfReport is opened multiple times
+//        {
+            lmodelLstProfile.addElement("Assignment");
+            lmodelLstProfile.addElement("Syllabus");
+//        }
         
         jtpEditor.removeTabAt(1);   //removes the Content tab
         //jtpEditor.add(jpContent, 1);    //re-adds the Content tab
@@ -1277,6 +1288,122 @@ public class jfReport extends javax.swing.JFrame
      * @param evt 
      */
     private void cmbDepartmentActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cmbDepartmentActionPerformed
+        bDepartmentsReady = false;
+        bCoursesReady = false;
+        bSectionsReady = false;
+        
+        try
+        {
+            sleep(100);
+        }
+        catch (InterruptedException ie)
+        {
+            System.out.println("[DEBUG] Interrupted");
+        }
+        
+        if (cmbDepartment.getSelectedItem().equals("---") == false)
+        //if (cmbDepartment.getSelectedIndex() != -1)
+        {
+            try
+            {
+                cmbSection.setEnabled(false);
+                cmbCourse.setEnabled(false);
+                cmbCourse.removeAllItems();
+                cmbCourse.addItem("---");
+                st = dbLocalConnection.createStatement();
+                rs = st.executeQuery("SELECT intNumber " +
+                    "FROM COURSE " +
+                    "WHERE fkDEPARTMENT_intID = (SELECT intID " +
+                    "    FROM DEPARTMENT " +
+                    "    WHERE vchrName = \"" + cmbDepartment.getSelectedItem().toString() + "\")");
+
+                while (rs.next())
+                {
+                    System.out.println("[DEBUG] intNumber=" + rs.getString("intNumber") );
+                    cmbCourse.addItem(rs.getString("intNumber") );
+                }
+//                cmbCourse.setSelectedIndex(-1);
+                cmbCourse.setEnabled(true);
+                bDepartmentsReady = true;
+            }
+            catch (SQLException ex)
+            {
+                Logger.getLogger(jfReport.class.getName()).log(Level.SEVERE, null, ex);
+                //in case cmbCourse was still enabled from a previous event trigger and something went wrong,
+                //to prevent breaking cmbCourse
+                //resets cmbCourse to "unused" state for tidying up
+                cmbCourse.removeAllItems();
+                cmbCourse.addItem("---");
+//                cmbCourse.setSelectedIndex(-1);
+                cmbCourse.setEnabled(false);
+            }
+        }
+        else
+        {
+            //resets cmbCourse to "unused" state for tidying up
+            cmbCourse.removeAllItems();
+            cmbCourse.addItem("---");
+//            cmbCourse.setSelectedIndex(-1);
+            cmbCourse.setEnabled(false);
+        }
+    }//GEN-LAST:event_cmbDepartmentActionPerformed
+
+    /**
+     * Enables and loads into cmbSection the available classes for the selected course.
+     * @param evt 
+     */
+    private void cmbCourseActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cmbCourseActionPerformed
+        bCoursesReady = false;
+        bSectionsReady = false;
+        
+        if (bDepartmentsReady = true)
+        {
+            if (cmbCourse.getSelectedItem().equals("---") == false)
+            {
+                try
+                {
+                    cmbSection.removeAllItems();
+                    cmbSection.addItem("---");
+                    st = dbLocalConnection.createStatement();
+                    rs = st.executeQuery("SELECT intSection " +
+                        "FROM CLASS " +
+                        "WHERE fkCOURSE_intID = (SELECT intID " +
+                        "    FROM COURSE " +
+                        "    WHERE intNumber = \"" + cmbCourse.getSelectedItem().toString() + "\")");
+
+                    while (rs.next())
+                    {
+                        System.out.println("[DEBUG] intSection=" + rs.getString("intSection") );
+                        cmbSection.addItem(rs.getString("intSection") );
+                    }
+                    cmbSection.setEnabled(true);
+                    bCoursesReady = true;
+                }
+                catch (SQLException ex)
+                {
+                    Logger.getLogger(jfReport.class.getName()).log(Level.SEVERE, null, ex);
+                    //in case cmbSection was still enabled from a previous event trigger and something went wrong,
+                    //to prevent breaking cmbSection
+                    //resets cmbSection to "unused" state for tidying up
+                    cmbSection.removeAllItems();
+                    cmbSection.addItem("---");
+    //                cmbSection.setSelectedIndex(-1);
+                    cmbSection.setEnabled(false);
+                }
+            }
+            else
+            {
+                //resets cmbSection to "unused" state for tidying up
+                cmbSection.removeAllItems();
+                cmbSection.addItem("---");
+    //            cmbSection.setSelectedIndex(-1);
+
+                cmbSection.setEnabled(false);
+            }
+        }
+    }//GEN-LAST:event_cmbCourseActionPerformed
+
+    private void cmbDepartmentFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_cmbDepartmentFocusLost
 //        if (cmbDepartment.getSelectedItem().equals("---") == false)
 //        //if (cmbDepartment.getSelectedIndex() != -1)
 //        {
@@ -1319,13 +1446,9 @@ public class jfReport extends javax.swing.JFrame
 //////            cmbCourse.setSelectedIndex(-1);
 ////            cmbCourse.setEnabled(false);
 ////        }
-    }//GEN-LAST:event_cmbDepartmentActionPerformed
+    }//GEN-LAST:event_cmbDepartmentFocusLost
 
-    /**
-     * Enables and loads into cmbSection the available classes for the selected course.
-     * @param evt 
-     */
-    private void cmbCourseActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cmbCourseActionPerformed
+    private void cmbCourseFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_cmbCourseFocusLost
 //        if (cmbCourse.getSelectedItem().equals("---") == false)
 //        {
 //            try
@@ -1366,94 +1489,6 @@ public class jfReport extends javax.swing.JFrame
 //////            cmbSection.setSelectedIndex(-1);
 ////            cmbSection.setEnabled(false);
 ////        }
-    }//GEN-LAST:event_cmbCourseActionPerformed
-
-    private void cmbDepartmentFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_cmbDepartmentFocusLost
-        if (cmbDepartment.getSelectedItem().equals("---") == false)
-        //if (cmbDepartment.getSelectedIndex() != -1)
-        {
-            try
-            {
-                cmbCourse.removeAllItems();
-                cmbCourse.addItem("---");
-                st = dbLocalConnection.createStatement();
-                rs = st.executeQuery("SELECT intNumber " +
-                    "FROM COURSE " +
-                    "WHERE fkDEPARTMENT_intID = (SELECT intID " +
-                    "    FROM DEPARTMENT " +
-                    "    WHERE vchrName = \"" + cmbDepartment.getSelectedItem().toString() + "\")");
-
-                while (rs.next())
-                {
-                    System.out.println("[DEBUG] intNumber=" + rs.getString("intNumber") );
-                    cmbCourse.addItem(rs.getString("intNumber") );
-                }
-//                cmbCourse.setSelectedIndex(-1);
-                cmbCourse.setEnabled(true);
-            }
-            catch (SQLException ex)
-            {
-                Logger.getLogger(jfReport.class.getName()).log(Level.SEVERE, null, ex);
-                //in case cmbCourse was still enabled from a previous event trigger and something went wrong,
-                //to prevent breaking cmbCourse
-                //resets cmbCourse to "unused" state for tidying up
-                cmbCourse.removeAllItems();
-                cmbCourse.addItem("---");
-//                cmbCourse.setSelectedIndex(-1);
-                cmbCourse.setEnabled(false);
-            }
-        }
-//        else
-//        {
-//            //resets cmbCourse to "unused" state for tidying up
-//            cmbCourse.removeAllItems();
-//            cmbCourse.addItem("---");
-////            cmbCourse.setSelectedIndex(-1);
-//            cmbCourse.setEnabled(false);
-//        }
-    }//GEN-LAST:event_cmbDepartmentFocusLost
-
-    private void cmbCourseFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_cmbCourseFocusLost
-        if (cmbCourse.getSelectedItem().equals("---") == false)
-        {
-            try
-            {
-                cmbSection.removeAllItems();
-                cmbSection.addItem("---");
-                st = dbLocalConnection.createStatement();
-                rs = st.executeQuery("SELECT intSection " +
-                    "FROM CLASS " +
-                    "WHERE fkCOURSE_intID = (SELECT intID " +
-                    "    FROM COURSE " +
-                    "    WHERE intNumber = \"" + cmbCourse.getSelectedItem().toString() + "\")");
-
-                while (rs.next())
-                {
-                    System.out.println("[DEBUG] intSection=" + rs.getString("intSection") );
-                    cmbSection.addItem(rs.getString("intSection") );
-                }
-                cmbSection.setEnabled(true);
-            }
-            catch (SQLException ex)
-            {
-                Logger.getLogger(jfReport.class.getName()).log(Level.SEVERE, null, ex);
-                //in case cmbSection was still enabled from a previous event trigger and something went wrong,
-                //to prevent breaking cmbSection
-                //resets cmbSection to "unused" state for tidying up
-                cmbSection.removeAllItems();
-                cmbSection.addItem("---");
-//                cmbSection.setSelectedIndex(-1);
-                cmbSection.setEnabled(false);
-            }
-        }
-//        else
-//        {
-//            //resets cmbSection to "unused" state for tidying up
-//            cmbSection.removeAllItems();
-//            cmbSection.addItem("---");
-////            cmbSection.setSelectedIndex(-1);
-//            cmbSection.setEnabled(false);
-//        }
     }//GEN-LAST:event_cmbCourseFocusLost
 
     /**
@@ -1464,7 +1499,7 @@ public class jfReport extends javax.swing.JFrame
         //TODO: Add DefaultListModel to lstProfile so it actually deletes the selected object
         if (lstProfile.getSelectedIndex() != -1)
         {
-            //lpTODO: "No" should be the default option, to avoid any accidental deletions
+            //TODO (low-priority): "No" should be the default option, to avoid any accidental deletions
             int intDialogResult = JOptionPane.showConfirmDialog(this, "Are you sure you want to delete " + lmodelLstProfile.getElementAt(lstProfile.getSelectedIndex() ) + "?", "Delete Profile", JOptionPane.YES_NO_OPTION, JOptionPane.WARNING_MESSAGE);
             if (intDialogResult == JOptionPane.YES_OPTION)
             {
