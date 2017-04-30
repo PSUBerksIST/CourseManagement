@@ -347,29 +347,34 @@
                       </Border>
                     </Property>
                     <Property name="model" type="javax.swing.ListModel" editor="org.netbeans.modules.form.editors2.ListModelEditor">
-                      <StringArray count="22">
-                        <StringItem index="0" value="CLASS_SCHEDULE{COLUMNS,ROWS}"/>
-                        <StringItem index="1" value="RESOURCE_REQUIREMENTS{COLUMNS,ROWS}"/>
-                        <StringItem index="2" value="ASSIGNMENT"/>
-                        <StringItem index="3" value="COURSE_NAME"/>
+                      <StringArray count="27">
+                        <StringItem index="0" value="TABLE{COLUMNS,ROWS}"/>
+                        <StringItem index="1" value="ASSIGNMENT_DESCRIPTION"/>
+                        <StringItem index="2" value="ASSIGNMENT_NAME"/>
+                        <StringItem index="3" value="AUTHOR"/>
                         <StringItem index="4" value="COURSE_DESCRIPTION"/>
-                        <StringItem index="5" value="DATE"/>
-                        <StringItem index="6" value="PROJECT_GROUP"/>
-                        <StringItem index="7" value="PROJECT_INDIVIDUAL"/>
-                        <StringItem index="8" value="TASK"/>
-                        <StringItem index="9" value="SPACER"/>
-                        <StringItem index="10" value="DIVIDER"/>
-                        <StringItem index="11" value="PAGEBREAK"/>
-                        <StringItem index="12" value="SECTION_NUMBER"/>
-                        <StringItem index="13" value="COURSE_NUMBER"/>
-                        <StringItem index="14" value="CLASS_NUMBER"/>
-                        <StringItem index="15" value="ACADEMIC_INTEGRITY"/>
-                        <StringItem index="16" value="TOLERANCE"/>
-                        <StringItem index="17" value="ACCOMMODATIONS"/>
-                        <StringItem index="18" value="AUTHOR"/>
-                        <StringItem index="19" value="TEXTBOOK_TITLE"/>
-                        <StringItem index="20" value="TEXTBOOK_INFORMATION"/>
-                        <StringItem index="21" value="TEXTBOOK_IMAGE"/>
+                        <StringItem index="5" value="COURSE_NAME"/>
+                        <StringItem index="6" value="COURSE_NUMBER"/>
+                        <StringItem index="7" value="CLASS_NUMBER"/>
+                        <StringItem index="8" value="DATE"/>
+                        <StringItem index="9" value="DIVIDER"/>
+                        <StringItem index="10" value="GROUP_PROJECT_DESCRIPTION"/>
+                        <StringItem index="11" value="GROUP_PROJECT_NAME"/>
+                        <StringItem index="12" value="INDIVIDUAL_PROJECT_DESCRIPTION"/>
+                        <StringItem index="13" value="INDIVIDUAL_PROJECT_NAME"/>
+                        <StringItem index="14" value="NEWLINE"/>
+                        <StringItem index="15" value="PAGEBREAK"/>
+                        <StringItem index="16" value="SECTION_NUMBER"/>
+                        <StringItem index="17" value="SYLLABUS_ACADEMIC_INTEGRITY"/>
+                        <StringItem index="18" value="SYLLABUS_ASSIGNMENT_STANDARDS"/>
+                        <StringItem index="19" value="SYLLABUS_COURSE_FORMAT"/>
+                        <StringItem index="20" value="SYLLABUS_DISABILITY"/>
+                        <StringItem index="21" value="SYLLABUS_GRADING"/>
+                        <StringItem index="22" value="SYLLABUS_MODIFICATION"/>
+                        <StringItem index="23" value="TASK_NAME"/>
+                        <StringItem index="24" value="TEXTBOOK_IMAGE"/>
+                        <StringItem index="25" value="TEXTBOOK_INFORMATION"/>
+                        <StringItem index="26" value="TEXTBOOK_IS_REQUIRED_OR_OPTIONAL"/>
                       </StringArray>
                     </Property>
                     <Property name="selectionMode" type="int" value="0"/>

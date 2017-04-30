@@ -8,6 +8,7 @@ package org.psu.berksist.CourseEZ;
 import java.awt.event.ItemEvent;
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import static java.lang.Thread.sleep;
 import java.sql.Connection;
 import java.sql.ResultSet;
@@ -21,29 +22,45 @@ import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
 import javax.swing.filechooser.FileNameExtensionFilter;
 import javax.swing.table.DefaultTableModel;
+import org.docx4j.Docx4J;
 import org.docx4j.openpackaging.exceptions.Docx4JException;
+import org.docx4j.openpackaging.exceptions.InvalidFormatException;
+import org.docx4j.openpackaging.packages.ProtectDocument;
+import org.docx4j.openpackaging.packages.WordprocessingMLPackage;
+import org.docx4j.openpackaging.parts.WordprocessingML.MainDocumentPart;
+import org.docx4j.wml.STDocProtect;
 
 /**
  *
  * @author Deathx, jss5783
  * 
  *  ******************* MODIFICATION LOG *****************************************
+ *  2017 April 30   -   !BUG: Tried to implement dynamic report generation.
+ *                          Turns out ResultSets can't be reused, and the Preview tab is probably needed as a step in general,
+ *                              not just for cleanup/quality-checking.
+ *                      !BUG: Loading bar and label don't display as intended.
+ *                      The only table component is now TABLE{COLUMNS,ROWS}.
+ *                      Some more components added. -JSS5783
  *  2017 April 29   -   Tables can now be created, customized (number of columns and rows; adding/deleting contents), and deleted,
  *                          with necessary backend variables implemented.
  *                      !BUGFIX: Selecting department/class/section now works as intended, with output being sorted in ascending order.
  *                      Additional components added to lstTemplateDefaultcomponents.
  *                      Various variables renamed to try for more naming consistency.
  *                      !BUGFIX: Filepath now adds all of its delimiters the right way, depending on what OS the application is running on. -JSS5783
+ * 
  *  2017 April 28   -   !BUGFIX: Opening jfReport doesn't create duplicate (currently hard-coded) profiles (lmodelLstTemplateProfiles is no longer static).
  *                      Still trying to fix the Class choosers. -JSS5783
+ * 
  *  2017 April 27   -   !BUG: Selecting anything after selecting from one of the Department/Course/Section dialogs throws an error and doesn't work.
  *                          As far as I can tell, it's triggering the other ActionListeners.
  *                          !WORKAROUND: Updates on FocusLost. It kind of works now.
  *                      Can now add and delete profiles, list-wise. (No dynamic profiles yet.)
  *                      Started work on progress bar. Reports.java code should probably be moved here so milestones can update the progress bar. -JSS5783
+ * 
  *  2017 April 27   -   Departments now loaded into cmbDepartment upon jfReport's creation.
  *                      Courses are loaded into cmbCourse when cmbDepartment has an actual department selected.
  *                      Beginnings of adding new profile functionality.
+ * 
  *                      Content tab "hidden" (deleted, because disabling it doesn't work as desired) on jfReport's creation. -JSS5783
  *  2017 April 25   -   !BUGFIX: Shows error message when no profile is loaded and the user tries to generate files.
  *                      Rearranged Template tab so table-related components can be easily hidden/shown as needed.
@@ -52,6 +69,7 @@ import org.docx4j.openpackaging.exceptions.Docx4JException;
  *                      Added (currently blank) Preview tab.
  *                      Disabled cmbCourse and cmbSection in preparation for loading in actual departments/etc.
  *                          from database. -JSS5783
+ * 
  *  2017 April 24   -   Radio buttons now update filetype.
  *                      Load button now updates profile type behind the scenes.
  *                      Worked on moving the report generation code here.
@@ -360,7 +378,7 @@ public class jfReport extends javax.swing.JFrame
 
         lstTemplateDefaultComponents.setBorder(javax.swing.BorderFactory.createTitledBorder("Default Components"));
         lstTemplateDefaultComponents.setModel(new javax.swing.AbstractListModel<String>() {
-            String[] strings = { "CLASS_SCHEDULE{COLUMNS,ROWS}", "RESOURCE_REQUIREMENTS{COLUMNS,ROWS}", "ASSIGNMENT", "COURSE_NAME", "COURSE_DESCRIPTION", "DATE", "PROJECT_GROUP", "PROJECT_INDIVIDUAL", "TASK", "SPACER", "DIVIDER", "PAGEBREAK", "SECTION_NUMBER", "COURSE_NUMBER", "CLASS_NUMBER", "ACADEMIC_INTEGRITY", "TOLERANCE", "ACCOMMODATIONS", "AUTHOR", "TEXTBOOK_TITLE", "TEXTBOOK_INFORMATION", "TEXTBOOK_IMAGE" };
+            String[] strings = { "TABLE{COLUMNS,ROWS}", "ASSIGNMENT_DESCRIPTION", "ASSIGNMENT_NAME", "AUTHOR", "COURSE_DESCRIPTION", "COURSE_NAME", "COURSE_NUMBER", "CLASS_NUMBER", "DATE", "DIVIDER", "GROUP_PROJECT_DESCRIPTION", "GROUP_PROJECT_NAME", "INDIVIDUAL_PROJECT_DESCRIPTION", "INDIVIDUAL_PROJECT_NAME", "NEWLINE", "PAGEBREAK", "SECTION_NUMBER", "SYLLABUS_ACADEMIC_INTEGRITY", "SYLLABUS_ASSIGNMENT_STANDARDS", "SYLLABUS_COURSE_FORMAT", "SYLLABUS_DISABILITY", "SYLLABUS_GRADING", "SYLLABUS_MODIFICATION", "TASK_NAME", "TEXTBOOK_IMAGE", "TEXTBOOK_INFORMATION", "TEXTBOOK_IS_REQUIRED_OR_OPTIONAL" };
             public int getSize() { return strings.length; }
             public String getElementAt(int i) { return strings[i]; }
         });
@@ -923,61 +941,111 @@ public class jfReport extends javax.swing.JFrame
         //TODO: Replace code here with smartcode, instead of checking for selected template and generating based on that.
         Reports report = new Reports();
         
-        switch(intSelectedProfile)
+        if (cmbDepartment.getSelectedItem().toString() != "---" && cmbCourse.getSelectedItem().toString() != "---" && cmbSection.getSelectedItem().toString() != "---")
         {
-            case -1:    //nothing selected
+            if (intSelectedProfile != -1)
+            {
+                //TODO: use currently edited profile, regardless of whether or not changes have been saved
+                //TODO: replace temporary code for testing generateReport()
+                    try
+                    {
+                        generateReport(dbLocalConnection, strFilepath, strFilename, intFiletype);
+                    }
+                    catch (Docx4JException ex)
+                    {
+                        //Logger.getLogger(jfReport.class.getName()).log(Level.SEVERE, null, ex);
+                        System.err.println(ex.toString() );
+                    }
+                    catch (FileNotFoundException ex)
+                    {
+                        //Logger.getLogger(jfReport.class.getName()).log(Level.SEVERE, null, ex);
+                        System.err.println(ex.toString() );
+                    }
+                    catch (SQLException ex)
+                    {
+                        //Logger.getLogger(jfReport.class.getName() ).log(Level.SEVERE, null, ex);
+                        System.err.println(ex.toString() );
+                    }
+            }
+            else
+            {
                 JOptionPane.showMessageDialog(this, "No profile loaded.","Error", JOptionPane.ERROR_MESSAGE);
-                break;
-            case 0:     //Assignment
-                try
-                {
-                    lblGenerationProgress.setVisible(true);
-                    lblGenerationProgress.setText("Generating files...");
-                    report.Assignment(dbLocalConnection, strFilepath, strFilename, intFiletype);
-                    lblGenerationProgress.setText("Generation complete!");
-                }
-                catch (Docx4JException ex)
-                {
-                    //Logger.getLogger(jfReport.class.getName()).log(Level.SEVERE, null, ex);
-                    System.err.println(ex.toString() );
-                }
-                catch (FileNotFoundException ex)
-                {
-                    //Logger.getLogger(jfReport.class.getName()).log(Level.SEVERE, null, ex);
-                    System.err.println(ex.toString() );
-                }
-                //TODO: Reports.Assignment() needs to be fleshed out more rather than just basic dummy data
-                catch (SQLException ex)
-                {
-                    //Logger.getLogger(jfReport.class.getName() ).log(Level.SEVERE, null, ex);
-                    System.err.println(ex.toString() );
-                }
-                break;
-            case 1: //Syllabus
-                try
-                {
-                    report.Syllabus(dbLocalConnection, strFilepath, strFilename, intFiletype);
-                }
-                catch (Docx4JException ex)
-                {
-                    //Logger.getLogger(jfReport.class.getName()).log(Level.SEVERE, null, ex);
-                    System.err.println(ex.toString() );
-                }
-                catch (FileNotFoundException ex)
-                {
-                    //Logger.getLogger(jfReport.class.getName()).log(Level.SEVERE, null, ex);
-                    System.err.println(ex.toString() );
-                }
-                catch (SQLException ex)
-                {
-                    //Logger.getLogger(jfReport.class.getName() ).log(Level.SEVERE, null, ex);
-                    System.err.println(ex.toString() );
-                }
-                break;
-            default:
-                break;
-        }   //end of switch(intSelectedProfile)
-        
+            }
+//            switch(intSelectedProfile)
+//            {
+//                case -1:    //nothing selected
+//                    JOptionPane.showMessageDialog(this, "No profile loaded.","Error", JOptionPane.ERROR_MESSAGE);
+//                    break;
+//                case 0:     //Assignment
+//                    try
+//                    {
+//                        report.Assignment(dbLocalConnection, strFilepath, strFilename, intFiletype);
+//                    }
+//                    catch (Docx4JException ex)
+//                    {
+//                        //Logger.getLogger(jfReport.class.getName()).log(Level.SEVERE, null, ex);
+//                        System.err.println(ex.toString() );
+//                    }
+//                    catch (FileNotFoundException ex)
+//                    {
+//                        //Logger.getLogger(jfReport.class.getName()).log(Level.SEVERE, null, ex);
+//                        System.err.println(ex.toString() );
+//                    }
+//                    //TODO: Reports.Assignment() needs to be fleshed out more rather than just basic dummy data
+//                    catch (SQLException ex)
+//                    {
+//                        //Logger.getLogger(jfReport.class.getName() ).log(Level.SEVERE, null, ex);
+//                        System.err.println(ex.toString() );
+//                    }
+//                    break;
+//                case 1: //Syllabus
+//                    try
+//                    {
+//                        report.Syllabus(dbLocalConnection, strFilepath, strFilename, intFiletype);
+//                    }
+//                    catch (Docx4JException ex)
+//                    {
+//                        //Logger.getLogger(jfReport.class.getName()).log(Level.SEVERE, null, ex);
+//                        System.err.println(ex.toString() );
+//                    }
+//                    catch (FileNotFoundException ex)
+//                    {
+//                        //Logger.getLogger(jfReport.class.getName()).log(Level.SEVERE, null, ex);
+//                        System.err.println(ex.toString() );
+//                    }
+//                    catch (SQLException ex)
+//                    {
+//                        //Logger.getLogger(jfReport.class.getName() ).log(Level.SEVERE, null, ex);
+//                        System.err.println(ex.toString() );
+//                    }
+//                    break;
+//                default:    //other (temporary, for testing generateReport() )
+//                    try
+//                    {
+//                        generateReport(dbLocalConnection, strFilepath, strFilename, intFiletype);
+//                    }
+//                    catch (Docx4JException ex)
+//                    {
+//                        //Logger.getLogger(jfReport.class.getName()).log(Level.SEVERE, null, ex);
+//                        System.err.println(ex.toString() );
+//                    }
+//                    catch (FileNotFoundException ex)
+//                    {
+//                        //Logger.getLogger(jfReport.class.getName()).log(Level.SEVERE, null, ex);
+//                        System.err.println(ex.toString() );
+//                    }
+//                    catch (SQLException ex)
+//                    {
+//                        //Logger.getLogger(jfReport.class.getName() ).log(Level.SEVERE, null, ex);
+//                        System.err.println(ex.toString() );
+//                    }
+//                    break;
+//            }   //end of switch(intSelectedProfile)
+        }
+        else
+        {
+            JOptionPane.showMessageDialog(this, "A department, class, and section must be selected before a report can be generated.", "Error", JOptionPane.ERROR_MESSAGE);
+        }
     }//GEN-LAST:event_btnGenerateReportActionPerformed
 
     /**
@@ -1303,9 +1371,10 @@ public class jfReport extends javax.swing.JFrame
             spinnerColumns.setValue(aLstTemplateComponents[lstTemplateComponents.getSelectedIndex()].getColumnCount() );
             spinnerRows.setValue(aLstTemplateComponents[lstTemplateComponents.getSelectedIndex()].getRowCount() );
         }
+        //if new column and/or row sizes are smaller than table's current column and/or row sizes
         else if ( (int) spinnerColumns.getValue() < tblTemplateComponentsTable.getColumnCount() || (int) spinnerRows.getValue() < tblTemplateComponentsTable.getRowCount() )
         {
-            int intResult = JOptionPane.showConfirmDialog(this, "Column and/or row size is smaller than current table size. Resizing may result in lost data. Continue anyway?", "Update Table Size", JOptionPane.YES_NO_OPTION, JOptionPane.WARNING_MESSAGE);
+            int intResult = JOptionPane.showConfirmDialog(this, "Column and/or row size is smaller than current table size(s). Resizing may result in lost data. Continue anyway?", "Update Table Size", JOptionPane.YES_NO_OPTION, JOptionPane.WARNING_MESSAGE);
             if (intResult == JOptionPane.YES_OPTION)
             {
                 aLstTemplateComponents[lstTemplateComponents.getSelectedIndex()].setColumnCount( (int) spinnerColumns.getValue() );
@@ -1516,6 +1585,214 @@ public class jfReport extends javax.swing.JFrame
         }
     }//GEN-LAST:event_cmbCourseItemStateChanged
 
+    
+    /**
+     * Generates a report based on the current loaded template and saves it as the specified filetype(s) in the specified filepath.
+     * @param dbConnection Connection used to retrieve data from the database.
+     * @param strFilepath String used to determine where to save the file(s).
+     * @param strFilename String used to determine the name of the file(s).
+     * @param intFiletype Integer used to determine whether the file is generated as a DOCX, PDF, or both.
+     * @throws InvalidFormatException
+     * @throws Docx4JException
+     * @throws FileNotFoundException
+     * @throws SQLException 
+     */
+    private void generateReport(Connection dbConnection, String strFilepath, String strFilename, int intFiletype)
+            throws InvalidFormatException, Docx4JException, FileNotFoundException, SQLException
+    {
+        
+        //declaration
+        int intEmptyRows;
+
+        //creates main document
+        WordprocessingMLPackage wordMLPackage = WordprocessingMLPackage.createPackage();
+        MainDocumentPart mdp = wordMLPackage.getMainDocumentPart();
+        
+        try
+        {
+            lblGenerationProgress.setVisible(true);
+            jpbGenerationProgress.setValue(30);
+            lblGenerationProgress.setText("Generating report...");
+            
+            //from 0 to the number of components in lmodelLstTemplateComponents, taking advantage of the 0-based index to scan through the list with getSize() as the exclusive upper bound
+            for (int intComponents = 0; intComponents < lmodelLstTemplateComponents.getSize(); intComponents++)
+            {
+                if (lmodelLstTemplateComponents.getElementAt(intComponents).toString().contains("{") == false)  //if non-table-type component
+                {
+                    //TODO (low-priority): hard-coded for now; possibly better to put into an external file, if possible
+                    //TODO: Get precise values instead of dumping the entire ResultSet to file.
+                    ResultSet rs;
+                    switch(lmodelLstTemplateComponents.getElementAt(intComponents).toString() )
+                        {
+                        case "ASSIGNMENT_NAME":                 //selects all assignment names for the selected course section (i.e., class)
+                            rs = st.executeQuery("SELECT vchrShortName FROM ASSIGNMENT WHERE ASSIGNMENT.intID = (SELECT fkASSIGNMENT_intID FROM CLASS_ASSIGNMENT WHERE CLASS_ASSIGNMENT.fkCLASS_intID = " + cmbSection.getSelectedItem() + ")");
+                            mdp.addParagraphOfText(rs.getString("vchrShortName") );
+                            break;
+                        case "ASSIGNMENT_DESCRIPTION":          //selects all assignment descriptions for the selected course section (i.e., class)
+                            rs = st.executeQuery("SELECT vchrDescription FROM ASSIGNMENT WHERE ASSIGNMENT.intID = (SELECT fkASSIGNMENT_intID FROM CLASS_ASSIGNMENT WHERE CLASS_ASSIGNMENT.fkCLASS_intID = " + cmbSection.getSelectedItem().toString() + ")");
+                            mdp.addParagraphOfText(rs.getString("vchrDescription") );
+                            break;
+                        case "AUTHOR":                          //selects all authors for resources for the selected course
+                            rs = st.executeQuery("SELECT vchrFirstName, vchrLastName " +
+                                "FROM AUTHOR, TEXTBOOK_AUTHOR, COURSE_TEXTBOOK, TEXTBOOK, COURSE " +
+                                "WHERE AUTHOR.intID = TEXTBOOK_AUTHOR.fkAUTHOR_intID AND TEXTBOOK.chrISBN = COURSE_TEXTBOOK.fkTEXTBOOK_chrISBN AND COURSE.intID =  " + cmbCourse.getSelectedItem().toString() );
+                            mdp.addParagraphOfText(rs.getString("vchrFirstName") + rs.getString("vchrLastName") );
+                            break;
+                        case "COURSE_DESCRIPTION":              //selects the course description for the selected course
+                            rs = st.executeQuery("SELECT vchrDescription FROM COURSE WHERE intNumber = " + cmbCourse.getSelectedItem().toString() );
+                            mdp.addParagraphOfText(rs.getString("vchrDescription") );
+                            break;
+                        case "COURSE_NAME":                     //selects the course name for the selected course
+                            rs = st.executeQuery("SELECT vchrTitle FROM COURSE WHERE intNumber = " + cmbCourse.getSelectedItem().toString() );
+                            mdp.addParagraphOfText(rs.getString("vchrTitle") );
+                            break;
+                        case "COURSE_NUMBER":                   //gets the course number from cmbCourse's selected item. Should be accurate unless the user changes it while the report is generated (TODO: lock out report generator controls while generating report with a "glass pane" or something), and saves on processing that way.
+                            mdp.addParagraphOfText(cmbCourse.getSelectedItem().toString() );
+                            break;
+                        case "CLASS_NUMBER":                    //gets the section (i.e., class) number from cmbSection's Should be accurate unless the user changes it while the report is generated, and saves on processing that way.
+                            mdp.addParagraphOfText(cmbSection.getSelectedItem().toString() );
+                            break;
+                        case "DATE":                            //date to do a task (not a due date)
+                            //TODO
+                            break;
+                        case "DIVIDER":                         //adds a divider line (TODO: center this)
+                            mdp.addParagraphOfText("\n--------------------------------------------------\n");
+                            break;
+                        case "GROUP_PROJECT_DESCRIPTION":       //adds group project description
+                            break;
+                        case "GROUP_PROJECT_NAME":              //adds group project name
+                            break;
+                        case "INDIVIDUAL_PROJECT_DESCRIPTION":  //adds individual project description
+                            break;
+                        case "INDIVIDUAL_PROJECT_NAME":         //adds individual project name
+                            break;
+                        case "NEWLINE":                         //adds an empty line between paragraphs
+                            mdp.addParagraphOfText("\n\n\n");
+                            break;
+                        case "PAGEBREAK":                       //adds a pagebreak
+                            //TODO
+                            break;
+                        case "SYLLABUS_ACADEMIC_INTEGRITY":     //gets the academic integrity description associated with the selected course
+                            rs = st.executeQuery("SELECT vchrContent " +
+                                "FROM SYLLABUSACADEMICINTEGRITY, COURSE, COURSE_SYLLABUSACADEMICINTEGRITY " +
+                                "WHERE SYLLABUSACADEMICINTEGRITY.intID = COURSE_SYLLABUSACADEMICINTEGRITY.fkSYLLABUSACADEMICINTEGRITY_intID AND COURSE_SYLLABUSACADEMICINTEGRITY.fkCOURSE_intID = COURSE.intID AND COURSE.intID = " + cmbCourse.getSelectedItem().toString() );
+                            mdp.addParagraphOfText(rs.getString("vchrContent") );
+                            break;
+                        case "SYLLABUS_ASSIGNMENT_STANDARDS":   //gets the assignment standards description associated with the selected course
+                            rs = st.executeQuery("SELECT vchrContent " +
+                                "FROM SYLLABUSASSIGNMENTSTANDARDS, COURSE, COURSE_SYLLABUSASSIGNMENTSTANDARDS " +
+                                "WHERE SYLLABUSASSIGNMENTSTANDARDS.intID = COURSE_SYLLABUSASSIGNMENTSTANDARDS.fkSYLLABUSASSIGNMENTSTANDARDS_intID AND COURSE_SYLLABUSASSIGNMENTSTANDARDS.fkCOURSE_intID = COURSE.intID AND COURSE.intID = " + cmbCourse.getSelectedItem().toString() );
+                            mdp.addParagraphOfText(rs.getString("vchrContent") );
+                            break;
+                        case "SYLLABUS_COURSE_FORMAT":          //gets the course format description associated with the selected course
+                            //TODO
+                            break;
+                        case "SYLLABUS_DISABILITY":             //gets the disability description associated with the selected course
+                            //TODO
+                            break;
+                        case "SYLLABUS_GRADING":                //gets the grading standards associated with the selected course
+                            //TODO
+                            break;
+                        case "SYLLABUS_MODIFICATION":           //gets the syllabus modifications associated with the selected course
+                            //TODO
+                            break;
+                        case "TASK_NAME":                       //gets the assignment or group project (individual or group) associated with the selected class (meant to be used in a schedule table for a syllabus).
+                            //TODO
+                            break;
+                        case "TEXTBOOK_IMAGE":                  //gets the covers of textbooks associated with the selected course
+                            //TODO
+                            break;
+                        case "TEXTBOOK_INFORMATION":            //gets the non-author, non-cover, non-title information (e.g., edition, ISBN, website, publisher, etc.) of textbooks associated with the selected course
+                            //TODO
+                            break;
+                        case "TEXTBOOK_TITLE":                  //gets the titles of textbooks associated with the selected course
+                           //TODO
+                            break;
+                        case "TEXTBOOK_IS_REQUIRED_OR_OPTIONAL":    //gets the required/not required status of textbooks associated with the selected course
+                            //TODO
+                            break;
+                        default:
+                            //TODO: throw exception; somehow a component has not had its case added here
+                            break;
+                        }   //switch(lmodelLstTemplateComponents.getElementAt(intComponents).toString() )
+                }   //if (lmodelLstTemplateComponents.getElementAt(intComponents).toString().contains("{") == false)  //if non-table-type component
+                else    //if table-type component
+                {
+                    for (int intRows = 0; intRows < aLstTemplateComponents[intComponents].getRowCount(); intRows++)
+                    {
+                        for (int intColumns = 0; intColumns < aLstTemplateComponents[intComponents].getColumnCount(); intColumns++)
+                        {
+                            //TODO: process selected cell's component (see if can reuse non-table component's select)
+                            //not sure if possible to look for PART of a string in a switch
+//                            //this is setup as a switch in case any hard-coded table templates like CLASS_SCHEDULE{2,1} gets added or anything
+//                            switch(lmodelLstTemplateComponents.getElementAt(intComponents).toString() )
+//                            {
+//                            case "TABLE{COLUMNS,ROWS}":
+//                                break;
+//                            default:
+//                                //TODO: throw exception; somehow a component has not had its case added here
+//                                break;
+//                            }   //switch(lmodelLstTemplateComponents.getElementAt(intComponents).toString() )
+                        }   //for (int intColumns = 0; intColumns <= MAX_COLUMNS; intColumns++)
+                    }   //for (int intRows = 0; intRows <= MAX_ROWS; intRows++)
+                }   //for (int intRows = 0; intRows <= MAX_ROWS; intRows++)   //else    //if table-type component
+            }   //for (int intComponents = 0; intComponents < lmodelLstTemplateComponents.getSize(); intComponents++)
+        }
+        catch (SQLException e)
+        {
+            System.err.println( e.getClass().getName() + ": " + e.getMessage() );
+            //System.exit(0);
+        }
+        catch (Exception e)
+        {
+            //TODO
+            System.err.println("[ERROR] " + e.toString() );
+        }
+//        finally
+//        {
+//            rs.close();
+//            st.close();
+//        }
+
+        //protect document
+        ProtectDocument protection = new ProtectDocument(wordMLPackage);
+        protection.restrictEditing(STDocProtect.READ_ONLY);
+
+        //save document
+        if (intFiletype == jfReport.DOCX_ONLY || intFiletype == jfReport.DOCX_AND_PDF)
+        {
+            if (intFiletype == jfReport.DOCX_ONLY)
+            {
+                jpbGenerationProgress.setValue(75);
+            }
+            else
+            {
+                jpbGenerationProgress.setValue(60);
+            }
+            lblGenerationProgress.setText("Saving report as DOCX...");
+            Docx4J.save(wordMLPackage, new java.io.File(strFilepath + strFilename + ".docx"), Docx4J.FLAG_SAVE_ZIP_FILE);
+        }
+
+        //converts to pdf
+        if (intFiletype == jfReport.DOCX_AND_PDF || intFiletype == jfReport.PDF_ONLY)
+        {
+            if (intFiletype == jfReport.DOCX_AND_PDF)
+            {
+                jpbGenerationProgress.setValue(75);
+            }
+            else
+            {
+                jpbGenerationProgress.setValue(60);
+            }
+            lblGenerationProgress.setText("Saving report as PDF...");
+            //Docx4J.toPDF(wordMLPackage, new FileOutputStream(System.getProperty("user.dir") + "/CourseEZ.pdf"));
+            Docx4J.toPDF(wordMLPackage, new FileOutputStream(strFilepath + strFilename + ".pdf") );
+        }
+        
+        jpbGenerationProgress.setValue(100);
+        lblGenerationProgress.setText("Report generation complete!");
+    }
+    
 //    for testing/debugging in isolation
 //    /**
 //     * @param args the command line arguments
