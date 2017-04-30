@@ -216,8 +216,7 @@
             </Property>
           </Properties>
           <Events>
-            <EventHandler event="focusLost" listener="java.awt.event.FocusListener" parameters="java.awt.event.FocusEvent" handler="cmbDepartmentFocusLost"/>
-            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="cmbDepartmentActionPerformed"/>
+            <EventHandler event="itemStateChanged" listener="java.awt.event.ItemListener" parameters="java.awt.event.ItemEvent" handler="cmbDepartmentItemStateChanged"/>
           </Events>
           <AuxValues>
             <AuxValue name="JavaCodeGenerator_TypeParameters" type="java.lang.String" value="&lt;String&gt;"/>
@@ -225,11 +224,15 @@
         </Component>
         <Component class="javax.swing.JComboBox" name="cmbCourse">
           <Properties>
+            <Property name="model" type="javax.swing.ComboBoxModel" editor="org.netbeans.modules.form.editors2.ComboBoxModelEditor">
+              <StringArray count="1">
+                <StringItem index="0" value="---"/>
+              </StringArray>
+            </Property>
             <Property name="enabled" type="boolean" value="false"/>
           </Properties>
           <Events>
-            <EventHandler event="focusLost" listener="java.awt.event.FocusListener" parameters="java.awt.event.FocusEvent" handler="cmbCourseFocusLost"/>
-            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="cmbCourseActionPerformed"/>
+            <EventHandler event="itemStateChanged" listener="java.awt.event.ItemListener" parameters="java.awt.event.ItemEvent" handler="cmbCourseItemStateChanged"/>
           </Events>
           <AuxValues>
             <AuxValue name="JavaCodeGenerator_TypeParameters" type="java.lang.String" value="&lt;String&gt;"/>
@@ -237,6 +240,11 @@
         </Component>
         <Component class="javax.swing.JComboBox" name="cmbSection">
           <Properties>
+            <Property name="model" type="javax.swing.ComboBoxModel" editor="org.netbeans.modules.form.editors2.ComboBoxModelEditor">
+              <StringArray count="1">
+                <StringItem index="0" value="---"/>
+              </StringArray>
+            </Property>
             <Property name="enabled" type="boolean" value="false"/>
           </Properties>
           <AuxValues>
@@ -339,16 +347,29 @@
                       </Border>
                     </Property>
                     <Property name="model" type="javax.swing.ListModel" editor="org.netbeans.modules.form.editors2.ListModelEditor">
-                      <StringArray count="9">
-                        <StringItem index="0" value="TASK"/>
-                        <StringItem index="1" value="ASSIGNMENT"/>
-                        <StringItem index="2" value="CLASS_NAME"/>
-                        <StringItem index="3" value="COURSE_DESCRIPTION"/>
-                        <StringItem index="4" value="PROJECT_INDIVIDUAL"/>
-                        <StringItem index="5" value="PROJECT_GROUP"/>
-                        <StringItem index="6" value="RESOURCE_REQUIREMENTS{COLUMNS,ROWS}"/>
-                        <StringItem index="7" value="CLASS_SCHEDULE{COLUMNS,ROWS}"/>
-                        <StringItem index="8" value="DATE"/>
+                      <StringArray count="22">
+                        <StringItem index="0" value="CLASS_SCHEDULE{COLUMNS,ROWS}"/>
+                        <StringItem index="1" value="RESOURCE_REQUIREMENTS{COLUMNS,ROWS}"/>
+                        <StringItem index="2" value="ASSIGNMENT"/>
+                        <StringItem index="3" value="COURSE_NAME"/>
+                        <StringItem index="4" value="COURSE_DESCRIPTION"/>
+                        <StringItem index="5" value="DATE"/>
+                        <StringItem index="6" value="PROJECT_GROUP"/>
+                        <StringItem index="7" value="PROJECT_INDIVIDUAL"/>
+                        <StringItem index="8" value="TASK"/>
+                        <StringItem index="9" value="SPACER"/>
+                        <StringItem index="10" value="DIVIDER"/>
+                        <StringItem index="11" value="PAGEBREAK"/>
+                        <StringItem index="12" value="SECTION_NUMBER"/>
+                        <StringItem index="13" value="COURSE_NUMBER"/>
+                        <StringItem index="14" value="CLASS_NUMBER"/>
+                        <StringItem index="15" value="ACADEMIC_INTEGRITY"/>
+                        <StringItem index="16" value="TOLERANCE"/>
+                        <StringItem index="17" value="ACCOMMODATIONS"/>
+                        <StringItem index="18" value="AUTHOR"/>
+                        <StringItem index="19" value="TEXTBOOK_TITLE"/>
+                        <StringItem index="20" value="TEXTBOOK_INFORMATION"/>
+                        <StringItem index="21" value="TEXTBOOK_IMAGE"/>
                       </StringArray>
                     </Property>
                     <Property name="selectionMode" type="int" value="0"/>
@@ -534,7 +555,7 @@
 
                   <Layout class="org.netbeans.modules.form.compat2.layouts.support.JScrollPaneSupportLayout"/>
                   <SubComponents>
-                    <Component class="javax.swing.JTable" name="tableTemplateTableContents">
+                    <Component class="javax.swing.JTable" name="tblTemplateComponentsTable">
                       <Properties>
                         <Property name="border" type="javax.swing.border.Border" editor="org.netbeans.modules.form.editors2.BorderEditor">
                           <Border info="org.netbeans.modules.form.compat2.border.TitledBorderInfo">
@@ -542,21 +563,13 @@
                           </Border>
                         </Property>
                         <Property name="model" type="javax.swing.table.TableModel" editor="org.netbeans.modules.form.editors2.TableModelEditor">
-                          <Table columnCount="2" rowCount="3">
-                            <Column editable="false" title="Column1" type="java.lang.String">
-                              <Data value="DATE"/>
-                              <Data value="DATE"/>
-                              <Data value="DATE"/>
-                            </Column>
-                            <Column editable="false" title="Column2" type="java.lang.String">
-                              <Data value="ASSIGNMENT"/>
-                              <Data value="ASSIGNMENT"/>
-                              <Data value="ASSIGNMENT"/>
-                            </Column>
-                          </Table>
+                          <Table columnCount="0" rowCount="0"/>
                         </Property>
                         <Property name="columnModel" type="javax.swing.table.TableColumnModel" editor="org.netbeans.modules.form.editors2.TableColumnModelEditor">
                           <TableColumnModel selectionModel="0"/>
+                        </Property>
+                        <Property name="tableHeader" type="javax.swing.table.JTableHeader" editor="org.netbeans.modules.form.editors2.JTableHeaderEditor">
+                          <TableHeader reorderingAllowed="true" resizingAllowed="true"/>
                         </Property>
                       </Properties>
                     </Component>

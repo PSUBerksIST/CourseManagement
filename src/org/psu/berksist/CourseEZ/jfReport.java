@@ -5,6 +5,7 @@
  */
 package org.psu.berksist.CourseEZ;
 
+import java.awt.event.ItemEvent;
 import java.io.File;
 import java.io.FileNotFoundException;
 import static java.lang.Thread.sleep;
@@ -12,12 +13,14 @@ import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.Arrays;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.DefaultListModel;
 import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
 import javax.swing.filechooser.FileNameExtensionFilter;
+import javax.swing.table.DefaultTableModel;
 import org.docx4j.openpackaging.exceptions.Docx4JException;
 
 /**
@@ -25,8 +28,13 @@ import org.docx4j.openpackaging.exceptions.Docx4JException;
  * @author Deathx, jss5783
  * 
  *  ******************* MODIFICATION LOG *****************************************
- *  2017 April 28   -   !BUGFIX: lmodelLstTemplateProfiles is no longer static,
- *                          so opening jfReport doesn't create duplicate (currently hard-coded) profiles.
+ *  2017 April 29   -   Tables can now be created, customized (number of columns and rows; adding/deleting contents), and deleted,
+ *                          with necessary backend variables implemented.
+ *                      !BUGFIX: Selecting department/class/section now works as intended, with output being sorted in ascending order.
+ *                      Additional components added to lstTemplateDefaultcomponents.
+ *                      Various variables renamed to try for more naming consistency.
+ *                      !BUGFIX: Filepath now adds all of its delimiters the right way, depending on what OS the application is running on. -JSS5783
+ *  2017 April 28   -   !BUGFIX: Opening jfReport doesn't create duplicate (currently hard-coded) profiles (lmodelLstTemplateProfiles is no longer static).
  *                      Still trying to fix the Class choosers. -JSS5783
  *  2017 April 27   -   !BUG: Selecting anything after selecting from one of the Department/Course/Section dialogs throws an error and doesn't work.
  *                          As far as I can tell, it's triggering the other ActionListeners.
@@ -73,11 +81,15 @@ public class jfReport extends javax.swing.JFrame
     private static final int DOCX_ONLY = 0;
     private static final int DOCX_AND_PDF = 1;
     private static final int PDF_ONLY = 2;
+    private static final int MAX_COMPONENTS = 300;  //the maximum number of components the main template can have (which affects the tables that may or may not be in a template); since Java doesn't have good dynamic arrays, preallocate a chunk of memory for the array instead
+    private static final int MAX_COLUMNS = 100;     //the maximum number of columns a table can have
+    private static final int MAX_ROWS = 100;        //the maximum number of rows a table can have
     private static int intFiletype = DOCX_AND_PDF;
     private static DefaultListModel lmodelLstTemplateComponents = new DefaultListModel();
 //    private static DefaultListModel lmodelLstProfile = new DefaultListModel();
     private DefaultListModel lmodelLstProfile = new DefaultListModel();
-    //private static Object[][] aObj = new Object[][];
+    //private static String[] aLstTemplateComponents;
+    private DefaultTableModel[] aLstTemplateComponents = new DefaultTableModel[MAX_COMPONENTS];
     private static Statement st;
     private static ResultSet rs;
     private static boolean bDepartmentsReady = false;
@@ -121,7 +133,8 @@ public class jfReport extends javax.swing.JFrame
         try
         {
             st = dbLocalConnection.createStatement();
-            rs = st.executeQuery("SELECT vchrName FROM DEPARTMENT");
+            rs = st.executeQuery("SELECT vchrName FROM DEPARTMENT " +
+                                 "ORDER BY vchrName ASC");
             
             while (rs.next() )
             {
@@ -186,7 +199,7 @@ public class jfReport extends javax.swing.JFrame
         lblRows = new javax.swing.JLabel();
         btnTemplateUpdateTable = new javax.swing.JButton();
         jScrollPane4 = new javax.swing.JScrollPane();
-        tableTemplateTableContents = new javax.swing.JTable();
+        tblTemplateComponentsTable = new javax.swing.JTable();
         jpContents = new javax.swing.JPanel();
         jScrollPane5 = new javax.swing.JScrollPane();
         lstContentsAvailableContentItems = new javax.swing.JList<>();
@@ -284,29 +297,21 @@ public class jfReport extends javax.swing.JFrame
         jpClass.setBorder(javax.swing.BorderFactory.createTitledBorder("Class"));
 
         cmbDepartment.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "---" }));
-        cmbDepartment.addFocusListener(new java.awt.event.FocusAdapter() {
-            public void focusLost(java.awt.event.FocusEvent evt) {
-                cmbDepartmentFocusLost(evt);
-            }
-        });
-        cmbDepartment.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                cmbDepartmentActionPerformed(evt);
+        cmbDepartment.addItemListener(new java.awt.event.ItemListener() {
+            public void itemStateChanged(java.awt.event.ItemEvent evt) {
+                cmbDepartmentItemStateChanged(evt);
             }
         });
 
+        cmbCourse.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "---" }));
         cmbCourse.setEnabled(false);
-        cmbCourse.addFocusListener(new java.awt.event.FocusAdapter() {
-            public void focusLost(java.awt.event.FocusEvent evt) {
-                cmbCourseFocusLost(evt);
-            }
-        });
-        cmbCourse.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                cmbCourseActionPerformed(evt);
+        cmbCourse.addItemListener(new java.awt.event.ItemListener() {
+            public void itemStateChanged(java.awt.event.ItemEvent evt) {
+                cmbCourseItemStateChanged(evt);
             }
         });
 
+        cmbSection.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "---" }));
         cmbSection.setEnabled(false);
 
         lblDepartment.setText("Department:");
@@ -355,7 +360,7 @@ public class jfReport extends javax.swing.JFrame
 
         lstTemplateDefaultComponents.setBorder(javax.swing.BorderFactory.createTitledBorder("Default Components"));
         lstTemplateDefaultComponents.setModel(new javax.swing.AbstractListModel<String>() {
-            String[] strings = { "TASK", "ASSIGNMENT", "CLASS_NAME", "COURSE_DESCRIPTION", "PROJECT_INDIVIDUAL", "PROJECT_GROUP", "RESOURCE_REQUIREMENTS{COLUMNS,ROWS}", "CLASS_SCHEDULE{COLUMNS,ROWS}", "DATE" };
+            String[] strings = { "CLASS_SCHEDULE{COLUMNS,ROWS}", "RESOURCE_REQUIREMENTS{COLUMNS,ROWS}", "ASSIGNMENT", "COURSE_NAME", "COURSE_DESCRIPTION", "DATE", "PROJECT_GROUP", "PROJECT_INDIVIDUAL", "TASK", "SPACER", "DIVIDER", "PAGEBREAK", "SECTION_NUMBER", "COURSE_NUMBER", "CLASS_NUMBER", "ACADEMIC_INTEGRITY", "TOLERANCE", "ACCOMMODATIONS", "AUTHOR", "TEXTBOOK_TITLE", "TEXTBOOK_INFORMATION", "TEXTBOOK_IMAGE" };
             public int getSize() { return strings.length; }
             public String getElementAt(int i) { return strings[i]; }
         });
@@ -444,33 +449,16 @@ public class jfReport extends javax.swing.JFrame
                 .addGap(0, 7, Short.MAX_VALUE))
         );
 
-        tableTemplateTableContents.setBorder(javax.swing.BorderFactory.createTitledBorder(""));
-        tableTemplateTableContents.setModel(new javax.swing.table.DefaultTableModel(
+        tblTemplateComponentsTable.setBorder(javax.swing.BorderFactory.createTitledBorder(""));
+        tblTemplateComponentsTable.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
-                {"DATE", "ASSIGNMENT"},
-                {"DATE", "ASSIGNMENT"},
-                {"DATE", "ASSIGNMENT"}
+
             },
             new String [] {
-                "Column1", "Column2"
-            }
-        ) {
-            Class[] types = new Class [] {
-                java.lang.String.class, java.lang.String.class
-            };
-            boolean[] canEdit = new boolean [] {
-                false, false
-            };
 
-            public Class getColumnClass(int columnIndex) {
-                return types [columnIndex];
             }
-
-            public boolean isCellEditable(int rowIndex, int columnIndex) {
-                return canEdit [columnIndex];
-            }
-        });
-        jScrollPane4.setViewportView(tableTemplateTableContents);
+        ));
+        jScrollPane4.setViewportView(tblTemplateComponentsTable);
 
         javax.swing.GroupLayout jpTemplateTableLayout = new javax.swing.GroupLayout(jpTemplateTable);
         jpTemplateTable.setLayout(jpTemplateTableLayout);
@@ -780,16 +768,14 @@ public class jfReport extends javax.swing.JFrame
                     .addComponent(jpGenerateReport, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addContainerGap(14, Short.MAX_VALUE))
             .addGroup(jpGenerationLayout.createSequentialGroup()
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addComponent(lblGenerationProgress)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-            .addGroup(jpGenerationLayout.createSequentialGroup()
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addComponent(jpbGenerationProgress, javax.swing.GroupLayout.PREFERRED_SIZE, 300, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-            .addGroup(jpGenerationLayout.createSequentialGroup()
                 .addGap(317, 317, 317)
                 .addComponent(btnGenerateReport)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+            .addGroup(jpGenerationLayout.createSequentialGroup()
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addGroup(jpGenerationLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(lblGenerationProgress)
+                    .addComponent(jpbGenerationProgress, javax.swing.GroupLayout.PREFERRED_SIZE, 300, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         jpGenerationLayout.setVerticalGroup(
@@ -862,6 +848,25 @@ public class jfReport extends javax.swing.JFrame
                 //File file = fc.getSelectedFile();
                 //File fileFilepath = fc.getCurrentDirectory();
                 //strFilepath = fileFilepath.getPath();     //getCurrentDirectory() and getPath() return a filepath that's one level too short (e.g., path is CourseManagement/resources, it will save it as CourseManagement instead)
+                
+                strFilepath = fc.getSelectedFile().toString();
+                
+                //append filepath delimiter onto the end so it's prepared for file generation (just stick on [filename] and .[filetype] and generate).
+                if (System.getProperty("os.name").toLowerCase().contains("win") == true)    //if Windows OS
+                {
+                    strFilepath += "\\";
+                }
+                //if Apple or Linux/Unix OS
+                else if (System.getProperty("os.name").toLowerCase().contains("mac") == true || System.getProperty("os.name").toLowerCase().contains("nux") == true || System.getProperty("os.name").toLowerCase().contains("nix") == true)
+                {
+                    strFilepath += "/";
+                }
+                else    //if non-standard OS, like FreeBSD
+                {
+                    //use standard forward slash (/), I guess
+                    strFilepath += "/";
+                }
+                
                 strFilepath = fc.getSelectedFile().toString() + "/";
                 txtfFilepath.setText(strFilepath);
             }
@@ -1077,8 +1082,16 @@ public class jfReport extends javax.swing.JFrame
         intFiletype = DOCX_ONLY;
     }//GEN-LAST:event_rbtnDocxActionPerformed
 
+    /**
+     * Removes the component from the selected cell in tblTemplateComponentsTable.
+     * @param evt 
+     */
     private void btnRemoveComponentFromTableActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnRemoveComponentFromTableActionPerformed
-        // TODO add your handling code here:
+        if (tblTemplateComponentsTable.getSelectedColumn() != -1 && tblTemplateComponentsTable.getSelectedRow() != -1)
+        {
+            aLstTemplateComponents[lstTemplateComponents.getSelectedIndex() ].setValueAt(null, tblTemplateComponentsTable.getSelectedRow(), tblTemplateComponentsTable.getSelectedColumn() );
+            //doesn't deselect cleared cell afterward, but that's better for ergonomics anyway; fix mistake, easily add intended component
+        }
     }//GEN-LAST:event_btnRemoveComponentFromTableActionPerformed
 
     /**
@@ -1131,22 +1144,38 @@ public class jfReport extends javax.swing.JFrame
     }//GEN-LAST:event_rbtnPdfActionPerformed
 
     /**
-     * Adds selected element from lstTemplateDefaultComponents to lstTemplateComponents (by way of lmodelLstTemplateComponents).
+     * Adds selected element from lstTemplateDefaultComponents to lstTemplateComponents (by way of lmodelLstTemplateComponents), along with any corresponding table objects.
      * @param evt 
      */
     private void btnTemplateAddComponentToTemplateActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnTemplateAddComponentToTemplateActionPerformed
         if (lstTemplateDefaultComponents.getSelectedIndex() != -1)
         {
-            lmodelLstTemplateComponents.addElement(lstTemplateDefaultComponents.getSelectedValue() );
-            if (lstTemplateDefaultComponents.getSelectedValue().contains("{") == true)  //if the selected component is an array of some sort
+            if (lstTemplateDefaultComponents.getSelectedValue().contains("{") == true)  //if the selected component is a table of some sort
             {
-                //TODO: Create new array and associate it with the added component
+                //adds new array at end of list, using lmodelLstTemplateComponents's 1-based getSize() for aLstTemplateComponents's 0-based position of the new array
+                lmodelLstTemplateComponents.addElement(lstTemplateDefaultComponents.getSelectedValue().replace("COLUMNS", "1").replace("ROWS", "1") );
+                //((trying to resize the array for the new component))
+                //aLstTemplateComponents = new DefaultTableModel[aLstTemplateComponents.length + 1];
+                //aLstTemplateComponents = Arrays.copyOf(aLstTemplateComponents, aLstTemplateComponents.length + 1);
+                //aLstTemplateComponents[lmodelLstTemplateComponents.getSize() ] = "";
+                aLstTemplateComponents[lmodelLstTemplateComponents.getSize() - 1] = new DefaultTableModel();
+                aLstTemplateComponents[lmodelLstTemplateComponents.getSize() - 1].setColumnCount(1);
+                aLstTemplateComponents[lmodelLstTemplateComponents.getSize() - 1].setRowCount(1);
+                if (AppConstants.DEBUG_MODE == true)
+                {
+                    System.out.println("[DEBUG] aLstTemplateComponents[" + lmodelLstTemplateComponents.getSize() + " - 1]=" + "Columns(" + aLstTemplateComponents[lmodelLstTemplateComponents.getSize() - 1].getColumnCount() + "), Rows(" + aLstTemplateComponents[lmodelLstTemplateComponents.getSize() - 1].getRowCount() + ")");
+                }
+            }
+            else
+            {
+                lmodelLstTemplateComponents.addElement(lstTemplateDefaultComponents.getSelectedValue() );
+                //if the selected component is not a table, then the corresponding position in aLstTemplateComponents remains NULL
             }
         }
     }//GEN-LAST:event_btnTemplateAddComponentToTemplateActionPerformed
 
     /**
-     * Removes selected element from lstTemplateComponents (by way of lmodelLstTemplateComponents).
+     * Removes selected element from lstTemplateComponents (by way of lmodelLstTemplateComponents), along with any corresponding tables.
      * @param evt 
      */
     private void btnTemplateRemoveComponentFromTemplateActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnTemplateRemoveComponentFromTemplateActionPerformed
@@ -1155,21 +1184,32 @@ public class jfReport extends javax.swing.JFrame
             //if deleting a table component
             if (lstTemplateComponents.getSelectedValue().contains("{") == true)
             {
-                jpTemplateTable.setVisible(false);
+                //if aLstTemplateComponents[lstTemplateComponents.getSelectedIndex()] instanceof String[][] == false)
+                int intResult = JOptionPane.showConfirmDialog(this, "Are you sure? This will delete any components in the table itself.", "Remove Table from Template", JOptionPane.YES_NO_OPTION);
+                if (intResult == JOptionPane.YES_OPTION)
+                {
+                    aLstTemplateComponents[lstTemplateComponents.getSelectedIndex()] = null;    //hopefully clears out any preexisting table, allowing Java to free up the memory
+                    lmodelLstTemplateComponents.removeElementAt(lstTemplateComponents.getSelectedIndex() );
+                    jpTemplateTable.setVisible(false);
+                }
+                //if the user clicks NO, then do not delete the selected component in DefaultListModel
             }
-            lmodelLstTemplateComponents.removeElementAt(lstTemplateComponents.getSelectedIndex() );
+            else    //if not table, just delete the component
+            {
+                lmodelLstTemplateComponents.removeElementAt(lstTemplateComponents.getSelectedIndex() );
+            }
         }
     }//GEN-LAST:event_btnTemplateRemoveComponentFromTemplateActionPerformed
 
     /**
-     * Adds selected element from lstTemplateDefaultComponents to aTemplateComponents (by way of lmodelLstTemplateComponents).
+     * Adds selected element from lstTemplateDefaultComponents to aLstTemplateComponents (by way of lmodelLstTemplateComponents).
      * @param evt 
      */
     private void btnAddComponentToTableActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAddComponentToTableActionPerformed
         //if a non-table component is selected in lstTemplateComponents and tableTemplateTableContents has at least 1 cell (at least 1 row and at least 1 column)
-        if (lstTemplateComponents.getSelectedIndex() != -1 && lstTemplateComponents.getSelectedValue().contains("{") == false && tableTemplateTableContents.getRowCount() > 0 && tableTemplateTableContents.getColumnCount() > 0)
+        if (lstTemplateDefaultComponents.getSelectedIndex() != -1 && lstTemplateDefaultComponents.getSelectedValue().contains("{") == false && tblTemplateComponentsTable.getRowCount() >= 1 && tblTemplateComponentsTable.getColumnCount() >= 1 && tblTemplateComponentsTable.getSelectedColumn() != -1 && tblTemplateComponentsTable.getSelectedRow() != -1)
         {
-            tableTemplateTableContents.setValueAt(evt, tableTemplateTableContents.getSelectedRow(), tableTemplateTableContents.getSelectedColumn() );
+            tblTemplateComponentsTable.setValueAt(lstTemplateDefaultComponents.getSelectedValue(), tblTemplateComponentsTable.getSelectedRow(), tblTemplateComponentsTable.getSelectedColumn() );
         }
     }//GEN-LAST:event_btnAddComponentToTableActionPerformed
 
@@ -1181,45 +1221,59 @@ public class jfReport extends javax.swing.JFrame
     private void lstTemplateComponentsValueChanged(javax.swing.event.ListSelectionEvent evt) {//GEN-FIRST:event_lstTemplateComponentsValueChanged
         if (lstTemplateComponents.isSelectionEmpty() == false)
         {
-            if (lstTemplateComponents.getSelectedValue().contains("{") == true)
+            //if (aLstTemplateComponents[lstTemplateComponents.getSelectedIndex() ] != null)  //if is table
+            if (lstTemplateComponents.getSelectedValue().contains("{") == true) //if is table
             {
-                //shows array-related components
+                if (AppConstants.DEBUG_MODE == true)
+                {
+                    System.out.println("[DEBUG] aLstTemplateComponents[" + lstTemplateComponents.getSelectedIndex() + "]=" + aLstTemplateComponents[lstTemplateComponents.getSelectedIndex() ] );
+                }
+                //shows table-related components
                 jpTemplateTable.setVisible(true);
+                
+                //get column and row values for spinners
+                spinnerColumns.setValue(aLstTemplateComponents[lstTemplateComponents.getSelectedIndex()].getColumnCount() );
+                spinnerRows.setValue(aLstTemplateComponents[lstTemplateComponents.getSelectedIndex()].getRowCount() );
+                
+                //registers selected table to tblTemplateComponentsTable
+                tblTemplateComponentsTable.setModel(aLstTemplateComponents[lstTemplateComponents.getSelectedIndex() ] );
 
-                //TODO: Load array's components into tableTemplateTableContents
-
-                //load in table's row and column values for the array
-                if (lstTemplateComponents.getSelectedValue().contains("COLUMNS") == true)
-                {
-                    spinnerColumns.setValue(0);
-                }
-                else
-                {
-                    //returns the selected component's COLUMNS value by searching for the indexes of ["{", ",").
-                    spinnerColumns.setValue(lstTemplateComponents.getSelectedValue().substring(lstTemplateComponents.getSelectedValue().indexOf("{"), lstTemplateComponents.getSelectedValue().indexOf(",") ) );
-                }
-
-                if (lstTemplateComponents.getSelectedValue().contains("ROWS") == true)
-                {
-                    spinnerRows.setValue(0);
-                }
-                else
-                {
-                    //returns the selected component's ROWS value by searching for the indexes of [",", "}").
-                    spinnerRows.setValue(lstTemplateComponents.getSelectedValue().substring(lstTemplateComponents.getSelectedValue().indexOf(","), lstTemplateComponents.getSelectedValue().indexOf("}") ) );
-                }
+//                //load in table's row and column values for the array
+//                if (lstTemplateComponents.getSelectedValue().contains("COLUMNS") == true)
+//                {
+//                    spinnerColumns.setValue(1);
+//                }
+//                else
+//                {
+//                    //returns the selected component's COLUMNS value by searching for the indexes of ["{", ",").
+//                    spinnerColumns.setValue(lstTemplateComponents.getSelectedValue().substring(lstTemplateComponents.getSelectedValue().indexOf("{"), lstTemplateComponents.getSelectedValue().indexOf(",") ) );
+//                }
+//
+//                if (lstTemplateComponents.getSelectedValue().contains("ROWS") == true)
+//                {
+//                    spinnerRows.setValue(1);
+//                }
+//                else
+//                {
+//                    //returns the selected component's ROWS value by searching for the indexes of [",", "}").
+//                    spinnerRows.setValue(lstTemplateComponents.getSelectedValue().substring(lstTemplateComponents.getSelectedValue().indexOf(","), lstTemplateComponents.getSelectedValue().indexOf("}") ) );
+//                }
 
             }   //if (lstTemplateComponents.getSelectedValue().contains("{") == true)
             else
             {
                 //hide array-related components
                 jpTemplateTable.setVisible(false);
+                if (AppConstants.DEBUG_MODE == true)
+                {
+                    System.out.println("[DEBUG] aLstTemplateComponents[" + lstTemplateComponents.getSelectedIndex() + "]=" + aLstTemplateComponents[lstTemplateComponents.getSelectedIndex() ] );
+                }
             }
         }
     }//GEN-LAST:event_lstTemplateComponentsValueChanged
 
     /**
-     * Updates tableTemplateTableContents with the non-negative values in spinnerColumns and spinnerRows.
+     * Updates tableTemplateTableContents with the non-negative, non-zero values in spinnerColumns and spinnerRows.
      * @param evt 
      */
     private void btnTemplateUpdateTableActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnTemplateUpdateTableActionPerformed
@@ -1229,6 +1283,40 @@ public class jfReport extends javax.swing.JFrame
         //"1 row = template for the entire table" idea, then the first row, when pulling in data from
         //the database, should instead load in cleaner-looking defaults based on the components in the cells
         //(e.g., TASK = Task or Assignment or something not all in caps).
+//        if ( (int) spinnerColumns.getValue() <= 0)  //if invalid number of columns, reset to preexisting value in selected table
+//        {
+//            if (lmodelLstTemplateComponents.getElementAt(lstTemplateComponents.getSelectedIndex() ) instanceof String[][] == true)
+//            {
+//                spinnerColumns.setValue(lstTemplateComponents.getSelectedValue().substring(lstTemplateComponents.getSelectedValue().indexOf("{"), lstTemplateComponents.getSelectedValue().indexOf(",") ) );
+//            }
+//        //else if NEW VALUE < OLD VALUE
+//        //  ask if user wants to resize the table since it's potentially a lossy operation (adding extra space is free, but accidentally deleting added components is not
+//        }
+//        else
+//        {
+//        }
+        //if new column or row size(s) is/are illegal or smaller than the current table column or row size(s)
+        if ( (int) spinnerColumns.getValue() <= 0 || (int) spinnerRows.getValue() <= 0)
+        {
+            JOptionPane.showMessageDialog(this, "Illegal column and/or row size. Must have 1+ column(s) and 1+ row(s).", "Update Table Size", JOptionPane.ERROR_MESSAGE);
+            
+            spinnerColumns.setValue(aLstTemplateComponents[lstTemplateComponents.getSelectedIndex()].getColumnCount() );
+            spinnerRows.setValue(aLstTemplateComponents[lstTemplateComponents.getSelectedIndex()].getRowCount() );
+        }
+        else if ( (int) spinnerColumns.getValue() < tblTemplateComponentsTable.getColumnCount() || (int) spinnerRows.getValue() < tblTemplateComponentsTable.getRowCount() )
+        {
+            int intResult = JOptionPane.showConfirmDialog(this, "Column and/or row size is smaller than current table size. Resizing may result in lost data. Continue anyway?", "Update Table Size", JOptionPane.YES_NO_OPTION, JOptionPane.WARNING_MESSAGE);
+            if (intResult == JOptionPane.YES_OPTION)
+            {
+                aLstTemplateComponents[lstTemplateComponents.getSelectedIndex()].setColumnCount( (int) spinnerColumns.getValue() );
+                aLstTemplateComponents[lstTemplateComponents.getSelectedIndex()].setRowCount( (int) spinnerRows.getValue() );
+            }
+        }
+        else
+        {
+            aLstTemplateComponents[lstTemplateComponents.getSelectedIndex()].setColumnCount( (int) spinnerColumns.getValue() );
+            aLstTemplateComponents[lstTemplateComponents.getSelectedIndex()].setRowCount( (int) spinnerRows.getValue() );
+        }
     }//GEN-LAST:event_btnTemplateUpdateTableActionPerformed
 
     /**
@@ -1284,214 +1372,6 @@ public class jfReport extends javax.swing.JFrame
     }//GEN-LAST:event_btnNewProfileActionPerformed
 
     /**
-     * Enables and loads into cmbCourse the available courses for the selected department.
-     * @param evt 
-     */
-    private void cmbDepartmentActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cmbDepartmentActionPerformed
-        bDepartmentsReady = false;
-        bCoursesReady = false;
-        bSectionsReady = false;
-        
-        try
-        {
-            sleep(100);
-        }
-        catch (InterruptedException ie)
-        {
-            System.out.println("[DEBUG] Interrupted");
-        }
-        
-        if (cmbDepartment.getSelectedItem().equals("---") == false)
-        //if (cmbDepartment.getSelectedIndex() != -1)
-        {
-            try
-            {
-                cmbSection.setEnabled(false);
-                cmbCourse.setEnabled(false);
-                cmbCourse.removeAllItems();
-                cmbCourse.addItem("---");
-                st = dbLocalConnection.createStatement();
-                rs = st.executeQuery("SELECT intNumber " +
-                    "FROM COURSE " +
-                    "WHERE fkDEPARTMENT_intID = (SELECT intID " +
-                    "    FROM DEPARTMENT " +
-                    "    WHERE vchrName = \"" + cmbDepartment.getSelectedItem().toString() + "\")");
-
-                while (rs.next())
-                {
-                    System.out.println("[DEBUG] intNumber=" + rs.getString("intNumber") );
-                    cmbCourse.addItem(rs.getString("intNumber") );
-                }
-//                cmbCourse.setSelectedIndex(-1);
-                cmbCourse.setEnabled(true);
-                bDepartmentsReady = true;
-            }
-            catch (SQLException ex)
-            {
-                Logger.getLogger(jfReport.class.getName()).log(Level.SEVERE, null, ex);
-                //in case cmbCourse was still enabled from a previous event trigger and something went wrong,
-                //to prevent breaking cmbCourse
-                //resets cmbCourse to "unused" state for tidying up
-                cmbCourse.removeAllItems();
-                cmbCourse.addItem("---");
-//                cmbCourse.setSelectedIndex(-1);
-                cmbCourse.setEnabled(false);
-            }
-        }
-        else
-        {
-            //resets cmbCourse to "unused" state for tidying up
-            cmbCourse.removeAllItems();
-            cmbCourse.addItem("---");
-//            cmbCourse.setSelectedIndex(-1);
-            cmbCourse.setEnabled(false);
-        }
-    }//GEN-LAST:event_cmbDepartmentActionPerformed
-
-    /**
-     * Enables and loads into cmbSection the available classes for the selected course.
-     * @param evt 
-     */
-    private void cmbCourseActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cmbCourseActionPerformed
-        bCoursesReady = false;
-        bSectionsReady = false;
-        
-        if (bDepartmentsReady = true)
-        {
-            if (cmbCourse.getSelectedItem().equals("---") == false)
-            {
-                try
-                {
-                    cmbSection.removeAllItems();
-                    cmbSection.addItem("---");
-                    st = dbLocalConnection.createStatement();
-                    rs = st.executeQuery("SELECT intSection " +
-                        "FROM CLASS " +
-                        "WHERE fkCOURSE_intID = (SELECT intID " +
-                        "    FROM COURSE " +
-                        "    WHERE intNumber = \"" + cmbCourse.getSelectedItem().toString() + "\")");
-
-                    while (rs.next())
-                    {
-                        System.out.println("[DEBUG] intSection=" + rs.getString("intSection") );
-                        cmbSection.addItem(rs.getString("intSection") );
-                    }
-                    cmbSection.setEnabled(true);
-                    bCoursesReady = true;
-                }
-                catch (SQLException ex)
-                {
-                    Logger.getLogger(jfReport.class.getName()).log(Level.SEVERE, null, ex);
-                    //in case cmbSection was still enabled from a previous event trigger and something went wrong,
-                    //to prevent breaking cmbSection
-                    //resets cmbSection to "unused" state for tidying up
-                    cmbSection.removeAllItems();
-                    cmbSection.addItem("---");
-    //                cmbSection.setSelectedIndex(-1);
-                    cmbSection.setEnabled(false);
-                }
-            }
-            else
-            {
-                //resets cmbSection to "unused" state for tidying up
-                cmbSection.removeAllItems();
-                cmbSection.addItem("---");
-    //            cmbSection.setSelectedIndex(-1);
-
-                cmbSection.setEnabled(false);
-            }
-        }
-    }//GEN-LAST:event_cmbCourseActionPerformed
-
-    private void cmbDepartmentFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_cmbDepartmentFocusLost
-//        if (cmbDepartment.getSelectedItem().equals("---") == false)
-//        //if (cmbDepartment.getSelectedIndex() != -1)
-//        {
-//            try
-//            {
-//                cmbCourse.removeAllItems();
-//                cmbCourse.addItem("---");
-//                st = dbLocalConnection.createStatement();
-//                rs = st.executeQuery("SELECT intNumber " +
-//                    "FROM COURSE " +
-//                    "WHERE fkDEPARTMENT_intID = (SELECT intID " +
-//                    "    FROM DEPARTMENT " +
-//                    "    WHERE vchrName = \"" + cmbDepartment.getSelectedItem().toString() + "\")");
-//
-//                while (rs.next())
-//                {
-//                    System.out.println("[DEBUG] intNumber=" + rs.getString("intNumber") );
-//                    cmbCourse.addItem(rs.getString("intNumber") );
-//                }
-////                cmbCourse.setSelectedIndex(-1);
-//                cmbCourse.setEnabled(true);
-//            }
-//            catch (SQLException ex)
-//            {
-//                Logger.getLogger(jfReport.class.getName()).log(Level.SEVERE, null, ex);
-//                //in case cmbCourse was still enabled from a previous event trigger and something went wrong,
-//                //to prevent breaking cmbCourse
-//                //resets cmbCourse to "unused" state for tidying up
-//                cmbCourse.removeAllItems();
-//                cmbCourse.addItem("---");
-////                cmbCourse.setSelectedIndex(-1);
-//                cmbCourse.setEnabled(false);
-//            }
-//        }
-////        else
-////        {
-////            //resets cmbCourse to "unused" state for tidying up
-////            cmbCourse.removeAllItems();
-////            cmbCourse.addItem("---");
-//////            cmbCourse.setSelectedIndex(-1);
-////            cmbCourse.setEnabled(false);
-////        }
-    }//GEN-LAST:event_cmbDepartmentFocusLost
-
-    private void cmbCourseFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_cmbCourseFocusLost
-//        if (cmbCourse.getSelectedItem().equals("---") == false)
-//        {
-//            try
-//            {
-//                cmbSection.removeAllItems();
-//                cmbSection.addItem("---");
-//                st = dbLocalConnection.createStatement();
-//                rs = st.executeQuery("SELECT intSection " +
-//                    "FROM CLASS " +
-//                    "WHERE fkCOURSE_intID = (SELECT intID " +
-//                    "    FROM COURSE " +
-//                    "    WHERE intNumber = \"" + cmbCourse.getSelectedItem().toString() + "\")");
-//
-//                while (rs.next())
-//                {
-//                    System.out.println("[DEBUG] intSection=" + rs.getString("intSection") );
-//                    cmbSection.addItem(rs.getString("intSection") );
-//                }
-//                cmbSection.setEnabled(true);
-//            }
-//            catch (SQLException ex)
-//            {
-//                Logger.getLogger(jfReport.class.getName()).log(Level.SEVERE, null, ex);
-//                //in case cmbSection was still enabled from a previous event trigger and something went wrong,
-//                //to prevent breaking cmbSection
-//                //resets cmbSection to "unused" state for tidying up
-//                cmbSection.removeAllItems();
-//                cmbSection.addItem("---");
-////                cmbSection.setSelectedIndex(-1);
-//                cmbSection.setEnabled(false);
-//            }
-//        }
-////        else
-////        {
-////            //resets cmbSection to "unused" state for tidying up
-////            cmbSection.removeAllItems();
-////            cmbSection.addItem("---");
-//////            cmbSection.setSelectedIndex(-1);
-////            cmbSection.setEnabled(false);
-////        }
-    }//GEN-LAST:event_cmbCourseFocusLost
-
-    /**
      * Delete selected template profile.
      * @param evt 
      */
@@ -1507,6 +1387,134 @@ public class jfReport extends javax.swing.JFrame
             }
         }
     }//GEN-LAST:event_btnDeleteProfileActionPerformed
+
+    /**
+     * Enables and loads into cmbCourse the available courses for the selected department.
+     * @param evt 
+     */
+    private void cmbDepartmentItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_cmbDepartmentItemStateChanged
+        if (evt.getStateChange() == ItemEvent.SELECTED)
+        {
+            bDepartmentsReady = false;
+            bCoursesReady = false;
+            bSectionsReady = false;
+
+            try
+            {
+                sleep(100);
+            }
+            catch (InterruptedException ie)
+            {
+                System.out.println("[DEBUG] Interrupted");
+            }
+
+            if (cmbDepartment.getSelectedItem().equals("---") == false)
+            //if (cmbDepartment.getSelectedIndex() != -1)
+            {
+                try
+                {
+                    cmbSection.setEnabled(false);
+                    cmbCourse.setEnabled(false);
+                    cmbCourse.removeAllItems();
+                    cmbCourse.addItem("---");
+                    st = dbLocalConnection.createStatement();
+                    rs = st.executeQuery("SELECT intNumber " +
+                        "FROM COURSE " +
+                        "WHERE fkDEPARTMENT_intID = (SELECT intID " +
+                        "    FROM DEPARTMENT " +
+                        "    WHERE vchrName = \"" + cmbDepartment.getSelectedItem().toString() + "\") " +
+                        "ORDER BY intNumber ASC");
+
+                    while (rs.next())
+                    {
+                        System.out.println("[DEBUG] intNumber=" + rs.getString("intNumber") );
+                        cmbCourse.addItem(rs.getString("intNumber") );
+                    }
+    //                cmbCourse.setSelectedIndex(-1);
+                    cmbCourse.setEnabled(true);
+                    bDepartmentsReady = true;
+                }
+                catch (SQLException ex)
+                {
+                    Logger.getLogger(jfReport.class.getName()).log(Level.SEVERE, null, ex);
+                    //in case cmbCourse was still enabled from a previous event trigger and something went wrong,
+                    //to prevent breaking cmbCourse
+                    //resets cmbCourse to "unused" state for tidying up
+                    cmbCourse.removeAllItems();
+                    cmbCourse.addItem("---");
+    //                cmbCourse.setSelectedIndex(-1);
+                    cmbCourse.setEnabled(false);
+                }
+            }
+            else
+            {
+                //resets cmbCourse to "unused" state for tidying up
+                cmbCourse.removeAllItems();
+                cmbCourse.addItem("---");
+    //            cmbCourse.setSelectedIndex(-1);
+                cmbCourse.setEnabled(false);
+            }
+        }
+    }//GEN-LAST:event_cmbDepartmentItemStateChanged
+
+    /**
+     * Enables and loads into cmbSection the available classes for the selected course.
+     * @param evt 
+     */
+    private void cmbCourseItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_cmbCourseItemStateChanged
+        if (evt.getStateChange() == ItemEvent.SELECTED)
+        {
+            bCoursesReady = false;
+            bSectionsReady = false;
+
+            if (bDepartmentsReady = true)
+            {
+                if (cmbCourse.getSelectedItem().equals("---") == false)
+                {
+                    try
+                    {
+                        cmbSection.removeAllItems();
+                        cmbSection.addItem("---");
+                        st = dbLocalConnection.createStatement();
+                        rs = st.executeQuery("SELECT intSection " +
+                            "FROM CLASS " +
+                            "WHERE fkCOURSE_intID = (SELECT intID " +
+                            "    FROM COURSE " +
+                            "    WHERE intNumber = \"" + cmbCourse.getSelectedItem().toString() + "\") " +
+                            "ORDER BY intSection ASC");
+
+                        while (rs.next())
+                        {
+                            System.out.println("[DEBUG] intSection=" + rs.getString("intSection") );
+                            cmbSection.addItem(rs.getString("intSection") );
+                        }
+                        cmbSection.setEnabled(true);
+                        bCoursesReady = true;
+                    }
+                    catch (SQLException ex)
+                    {
+                        Logger.getLogger(jfReport.class.getName()).log(Level.SEVERE, null, ex);
+                        //in case cmbSection was still enabled from a previous event trigger and something went wrong,
+                        //to prevent breaking cmbSection
+                        //resets cmbSection to "unused" state for tidying up
+                        cmbSection.removeAllItems();
+                        cmbSection.addItem("---");
+        //                cmbSection.setSelectedIndex(-1);
+                        cmbSection.setEnabled(false);
+                    }
+                }
+                else
+                {
+                    //resets cmbSection to "unused" state for tidying up
+                    cmbSection.removeAllItems();
+                    cmbSection.addItem("---");
+        //            cmbSection.setSelectedIndex(-1);
+
+                    cmbSection.setEnabled(false);
+                }
+            }
+        }
+    }//GEN-LAST:event_cmbCourseItemStateChanged
 
 //    for testing/debugging in isolation
 //    /**
@@ -1612,7 +1620,7 @@ public class jfReport extends javax.swing.JFrame
     private javax.swing.JSpinner spinnerColumns;
     private javax.swing.JSpinner spinnerRows;
     private javax.swing.JTable tableContentsAssignedContentItems;
-    private javax.swing.JTable tableTemplateTableContents;
+    private javax.swing.JTable tblTemplateComponentsTable;
     private javax.swing.JTextField txtfFilename;
     private javax.swing.JTextField txtfFilepath;
     // End of variables declaration//GEN-END:variables
