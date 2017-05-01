@@ -35,6 +35,7 @@ import org.docx4j.openpackaging.exceptions.Docx4JException;
  * 
  * 
  ******************* MODIFICATION LOG *****************************************
+ * 2017 May   01    -   jmHelpContentsActionPerformed now calls HelpFX - RGS19
  * 2017 April 24    -   jMenuItem1 is now jmiTestGenerateReport as "TEST: Generate Report" under Report.
  *                      Updated jmiTestGenerateReport and jmiGenerateReport's parameters to work
  *                          with the modified functions in Reports.java. -JSS5783
@@ -489,7 +490,7 @@ public class jfMain extends JFrame {
     }//GEN-LAST:event_jmiAboutActionPerformed
 
     private void jmHelpContentsActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jmHelpContentsActionPerformed
-      //Implementation of HelpFX to display help file.
+      //Implementation of HelpFX to display help file. - RGS
       HelpFX hf = new HelpFX();
       hf.run();
         
