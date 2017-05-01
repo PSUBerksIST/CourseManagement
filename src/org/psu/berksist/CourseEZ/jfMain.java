@@ -484,13 +484,16 @@ public class jfMain extends JFrame {
     }//GEN-LAST:event_jmiAboutActionPerformed
 
     private void jmHelpContentsActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jmHelpContentsActionPerformed
-      
+      //Implementation of HelpFX to display help file.
+      HelpFX hf = new HelpFX();
+      hf.run();
+        
         /** 
          * Action performed that opens HelpDoc
          * Old methods are commented out 
          * mrs6041 Michael Strizziere
          */ 
-        
+       
         // Opening HelpDoc via ICEBrowser
         /* try {
             Class htmlBrowserClass;
