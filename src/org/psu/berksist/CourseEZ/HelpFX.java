@@ -183,7 +183,7 @@ public class HelpFX implements Runnable {
     @Override public void run() {
 
         frame.setPreferredSize(new Dimension(1024, 600));
-        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        //frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 
         initComponents();
         File HelpDoc = new File(AppConstants.ROOT_FOLDER + "HelpDoc" + "/CourseManagement.html");
