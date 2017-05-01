@@ -1,8 +1,3 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package org.psu.berksist.CourseEZ;
 
 import java.sql.Connection;
@@ -23,43 +18,57 @@ import javax.swing.event.TableModelListener;
 import javax.swing.table.DefaultTableModel;
 
 /**
- *
- * @author Nicholas
+ * Panel to handle displaying the list of Books in the database.  From here a user can see basic information
+ * There are two buttons, Add Book and Edit Book.  Both open a jpAddBook panel.  Add is empty and edit will bring up the selected Book's info
+ * @author Nicholas Beliveau
  */
 public class jpBook extends javax.swing.JPanel {
 
-    
+    //Declare database and table variables.
     private Statement st;    
     private Connection dbConnection;
-    
     private SortRows tableSort;
     List<Integer> selectedBookIDs = new ArrayList<>();
     private TableChangeListener tcListener = new TableChangeListener();
     
-    
     /**
      * Creates new form jpBook
      */
-    public jpBook() {
+    public jpBook() 
+    {
         initComponents();
     }
     
-    public jpBook(Connection inConnection){
+    /**
+     * Constructor that should be used.  Passed a connection to get the database connection
+     * @param inConnection 
+     */
+    public jpBook(Connection inConnection)
+    {
         
         initComponents();
-        setdbConnection(inConnection);;
+        setdbConnection(inConnection);
         setjcbBook();
     }
     
-    // This sets the local datbase connection
+    /**
+     * Connects the panel to the database
+     * @param inConnection 
+     */
     private void setdbConnection(Connection inConnection){
+        
         dbConnection = inConnection;
-        try {             
+        
+        try 
+        {             
             st = dbConnection.createStatement();
-        } catch (SQLException ex) {
+        } 
+        catch (SQLException ex) 
+        {
             System.out.println(ex);
         }
     }
+    
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -72,6 +81,7 @@ public class jpBook extends javax.swing.JPanel {
         jbAddBook = new javax.swing.JButton();
         jScrollPane1 = new javax.swing.JScrollPane();
         jtBooksDisplay = new javax.swing.JTable();
+        jbEditBook = new javax.swing.JButton();
 
         jbAddBook.setText("Add Book");
         jbAddBook.addActionListener(new java.awt.event.ActionListener() {
@@ -119,6 +129,13 @@ public class jpBook extends javax.swing.JPanel {
             jtBooksDisplay.getColumnModel().getColumn(3).setPreferredWidth(100);
         }
 
+        jbEditBook.setText("Edit Book");
+        jbEditBook.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jbEditBookActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
         layout.setHorizontalGroup(
@@ -128,6 +145,8 @@ public class jpBook extends javax.swing.JPanel {
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
                         .addComponent(jbAddBook)
+                        .addGap(18, 18, 18)
+                        .addComponent(jbEditBook)
                         .addGap(0, 0, Short.MAX_VALUE))
                     .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 663, Short.MAX_VALUE))
                 .addContainerGap())
@@ -136,13 +155,19 @@ public class jpBook extends javax.swing.JPanel {
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(jbAddBook)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jbAddBook)
+                    .addComponent(jbEditBook))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 456, Short.MAX_VALUE)
                 .addContainerGap())
         );
     }// </editor-fold>//GEN-END:initComponents
 
+    /**
+     * Bring up the add book panel for the user to add a book to the database
+     * @param evt 
+     */
     private void jbAddBookActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jbAddBookActionPerformed
         
         JDialog jdAddBook = new JDialog();
@@ -153,6 +178,13 @@ public class jpBook extends javax.swing.JPanel {
         
     }//GEN-LAST:event_jbAddBookActionPerformed
 
+    private void jbEditBookActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jbEditBookActionPerformed
+        // TODO Get the selected Book and create a new jpAddBook panel to display the information
+    }//GEN-LAST:event_jbEditBookActionPerformed
+
+    /**
+     * Update the table when changes are made
+     */
     private void setjcbBook() 
     {
         tableSort = new SortRows(jtBooksDisplay);
@@ -164,8 +196,12 @@ public class jpBook extends javax.swing.JPanel {
         jtBooksDisplay.getModel().addTableModelListener(tcListener);
     }
     
+    /**
+     * Function to populate the table with books in the database
+     */
     private void setBooks()
     {
+        
         tableSort.setCurrentSort((List<RowSorter.SortKey>) jtBooksDisplay.getRowSorter().getSortKeys());
         
         try
@@ -198,22 +234,6 @@ public class jpBook extends javax.swing.JPanel {
             
             while (result.next()) 
             {
-                /**
-                boolean g;
-                if(result.getString("Group") == null) // shouldn't be null, but just in case
-                {
-                    g = false;
-                }
-                else
-                {
-                    g = result.getBoolean("Group");
-                }
-                
-                String strGroup = g ? "Yes" : "No";
-                
-                boolean b = selectedBookIDs.contains(result.getInt("intID"));
-                
-                */
                 // Add our row to the JTable
                 model.addRow(new Object[]{ result.getString("Title"), result.getString("chrISBN"), 
                     result.getString("vchrEdition"), result.getString("vchrLastName"), result.getDouble("decPrice")});
@@ -221,9 +241,6 @@ public class jpBook extends javax.swing.JPanel {
             }
             
             tableSort.applyCurrentSort();
-            
-        
-        
         } 
         catch (SQLException ex) 
         {
@@ -231,39 +248,45 @@ public class jpBook extends javax.swing.JPanel {
         }
     }
     
-    private class TableChangeListener implements TableModelListener{
+    /**
+     * Listen for changes to the table and react when changes are made
+     */
+    private class TableChangeListener implements TableModelListener
+    {
 
         @Override
-        public void tableChanged(TableModelEvent e) {
+        public void tableChanged(TableModelEvent e) 
+        {
             // On a table change update our local store of selectedAssignmentIDs
-            if (e.getColumn() == 0){
-
+            if (e.getColumn() == 0)
+            {
                 int assignmentID = Integer.parseInt(jtBooksDisplay.getModel().getValueAt(e.getLastRow(),1).toString());
 
-                if ((boolean) jtBooksDisplay.getModel().getValueAt(e.getLastRow(), 0)){
+                if ((boolean) jtBooksDisplay.getModel().getValueAt(e.getLastRow(), 0))
+                {
 
-                    if (!selectedBookIDs.contains(assignmentID)){
+                    if (!selectedBookIDs.contains(assignmentID))
+                    {
                         selectedBookIDs.add(assignmentID);
                     }
-                } else {
-                    if (selectedBookIDs.contains(assignmentID)){
+                } 
+                else 
+                {
+                    if (selectedBookIDs.contains(assignmentID))
+                    {
                         selectedBookIDs.remove(selectedBookIDs.indexOf(assignmentID));
                     }
-
                 }
 
                 // Show the programmer what IDs are selected
                 System.out.println(selectedBookIDs);
-
             }
         }
-    
     }
-
-
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JButton jbAddBook;
+    private javax.swing.JButton jbEditBook;
     private javax.swing.JTable jtBooksDisplay;
     // End of variables declaration//GEN-END:variables
 }

@@ -21,6 +21,8 @@
               <Group type="103" groupAlignment="0" attributes="0">
                   <Group type="102" alignment="0" attributes="0">
                       <Component id="jbAddBook" min="-2" max="-2" attributes="0"/>
+                      <EmptySpace type="separate" max="-2" attributes="0"/>
+                      <Component id="jbEditBook" min="-2" max="-2" attributes="0"/>
                       <EmptySpace min="0" pref="0" max="32767" attributes="0"/>
                   </Group>
                   <Component id="jScrollPane1" alignment="0" pref="663" max="32767" attributes="0"/>
@@ -33,7 +35,10 @@
       <Group type="103" groupAlignment="0" attributes="0">
           <Group type="102" alignment="0" attributes="0">
               <EmptySpace max="-2" attributes="0"/>
-              <Component id="jbAddBook" min="-2" max="-2" attributes="0"/>
+              <Group type="103" groupAlignment="3" attributes="0">
+                  <Component id="jbAddBook" alignment="3" min="-2" max="-2" attributes="0"/>
+                  <Component id="jbEditBook" alignment="3" min="-2" max="-2" attributes="0"/>
+              </Group>
               <EmptySpace max="-2" attributes="0"/>
               <Component id="jScrollPane1" pref="456" max="32767" attributes="0"/>
               <EmptySpace max="-2" attributes="0"/>
@@ -107,5 +112,13 @@
         </Component>
       </SubComponents>
     </Container>
+    <Component class="javax.swing.JButton" name="jbEditBook">
+      <Properties>
+        <Property name="text" type="java.lang.String" value="Edit Book"/>
+      </Properties>
+      <Events>
+        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="jbEditBookActionPerformed"/>
+      </Events>
+    </Component>
   </SubComponents>
 </Form>
