@@ -73,7 +73,7 @@ public class HelpFX implements Runnable {
         statusBar.add(lblStatus, BorderLayout.CENTER);
         statusBar.add(progressBar, BorderLayout.EAST);
 
-        panel.add(topBar, BorderLayout.NORTH);
+        //panel.add(topBar, BorderLayout.NORTH);
         panel.add(jfxPanel, BorderLayout.CENTER);
         panel.add(statusBar, BorderLayout.SOUTH);
 
