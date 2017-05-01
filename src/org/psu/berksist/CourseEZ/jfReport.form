@@ -138,6 +138,9 @@
           <Properties>
             <Property name="text" type="java.lang.String" value="Save"/>
           </Properties>
+          <Events>
+            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btnSaveProfileActionPerformed"/>
+          </Events>
         </Component>
         <Container class="javax.swing.JScrollPane" name="scpListProfile">
           <AuxValues>
@@ -584,11 +587,11 @@
             </Container>
           </SubComponents>
         </Container>
-        <Container class="javax.swing.JPanel" name="jpContents">
+        <Container class="javax.swing.JPanel" name="jpContent">
           <Constraints>
             <Constraint layoutClass="org.netbeans.modules.form.compat2.layouts.support.JTabbedPaneSupportLayout" value="org.netbeans.modules.form.compat2.layouts.support.JTabbedPaneSupportLayout$JTabbedPaneConstraintsDescription">
-              <JTabbedPaneConstraints tabName="Contents">
-                <Property name="tabTitle" type="java.lang.String" value="Contents"/>
+              <JTabbedPaneConstraints tabName="Content">
+                <Property name="tabTitle" type="java.lang.String" value="Content"/>
               </JTabbedPaneConstraints>
             </Constraint>
           </Constraints>
@@ -604,14 +607,14 @@
                       </Group>
                       <EmptySpace max="-2" attributes="0"/>
                       <Group type="103" groupAlignment="0" attributes="0">
-                          <Component id="btnContentsRemoveSelectedContentItemFromList" alignment="0" min="-2" max="-2" attributes="0"/>
-                          <Component id="btnContentsAssignSelectedContentItemToList" alignment="0" min="-2" max="-2" attributes="0"/>
-                          <Component id="btnContentsAssignSelectedContentItemToTable" min="-2" max="-2" attributes="0"/>
-                          <Component id="btnContentsRemoveSelectedContentItemFromTable" min="-2" max="-2" attributes="0"/>
-                          <Component id="btnContentsAssignAllContentItemsToList" min="-2" max="-2" attributes="0"/>
-                          <Component id="btnContentsRemoveAllContentItemsFromList" min="-2" max="-2" attributes="0"/>
-                          <Component id="btnContentsAssignAllContentItemsToTable" min="-2" max="-2" attributes="0"/>
-                          <Component id="btnContentsRemoveAllContentItemsFromTable" min="-2" max="-2" attributes="0"/>
+                          <Component id="btnContentRemoveSelectedContentItemFromList" alignment="0" min="-2" max="-2" attributes="0"/>
+                          <Component id="btnContentAssignSelectedContentItemToList" alignment="0" min="-2" max="-2" attributes="0"/>
+                          <Component id="btnContentAssignSelectedContentItemToTable" min="-2" max="-2" attributes="0"/>
+                          <Component id="btnContentRemoveSelectedContentItemFromTable" min="-2" max="-2" attributes="0"/>
+                          <Component id="btnContentAssignAllContentItemsToList" min="-2" max="-2" attributes="0"/>
+                          <Component id="btnContentRemoveAllContentItemsFromList" min="-2" max="-2" attributes="0"/>
+                          <Component id="btnContentAssignAllContentItemsToTable" min="-2" max="-2" attributes="0"/>
+                          <Component id="btnContentRemoveAllContentItemsFromTable" min="-2" max="-2" attributes="0"/>
                       </Group>
                       <EmptySpace max="-2" attributes="0"/>
                       <Component id="jScrollPane5" pref="408" max="32767" attributes="0"/>
@@ -631,21 +634,21 @@
                           </Group>
                           <Group type="102" alignment="0" attributes="0">
                               <EmptySpace min="-2" pref="35" max="-2" attributes="0"/>
-                              <Component id="btnContentsAssignAllContentItemsToList" min="-2" max="-2" attributes="0"/>
+                              <Component id="btnContentAssignAllContentItemsToList" min="-2" max="-2" attributes="0"/>
                               <EmptySpace max="-2" attributes="0"/>
-                              <Component id="btnContentsAssignSelectedContentItemToList" min="-2" max="-2" attributes="0"/>
+                              <Component id="btnContentAssignSelectedContentItemToList" min="-2" max="-2" attributes="0"/>
                               <EmptySpace max="-2" attributes="0"/>
-                              <Component id="btnContentsRemoveSelectedContentItemFromList" min="-2" max="-2" attributes="0"/>
+                              <Component id="btnContentRemoveSelectedContentItemFromList" min="-2" max="-2" attributes="0"/>
                               <EmptySpace max="-2" attributes="0"/>
-                              <Component id="btnContentsRemoveAllContentItemsFromList" min="-2" max="-2" attributes="0"/>
+                              <Component id="btnContentRemoveAllContentItemsFromList" min="-2" max="-2" attributes="0"/>
                               <EmptySpace min="-2" pref="54" max="-2" attributes="0"/>
-                              <Component id="btnContentsAssignAllContentItemsToTable" min="-2" max="-2" attributes="0"/>
+                              <Component id="btnContentAssignAllContentItemsToTable" min="-2" max="-2" attributes="0"/>
                               <EmptySpace max="-2" attributes="0"/>
-                              <Component id="btnContentsAssignSelectedContentItemToTable" min="-2" max="-2" attributes="0"/>
+                              <Component id="btnContentAssignSelectedContentItemToTable" min="-2" max="-2" attributes="0"/>
                               <EmptySpace max="-2" attributes="0"/>
-                              <Component id="btnContentsRemoveSelectedContentItemFromTable" min="-2" max="-2" attributes="0"/>
+                              <Component id="btnContentRemoveSelectedContentItemFromTable" min="-2" max="-2" attributes="0"/>
                               <EmptySpace max="32767" attributes="0"/>
-                              <Component id="btnContentsRemoveAllContentItemsFromTable" min="-2" max="-2" attributes="0"/>
+                              <Component id="btnContentRemoveAllContentItemsFromTable" min="-2" max="-2" attributes="0"/>
                           </Group>
                           <Component id="jScrollPane5" alignment="1" max="32767" attributes="0"/>
                       </Group>
@@ -662,7 +665,7 @@
 
               <Layout class="org.netbeans.modules.form.compat2.layouts.support.JScrollPaneSupportLayout"/>
               <SubComponents>
-                <Component class="javax.swing.JList" name="lstContentsAvailableContentItems">
+                <Component class="javax.swing.JList" name="lstContentAvailableContentItems">
                   <Properties>
                     <Property name="border" type="javax.swing.border.Border" editor="org.netbeans.modules.form.editors2.BorderEditor">
                       <Border info="org.netbeans.modules.form.compat2.border.TitledBorderInfo">
@@ -671,11 +674,11 @@
                     </Property>
                     <Property name="model" type="javax.swing.ListModel" editor="org.netbeans.modules.form.editors2.ListModelEditor">
                       <StringArray count="5">
-                        <StringItem index="0" value="ASSIGNMENT1"/>
-                        <StringItem index="1" value="ASSIGNMENT4"/>
-                        <StringItem index="2" value="ASSIGNMENT5"/>
-                        <StringItem index="3" value="PROJECT_GROUP1"/>
-                        <StringItem index="4" value="PROJECT_INDIVIDUAL1"/>
+                        <StringItem index="0" value="Assignment 1"/>
+                        <StringItem index="1" value="Assignment 4"/>
+                        <StringItem index="2" value="Assignment 5"/>
+                        <StringItem index="3" value="Group Project 1"/>
+                        <StringItem index="4" value="Individual Project 1"/>
                       </StringArray>
                     </Property>
                     <Property name="selectionMode" type="int" value="0"/>
@@ -693,7 +696,7 @@
 
               <Layout class="org.netbeans.modules.form.compat2.layouts.support.JScrollPaneSupportLayout"/>
               <SubComponents>
-                <Component class="javax.swing.JList" name="listContentsAssignedContentItems">
+                <Component class="javax.swing.JList" name="lstContentAssignedContentItems">
                   <Properties>
                     <Property name="border" type="javax.swing.border.Border" editor="org.netbeans.modules.form.editors2.BorderEditor">
                       <Border info="org.netbeans.modules.form.compat2.border.TitledBorderInfo">
@@ -701,12 +704,13 @@
                       </Border>
                     </Property>
                     <Property name="model" type="javax.swing.ListModel" editor="org.netbeans.modules.form.editors2.ListModelEditor">
-                      <StringArray count="5">
-                        <StringItem index="0" value="CLASS_NAME"/>
-                        <StringItem index="1" value="COURSE_DESCRIPTION"/>
-                        <StringItem index="2" value="CONTACT_INFORMATION"/>
-                        <StringItem index="3" value="RESOURCE_REQUIREMENTS{3,1}"/>
-                        <StringItem index="4" value="SCHEDULE{2,3}"/>
+                      <StringArray count="6">
+                        <StringItem index="0" value="Networking"/>
+                        <StringItem index="1" value="[[PAGEBREAK]]"/>
+                        <StringItem index="2" value="[[COURSE_DESCRIPTION]]"/>
+                        <StringItem index="3" value="[[CONTACT_INFORMATION]]"/>
+                        <StringItem index="4" value="[[RESOURCE_REQUIREMENTS{3,1}]]"/>
+                        <StringItem index="5" value="[[SCHEDULE{2,3}]]"/>
                       </StringArray>
                     </Property>
                     <Property name="selectionMode" type="int" value="0"/>
@@ -724,7 +728,7 @@
 
               <Layout class="org.netbeans.modules.form.compat2.layouts.support.JScrollPaneSupportLayout"/>
               <SubComponents>
-                <Component class="javax.swing.JTable" name="tableContentsAssignedContentItems">
+                <Component class="javax.swing.JTable" name="tblContentAssignedContentItems">
                   <Properties>
                     <Property name="border" type="javax.swing.border.Border" editor="org.netbeans.modules.form.editors2.BorderEditor">
                       <Border info="org.netbeans.modules.form.compat2.border.TitledBorderInfo">
@@ -739,9 +743,9 @@
                           <Data value="April 14"/>
                         </Column>
                         <Column editable="false" title="Task" type="java.lang.String">
-                          <Data value="ASSIGNMENT2"/>
-                          <Data value="ASSIGNMENT3"/>
-                          <Data value="ASSIGNMENT6"/>
+                          <Data value="Assignment 2"/>
+                          <Data value="Assignment 3"/>
+                          <Data value="Assignment 6"/>
                         </Column>
                       </Table>
                     </Property>
@@ -766,42 +770,42 @@
                 </Component>
               </SubComponents>
             </Container>
-            <Component class="javax.swing.JButton" name="btnContentsRemoveSelectedContentItemFromList">
+            <Component class="javax.swing.JButton" name="btnContentRemoveSelectedContentItemFromList">
               <Properties>
                 <Property name="text" type="java.lang.String" value="&gt;"/>
               </Properties>
             </Component>
-            <Component class="javax.swing.JButton" name="btnContentsAssignSelectedContentItemToList">
+            <Component class="javax.swing.JButton" name="btnContentAssignSelectedContentItemToList">
               <Properties>
                 <Property name="text" type="java.lang.String" value="&lt;"/>
               </Properties>
             </Component>
-            <Component class="javax.swing.JButton" name="btnContentsAssignSelectedContentItemToTable">
+            <Component class="javax.swing.JButton" name="btnContentAssignSelectedContentItemToTable">
               <Properties>
                 <Property name="text" type="java.lang.String" value="&lt;"/>
               </Properties>
             </Component>
-            <Component class="javax.swing.JButton" name="btnContentsRemoveSelectedContentItemFromTable">
+            <Component class="javax.swing.JButton" name="btnContentRemoveSelectedContentItemFromTable">
               <Properties>
                 <Property name="text" type="java.lang.String" value="&gt;"/>
               </Properties>
             </Component>
-            <Component class="javax.swing.JButton" name="btnContentsAssignAllContentItemsToList">
+            <Component class="javax.swing.JButton" name="btnContentAssignAllContentItemsToList">
               <Properties>
                 <Property name="text" type="java.lang.String" value="&lt;&lt;"/>
               </Properties>
             </Component>
-            <Component class="javax.swing.JButton" name="btnContentsRemoveAllContentItemsFromList">
+            <Component class="javax.swing.JButton" name="btnContentRemoveAllContentItemsFromList">
               <Properties>
                 <Property name="text" type="java.lang.String" value="&gt;&gt;"/>
               </Properties>
             </Component>
-            <Component class="javax.swing.JButton" name="btnContentsAssignAllContentItemsToTable">
+            <Component class="javax.swing.JButton" name="btnContentAssignAllContentItemsToTable">
               <Properties>
                 <Property name="text" type="java.lang.String" value="&lt;&lt;"/>
               </Properties>
             </Component>
-            <Component class="javax.swing.JButton" name="btnContentsRemoveAllContentItemsFromTable">
+            <Component class="javax.swing.JButton" name="btnContentRemoveAllContentItemsFromTable">
               <Properties>
                 <Property name="text" type="java.lang.String" value="&gt;&gt;"/>
               </Properties>

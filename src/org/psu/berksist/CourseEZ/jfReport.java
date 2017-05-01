@@ -35,12 +35,18 @@ import org.docx4j.wml.STDocProtect;
  * @author Deathx, jss5783
  * 
  *  ******************* MODIFICATION LOG *****************************************
- *  2017 April 30   -   !BUG: Tried to implement dynamic report generation.
+ *  2017 May  1     -   Unhid the Content tab.
+ *                      Clicking on the Content tab checks for selected class (department-course-section) and non-empty template.
+ *                      Added ListModel and DefaultTableModel array for Content tab.
+ *                          (Not registered yet to preserve examples for future teams for now.) -JSS5783
+ * 
+ * 2017 April 30   -   !BUG: Tried to implement dynamic report generation.
  *                          Turns out ResultSets can't be reused, and the Preview tab is probably needed as a step in general,
  *                              not just for cleanup/quality-checking.
  *                      !BUG: Loading bar and label don't display as intended.
  *                      The only table component is now TABLE{COLUMNS,ROWS}.
  *                      Some more components added. -JSS5783
+ * 
  *  2017 April 29   -   Tables can now be created, customized (number of columns and rows; adding/deleting contents), and deleted,
  *                          with necessary backend variables implemented.
  *                      !BUGFIX: Selecting department/class/section now works as intended, with output being sorted in ascending order.
@@ -60,8 +66,8 @@ import org.docx4j.wml.STDocProtect;
  *  2017 April 27   -   Departments now loaded into cmbDepartment upon jfReport's creation.
  *                      Courses are loaded into cmbCourse when cmbDepartment has an actual department selected.
  *                      Beginnings of adding new profile functionality.
- * 
  *                      Content tab "hidden" (deleted, because disabling it doesn't work as desired) on jfReport's creation. -JSS5783
+ * 
  *  2017 April 25   -   !BUGFIX: Shows error message when no profile is loaded and the user tries to generate files.
  *                      Rearranged Template tab so table-related components can be easily hidden/shown as needed.
  *                      Components can now be added and removed from lstTemplateComponents
@@ -106,8 +112,10 @@ public class jfReport extends javax.swing.JFrame
     private static DefaultListModel lmodelLstTemplateComponents = new DefaultListModel();
 //    private static DefaultListModel lmodelLstProfile = new DefaultListModel();
     private DefaultListModel lmodelLstProfile = new DefaultListModel();
+    private DefaultListModel lmodelLstContentAssignedContentItems = new DefaultListModel();
     //private static String[] aLstTemplateComponents;
     private DefaultTableModel[] aLstTemplateComponents = new DefaultTableModel[MAX_COMPONENTS];
+    private DefaultTableModel[] aLstLstContentAssignedContentItems = new DefaultTableModel[MAX_COMPONENTS];
     private static Statement st;
     private static ResultSet rs;
     private static boolean bDepartmentsReady = false;
@@ -140,7 +148,7 @@ public class jfReport extends javax.swing.JFrame
             lmodelLstProfile.addElement("Syllabus");
 //        }
         
-        jtpEditor.removeTabAt(1);   //removes the Content tab
+        //jtpEditor.removeTabAt(1);   //removes the Content tab
         //jtpEditor.add(jpContent, 1);    //re-adds the Content tab
         
 //        cmbDepartment.addItem("---");
@@ -218,21 +226,21 @@ public class jfReport extends javax.swing.JFrame
         btnTemplateUpdateTable = new javax.swing.JButton();
         jScrollPane4 = new javax.swing.JScrollPane();
         tblTemplateComponentsTable = new javax.swing.JTable();
-        jpContents = new javax.swing.JPanel();
+        jpContent = new javax.swing.JPanel();
         jScrollPane5 = new javax.swing.JScrollPane();
-        lstContentsAvailableContentItems = new javax.swing.JList<>();
+        lstContentAvailableContentItems = new javax.swing.JList<>();
         jspListContentsAssignedComponents = new javax.swing.JScrollPane();
-        listContentsAssignedContentItems = new javax.swing.JList<>();
+        lstContentAssignedContentItems = new javax.swing.JList<>();
         jScrollPane7 = new javax.swing.JScrollPane();
-        tableContentsAssignedContentItems = new javax.swing.JTable();
-        btnContentsRemoveSelectedContentItemFromList = new javax.swing.JButton();
-        btnContentsAssignSelectedContentItemToList = new javax.swing.JButton();
-        btnContentsAssignSelectedContentItemToTable = new javax.swing.JButton();
-        btnContentsRemoveSelectedContentItemFromTable = new javax.swing.JButton();
-        btnContentsAssignAllContentItemsToList = new javax.swing.JButton();
-        btnContentsRemoveAllContentItemsFromList = new javax.swing.JButton();
-        btnContentsAssignAllContentItemsToTable = new javax.swing.JButton();
-        btnContentsRemoveAllContentItemsFromTable = new javax.swing.JButton();
+        tblContentAssignedContentItems = new javax.swing.JTable();
+        btnContentRemoveSelectedContentItemFromList = new javax.swing.JButton();
+        btnContentAssignSelectedContentItemToList = new javax.swing.JButton();
+        btnContentAssignSelectedContentItemToTable = new javax.swing.JButton();
+        btnContentRemoveSelectedContentItemFromTable = new javax.swing.JButton();
+        btnContentAssignAllContentItemsToList = new javax.swing.JButton();
+        btnContentRemoveAllContentItemsFromList = new javax.swing.JButton();
+        btnContentAssignAllContentItemsToTable = new javax.swing.JButton();
+        btnContentRemoveAllContentItemsFromTable = new javax.swing.JButton();
         jpPreview = new javax.swing.JPanel();
         jpGeneration = new javax.swing.JPanel();
         txtfFilepath = new javax.swing.JTextField();
@@ -274,6 +282,11 @@ public class jfReport extends javax.swing.JFrame
         });
 
         btnSaveProfile.setText("Save");
+        btnSaveProfile.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnSaveProfileActionPerformed(evt);
+            }
+        });
 
         lstProfile.setModel(lmodelLstProfile);
         lstProfile.setSelectionMode(javax.swing.ListSelectionModel.SINGLE_SELECTION);
@@ -545,30 +558,30 @@ public class jfReport extends javax.swing.JFrame
 
         jtpEditor.addTab("Template", jpTemplate);
 
-        lstContentsAvailableContentItems.setBorder(javax.swing.BorderFactory.createTitledBorder("Unassigned Content Items"));
-        lstContentsAvailableContentItems.setModel(new javax.swing.AbstractListModel<String>() {
-            String[] strings = { "ASSIGNMENT1", "ASSIGNMENT4", "ASSIGNMENT5", "PROJECT_GROUP1", "PROJECT_INDIVIDUAL1" };
+        lstContentAvailableContentItems.setBorder(javax.swing.BorderFactory.createTitledBorder("Unassigned Content Items"));
+        lstContentAvailableContentItems.setModel(new javax.swing.AbstractListModel<String>() {
+            String[] strings = { "Assignment 1", "Assignment 4", "Assignment 5", "Group Project 1", "Individual Project 1" };
             public int getSize() { return strings.length; }
             public String getElementAt(int i) { return strings[i]; }
         });
-        lstContentsAvailableContentItems.setSelectionMode(javax.swing.ListSelectionModel.SINGLE_SELECTION);
-        jScrollPane5.setViewportView(lstContentsAvailableContentItems);
+        lstContentAvailableContentItems.setSelectionMode(javax.swing.ListSelectionModel.SINGLE_SELECTION);
+        jScrollPane5.setViewportView(lstContentAvailableContentItems);
 
-        listContentsAssignedContentItems.setBorder(javax.swing.BorderFactory.createTitledBorder("Assigned Content Items"));
-        listContentsAssignedContentItems.setModel(new javax.swing.AbstractListModel<String>() {
-            String[] strings = { "CLASS_NAME", "COURSE_DESCRIPTION", "CONTACT_INFORMATION", "RESOURCE_REQUIREMENTS{3,1}", "SCHEDULE{2,3}" };
+        lstContentAssignedContentItems.setBorder(javax.swing.BorderFactory.createTitledBorder("Assigned Content Items"));
+        lstContentAssignedContentItems.setModel(new javax.swing.AbstractListModel<String>() {
+            String[] strings = { "Networking", "[[PAGEBREAK]]", "[[COURSE_DESCRIPTION]]", "[[CONTACT_INFORMATION]]", "[[RESOURCE_REQUIREMENTS{3,1}]]", "[[SCHEDULE{2,3}]]" };
             public int getSize() { return strings.length; }
             public String getElementAt(int i) { return strings[i]; }
         });
-        listContentsAssignedContentItems.setSelectionMode(javax.swing.ListSelectionModel.SINGLE_SELECTION);
-        jspListContentsAssignedComponents.setViewportView(listContentsAssignedContentItems);
+        lstContentAssignedContentItems.setSelectionMode(javax.swing.ListSelectionModel.SINGLE_SELECTION);
+        jspListContentsAssignedComponents.setViewportView(lstContentAssignedContentItems);
 
-        tableContentsAssignedContentItems.setBorder(javax.swing.BorderFactory.createTitledBorder(""));
-        tableContentsAssignedContentItems.setModel(new javax.swing.table.DefaultTableModel(
+        tblContentAssignedContentItems.setBorder(javax.swing.BorderFactory.createTitledBorder(""));
+        tblContentAssignedContentItems.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
-                {"April 10", "ASSIGNMENT2"},
-                {"April 12", "ASSIGNMENT3"},
-                {"April 14", "ASSIGNMENT6"}
+                {"April 10", "Assignment 2"},
+                {"April 12", "Assignment 3"},
+                {"April 14", "Assignment 6"}
             },
             new String [] {
                 "Date", "Task"
@@ -589,78 +602,78 @@ public class jfReport extends javax.swing.JFrame
                 return canEdit [columnIndex];
             }
         });
-        jScrollPane7.setViewportView(tableContentsAssignedContentItems);
+        jScrollPane7.setViewportView(tblContentAssignedContentItems);
 
-        btnContentsRemoveSelectedContentItemFromList.setText(">");
+        btnContentRemoveSelectedContentItemFromList.setText(">");
 
-        btnContentsAssignSelectedContentItemToList.setText("<");
+        btnContentAssignSelectedContentItemToList.setText("<");
 
-        btnContentsAssignSelectedContentItemToTable.setText("<");
+        btnContentAssignSelectedContentItemToTable.setText("<");
 
-        btnContentsRemoveSelectedContentItemFromTable.setText(">");
+        btnContentRemoveSelectedContentItemFromTable.setText(">");
 
-        btnContentsAssignAllContentItemsToList.setText("<<");
+        btnContentAssignAllContentItemsToList.setText("<<");
 
-        btnContentsRemoveAllContentItemsFromList.setText(">>");
+        btnContentRemoveAllContentItemsFromList.setText(">>");
 
-        btnContentsAssignAllContentItemsToTable.setText("<<");
+        btnContentAssignAllContentItemsToTable.setText("<<");
 
-        btnContentsRemoveAllContentItemsFromTable.setText(">>");
+        btnContentRemoveAllContentItemsFromTable.setText(">>");
 
-        javax.swing.GroupLayout jpContentsLayout = new javax.swing.GroupLayout(jpContents);
-        jpContents.setLayout(jpContentsLayout);
-        jpContentsLayout.setHorizontalGroup(
-            jpContentsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jpContentsLayout.createSequentialGroup()
+        javax.swing.GroupLayout jpContentLayout = new javax.swing.GroupLayout(jpContent);
+        jpContent.setLayout(jpContentLayout);
+        jpContentLayout.setHorizontalGroup(
+            jpContentLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jpContentLayout.createSequentialGroup()
                 .addContainerGap()
-                .addGroup(jpContentsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                .addGroup(jpContentLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                     .addComponent(jspListContentsAssignedComponents, javax.swing.GroupLayout.DEFAULT_SIZE, 277, Short.MAX_VALUE)
                     .addComponent(jScrollPane7, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(jpContentsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(btnContentsRemoveSelectedContentItemFromList)
-                    .addComponent(btnContentsAssignSelectedContentItemToList)
-                    .addComponent(btnContentsAssignSelectedContentItemToTable)
-                    .addComponent(btnContentsRemoveSelectedContentItemFromTable)
-                    .addComponent(btnContentsAssignAllContentItemsToList)
-                    .addComponent(btnContentsRemoveAllContentItemsFromList)
-                    .addComponent(btnContentsAssignAllContentItemsToTable)
-                    .addComponent(btnContentsRemoveAllContentItemsFromTable))
+                .addGroup(jpContentLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(btnContentRemoveSelectedContentItemFromList)
+                    .addComponent(btnContentAssignSelectedContentItemToList)
+                    .addComponent(btnContentAssignSelectedContentItemToTable)
+                    .addComponent(btnContentRemoveSelectedContentItemFromTable)
+                    .addComponent(btnContentAssignAllContentItemsToList)
+                    .addComponent(btnContentRemoveAllContentItemsFromList)
+                    .addComponent(btnContentAssignAllContentItemsToTable)
+                    .addComponent(btnContentRemoveAllContentItemsFromTable))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jScrollPane5, javax.swing.GroupLayout.DEFAULT_SIZE, 408, Short.MAX_VALUE)
                 .addContainerGap())
         );
-        jpContentsLayout.setVerticalGroup(
-            jpContentsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jpContentsLayout.createSequentialGroup()
+        jpContentLayout.setVerticalGroup(
+            jpContentLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jpContentLayout.createSequentialGroup()
                 .addContainerGap()
-                .addGroup(jpContentsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(jpContentsLayout.createSequentialGroup()
+                .addGroup(jpContentLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(jpContentLayout.createSequentialGroup()
                         .addComponent(jspListContentsAssignedComponents, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(18, 18, 18)
                         .addComponent(jScrollPane7, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE))
-                    .addGroup(jpContentsLayout.createSequentialGroup()
+                    .addGroup(jpContentLayout.createSequentialGroup()
                         .addGap(35, 35, 35)
-                        .addComponent(btnContentsAssignAllContentItemsToList)
+                        .addComponent(btnContentAssignAllContentItemsToList)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(btnContentsAssignSelectedContentItemToList)
+                        .addComponent(btnContentAssignSelectedContentItemToList)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(btnContentsRemoveSelectedContentItemFromList)
+                        .addComponent(btnContentRemoveSelectedContentItemFromList)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(btnContentsRemoveAllContentItemsFromList)
+                        .addComponent(btnContentRemoveAllContentItemsFromList)
                         .addGap(54, 54, 54)
-                        .addComponent(btnContentsAssignAllContentItemsToTable)
+                        .addComponent(btnContentAssignAllContentItemsToTable)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(btnContentsAssignSelectedContentItemToTable)
+                        .addComponent(btnContentAssignSelectedContentItemToTable)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(btnContentsRemoveSelectedContentItemFromTable)
+                        .addComponent(btnContentRemoveSelectedContentItemFromTable)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(btnContentsRemoveAllContentItemsFromTable))
+                        .addComponent(btnContentRemoveAllContentItemsFromTable))
                     .addComponent(jScrollPane5, javax.swing.GroupLayout.Alignment.TRAILING))
                 .addContainerGap())
         );
 
-        jtpEditor.addTab("Contents", jpContents);
+        jtpEditor.addTab("Content", jpContent);
 
         javax.swing.GroupLayout jpPreviewLayout = new javax.swing.GroupLayout(jpPreview);
         jpPreview.setLayout(jpPreviewLayout);
@@ -1163,20 +1176,37 @@ public class jfReport extends javax.swing.JFrame
     }//GEN-LAST:event_btnRemoveComponentFromTableActionPerformed
 
     /**
-     * When selected tab changes to Preview, information is loaded in from the database.
+     * When selected tab changes to:
+     * Content, components are copied over
+     * Preview, information is loaded in from the database.
      * @param evt 
      */
     private void jtpEditorStateChanged(javax.swing.event.ChangeEvent evt) {//GEN-FIRST:event_jtpEditorStateChanged
         if (jtpEditor.getTitleAt(jtpEditor.getSelectedIndex() ).equals("Preview") == true)
         {
-            //TODO: Should also detect DB changes, or at least include a refresh button somewhere
-            if (cmbDepartment.getSelectedItem().equals("---") == false && cmbCourse.getSelectedItem().equals("---") == false && cmbSection.getSelectedItem().equals("---") == false)
+            /*
+                TODO: Should also detect DB changes, or at least include a refresh button somewhere
+                check if content tab is correctly filled (all components replaced with actual content for a specific class)
+            */
+        }
+        else if (jtpEditor.getTitleAt(jtpEditor.getSelectedIndex() ).equals("Content") == true)
+        {
+            if (cmbDepartment.getSelectedItem().equals("---") == false && cmbCourse.getSelectedItem().equals("---") == false && cmbSection.getSelectedItem().equals("---") == false && lmodelLstTemplateComponents.isEmpty() == false)
             {
-                System.out.println("[DEBUG] Preview tab is now selected. Valid class is selected!");
+                if (AppConstants.DEBUG_MODE == true)
+                {
+                    System.out.println("[DEBUG] Content tab is now selected. Valid class is selected AND template is not empty!");
+                }
             }
-            else if (cmbDepartment.getSelectedItem().equals("---") == true || cmbCourse.getSelectedItem().equals("---") == true || cmbSection.getSelectedItem().equals("---") == true)
+            else
             {
-                System.out.println("[DEBUG] Preview tab is now selected. No valid class selected!");
+                if (AppConstants.DEBUG_MODE == true)
+                {
+                    System.out.println("[DEBUG] Content tab is now selected. No valid class selected OR empty template!");
+                }
+                //Check if Content tab is filled out
+                JOptionPane.showMessageDialog(this, "Class must be selected and component template must not be empty.", "Error", JOptionPane.ERROR_MESSAGE);
+                jtpEditor.setSelectedIndex(0);  //switches back to Template tab
             }
         }
         //System.out.println("[DEBUG] Current tab name=" + jtpEditor.getTitleAt(jtpEditor.getSelectedIndex() ) + " | Current tab index=" + jtpEditor.getSelectedIndex() );
@@ -1585,6 +1615,19 @@ public class jfReport extends javax.swing.JFrame
         }
     }//GEN-LAST:event_cmbCourseItemStateChanged
 
+    /**
+     * Saves the currently loaded profile.
+     * @param evt 
+     */
+    private void btnSaveProfileActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSaveProfileActionPerformed
+        //ask if the user wants to save the currently loaded profile
+        int intResult = JOptionPane.showConfirmDialog(this, "Are you sure you want to overwrite " + lmodelLstProfile.getElementAt(intSelectedProfile) + "?", "Save Profile", JOptionPane.YES_NO_OPTION);
+        if (intResult == JOptionPane.YES_OPTION)
+        {
+            //TODO: Write file
+        }
+    }//GEN-LAST:event_btnSaveProfileActionPerformed
+
     
     /**
      * Generates a report based on the current loaded template and saves it as the specified filetype(s) in the specified filepath.
@@ -1839,14 +1882,14 @@ public class jfReport extends javax.swing.JFrame
     
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnAddComponentToTable;
-    private javax.swing.JButton btnContentsAssignAllContentItemsToList;
-    private javax.swing.JButton btnContentsAssignAllContentItemsToTable;
-    private javax.swing.JButton btnContentsAssignSelectedContentItemToList;
-    private javax.swing.JButton btnContentsAssignSelectedContentItemToTable;
-    private javax.swing.JButton btnContentsRemoveAllContentItemsFromList;
-    private javax.swing.JButton btnContentsRemoveAllContentItemsFromTable;
-    private javax.swing.JButton btnContentsRemoveSelectedContentItemFromList;
-    private javax.swing.JButton btnContentsRemoveSelectedContentItemFromTable;
+    private javax.swing.JButton btnContentAssignAllContentItemsToList;
+    private javax.swing.JButton btnContentAssignAllContentItemsToTable;
+    private javax.swing.JButton btnContentAssignSelectedContentItemToList;
+    private javax.swing.JButton btnContentAssignSelectedContentItemToTable;
+    private javax.swing.JButton btnContentRemoveAllContentItemsFromList;
+    private javax.swing.JButton btnContentRemoveAllContentItemsFromTable;
+    private javax.swing.JButton btnContentRemoveSelectedContentItemFromList;
+    private javax.swing.JButton btnContentRemoveSelectedContentItemFromTable;
     private javax.swing.JButton btnDeleteProfile;
     private javax.swing.JButton btnFilename;
     private javax.swing.JButton btnFilepath;
@@ -1868,7 +1911,7 @@ public class jfReport extends javax.swing.JFrame
     private javax.swing.JScrollPane jScrollPane5;
     private javax.swing.JScrollPane jScrollPane7;
     private javax.swing.JPanel jpClass;
-    private javax.swing.JPanel jpContents;
+    private javax.swing.JPanel jpContent;
     private javax.swing.JPanel jpGenerateReport;
     private javax.swing.JPanel jpGeneration;
     private javax.swing.JPanel jpPreview;
@@ -1885,8 +1928,8 @@ public class jfReport extends javax.swing.JFrame
     private javax.swing.JLabel lblGenerationProgress;
     private javax.swing.JLabel lblRows;
     private javax.swing.JLabel lblSection;
-    private javax.swing.JList<String> listContentsAssignedContentItems;
-    private javax.swing.JList<String> lstContentsAvailableContentItems;
+    private javax.swing.JList<String> lstContentAssignedContentItems;
+    private javax.swing.JList<String> lstContentAvailableContentItems;
     private javax.swing.JList<String> lstProfile;
     private javax.swing.JList<String> lstTemplateComponents;
     private javax.swing.JList<String> lstTemplateDefaultComponents;
@@ -1896,7 +1939,7 @@ public class jfReport extends javax.swing.JFrame
     private javax.swing.JScrollPane scpListProfile;
     private javax.swing.JSpinner spinnerColumns;
     private javax.swing.JSpinner spinnerRows;
-    private javax.swing.JTable tableContentsAssignedContentItems;
+    private javax.swing.JTable tblContentAssignedContentItems;
     private javax.swing.JTable tblTemplateComponentsTable;
     private javax.swing.JTextField txtfFilename;
     private javax.swing.JTextField txtfFilepath;
