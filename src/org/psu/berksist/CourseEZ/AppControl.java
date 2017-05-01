@@ -12,6 +12,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JDialog;
 import javax.swing.JFrame;
+import javax.swing.JOptionPane;
 import javax.swing.UIManager;
 import org.apache.commons.cli.CommandLine;
 import org.apache.commons.cli.HelpFormatter;
@@ -20,6 +21,9 @@ import org.apache.commons.cli.ParseException;
 /**
  *
  * @author rqz5104
+ *  ************************************************** MODIFICATION LOG **************************************************
+ *  2017 April 29       -   Added debug mode check for splash screen.
+ *                          Added basic alpha disclaimer. -JSS5783
  */
 public class AppControl {
     
@@ -33,9 +37,11 @@ public class AppControl {
     
     public static void main(String[] args) throws IOException
     {
-        
-        SplashScreen splash = new SplashScreen(10000); //change duration of splash screen here
-        splash.showSplash(); //to display splash screen
+        if (AppConstants.DEBUG_MODE == false)
+        {
+            SplashScreen splash = new SplashScreen(10000); //change duration of splash screen here
+            splash.showSplash(); //to display splash screen
+        }
         
         new AppControl(args);
         
@@ -81,6 +87,18 @@ public class AppControl {
 
                 
                 main = new jfMain(myProps, gpa, newRun);
+                
+                if (AppConstants.DEBUG_MODE == true)
+                {
+                    main.setTitle(AppConstants.APP_ID + " (Debug Mode)");
+                }
+                
+                //if application version starts with "0.", assume it's an alpha version
+                //TODO: Add better alpha-detection, such as the presence of alphabetical characters (e.g., 1.2.33a) or an IS_ALPHA boolean or something
+                if (AppConstants.APP_VERSION.substring(0,2).equals("0.") == true)
+                {
+                    JOptionPane.showMessageDialog(main, "This is an alpha version. That means things are very likely to be:\n-Incomplete or unimplemented\n-Rapidly changing in development from version to version\n-Buggy or completely broken\n\nUsing this program means you accept all responsibility for any and all problems that may occur in its use.", "Alpha", JOptionPane.WARNING_MESSAGE);
+                }
 
             }
         });

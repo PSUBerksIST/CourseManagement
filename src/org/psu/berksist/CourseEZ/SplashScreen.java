@@ -21,6 +21,7 @@ import sas.swing.plaf.MultiLineLabelUI;
  * @author rgs19
  * 
  *  ******************* MODIFICATION LOG *****************************************
+ *  2017 April 29   -   Updated copyright line text. -JSS5783
  *  2017 April 27   -   Tweaked color scheme. -JSS5783
  *  2017 April 27   -   Replaced splash image name with constant name.
  *                      Modified color scheme to match image (as constants for easy modification).
@@ -297,7 +298,7 @@ public class SplashScreen extends JWindow
         lblApplicationName.setFont(new Font("Sans-Serif", Font.BOLD, 24) );
         lblApplicationName.setHorizontalAlignment(JLabel.CENTER);
         lblSplashImage = new JLabel(new ImageIcon(imgSplash) );
-        lblCopyright = new JLabel("Copyright 2017, Penn State Berks IST");
+        lblCopyright = new JLabel("©2017 PSU Berks IST");
         lblCopyright.setHorizontalAlignment(JLabel.CENTER);
         lblCopyright.setFont(new Font("Sans-Serif", Font.PLAIN, 12) );
         lblCopyright.setForeground(TEXT_COLOR);

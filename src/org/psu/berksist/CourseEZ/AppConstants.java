@@ -15,15 +15,19 @@ import javax.swing.UIManager;
  * Central location for all application constants.
  * 
  *  ******************* MODIFICATION LOG *****************************************
- *  2017 April 27   -   Added SPLASH_IMAGE_NAME. - JSS5783
+ *  2017 April 29   -   Added DEBUG_MODE.
+ *                      APP_VERSION changed to... 0.2. Because this is the second class of students working on the project. -JSS5783
+ *  2017 April 28   -   Updated APP_ICON. -JSS5783
+ *  2017 April 27   -   Added SPLASH_IMAGE_NAME. -JSS5783
  *  2016 March 25   -   Initial creation - WHB
 
 */
 public class AppConstants 
 {
     public static final String APP_ID = "CourseEZ";
-    public static final String APP_VERSION = "1";
+    public static final String APP_VERSION = "0.2";
     
+    public static final boolean DEBUG_MODE = false; //change to true to enable debug-mode-only tweaks like skipped splash screens and test outputs to the console.
     
     public static String LAF = "LookAndFeel";
     public static String LAST_DB = "LastConnectedDatabase";
@@ -50,7 +54,7 @@ public class AppConstants
     
     
     // Icon Images --------(Alphabetical)------------------------
-    public static String APP_ICON = "AppIcon-temp.png";
+    public static String APP_ICON = "LIONScroll_-_icon_v0_2017_04_23_alt-colors.png";
     public static String CASCADE_ICON_16 = "CascadeIcon16.png";
     public static String CASCADE_ICON_32 = "CascadeIcon32.png";
     public static String DB_OPEN_ICON_16 = "DatabaseIcon16.png";

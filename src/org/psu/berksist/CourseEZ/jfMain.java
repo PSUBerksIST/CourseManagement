@@ -296,6 +296,7 @@ public class jfMain extends JFrame {
 
         jmbMain.add(jmFile);
 
+        jmEdit.setMnemonic('E');
         jmEdit.setText("Edit");
 
         jmiCut.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/CutIcon16.png"))); // NOI18N
@@ -329,9 +330,11 @@ public class jfMain extends JFrame {
 
         jmbMain.add(jmWindows);
 
+        jmLookAndFeel.setMnemonic('L');
         jmLookAndFeel.setText("Look And Feel");
         jmbMain.add(jmLookAndFeel);
 
+        jmOptions.setMnemonic('O');
         jmOptions.setText("Options");
         jmOptions.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -357,6 +360,7 @@ public class jfMain extends JFrame {
 
         jmbMain.add(jmOptions);
 
+        jmHelp.setMnemonic('H');
         jmHelp.setText("Help");
 
         jmHelpContents.setText("Help Contents");
@@ -385,6 +389,7 @@ public class jfMain extends JFrame {
 
         jmbMain.add(jmHelp);
 
+        jMenu1.setMnemonic('R');
         jMenu1.setText("Report");
 
         jmiTestGenerateReport.setText("TEST: Generate Report");

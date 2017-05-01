@@ -1,15 +1,10 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package org.psu.berksist.CourseEZ;
 
 import java.sql.Connection;
 
 /**
- *
- * @author Nicholas
+ * Panel to get information from the user about a Book.  Can be used to add a new book to the database or edit an existing one
+ * @author Nicholas Beliveau
  */
 public class jpAddBook extends javax.swing.JPanel {
 
@@ -22,6 +17,10 @@ public class jpAddBook extends javax.swing.JPanel {
         initComponents();
     }
     
+    /**
+     * Constructor with a database connection passed to it
+     * @param inConnection 
+     */
     public jpAddBook(Connection inConnection)
     {
         initComponents();
@@ -124,8 +123,18 @@ public class jpAddBook extends javax.swing.JPanel {
         jlManual.setText("Manual :");
 
         jbSave.setText("Save");
+        jbSave.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jbSaveActionPerformed(evt);
+            }
+        });
 
         jbCancel.setText("Cancel");
+        jbCancel.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jbCancelActionPerformed(evt);
+            }
+        });
 
         jListCourses.setModel(new javax.swing.AbstractListModel<String>() {
             String[] strings = { "Item 1", "Item 2", "Item 3", "Item 4", "Item 5" };
@@ -302,8 +311,16 @@ public class jpAddBook extends javax.swing.JPanel {
     }//GEN-LAST:event_jtfClassActionPerformed
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
-        // TODO add your handling code here:
+        // TODO Add code to allow the user to select from a list of courses to connect the current book with
     }//GEN-LAST:event_jButton1ActionPerformed
+
+    private void jbCancelActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jbCancelActionPerformed
+        // TODO Close out the panel and discard the added information
+    }//GEN-LAST:event_jbCancelActionPerformed
+
+    private void jbSaveActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jbSaveActionPerformed
+        // TODO Collect the data that has been entered and add it to the database as a new book
+    }//GEN-LAST:event_jbSaveActionPerformed
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
