@@ -10,12 +10,13 @@ package org.psu.berksist.CourseEZ;
  * @author dockery estate
  */
 public class jpSemester extends javax.swing.JPanel {
-
+//TODO nned to design semester need to make a teacher schedule 
     /**
      * Creates new form jpSemester
      */
     public jpSemester() {
         initComponents();
+        //TODO A SEMESTER TO COURSE TO CLASS
     }
 
     /**
