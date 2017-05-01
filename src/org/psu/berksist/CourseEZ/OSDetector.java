@@ -7,6 +7,8 @@ package org.psu.berksist.CourseEZ;
 
 import java.awt.Desktop;
 import java.io.File;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  *
@@ -14,62 +16,59 @@ import java.io.File;
  */
 
 /* 
- * April 21, 2017 - OS Detctor implemented from - http://stackoverflow.com/questions/7024031/java-open-a-file-windows-mac - RGS
- *
+ * April 21, 2017 - OSDetector implemented from - http://stackoverflow.com/questions/7024031/java-open-a-file-windows-mac - RGS
+ * April 25, 2017 - Modified to use a different command for Linux/Unix
  */
 
 public class OSDetector {
     
-     private static boolean isWindows = false;
-    private static boolean isLinux = false;
+    private static boolean isWindows = false;
     private static boolean isMac = false;
+    private static boolean isLinux = false;
 
     static
     {
         String os = System.getProperty("os.name").toLowerCase();
         isWindows = os.contains("win");
-        isLinux = os.contains("nux") || os.contains("nix");
         isMac = os.contains("mac");
+        isLinux = os.contains("nux") || os.contains("nix");
     }
 
-    public static boolean isWindows() { return isWindows; }
-    public static boolean isLinux() { return isLinux; }
-    public static boolean isMac() { return isMac; };
+    private static boolean isWindows() {return isWindows;}
+    private static boolean isMac() {return isMac;}
+    private static boolean isLinux() {return isLinux;}
 
     
-    public static boolean open(File file)
-{
+    public static boolean open(File file) {
     try
     {
-        if (OSDetector.isWindows())
-        {
-            Runtime.getRuntime().exec(new String[]
-            {"rundll32", "url.dll,FileProtocolHandler",
-             file.getAbsolutePath()});
+        if (OSDetector.isWindows()) {
+            Runtime.getRuntime().exec(new String[] 
+                {"rundll32", "url.dll,FileProtocolHandler",
+                file.getAbsolutePath()});
             return true;
-        } else if (OSDetector.isLinux() || OSDetector.isMac())
-        {
+        } else if (OSDetector.isMac()) {
             Runtime.getRuntime().exec(new String[]{"/usr/bin/open",
-                                                   file.getAbsolutePath()});
+                file.getAbsolutePath()});
             return true;
-        } else
-        {
+        } else if (OSDetector.isLinux()) {
+            Runtime.getRuntime().exec(new String[]{"xgd-open",
+                file.getAbsolutePath()});
+            return true;
+        } else {
             // Unknown OS, try with desktop
-            if (Desktop.isDesktopSupported())
-            {
+            if (Desktop.isDesktopSupported()) {
                 Desktop.getDesktop().open(file);
                 return true;
-            }
-            else
-            {
+            } else {
                 return false;
             }
         }
-    } catch (Exception e)
-    {
-        e.printStackTrace(System.err);
+    } catch (Exception ex) {
+        Logger.getLogger(jfMain.class.getName()).log(Level.SEVERE, null, ex);
         return false;
     }
+    
 }
     
 }

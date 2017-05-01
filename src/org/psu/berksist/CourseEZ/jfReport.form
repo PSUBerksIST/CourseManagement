@@ -33,7 +33,7 @@
               <Component id="jpProfile" max="32767" attributes="0"/>
               <EmptySpace max="-2" attributes="0"/>
               <Group type="103" groupAlignment="0" max="-2" attributes="0">
-                  <Component id="jTabbedPanel" max="32767" attributes="0"/>
+                  <Component id="jtpEditor" max="32767" attributes="0"/>
                   <Component id="jpClass" max="32767" attributes="0"/>
               </Group>
               <EmptySpace max="32767" attributes="0"/>
@@ -48,7 +48,7 @@
                   <Group type="102" attributes="0">
                       <Component id="jpClass" min="-2" max="-2" attributes="0"/>
                       <EmptySpace max="-2" attributes="0"/>
-                      <Component id="jTabbedPanel" max="32767" attributes="0"/>
+                      <Component id="jtpEditor" max="32767" attributes="0"/>
                   </Group>
                   <Component id="jpProfile" max="32767" attributes="0"/>
               </Group>
@@ -80,7 +80,7 @@
                           </Group>
                           <EmptySpace max="32767" attributes="0"/>
                           <Group type="103" groupAlignment="0" attributes="0">
-                              <Component id="btnDeleteProfile" pref="70" max="32767" attributes="0"/>
+                              <Component id="btnDeleteProfile" max="32767" attributes="0"/>
                               <Component id="btnLoadProfile" alignment="1" max="32767" attributes="0"/>
                           </Group>
                       </Group>
@@ -114,6 +114,9 @@
           <Properties>
             <Property name="text" type="java.lang.String" value="New"/>
           </Properties>
+          <Events>
+            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btnNewProfileActionPerformed"/>
+          </Events>
         </Component>
         <Component class="javax.swing.JButton" name="btnLoadProfile">
           <Properties>
@@ -127,11 +130,17 @@
           <Properties>
             <Property name="text" type="java.lang.String" value="Delete"/>
           </Properties>
+          <Events>
+            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btnDeleteProfileActionPerformed"/>
+          </Events>
         </Component>
         <Component class="javax.swing.JButton" name="btnSaveProfile">
           <Properties>
             <Property name="text" type="java.lang.String" value="Save"/>
           </Properties>
+          <Events>
+            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btnSaveProfileActionPerformed"/>
+          </Events>
         </Component>
         <Container class="javax.swing.JScrollPane" name="scpListProfile">
           <AuxValues>
@@ -142,11 +151,8 @@
           <SubComponents>
             <Component class="javax.swing.JList" name="lstProfile">
               <Properties>
-                <Property name="model" type="javax.swing.ListModel" editor="org.netbeans.modules.form.editors2.ListModelEditor">
-                  <StringArray count="2">
-                    <StringItem index="0" value="Assignment"/>
-                    <StringItem index="1" value="Syllabus"/>
-                  </StringArray>
+                <Property name="model" type="javax.swing.ListModel" editor="org.netbeans.modules.form.RADConnectionPropertyEditor">
+                  <Connection code="lmodelLstProfile" type="code"/>
                 </Property>
                 <Property name="selectionMode" type="int" value="0"/>
               </Properties>
@@ -208,10 +214,13 @@
           <Properties>
             <Property name="model" type="javax.swing.ComboBoxModel" editor="org.netbeans.modules.form.editors2.ComboBoxModelEditor">
               <StringArray count="1">
-                <StringItem index="0" value="IST"/>
+                <StringItem index="0" value="---"/>
               </StringArray>
             </Property>
           </Properties>
+          <Events>
+            <EventHandler event="itemStateChanged" listener="java.awt.event.ItemListener" parameters="java.awt.event.ItemEvent" handler="cmbDepartmentItemStateChanged"/>
+          </Events>
           <AuxValues>
             <AuxValue name="JavaCodeGenerator_TypeParameters" type="java.lang.String" value="&lt;String&gt;"/>
           </AuxValues>
@@ -220,10 +229,14 @@
           <Properties>
             <Property name="model" type="javax.swing.ComboBoxModel" editor="org.netbeans.modules.form.editors2.ComboBoxModelEditor">
               <StringArray count="1">
-                <StringItem index="0" value="261"/>
+                <StringItem index="0" value="---"/>
               </StringArray>
             </Property>
+            <Property name="enabled" type="boolean" value="false"/>
           </Properties>
+          <Events>
+            <EventHandler event="itemStateChanged" listener="java.awt.event.ItemListener" parameters="java.awt.event.ItemEvent" handler="cmbCourseItemStateChanged"/>
+          </Events>
           <AuxValues>
             <AuxValue name="JavaCodeGenerator_TypeParameters" type="java.lang.String" value="&lt;String&gt;"/>
           </AuxValues>
@@ -232,9 +245,10 @@
           <Properties>
             <Property name="model" type="javax.swing.ComboBoxModel" editor="org.netbeans.modules.form.editors2.ComboBoxModelEditor">
               <StringArray count="1">
-                <StringItem index="0" value="001"/>
+                <StringItem index="0" value="---"/>
               </StringArray>
             </Property>
+            <Property name="enabled" type="boolean" value="false"/>
           </Properties>
           <AuxValues>
             <AuxValue name="JavaCodeGenerator_TypeParameters" type="java.lang.String" value="&lt;String&gt;"/>
@@ -257,10 +271,9 @@
         </Component>
       </SubComponents>
     </Container>
-    <Container class="javax.swing.JTabbedPane" name="jTabbedPanel">
+    <Container class="javax.swing.JTabbedPane" name="jtpEditor">
       <Events>
-        <EventHandler event="stateChanged" listener="javax.swing.event.ChangeListener" parameters="javax.swing.event.ChangeEvent" handler="jTabbedPanelStateChanged"/>
-        <EventHandler event="focusGained" listener="java.awt.event.FocusListener" parameters="java.awt.event.FocusEvent" handler="jTabbedPanelFocusGained"/>
+        <EventHandler event="stateChanged" listener="javax.swing.event.ChangeListener" parameters="javax.swing.event.ChangeEvent" handler="jtpEditorStateChanged"/>
       </Events>
 
       <Layout class="org.netbeans.modules.form.compat2.layouts.support.JTabbedPaneSupportLayout"/>
@@ -282,18 +295,15 @@
                       <Component id="jScrollPane2" min="-2" pref="178" max="-2" attributes="0"/>
                       <EmptySpace max="-2" attributes="0"/>
                       <Group type="103" groupAlignment="0" attributes="0">
-                          <Group type="103" alignment="0" groupAlignment="0" max="-2" attributes="0">
-                              <Component id="btnTemplateAddComponentToTemplate" max="32767" attributes="0"/>
-                              <Component id="btnTemplateRemoveComponentFromTemplate" max="32767" attributes="0"/>
-                              <Component id="btnAddComponentToTable" alignment="0" min="-2" max="-2" attributes="0"/>
+                          <Group type="102" attributes="0">
+                              <Group type="103" groupAlignment="0" max="-2" attributes="0">
+                                  <Component id="btnTemplateAddComponentToTemplate" pref="54" max="32767" attributes="0"/>
+                                  <Component id="btnTemplateRemoveComponentFromTemplate" max="32767" attributes="0"/>
+                              </Group>
+                              <EmptySpace max="-2" attributes="0"/>
+                              <Component id="jScrollPane3" max="32767" attributes="0"/>
                           </Group>
-                          <Component id="btnRemoveComponentFromTable" min="-2" max="-2" attributes="0"/>
-                      </Group>
-                      <EmptySpace max="-2" attributes="0"/>
-                      <Group type="103" groupAlignment="1" attributes="0">
-                          <Component id="jpTemplateTableSize" max="32767" attributes="0"/>
-                          <Component id="jScrollPane3" max="32767" attributes="0"/>
-                          <Component id="jScrollPane4" pref="0" max="32767" attributes="0"/>
+                          <Component id="jpTemplateTable" max="32767" attributes="0"/>
                       </Group>
                       <EmptySpace max="-2" attributes="0"/>
                   </Group>
@@ -304,14 +314,10 @@
                   <Group type="102" alignment="0" attributes="0">
                       <EmptySpace max="-2" attributes="0"/>
                       <Group type="103" groupAlignment="0" attributes="0">
-                          <Component id="jScrollPane2" max="32767" attributes="0"/>
+                          <Component id="jScrollPane2" pref="357" max="32767" attributes="0"/>
                           <Group type="102" alignment="0" attributes="0">
                               <Group type="103" groupAlignment="0" attributes="0">
-                                  <Group type="102" alignment="0" attributes="0">
-                                      <Component id="jScrollPane3" min="-2" pref="148" max="-2" attributes="0"/>
-                                      <EmptySpace max="-2" attributes="0"/>
-                                      <Component id="jpTemplateTableSize" min="-2" max="-2" attributes="0"/>
-                                  </Group>
+                                  <Component id="jScrollPane3" alignment="0" min="-2" pref="148" max="-2" attributes="0"/>
                                   <Group type="102" alignment="0" attributes="0">
                                       <EmptySpace min="-2" pref="25" max="-2" attributes="0"/>
                                       <Component id="btnTemplateAddComponentToTemplate" min="-2" max="-2" attributes="0"/>
@@ -320,18 +326,10 @@
                                   </Group>
                               </Group>
                               <EmptySpace max="-2" attributes="0"/>
-                              <Group type="103" groupAlignment="0" attributes="0">
-                                  <Group type="102" attributes="0">
-                                      <Component id="btnAddComponentToTable" min="-2" max="-2" attributes="0"/>
-                                      <EmptySpace type="separate" max="-2" attributes="0"/>
-                                      <Component id="btnRemoveComponentFromTable" min="-2" max="-2" attributes="0"/>
-                                      <EmptySpace min="0" pref="60" max="32767" attributes="0"/>
-                                  </Group>
-                                  <Component id="jScrollPane4" pref="0" max="32767" attributes="0"/>
-                              </Group>
+                              <Component id="jpTemplateTable" max="32767" attributes="0"/>
                           </Group>
                       </Group>
-                      <EmptySpace max="-2" attributes="0"/>
+                      <EmptySpace max="32767" attributes="0"/>
                   </Group>
               </Group>
             </DimensionLayout>
@@ -344,7 +342,7 @@
 
               <Layout class="org.netbeans.modules.form.compat2.layouts.support.JScrollPaneSupportLayout"/>
               <SubComponents>
-                <Component class="javax.swing.JList" name="listTemplateDefaultComponents">
+                <Component class="javax.swing.JList" name="lstTemplateDefaultComponents">
                   <Properties>
                     <Property name="border" type="javax.swing.border.Border" editor="org.netbeans.modules.form.editors2.BorderEditor">
                       <Border info="org.netbeans.modules.form.compat2.border.TitledBorderInfo">
@@ -352,14 +350,34 @@
                       </Border>
                     </Property>
                     <Property name="model" type="javax.swing.ListModel" editor="org.netbeans.modules.form.editors2.ListModelEditor">
-                      <StringArray count="7">
-                        <StringItem index="0" value="ASSIGNMENT"/>
-                        <StringItem index="1" value="CLASS_NAME"/>
-                        <StringItem index="2" value="COURSE_DESCRIPTION"/>
-                        <StringItem index="3" value="PROJECT_INDIVIDUAL"/>
-                        <StringItem index="4" value="PROJECT_GROUP"/>
-                        <StringItem index="5" value="RESOURCE_REQUIREMENTS{COLUMNS,ROWS}"/>
-                        <StringItem index="6" value="SCHEDULE{COLUMNS,ROWS}"/>
+                      <StringArray count="27">
+                        <StringItem index="0" value="TABLE{COLUMNS,ROWS}"/>
+                        <StringItem index="1" value="ASSIGNMENT_DESCRIPTION"/>
+                        <StringItem index="2" value="ASSIGNMENT_NAME"/>
+                        <StringItem index="3" value="AUTHOR"/>
+                        <StringItem index="4" value="COURSE_DESCRIPTION"/>
+                        <StringItem index="5" value="COURSE_NAME"/>
+                        <StringItem index="6" value="COURSE_NUMBER"/>
+                        <StringItem index="7" value="CLASS_NUMBER"/>
+                        <StringItem index="8" value="DATE"/>
+                        <StringItem index="9" value="DIVIDER"/>
+                        <StringItem index="10" value="GROUP_PROJECT_DESCRIPTION"/>
+                        <StringItem index="11" value="GROUP_PROJECT_NAME"/>
+                        <StringItem index="12" value="INDIVIDUAL_PROJECT_DESCRIPTION"/>
+                        <StringItem index="13" value="INDIVIDUAL_PROJECT_NAME"/>
+                        <StringItem index="14" value="NEWLINE"/>
+                        <StringItem index="15" value="PAGEBREAK"/>
+                        <StringItem index="16" value="SECTION_NUMBER"/>
+                        <StringItem index="17" value="SYLLABUS_ACADEMIC_INTEGRITY"/>
+                        <StringItem index="18" value="SYLLABUS_ASSIGNMENT_STANDARDS"/>
+                        <StringItem index="19" value="SYLLABUS_COURSE_FORMAT"/>
+                        <StringItem index="20" value="SYLLABUS_DISABILITY"/>
+                        <StringItem index="21" value="SYLLABUS_GRADING"/>
+                        <StringItem index="22" value="SYLLABUS_MODIFICATION"/>
+                        <StringItem index="23" value="TASK_NAME"/>
+                        <StringItem index="24" value="TEXTBOOK_IMAGE"/>
+                        <StringItem index="25" value="TEXTBOOK_INFORMATION"/>
+                        <StringItem index="26" value="TEXTBOOK_IS_REQUIRED_OR_OPTIONAL"/>
                       </StringArray>
                     </Property>
                     <Property name="selectionMode" type="int" value="0"/>
@@ -377,21 +395,15 @@
 
               <Layout class="org.netbeans.modules.form.compat2.layouts.support.JScrollPaneSupportLayout"/>
               <SubComponents>
-                <Component class="javax.swing.JList" name="listTemplateComponents">
+                <Component class="javax.swing.JList" name="lstTemplateComponents">
                   <Properties>
                     <Property name="border" type="javax.swing.border.Border" editor="org.netbeans.modules.form.editors2.BorderEditor">
                       <Border info="org.netbeans.modules.form.compat2.border.TitledBorderInfo">
                         <TitledBorder title="Template Components"/>
                       </Border>
                     </Property>
-                    <Property name="model" type="javax.swing.ListModel" editor="org.netbeans.modules.form.editors2.ListModelEditor">
-                      <StringArray count="5">
-                        <StringItem index="0" value="CLASS_NAME"/>
-                        <StringItem index="1" value="COURSE_DESCRIPTION"/>
-                        <StringItem index="2" value="CONTACT_INFORMATION"/>
-                        <StringItem index="3" value="RESOURCE_REQUIREMENTS{3,1}"/>
-                        <StringItem index="4" value="SCHEDULE{2,3}"/>
-                      </StringArray>
+                    <Property name="model" type="javax.swing.ListModel" editor="org.netbeans.modules.form.RADConnectionPropertyEditor">
+                      <Connection code="lmodelLstTemplateComponents" type="code"/>
                     </Property>
                     <Property name="selectionMode" type="int" value="0"/>
                     <Property name="toolTipText" type="java.lang.String" value=""/>
@@ -399,6 +411,9 @@
                       <Value id="INSERT"/>
                     </Property>
                   </Properties>
+                  <Events>
+                    <EventHandler event="valueChanged" listener="javax.swing.event.ListSelectionListener" parameters="javax.swing.event.ListSelectionEvent" handler="lstTemplateComponentsValueChanged"/>
+                  </Events>
                   <AuxValues>
                     <AuxValue name="JavaCodeGenerator_TypeParameters" type="java.lang.String" value="&lt;String&gt;"/>
                   </AuxValues>
@@ -407,128 +422,176 @@
             </Container>
             <Component class="javax.swing.JButton" name="btnTemplateAddComponentToTemplate">
               <Properties>
-                <Property name="text" type="java.lang.String" value="&gt;&gt;"/>
+                <Property name="text" type="java.lang.String" value="&gt;"/>
               </Properties>
+              <Events>
+                <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btnTemplateAddComponentToTemplateActionPerformed"/>
+              </Events>
             </Component>
             <Component class="javax.swing.JButton" name="btnTemplateRemoveComponentFromTemplate">
               <Properties>
-                <Property name="text" type="java.lang.String" value="&lt;&lt;"/>
-              </Properties>
-            </Component>
-            <Container class="javax.swing.JScrollPane" name="jScrollPane4">
-              <AuxValues>
-                <AuxValue name="autoScrollPane" type="java.lang.Boolean" value="true"/>
-              </AuxValues>
-
-              <Layout class="org.netbeans.modules.form.compat2.layouts.support.JScrollPaneSupportLayout"/>
-              <SubComponents>
-                <Component class="javax.swing.JTable" name="tableTemplateTableContents">
-                  <Properties>
-                    <Property name="border" type="javax.swing.border.Border" editor="org.netbeans.modules.form.editors2.BorderEditor">
-                      <Border info="org.netbeans.modules.form.compat2.border.TitledBorderInfo">
-                        <TitledBorder/>
-                      </Border>
-                    </Property>
-                    <Property name="model" type="javax.swing.table.TableModel" editor="org.netbeans.modules.form.editors2.TableModelEditor">
-                      <Table columnCount="2" rowCount="3">
-                        <Column editable="false" title="Column1" type="java.lang.String">
-                          <Data value="DATE"/>
-                          <Data value="DATE"/>
-                          <Data value="DATE"/>
-                        </Column>
-                        <Column editable="false" title="Column2" type="java.lang.String">
-                          <Data value="ASSIGNMENT"/>
-                          <Data value="ASSIGNMENT"/>
-                          <Data value="ASSIGNMENT"/>
-                        </Column>
-                      </Table>
-                    </Property>
-                    <Property name="columnModel" type="javax.swing.table.TableColumnModel" editor="org.netbeans.modules.form.editors2.TableColumnModelEditor">
-                      <TableColumnModel selectionModel="0"/>
-                    </Property>
-                    <Property name="tableHeader" type="javax.swing.table.JTableHeader" editor="org.netbeans.modules.form.editors2.JTableHeaderEditor">
-                      <TableHeader reorderingAllowed="true" resizingAllowed="true"/>
-                    </Property>
-                  </Properties>
-                </Component>
-              </SubComponents>
-            </Container>
-            <Component class="javax.swing.JButton" name="btnAddComponentToTable">
-              <Properties>
-                <Property name="text" type="java.lang.String" value="&gt;&gt;"/>
-              </Properties>
-            </Component>
-            <Component class="javax.swing.JButton" name="btnRemoveComponentFromTable">
-              <Properties>
-                <Property name="text" type="java.lang.String" value="&lt;&lt;"/>
+                <Property name="text" type="java.lang.String" value="&lt;"/>
               </Properties>
               <Events>
-                <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btnRemoveComponentFromTableActionPerformed"/>
+                <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btnTemplateRemoveComponentFromTemplateActionPerformed"/>
               </Events>
             </Component>
-            <Container class="javax.swing.JPanel" name="jpTemplateTableSize">
-              <Properties>
-                <Property name="border" type="javax.swing.border.Border" editor="org.netbeans.modules.form.editors2.BorderEditor">
-                  <Border info="org.netbeans.modules.form.compat2.border.TitledBorderInfo">
-                    <TitledBorder title="Table Size"/>
-                  </Border>
-                </Property>
-              </Properties>
+            <Container class="javax.swing.JPanel" name="jpTemplateTable">
 
               <Layout>
                 <DimensionLayout dim="0">
                   <Group type="103" groupAlignment="0" attributes="0">
-                      <Group type="102" alignment="0" attributes="0">
-                          <EmptySpace pref="60" max="32767" attributes="0"/>
-                          <Component id="lblColumns" min="-2" max="-2" attributes="0"/>
-                          <EmptySpace max="-2" attributes="0"/>
-                          <Component id="spinnerColumns" min="-2" max="-2" attributes="0"/>
-                          <EmptySpace min="-2" pref="50" max="-2" attributes="0"/>
-                          <Component id="lblRows" min="-2" max="-2" attributes="0"/>
-                          <EmptySpace max="-2" attributes="0"/>
-                          <Component id="spinnerRows" min="-2" max="-2" attributes="0"/>
-                          <EmptySpace pref="49" max="32767" attributes="0"/>
+                      <Group type="102" alignment="1" attributes="0">
+                          <Group type="103" groupAlignment="0" attributes="0">
+                              <Component id="btnAddComponentToTable" pref="51" max="32767" attributes="0"/>
+                              <Component id="btnRemoveComponentFromTable" max="32767" attributes="0"/>
+                          </Group>
+                          <EmptySpace type="unrelated" max="-2" attributes="0"/>
+                          <Group type="103" groupAlignment="0" max="-2" attributes="0">
+                              <Component id="jpTemplateTableSize" max="32767" attributes="0"/>
+                              <Component id="jScrollPane4" pref="482" max="32767" attributes="0"/>
+                          </Group>
                       </Group>
                   </Group>
                 </DimensionLayout>
                 <DimensionLayout dim="1">
                   <Group type="103" groupAlignment="0" attributes="0">
+                      <Group type="102" attributes="0">
+                          <EmptySpace min="-2" pref="62" max="-2" attributes="0"/>
+                          <Component id="btnAddComponentToTable" min="-2" max="-2" attributes="0"/>
+                          <EmptySpace type="unrelated" max="-2" attributes="0"/>
+                          <Component id="btnRemoveComponentFromTable" min="-2" max="-2" attributes="0"/>
+                          <EmptySpace max="32767" attributes="0"/>
+                      </Group>
                       <Group type="102" alignment="0" attributes="0">
-                          <Group type="103" groupAlignment="3" attributes="0">
-                              <Component id="spinnerColumns" alignment="3" min="-2" max="-2" attributes="0"/>
-                              <Component id="spinnerRows" alignment="3" min="-2" max="-2" attributes="0"/>
-                              <Component id="lblColumns" alignment="3" min="-2" max="-2" attributes="0"/>
-                              <Component id="lblRows" alignment="3" min="-2" max="-2" attributes="0"/>
-                          </Group>
-                          <EmptySpace min="0" pref="8" max="32767" attributes="0"/>
+                          <Component id="jpTemplateTableSize" min="-2" max="-2" attributes="0"/>
+                          <EmptySpace max="-2" attributes="0"/>
+                          <Component id="jScrollPane4" pref="0" max="32767" attributes="0"/>
+                          <EmptySpace max="-2" attributes="0"/>
                       </Group>
                   </Group>
                 </DimensionLayout>
               </Layout>
               <SubComponents>
-                <Component class="javax.swing.JSpinner" name="spinnerColumns">
-                </Component>
-                <Component class="javax.swing.JSpinner" name="spinnerRows">
-                </Component>
-                <Component class="javax.swing.JLabel" name="lblColumns">
+                <Component class="javax.swing.JButton" name="btnAddComponentToTable">
                   <Properties>
-                    <Property name="text" type="java.lang.String" value="Columns:"/>
+                    <Property name="text" type="java.lang.String" value="&gt;"/>
                   </Properties>
+                  <Events>
+                    <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btnAddComponentToTableActionPerformed"/>
+                  </Events>
                 </Component>
-                <Component class="javax.swing.JLabel" name="lblRows">
+                <Component class="javax.swing.JButton" name="btnRemoveComponentFromTable">
                   <Properties>
-                    <Property name="text" type="java.lang.String" value="Rows:"/>
+                    <Property name="text" type="java.lang.String" value="&lt;"/>
                   </Properties>
+                  <Events>
+                    <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btnRemoveComponentFromTableActionPerformed"/>
+                  </Events>
                 </Component>
+                <Container class="javax.swing.JPanel" name="jpTemplateTableSize">
+                  <Properties>
+                    <Property name="border" type="javax.swing.border.Border" editor="org.netbeans.modules.form.editors2.BorderEditor">
+                      <Border info="org.netbeans.modules.form.compat2.border.TitledBorderInfo">
+                        <TitledBorder title="Table Size"/>
+                      </Border>
+                    </Property>
+                  </Properties>
+
+                  <Layout>
+                    <DimensionLayout dim="0">
+                      <Group type="103" groupAlignment="0" attributes="0">
+                          <Group type="102" alignment="0" attributes="0">
+                              <EmptySpace max="32767" attributes="0"/>
+                              <Component id="lblColumns" min="-2" max="-2" attributes="0"/>
+                              <EmptySpace max="-2" attributes="0"/>
+                              <Component id="spinnerColumns" min="-2" max="-2" attributes="0"/>
+                              <EmptySpace min="-2" pref="51" max="-2" attributes="0"/>
+                              <Component id="lblRows" min="-2" max="-2" attributes="0"/>
+                              <EmptySpace max="-2" attributes="0"/>
+                              <Component id="spinnerRows" min="-2" max="-2" attributes="0"/>
+                              <EmptySpace max="32767" attributes="0"/>
+                              <Component id="btnTemplateUpdateTable" min="-2" max="-2" attributes="0"/>
+                              <EmptySpace min="-2" pref="24" max="-2" attributes="0"/>
+                          </Group>
+                      </Group>
+                    </DimensionLayout>
+                    <DimensionLayout dim="1">
+                      <Group type="103" groupAlignment="0" attributes="0">
+                          <Group type="102" alignment="0" attributes="0">
+                              <Group type="103" groupAlignment="3" attributes="0">
+                                  <Component id="spinnerColumns" alignment="3" min="-2" max="-2" attributes="0"/>
+                                  <Component id="spinnerRows" alignment="3" min="-2" max="-2" attributes="0"/>
+                                  <Component id="lblColumns" alignment="3" min="-2" max="-2" attributes="0"/>
+                                  <Component id="lblRows" alignment="3" min="-2" max="-2" attributes="0"/>
+                                  <Component id="btnTemplateUpdateTable" alignment="3" min="-2" max="-2" attributes="0"/>
+                              </Group>
+                              <EmptySpace min="0" pref="7" max="32767" attributes="0"/>
+                          </Group>
+                      </Group>
+                    </DimensionLayout>
+                  </Layout>
+                  <SubComponents>
+                    <Component class="javax.swing.JSpinner" name="spinnerColumns">
+                    </Component>
+                    <Component class="javax.swing.JSpinner" name="spinnerRows">
+                    </Component>
+                    <Component class="javax.swing.JLabel" name="lblColumns">
+                      <Properties>
+                        <Property name="text" type="java.lang.String" value="Columns:"/>
+                      </Properties>
+                    </Component>
+                    <Component class="javax.swing.JLabel" name="lblRows">
+                      <Properties>
+                        <Property name="text" type="java.lang.String" value="Rows:"/>
+                      </Properties>
+                    </Component>
+                    <Component class="javax.swing.JButton" name="btnTemplateUpdateTable">
+                      <Properties>
+                        <Property name="text" type="java.lang.String" value="Update Table"/>
+                      </Properties>
+                      <Events>
+                        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btnTemplateUpdateTableActionPerformed"/>
+                      </Events>
+                    </Component>
+                  </SubComponents>
+                </Container>
+                <Container class="javax.swing.JScrollPane" name="jScrollPane4">
+                  <AuxValues>
+                    <AuxValue name="autoScrollPane" type="java.lang.Boolean" value="true"/>
+                  </AuxValues>
+
+                  <Layout class="org.netbeans.modules.form.compat2.layouts.support.JScrollPaneSupportLayout"/>
+                  <SubComponents>
+                    <Component class="javax.swing.JTable" name="tblTemplateComponentsTable">
+                      <Properties>
+                        <Property name="border" type="javax.swing.border.Border" editor="org.netbeans.modules.form.editors2.BorderEditor">
+                          <Border info="org.netbeans.modules.form.compat2.border.TitledBorderInfo">
+                            <TitledBorder/>
+                          </Border>
+                        </Property>
+                        <Property name="model" type="javax.swing.table.TableModel" editor="org.netbeans.modules.form.editors2.TableModelEditor">
+                          <Table columnCount="0" rowCount="0"/>
+                        </Property>
+                        <Property name="columnModel" type="javax.swing.table.TableColumnModel" editor="org.netbeans.modules.form.editors2.TableColumnModelEditor">
+                          <TableColumnModel selectionModel="0"/>
+                        </Property>
+                        <Property name="tableHeader" type="javax.swing.table.JTableHeader" editor="org.netbeans.modules.form.editors2.JTableHeaderEditor">
+                          <TableHeader reorderingAllowed="true" resizingAllowed="true"/>
+                        </Property>
+                      </Properties>
+                    </Component>
+                  </SubComponents>
+                </Container>
               </SubComponents>
             </Container>
           </SubComponents>
         </Container>
-        <Container class="javax.swing.JPanel" name="jpContents">
+        <Container class="javax.swing.JPanel" name="jpContent">
           <Constraints>
             <Constraint layoutClass="org.netbeans.modules.form.compat2.layouts.support.JTabbedPaneSupportLayout" value="org.netbeans.modules.form.compat2.layouts.support.JTabbedPaneSupportLayout$JTabbedPaneConstraintsDescription">
-              <JTabbedPaneConstraints tabName="Contents">
-                <Property name="tabTitle" type="java.lang.String" value="Contents"/>
+              <JTabbedPaneConstraints tabName="Content">
+                <Property name="tabTitle" type="java.lang.String" value="Content"/>
               </JTabbedPaneConstraints>
             </Constraint>
           </Constraints>
@@ -544,13 +607,17 @@
                       </Group>
                       <EmptySpace max="-2" attributes="0"/>
                       <Group type="103" groupAlignment="0" attributes="0">
-                          <Component id="btnContentsRemoveContentItemFromList" alignment="0" min="-2" max="-2" attributes="0"/>
-                          <Component id="btnContentsAssignContentItemToList" alignment="0" min="-2" max="-2" attributes="0"/>
-                          <Component id="btnContentsAssignContentItemToTable" min="-2" max="-2" attributes="0"/>
-                          <Component id="btnContentsRemoveContentItemFromTable" min="-2" max="-2" attributes="0"/>
+                          <Component id="btnContentRemoveSelectedContentItemFromList" alignment="0" min="-2" max="-2" attributes="0"/>
+                          <Component id="btnContentAssignSelectedContentItemToList" alignment="0" min="-2" max="-2" attributes="0"/>
+                          <Component id="btnContentAssignSelectedContentItemToTable" min="-2" max="-2" attributes="0"/>
+                          <Component id="btnContentRemoveSelectedContentItemFromTable" min="-2" max="-2" attributes="0"/>
+                          <Component id="btnContentAssignAllContentItemsToList" min="-2" max="-2" attributes="0"/>
+                          <Component id="btnContentRemoveAllContentItemsFromList" min="-2" max="-2" attributes="0"/>
+                          <Component id="btnContentAssignAllContentItemsToTable" min="-2" max="-2" attributes="0"/>
+                          <Component id="btnContentRemoveAllContentItemsFromTable" min="-2" max="-2" attributes="0"/>
                       </Group>
                       <EmptySpace max="-2" attributes="0"/>
-                      <Component id="jScrollPane5" pref="253" max="32767" attributes="0"/>
+                      <Component id="jScrollPane5" pref="408" max="32767" attributes="0"/>
                       <EmptySpace max="-2" attributes="0"/>
                   </Group>
               </Group>
@@ -566,15 +633,22 @@
                               <Component id="jScrollPane7" pref="0" max="32767" attributes="0"/>
                           </Group>
                           <Group type="102" alignment="0" attributes="0">
-                              <EmptySpace min="-2" pref="70" max="-2" attributes="0"/>
-                              <Component id="btnContentsAssignContentItemToList" min="-2" max="-2" attributes="0"/>
+                              <EmptySpace min="-2" pref="35" max="-2" attributes="0"/>
+                              <Component id="btnContentAssignAllContentItemsToList" min="-2" max="-2" attributes="0"/>
                               <EmptySpace max="-2" attributes="0"/>
-                              <Component id="btnContentsRemoveContentItemFromList" min="-2" max="-2" attributes="0"/>
-                              <EmptySpace min="-2" pref="124" max="-2" attributes="0"/>
-                              <Component id="btnContentsAssignContentItemToTable" min="-2" max="-2" attributes="0"/>
+                              <Component id="btnContentAssignSelectedContentItemToList" min="-2" max="-2" attributes="0"/>
                               <EmptySpace max="-2" attributes="0"/>
-                              <Component id="btnContentsRemoveContentItemFromTable" min="-2" max="-2" attributes="0"/>
-                              <EmptySpace min="0" pref="30" max="32767" attributes="0"/>
+                              <Component id="btnContentRemoveSelectedContentItemFromList" min="-2" max="-2" attributes="0"/>
+                              <EmptySpace max="-2" attributes="0"/>
+                              <Component id="btnContentRemoveAllContentItemsFromList" min="-2" max="-2" attributes="0"/>
+                              <EmptySpace min="-2" pref="54" max="-2" attributes="0"/>
+                              <Component id="btnContentAssignAllContentItemsToTable" min="-2" max="-2" attributes="0"/>
+                              <EmptySpace max="-2" attributes="0"/>
+                              <Component id="btnContentAssignSelectedContentItemToTable" min="-2" max="-2" attributes="0"/>
+                              <EmptySpace max="-2" attributes="0"/>
+                              <Component id="btnContentRemoveSelectedContentItemFromTable" min="-2" max="-2" attributes="0"/>
+                              <EmptySpace max="32767" attributes="0"/>
+                              <Component id="btnContentRemoveAllContentItemsFromTable" min="-2" max="-2" attributes="0"/>
                           </Group>
                           <Component id="jScrollPane5" alignment="1" max="32767" attributes="0"/>
                       </Group>
@@ -591,7 +665,7 @@
 
               <Layout class="org.netbeans.modules.form.compat2.layouts.support.JScrollPaneSupportLayout"/>
               <SubComponents>
-                <Component class="javax.swing.JList" name="lstContentsAvailableContentItems">
+                <Component class="javax.swing.JList" name="lstContentAvailableContentItems">
                   <Properties>
                     <Property name="border" type="javax.swing.border.Border" editor="org.netbeans.modules.form.editors2.BorderEditor">
                       <Border info="org.netbeans.modules.form.compat2.border.TitledBorderInfo">
@@ -600,11 +674,11 @@
                     </Property>
                     <Property name="model" type="javax.swing.ListModel" editor="org.netbeans.modules.form.editors2.ListModelEditor">
                       <StringArray count="5">
-                        <StringItem index="0" value="ASSIGNMENT1"/>
-                        <StringItem index="1" value="ASSIGNMENT4"/>
-                        <StringItem index="2" value="ASSIGNMENT5"/>
-                        <StringItem index="3" value="PROJECT_GROUP1"/>
-                        <StringItem index="4" value="PROJECT_INDIVIDUAL1"/>
+                        <StringItem index="0" value="Assignment 1"/>
+                        <StringItem index="1" value="Assignment 4"/>
+                        <StringItem index="2" value="Assignment 5"/>
+                        <StringItem index="3" value="Group Project 1"/>
+                        <StringItem index="4" value="Individual Project 1"/>
                       </StringArray>
                     </Property>
                     <Property name="selectionMode" type="int" value="0"/>
@@ -622,7 +696,7 @@
 
               <Layout class="org.netbeans.modules.form.compat2.layouts.support.JScrollPaneSupportLayout"/>
               <SubComponents>
-                <Component class="javax.swing.JList" name="listContentsAssignedContentItems">
+                <Component class="javax.swing.JList" name="lstContentAssignedContentItems">
                   <Properties>
                     <Property name="border" type="javax.swing.border.Border" editor="org.netbeans.modules.form.editors2.BorderEditor">
                       <Border info="org.netbeans.modules.form.compat2.border.TitledBorderInfo">
@@ -630,12 +704,13 @@
                       </Border>
                     </Property>
                     <Property name="model" type="javax.swing.ListModel" editor="org.netbeans.modules.form.editors2.ListModelEditor">
-                      <StringArray count="5">
-                        <StringItem index="0" value="CLASS_NAME"/>
-                        <StringItem index="1" value="COURSE_DESCRIPTION"/>
-                        <StringItem index="2" value="CONTACT_INFORMATION"/>
-                        <StringItem index="3" value="RESOURCE_REQUIREMENTS{3,1}"/>
-                        <StringItem index="4" value="SCHEDULE{2,3}"/>
+                      <StringArray count="6">
+                        <StringItem index="0" value="Networking"/>
+                        <StringItem index="1" value="[[PAGEBREAK]]"/>
+                        <StringItem index="2" value="[[COURSE_DESCRIPTION]]"/>
+                        <StringItem index="3" value="[[CONTACT_INFORMATION]]"/>
+                        <StringItem index="4" value="[[RESOURCE_REQUIREMENTS{3,1}]]"/>
+                        <StringItem index="5" value="[[SCHEDULE{2,3}]]"/>
                       </StringArray>
                     </Property>
                     <Property name="selectionMode" type="int" value="0"/>
@@ -653,7 +728,7 @@
 
               <Layout class="org.netbeans.modules.form.compat2.layouts.support.JScrollPaneSupportLayout"/>
               <SubComponents>
-                <Component class="javax.swing.JTable" name="tableContentsAssignedContentItems">
+                <Component class="javax.swing.JTable" name="tblContentAssignedContentItems">
                   <Properties>
                     <Property name="border" type="javax.swing.border.Border" editor="org.netbeans.modules.form.editors2.BorderEditor">
                       <Border info="org.netbeans.modules.form.compat2.border.TitledBorderInfo">
@@ -668,9 +743,9 @@
                           <Data value="April 14"/>
                         </Column>
                         <Column editable="false" title="Task" type="java.lang.String">
-                          <Data value="ASSIGNMENT2"/>
-                          <Data value="ASSIGNMENT3"/>
-                          <Data value="ASSIGNMENT6"/>
+                          <Data value="Assignment 2"/>
+                          <Data value="Assignment 3"/>
+                          <Data value="Assignment 6"/>
                         </Column>
                       </Table>
                     </Property>
@@ -695,30 +770,69 @@
                 </Component>
               </SubComponents>
             </Container>
-            <Component class="javax.swing.JButton" name="btnContentsRemoveContentItemFromList">
+            <Component class="javax.swing.JButton" name="btnContentRemoveSelectedContentItemFromList">
+              <Properties>
+                <Property name="text" type="java.lang.String" value="&gt;"/>
+              </Properties>
+            </Component>
+            <Component class="javax.swing.JButton" name="btnContentAssignSelectedContentItemToList">
+              <Properties>
+                <Property name="text" type="java.lang.String" value="&lt;"/>
+              </Properties>
+            </Component>
+            <Component class="javax.swing.JButton" name="btnContentAssignSelectedContentItemToTable">
+              <Properties>
+                <Property name="text" type="java.lang.String" value="&lt;"/>
+              </Properties>
+            </Component>
+            <Component class="javax.swing.JButton" name="btnContentRemoveSelectedContentItemFromTable">
+              <Properties>
+                <Property name="text" type="java.lang.String" value="&gt;"/>
+              </Properties>
+            </Component>
+            <Component class="javax.swing.JButton" name="btnContentAssignAllContentItemsToList">
+              <Properties>
+                <Property name="text" type="java.lang.String" value="&lt;&lt;"/>
+              </Properties>
+            </Component>
+            <Component class="javax.swing.JButton" name="btnContentRemoveAllContentItemsFromList">
               <Properties>
                 <Property name="text" type="java.lang.String" value="&gt;&gt;"/>
               </Properties>
             </Component>
-            <Component class="javax.swing.JButton" name="btnContentsAssignContentItemToList">
+            <Component class="javax.swing.JButton" name="btnContentAssignAllContentItemsToTable">
               <Properties>
                 <Property name="text" type="java.lang.String" value="&lt;&lt;"/>
               </Properties>
             </Component>
-            <Component class="javax.swing.JButton" name="btnContentsAssignContentItemToTable">
-              <Properties>
-                <Property name="text" type="java.lang.String" value="&lt;&lt;"/>
-              </Properties>
-              <Events>
-                <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btnContentsAssignContentItemToTableActionPerformed"/>
-              </Events>
-            </Component>
-            <Component class="javax.swing.JButton" name="btnContentsRemoveContentItemFromTable">
+            <Component class="javax.swing.JButton" name="btnContentRemoveAllContentItemsFromTable">
               <Properties>
                 <Property name="text" type="java.lang.String" value="&gt;&gt;"/>
               </Properties>
             </Component>
           </SubComponents>
+        </Container>
+        <Container class="javax.swing.JPanel" name="jpPreview">
+          <Constraints>
+            <Constraint layoutClass="org.netbeans.modules.form.compat2.layouts.support.JTabbedPaneSupportLayout" value="org.netbeans.modules.form.compat2.layouts.support.JTabbedPaneSupportLayout$JTabbedPaneConstraintsDescription">
+              <JTabbedPaneConstraints tabName="Preview">
+                <Property name="tabTitle" type="java.lang.String" value="Preview"/>
+              </JTabbedPaneConstraints>
+            </Constraint>
+          </Constraints>
+
+          <Layout>
+            <DimensionLayout dim="0">
+              <Group type="103" groupAlignment="0" attributes="0">
+                  <EmptySpace min="0" pref="753" max="32767" attributes="0"/>
+              </Group>
+            </DimensionLayout>
+            <DimensionLayout dim="1">
+              <Group type="103" groupAlignment="0" attributes="0">
+                  <EmptySpace min="0" pref="381" max="32767" attributes="0"/>
+              </Group>
+            </DimensionLayout>
+          </Layout>
         </Container>
         <Container class="javax.swing.JPanel" name="jpGeneration">
           <Constraints>
@@ -748,11 +862,19 @@
                           </Group>
                           <Component id="jpGenerateReport" alignment="0" max="32767" attributes="0"/>
                       </Group>
+                      <EmptySpace pref="14" max="32767" attributes="0"/>
+                  </Group>
+                  <Group type="102" alignment="0" attributes="0">
+                      <EmptySpace min="-2" pref="317" max="-2" attributes="0"/>
+                      <Component id="btnGenerateReport" min="-2" max="-2" attributes="0"/>
                       <EmptySpace max="32767" attributes="0"/>
                   </Group>
-                  <Group type="102" alignment="1" attributes="0">
+                  <Group type="102" attributes="0">
                       <EmptySpace max="32767" attributes="0"/>
-                      <Component id="btnGenerateReport" min="-2" max="-2" attributes="0"/>
+                      <Group type="103" groupAlignment="0" attributes="0">
+                          <Component id="lblGenerationProgress" alignment="0" min="-2" max="-2" attributes="0"/>
+                          <Component id="jpbGenerationProgress" alignment="0" min="-2" pref="300" max="-2" attributes="0"/>
+                      </Group>
                       <EmptySpace max="32767" attributes="0"/>
                   </Group>
               </Group>
@@ -760,21 +882,25 @@
             <DimensionLayout dim="1">
               <Group type="103" groupAlignment="0" attributes="0">
                   <Group type="102" alignment="0" attributes="0">
-                      <EmptySpace pref="31" max="32767" attributes="0"/>
+                      <EmptySpace pref="32" max="32767" attributes="0"/>
                       <Group type="103" groupAlignment="3" attributes="0">
                           <Component id="txtfFilepath" alignment="3" min="-2" max="-2" attributes="0"/>
                           <Component id="btnFilepath" alignment="3" min="-2" max="-2" attributes="0"/>
                       </Group>
-                      <EmptySpace pref="27" max="32767" attributes="0"/>
+                      <EmptySpace pref="28" max="32767" attributes="0"/>
                       <Group type="103" groupAlignment="3" attributes="0">
                           <Component id="txtfFilename" alignment="3" min="-2" max="-2" attributes="0"/>
                           <Component id="btnFilename" alignment="3" min="-2" max="-2" attributes="0"/>
                       </Group>
-                      <EmptySpace pref="66" max="32767" attributes="0"/>
+                      <EmptySpace pref="67" max="32767" attributes="0"/>
                       <Component id="jpGenerateReport" min="-2" max="-2" attributes="0"/>
-                      <EmptySpace pref="62" max="32767" attributes="0"/>
+                      <EmptySpace pref="28" max="32767" attributes="0"/>
+                      <Component id="lblGenerationProgress" min="-2" max="-2" attributes="0"/>
+                      <EmptySpace type="unrelated" max="-2" attributes="0"/>
+                      <Component id="jpbGenerationProgress" min="-2" max="-2" attributes="0"/>
+                      <EmptySpace type="unrelated" max="-2" attributes="0"/>
                       <Component id="btnGenerateReport" min="-2" max="-2" attributes="0"/>
-                      <EmptySpace pref="59" max="32767" attributes="0"/>
+                      <EmptySpace pref="36" max="32767" attributes="0"/>
                   </Group>
               </Group>
             </DimensionLayout>
@@ -829,13 +955,13 @@
                 <DimensionLayout dim="0">
                   <Group type="103" groupAlignment="0" attributes="0">
                       <Group type="102" alignment="0" attributes="0">
-                          <EmptySpace pref="112" max="32767" attributes="0"/>
+                          <EmptySpace pref="189" max="32767" attributes="0"/>
                           <Component id="rbtnDocx" min="-2" max="-2" attributes="0"/>
                           <EmptySpace min="-2" pref="60" max="-2" attributes="0"/>
                           <Component id="rbtnDocxAndPdf" min="-2" max="-2" attributes="0"/>
                           <EmptySpace min="-2" pref="75" max="-2" attributes="0"/>
                           <Component id="rbtnPdf" min="-2" max="-2" attributes="0"/>
-                          <EmptySpace pref="113" max="32767" attributes="0"/>
+                          <EmptySpace pref="189" max="32767" attributes="0"/>
                       </Group>
                   </Group>
                 </DimensionLayout>
@@ -886,6 +1012,13 @@
                 </Component>
               </SubComponents>
             </Container>
+            <Component class="javax.swing.JProgressBar" name="jpbGenerationProgress">
+            </Component>
+            <Component class="javax.swing.JLabel" name="lblGenerationProgress">
+              <Properties>
+                <Property name="text" type="java.lang.String" value="[PROGRESS_BAR]"/>
+              </Properties>
+            </Component>
           </SubComponents>
         </Container>
       </SubComponents>

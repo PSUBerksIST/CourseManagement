@@ -1,21 +1,30 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package org.psu.berksist.CourseEZ;
 
+import java.sql.Connection;
+
 /**
- *
- * @author Nicholas
+ * Panel to get information from the user about a Book.  Can be used to add a new book to the database or edit an existing one
+ * @author Nicholas Beliveau
  */
 public class jpAddBook extends javax.swing.JPanel {
 
+    private Connection dbConnection;
+    
     /**
      * Creates new form jpAddBook
      */
     public jpAddBook() {
         initComponents();
+    }
+    
+    /**
+     * Constructor with a database connection passed to it
+     * @param inConnection 
+     */
+    public jpAddBook(Connection inConnection)
+    {
+        initComponents();
+        dbConnection = inConnection;
     }
 
     /**
@@ -39,13 +48,8 @@ public class jpAddBook extends javax.swing.JPanel {
         jtfClass1 = new javax.swing.JTextField();
         jtfISBN = new javax.swing.JTextField();
         jtfAuthor = new javax.swing.JTextField();
-        jtfTitle = new javax.swing.JTextField();
-        jlEdition = new javax.swing.JLabel();
         jlPrice = new javax.swing.JLabel();
-        jtfEdition = new javax.swing.JTextField();
         jtfPrice = new javax.swing.JTextField();
-        jlInUse = new javax.swing.JLabel();
-        jtfInUse = new javax.swing.JTextField();
         jlRequired = new javax.swing.JLabel();
         jtfRequired = new javax.swing.JTextField();
         jlOptional = new javax.swing.JLabel();
@@ -60,6 +64,11 @@ public class jpAddBook extends javax.swing.JPanel {
         jtfManual = new javax.swing.JTextField();
         jbSave = new javax.swing.JButton();
         jbCancel = new javax.swing.JButton();
+        jspCourses = new javax.swing.JScrollPane();
+        jListCourses = new javax.swing.JList<>();
+        jLabelCourses = new javax.swing.JLabel();
+        jButton1 = new javax.swing.JButton();
+        jtfTitle = new javax.swing.JTextField();
 
         jTextField1.setText("jTextField1");
 
@@ -73,7 +82,7 @@ public class jpAddBook extends javax.swing.JPanel {
 
         jlPublisher.setText("Publisher : ");
 
-        jlClass.setText("Class : ");
+        jlClass.setText("Edition :");
 
         jtfPublisher.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -93,8 +102,6 @@ public class jpAddBook extends javax.swing.JPanel {
             }
         });
 
-        jlEdition.setText("Edition : ");
-
         jlPrice.setText("Price : ");
 
         jtfPrice.addActionListener(new java.awt.event.ActionListener() {
@@ -102,8 +109,6 @@ public class jpAddBook extends javax.swing.JPanel {
                 jtfPriceActionPerformed(evt);
             }
         });
-
-        jlInUse.setText("In Use : ");
 
         jlRequired.setText("Required : ");
 
@@ -118,60 +123,88 @@ public class jpAddBook extends javax.swing.JPanel {
         jlManual.setText("Manual :");
 
         jbSave.setText("Save");
+        jbSave.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jbSaveActionPerformed(evt);
+            }
+        });
 
         jbCancel.setText("Cancel");
+        jbCancel.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jbCancelActionPerformed(evt);
+            }
+        });
+
+        jListCourses.setModel(new javax.swing.AbstractListModel<String>() {
+            String[] strings = { "Item 1", "Item 2", "Item 3", "Item 4", "Item 5" };
+            public int getSize() { return strings.length; }
+            public String getElementAt(int i) { return strings[i]; }
+        });
+        jspCourses.setViewportView(jListCourses);
+
+        jLabelCourses.setText("Courses :");
+
+        jButton1.setText("Add Course");
+        jButton1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton1ActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(jButton1)
+                .addContainerGap())
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                .addGap(41, 41, 41)
+                .addComponent(jbCancel, javax.swing.GroupLayout.PREFERRED_SIZE, 76, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(jbSave, javax.swing.GroupLayout.PREFERRED_SIZE, 76, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(44, 44, 44))
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addGroup(layout.createSequentialGroup()
-                        .addComponent(jlOptional)
-                        .addGap(18, 18, 18)
-                        .addComponent(jtfOptional))
-                    .addGroup(layout.createSequentialGroup()
-                        .addComponent(jlRequired)
-                        .addGap(18, 18, 18)
-                        .addComponent(jtfRequired))
-                    .addGroup(layout.createSequentialGroup()
-                        .addComponent(jlInUse)
-                        .addGap(18, 18, 18)
-                        .addComponent(jtfInUse))
-                    .addGroup(layout.createSequentialGroup()
-                        .addComponent(jlTitle)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addComponent(jtfTitle))
-                    .addGroup(layout.createSequentialGroup()
-                        .addComponent(jlAuthor)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addComponent(jtfAuthor))
-                    .addGroup(layout.createSequentialGroup()
-                        .addComponent(jlISBN)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addComponent(jtfISBN))
-                    .addGroup(layout.createSequentialGroup()
-                        .addComponent(jlWebsite)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addComponent(jtfClass1))
-                    .addGroup(layout.createSequentialGroup()
-                        .addComponent(jlPublisher)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addComponent(jtfPublisher, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addGroup(layout.createSequentialGroup()
-                        .addComponent(jlClass)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addComponent(jtfClass, javax.swing.GroupLayout.PREFERRED_SIZE, 118, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                            .addGroup(layout.createSequentialGroup()
+                                .addComponent(jlRequired)
+                                .addGap(18, 18, 18)
+                                .addComponent(jtfRequired))
+                            .addGroup(layout.createSequentialGroup()
+                                .addComponent(jlAuthor)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                                .addComponent(jtfAuthor))
+                            .addGroup(layout.createSequentialGroup()
+                                .addComponent(jlISBN)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                                .addComponent(jtfISBN))
+                            .addGroup(layout.createSequentialGroup()
+                                .addComponent(jlWebsite)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                                .addComponent(jtfClass1))
+                            .addGroup(layout.createSequentialGroup()
+                                .addComponent(jlPublisher)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                                .addComponent(jtfPublisher, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addGroup(layout.createSequentialGroup()
+                                .addComponent(jlClass)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                                .addComponent(jtfClass, javax.swing.GroupLayout.PREFERRED_SIZE, 118, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addGroup(layout.createSequentialGroup()
+                                .addComponent(jlOptional)
+                                .addGap(32, 32, 32)
+                                .addComponent(jtfOptional)))
                         .addGap(18, 18, 18)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                             .addGroup(layout.createSequentialGroup()
-                                .addComponent(jlEdition)
-                                .addGap(18, 18, 18)
-                                .addComponent(jtfEdition))
+                                .addComponent(jLabelCourses)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                .addComponent(jspCourses, javax.swing.GroupLayout.PREFERRED_SIZE, 70, javax.swing.GroupLayout.PREFERRED_SIZE))
                             .addGroup(layout.createSequentialGroup()
                                 .addComponent(jlPrice)
                                 .addGap(18, 18, 18)
@@ -192,13 +225,12 @@ public class jpAddBook extends javax.swing.JPanel {
                                 .addComponent(jlManual)
                                 .addGap(18, 18, 18)
                                 .addComponent(jtfManual)))
-                        .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                            .addComponent(jbCancel, javax.swing.GroupLayout.DEFAULT_SIZE, 76, Short.MAX_VALUE)
-                            .addComponent(jbSave, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                        .addGap(38, 38, 38))))
+                        .addGap(0, 0, Short.MAX_VALUE))
+                    .addGroup(layout.createSequentialGroup()
+                        .addComponent(jlTitle)
+                        .addGap(18, 18, 18)
+                        .addComponent(jtfTitle)))
+                .addContainerGap())
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -206,9 +238,7 @@ public class jpAddBook extends javax.swing.JPanel {
                 .addGap(23, 23, 23)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jlTitle)
-                    .addComponent(jtfTitle, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jlEdition)
-                    .addComponent(jtfEdition, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(jtfTitle, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jlAuthor)
@@ -240,30 +270,33 @@ public class jpAddBook extends javax.swing.JPanel {
                     .addComponent(jlManual)
                     .addComponent(jtfManual, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jlInUse)
-                    .addComponent(jtfInUse, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(layout.createSequentialGroup()
+                        .addComponent(jLabelCourses)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(jlRequired)
+                            .addComponent(jtfRequired, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(jlOptional)
+                            .addComponent(jtfOptional, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGap(13, 13, 13))
+                    .addGroup(layout.createSequentialGroup()
+                        .addComponent(jspCourses, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)))
+                .addComponent(jButton1)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jlRequired)
-                    .addComponent(jtfRequired, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jbSave))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jlOptional)
-                    .addComponent(jtfOptional, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jbSave)
                     .addComponent(jbCancel))
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addContainerGap())
         );
     }// </editor-fold>//GEN-END:initComponents
 
     private void jtfPublisherActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jtfPublisherActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_jtfPublisherActionPerformed
-
-    private void jtfClassActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jtfClassActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_jtfClassActionPerformed
 
     private void jtfClass1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jtfClass1ActionPerformed
         // TODO add your handling code here:
@@ -273,16 +306,33 @@ public class jpAddBook extends javax.swing.JPanel {
         // TODO add your handling code here:
     }//GEN-LAST:event_jtfPriceActionPerformed
 
+    private void jtfClassActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jtfClassActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_jtfClassActionPerformed
+
+    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
+        // TODO Add code to allow the user to select from a list of courses to connect the current book with
+    }//GEN-LAST:event_jButton1ActionPerformed
+
+    private void jbCancelActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jbCancelActionPerformed
+        // TODO Close out the panel and discard the added information
+    }//GEN-LAST:event_jbCancelActionPerformed
+
+    private void jbSaveActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jbSaveActionPerformed
+        // TODO Collect the data that has been entered and add it to the database as a new book
+    }//GEN-LAST:event_jbSaveActionPerformed
+
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton jButton1;
+    private javax.swing.JLabel jLabelCourses;
+    private javax.swing.JList<String> jListCourses;
     private javax.swing.JTextField jTextField1;
     private javax.swing.JButton jbCancel;
     private javax.swing.JButton jbSave;
     private javax.swing.JLabel jlAuthor;
     private javax.swing.JLabel jlClass;
-    private javax.swing.JLabel jlEdition;
     private javax.swing.JLabel jlISBN;
-    private javax.swing.JLabel jlInUse;
     private javax.swing.JLabel jlManual;
     private javax.swing.JLabel jlOptional;
     private javax.swing.JLabel jlPowerpoints;
@@ -293,12 +343,11 @@ public class jpAddBook extends javax.swing.JPanel {
     private javax.swing.JLabel jlTests;
     private javax.swing.JLabel jlTitle;
     private javax.swing.JLabel jlWebsite;
+    private javax.swing.JScrollPane jspCourses;
     private javax.swing.JTextField jtfAuthor;
     private javax.swing.JTextField jtfClass;
     private javax.swing.JTextField jtfClass1;
-    private javax.swing.JTextField jtfEdition;
     private javax.swing.JTextField jtfISBN;
-    private javax.swing.JTextField jtfInUse;
     private javax.swing.JTextField jtfManual;
     private javax.swing.JTextField jtfOptional;
     private javax.swing.JTextField jtfPowerpoints;

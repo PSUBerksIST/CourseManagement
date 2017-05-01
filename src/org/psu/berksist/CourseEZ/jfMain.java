@@ -6,7 +6,6 @@ import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.io.File;
 import java.io.FileNotFoundException;
-import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.sql.ResultSet;
@@ -490,20 +489,46 @@ public class jfMain extends JFrame {
     }//GEN-LAST:event_jmiAboutActionPerformed
 
     private void jmHelpContentsActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jmHelpContentsActionPerformed
+      
+        /** 
+         * Action performed that opens HelpDoc
+         * Old methods are commented out 
+         * mrs6041 Michael Strizziere
+         */ 
         
-        //TODO: Make sure the correct file is opening. - RGS
-        File HelpDoc = new File(AppConstants.ROOT_FOLDER + "HelpDoc" + "/CourseManagement.html");
-        OSDetector.open(HelpDoc);
+        // Opening HelpDoc via ICEBrowser
+        /* try {
+            Class htmlBrowserClass;
+            htmlBrowserClass = Class.forName("oracle.help.htmlBrowser.ICEBrowser");
+            Help myH = new Help(htmlBrowserClass);
+            HelpSet myHS = new HelpSet(ClassInfo.class, HelpDoc + "/CourseManagement.html");
+            myH.addBook(myHS);
+            myH.showNavigatorWindow();
+        } catch (HelpSetParseException | ClassNotFoundException ex) {
+            Logger.getLogger(helpTester.class.getName()).log(Level.SEVERE, null, ex);
+        } */
         
+        // Opening HelpDoc via OSDetector class
+        //File HelpDoc = new File(AppConstants.ROOT_FOLDER + "HelpDoc" + "/CourseManagement.html");
+        //OSDetector.open(HelpDoc);
         
+        // This method of opening HelpDoc is now done inside of the OSDetector class
         /* File HelpDoc = new File(AppConstants.ROOT_FOLDER + "HelpDoc");
         try {
-            Runtime.getRuntime().exec("rundll32 url.dll,FileProtocolHandler " 
-                + HelpDoc + "/Course Management.html");
-        } catch(IOException ex) {
+            if (OSDetector.isWindows) {
+                Runtime.getRuntime().exec("rundll32 url.dll,FileProtocolHandler " 
+                    + HelpDoc + "/CourseManagement.html");
+            }
+            else if (OSDetector.isMac || OSDetector.isLinux) {
+                Runtime.getRuntime().exec("/usr/bin/open" + HelpDoc
+                        + "/CourseManagement.html");
+            }
+            else {
+                Runtime.getRuntime().exec(HelpDoc + "/CourseManagement.hmtl");
+            }
+        } catch(Exception ex) {
             Logger.getLogger(jfMain.class.getName()).log(Level.SEVERE, null, ex);
-        } // Opens the help document in a browser
-        */
+        } */
     }//GEN-LAST:event_jmHelpContentsActionPerformed
 
     /**
