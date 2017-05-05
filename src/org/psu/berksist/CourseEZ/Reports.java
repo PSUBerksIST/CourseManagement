@@ -6,7 +6,9 @@ import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.HashMap;
 import org.docx4j.Docx4J;
+import org.docx4j.model.datastorage.migration.VariablePrepare;
 import org.docx4j.openpackaging.exceptions.Docx4JException;
 import org.docx4j.openpackaging.exceptions.InvalidFormatException;
 import org.docx4j.openpackaging.packages.ProtectDocument;
@@ -35,48 +37,62 @@ public class Reports
     }
 
     public void Syllabus(Connection inConn, String strFilepath, String strFilename, int intFiletype)
-            throws InvalidFormatException, Docx4JException, FileNotFoundException, SQLException
+            throws InvalidFormatException, Docx4JException, FileNotFoundException, SQLException, Exception
+    //TODO: there is still quite a bit to do here like replacing the rest of the variables in the template
+    //      and gettinng the rest of the information from the DB, but i think you will find it fairly simple
+    //      to do following what was already done.
+ 
     {
-        // creates main document 
+        //connects syllabus to Database
         dbConnection = inConn;
-
-        WordprocessingMLPackage wordMLPackage = WordprocessingMLPackage.createPackage();
+        //Used for replacing Text in docx templates
+        HashMap<String,String> mappings = new HashMap<String,String>();
+        
+        //Uses Template.docx as input for Syllabus reports
+        WordprocessingMLPackage wordMLPackage = WordprocessingMLPackage
+                .load(new java.io.File(System.getProperty("user.dir")
+                                        +"/Template.docx"));
+        //Prepares word doc for variable replacement
+        VariablePrepare.prepare(wordMLPackage);
+        
+        //gets main part of document
         MainDocumentPart mdp = wordMLPackage.getMainDocumentPart();
-        // writes into document
-
-
-        //protects document
-
-        //st = dbConnection.prepareStatement("SELECT vchrDescription "
-        //            + "FROM SYLLABUS_MASTER;");
+        
         try
         {
+            //used to execute queries
             st = dbConnection.createStatement();
+            
+            //stores result of executed query
             ResultSet rs = st.executeQuery( "SELECT * FROM vSYLLABUS_MASTER;" );
-
+            
+            //storing information from executed query into strings to be replaced
             String  syllaMain = rs.getString("vchrDescription");
-            int num  = rs.getInt("intNumber");
+            String num  = rs.getString("intNumber");
             String  title = rs.getString("vchrTitle");
-
-            mdp.addParagraphOfText(syllaMain);
-            mdp.addParagraphOfText( Integer.toString(num));
-            mdp.addParagraphOfText(title);
+            
+            //Replaces the first with the second
+            //Example courseDescript will be replaced by syllaMain
+            mappings.put("courseDescript",syllaMain);
+            mappings.put("classNum",num);
+            mappings.put("courseTitle",title);
+            
+            //replaces variables
+            mdp.variableReplace(mappings);
 
             rs.close();
             st.close();
-           // c.close();
+            
         }
         catch (SQLException e)
         {
             System.err.println( e.getClass().getName() + ": " + e.getMessage() );
-            //System.exit(0);
         }
 
         ProtectDocument protection = new ProtectDocument(wordMLPackage);
         protection.restrictEditing(STDocProtect.READ_ONLY, "ohhhnoooo");
 
-        //saves documents as
-        //String filename = System.getProperty("user.dir") + "/CourseEZ.docx";
+        //saves document as
         if (intFiletype == 0 || intFiletype == 1)
         {
             Docx4J.save(wordMLPackage, new java.io.File(strFilepath + strFilename + ".docx"), Docx4J.FLAG_SAVE_ZIP_FILE);
@@ -92,6 +108,7 @@ public class Reports
 
     public void Assignment(Connection inConn, String strFilepath, String strFilename, int intFiletype)
             throws InvalidFormatException, Docx4JException, FileNotFoundException, SQLException
+    //TODO: replicate what was being done for syllabus, but use the database for assignments instead
     {
 
         //creates main document 
@@ -119,3 +136,7 @@ public class Reports
     }
     
 }
+//TODO: any additional reports you make can be put down here as assignment and syllabus was made above, you would
+// just need to create templates for them. Also customized reports was something i originally was working on, so if
+//that was something you wanted to work on and need help, or need help on anything report related, contact me with the
+//info on the handover documentation.
